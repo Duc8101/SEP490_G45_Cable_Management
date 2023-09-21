@@ -88,9 +88,10 @@ namespace API.Services
             {
                 throw new ApplicationException("Nhà cung cấp đã tồn tại");
             }
+
             supplier.SupplierName = DTO.SupplierName.Trim();
             supplier.Country = DTO.Country == null ? null : DTO.Country.Trim();
-            supplier.SupplierDescription = DTO.SupplierDescription == null ? null : DTO.SupplierDescription.Trim();
+            supplier.SupplierDescription = DTO.SupplierDescription == null || DTO.SupplierDescription.Trim().Length == 0 ? null : DTO.SupplierDescription.Trim();
             supplier.UpdateAt = DateTime.Now;
             // update supplier
             int number = await daoSupplier.UpdateSupplier(supplier);
