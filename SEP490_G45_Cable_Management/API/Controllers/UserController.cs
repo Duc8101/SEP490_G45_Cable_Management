@@ -12,12 +12,12 @@ namespace API.Controllers
     [ApiController]
     public class UserController : BaseAPIController
     {
-        private readonly UserService userService = new UserService();
+        private readonly UserService service = new UserService();
 
         [HttpPost]
         public async Task<BaseResponseDTO<TokenResponse>> Login([Required] LoginDTO DTO)
         {
-            return await userService.Login(DTO);
+            return await service.Login(DTO);
         }
     }
 }
