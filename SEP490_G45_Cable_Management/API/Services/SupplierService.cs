@@ -38,7 +38,7 @@ namespace API.Services
                     {
                         return new ResponseDTO<bool>(true, string.Empty, (int) HttpStatusCode.OK);
                     }
-                    return new ResponseDTO<bool>("Tạo thất bại", (int) HttpStatusCode.BadRequest);
+                    return new ResponseDTO<bool>("Tạo thất bại", (int) HttpStatusCode.Conflict);
                 }
                 throw new ApplicationException("Nhà cung cấp này đã tồn tại");
             }
@@ -98,9 +98,9 @@ namespace API.Services
             // if update successful
             if (number > 0)
             {
-                return new ResponseDTO<bool>(true, string.Empty, (int) HttpStatusCode.OK);
+                return new ResponseDTO<bool>(true);
             }
-            return new ResponseDTO<bool>("Chỉnh sửa thất bại", (int) HttpStatusCode.NotFound);
+            return new ResponseDTO<bool>("Chỉnh sửa thất bại", (int) HttpStatusCode.Conflict);
         }
 
         public async Task<ResponseDTO<bool>> Delete(int SupplierID)
@@ -117,7 +117,7 @@ namespace API.Services
             if (number > 0) {
                 return new ResponseDTO<bool>(true);
             }
-            return new ResponseDTO<bool>("Xóa thất bại", (int)HttpStatusCode.NotFound);
+            return new ResponseDTO<bool>("Xóa thất bại", (int) HttpStatusCode.Conflict);
         }
     }
 }
