@@ -1,8 +1,9 @@
 ﻿using DataAccess.Const;
-using DataAccess.DTO.CommonDTO;
+using DataAccess.DTO;
 using DataAccess.DTO.UserDTO;
 using DataAccess.Entity;
 using DataAccess.Model.DAO;
+using DataAccess.Model.Util;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
@@ -15,15 +16,15 @@ namespace API.Services
     {
         private readonly DAOUser daoUser = new DAOUser();
 
-        public async Task<BaseResponseDTO<TokenResponse>> Login(LoginDTO DTO)
+        public async Task<ResponseDTO<string>> Login(LoginDTO DTO)
         {
             User? user = await daoUser.getUser(DTO);
             // if username or password incorrect
             if (user == null) {
-                return new BaseResponseDTO<TokenResponse>("Username or password wrong", StatusCodes.Status401Unauthorized);
+                return new ResponseDTO<string>("Username or password wrong", StatusCodes.Status401Unauthorized);
             }
             string AccessToken = getAccessToken(user);
-            return new BaseResponseDTO<TokenResponse>(new TokenResponse { Access_Token = AccessToken }, string.Empty, (int) HttpStatusCode.OK);
+            return new ResponseDTO<string>(AccessToken);
         }
 
         private string getAccessToken(User user)
@@ -55,5 +56,36 @@ namespace API.Services
                 signingCredentials: credentials);
             return handler.WriteToken(token);
         }
+
+        public async Task<ResponseDTO<bool>> Register(RegisterDTO DTO, string password)
+        {
+            User user = new User()
+            {
+                UserId = Guid.NewGuid(),
+                UserName = DTO.UserName,
+                LastName = DTO.LastName.Trim(),
+                FirstName = DTO.FirstName.Trim(),
+                Email = DTO.Email,
+                Password = password,
+                Phone = DTO.Phone,
+                RoleId = RoleConst.INT_ROLE_STAFF,
+                CreatedAt = DateTime.Now,
+                UpdateAt = null,
+                IsDeleted = false
+            };
+            // if user exist
+            if(await daoUser.isExist(user.UserName, user.Email))
+            {
+                return new ResponseDTO<bool>("Email hoặc username đã được sử dụng", StatusCodes.Status409Conflict);
+            }
+            int number = await daoUser.AddUser(user);
+            // if register successful
+            if(number > 0)
+            {
+                return new ResponseDTO<bool>(true);
+            }
+            return new ResponseDTO<bool>("Đăng ký không thành công", StatusCodes.Status409Conflict);
+        }
+
     }
 }

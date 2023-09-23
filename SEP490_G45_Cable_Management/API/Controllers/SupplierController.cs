@@ -1,5 +1,5 @@
 ﻿using API.Services;
-using DataAccess.DTO.CommonDTO;
+using DataAccess.DTO;
 using DataAccess.DTO.SupplierDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +16,7 @@ namespace API.Controllers
         private readonly SupplierService service = new SupplierService();
         [HttpPost]
         [Authorize]
-        public async Task<BaseResponseDTO<bool>> Create(SupplierCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Create(SupplierCreateUpdateDTO DTO)
         { 
             // if admin or warehouse
             if (isAdmin() || isWarehouseKeeper())
@@ -26,7 +26,7 @@ namespace API.Controllers
                 // if not found user id
                 if (CreatorID == null)
                 {
-                    return new BaseResponseDTO<bool>("Không tìm thấy ID của bạn", (int) HttpStatusCode.NotFound);
+                    return new ResponseDTO<bool>("Không tìm thấy ID của bạn", (int) HttpStatusCode.NotFound);
                 }
                 return await service.Create(DTO, CreatorID);             
             }
@@ -34,14 +34,14 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<BaseResponseDTO<PagedResultDTO<SupplierListDTO>>> List(string? filter /* list supplier based on supplier name */, int pageSize = 12 /* number of row in a page */, int currentPage = 1 )
+        public async Task<PagedResultDTO<SupplierListDTO>> List(string? filter /* list supplier based on supplier name */, int pageSize = 12 /* number of row in a page */, int currentPage = 1 )
         {
             return await service.List(filter, pageSize, currentPage);
         }
 
         [HttpPut("{SupplierID}")]
         [Authorize]
-        public async Task<BaseResponseDTO<bool>> Update(int SupplierID, SupplierCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Update(int SupplierID, SupplierCreateUpdateDTO DTO)
         {
             // if admin or warehouse
             if (isAdmin() || isWarehouseKeeper())
@@ -53,7 +53,7 @@ namespace API.Controllers
 
         [HttpDelete("{SupplierID}")]
         [Authorize]
-        public async Task<BaseResponseDTO<bool>> Delete(int SupplierID)
+        public async Task<ResponseDTO<bool>> Delete(int SupplierID)
         {
             // if admin or warehousekeeper
             if (isAdmin() || isWarehouseKeeper())

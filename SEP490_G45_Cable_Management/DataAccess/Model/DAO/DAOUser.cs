@@ -22,5 +22,16 @@ namespace DataAccess.Model.DAO
             }
             return user;
         }
+
+        public async Task<int> AddUser(User user)
+        {
+            await context.Users.AddAsync(user);
+            return await context.SaveChangesAsync();
+        }
+
+        public async Task<bool> isExist(string username, string email)
+        {
+            return await context.Users.AnyAsync(u => (u.UserName == username || u.Email == email) && u.IsDeleted == false);
+        }
     }
 }

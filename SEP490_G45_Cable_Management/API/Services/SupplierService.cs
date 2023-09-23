@@ -1,5 +1,5 @@
 ﻿using DataAccess.Const;
-using DataAccess.DTO.CommonDTO;
+using DataAccess.DTO;
 using DataAccess.DTO.SupplierDTO;
 using DataAccess.Entity;
 using DataAccess.Model.DAO;
@@ -13,7 +13,7 @@ namespace API.Services
     public class SupplierService
     {
         private readonly DAOSupplier daoSupplier = new DAOSupplier();
-        public async Task<BaseResponseDTO<bool>> Create(SupplierCreateUpdateDTO DTO, string CreatorID)
+        public async Task<ResponseDTO<bool>> Create(SupplierCreateUpdateDTO DTO, string CreatorID)
         {
             try
             {
@@ -36,9 +36,9 @@ namespace API.Services
                     // if create successful
                     if(number > 0)
                     {
-                        return new BaseResponseDTO<bool>(true, string.Empty, (int) HttpStatusCode.OK);
+                        return new ResponseDTO<bool>(true, string.Empty, (int) HttpStatusCode.OK);
                     }
-                    return new BaseResponseDTO<bool>("Tạo thất bại", (int) HttpStatusCode.BadRequest);
+                    return new ResponseDTO<bool>("Tạo thất bại", (int) HttpStatusCode.BadRequest);
                 }
                 throw new ApplicationException("Nhà cung cấp này đã tồn tại");
             }
@@ -67,15 +67,15 @@ namespace API.Services
             return result;
         }
 
-        public async Task<BaseResponseDTO<PagedResultDTO<SupplierListDTO>>> List(string? filter, int pageSize/* number of row in a page*/, int currentPage)
+        public async Task<PagedResultDTO<SupplierListDTO>> List(string? filter, int pageSize/* number of row in a page*/, int currentPage)
         {
             List<Supplier> list = await daoSupplier.getList(filter, pageSize, currentPage);
             List<SupplierListDTO> result = getList(list);
             PagedResultDTO<SupplierListDTO> pageResult = new PagedResultDTO<SupplierListDTO>(currentPage, pageSize, result, 0);
-            return new BaseResponseDTO<PagedResultDTO<SupplierListDTO>>(pageResult, string.Empty, (int) HttpStatusCode.OK);
+            return pageResult;
         }
 
-        public async Task<BaseResponseDTO<bool>> Update(int SupplierID, SupplierCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Update(int SupplierID, SupplierCreateUpdateDTO DTO)
         {
             Supplier? supplier = await daoSupplier.getSupplier(SupplierID);
             // if supplier id not exist
@@ -98,12 +98,12 @@ namespace API.Services
             // if update successful
             if (number > 0)
             {
-                return new BaseResponseDTO<bool>(true, string.Empty, (int) HttpStatusCode.OK);
+                return new ResponseDTO<bool>(true, string.Empty, (int) HttpStatusCode.OK);
             }
-            return new BaseResponseDTO<bool>("Chỉnh sửa thất bại", (int) HttpStatusCode.NotFound);
+            return new ResponseDTO<bool>("Chỉnh sửa thất bại", (int) HttpStatusCode.NotFound);
         }
 
-        public async Task<BaseResponseDTO<bool>> Delete(int SupplierID)
+        public async Task<ResponseDTO<bool>> Delete(int SupplierID)
         {
             Supplier? supplier = await daoSupplier.getSupplier(SupplierID); 
             // if supplier not exist
@@ -115,9 +115,9 @@ namespace API.Services
             int number = await daoSupplier.DeleteSupplier(supplier); 
             // if delete successful
             if (number > 0) {
-                return new BaseResponseDTO<bool>(true, string.Empty, (int) HttpStatusCode.OK);
+                return new ResponseDTO<bool>(true);
             }
-            return new BaseResponseDTO<bool>("Xóa thất bại", (int)HttpStatusCode.NotFound);
+            return new ResponseDTO<bool>("Xóa thất bại", (int)HttpStatusCode.NotFound);
         }
     }
 }
