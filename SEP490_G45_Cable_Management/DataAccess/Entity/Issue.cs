@@ -16,9 +16,8 @@ namespace DataAccess.Entity
         public string? IssueCode { get; set; }
         public string? Description { get; set; }
         public Guid CreatorId { get; set; }
-        public DateTime? CreatedDate { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdateAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
         public string? Status { get; set; }
         public string? CableRoutingName { get; set; }

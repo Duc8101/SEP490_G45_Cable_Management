@@ -20,7 +20,7 @@ namespace DataAccess.Entity
         public Guid? IssueId { get; set; }
         public string? Status { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdateAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
         public int RequestCategoryId { get; set; }
         public int? DeliverWarehouseId { get; set; }

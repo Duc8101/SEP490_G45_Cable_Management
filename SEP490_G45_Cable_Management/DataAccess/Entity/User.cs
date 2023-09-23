@@ -24,9 +24,8 @@ namespace DataAccess.Entity
         public string Email { get; set; } = null!;
         public string Phone { get; set; } = null!;
         public int RoleId { get; set; }
-        public DateTime CreatedDate { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdateAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
 
         public virtual Role Role { get; set; } = null!;

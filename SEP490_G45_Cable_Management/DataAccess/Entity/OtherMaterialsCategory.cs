@@ -14,7 +14,7 @@ namespace DataAccess.Entity
         public int OtherMaterialsCategoryId { get; set; }
         public string OtherMaterialsCategoryName { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdateAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
 
         public virtual ICollection<NodeMaterialCategory> NodeMaterialCategories { get; set; }

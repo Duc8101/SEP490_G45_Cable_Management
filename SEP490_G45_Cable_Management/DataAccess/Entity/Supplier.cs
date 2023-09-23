@@ -17,7 +17,7 @@ namespace DataAccess.Entity
         public Guid? CreatorId { get; set; }
         public string? SupplierDescription { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdateAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
 
         public virtual User? Creator { get; set; }

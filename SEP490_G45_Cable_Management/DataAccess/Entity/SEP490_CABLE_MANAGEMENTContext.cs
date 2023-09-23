@@ -46,7 +46,7 @@ namespace DataAccess.Entity
                 ConfigurationBuilder builder = new ConfigurationBuilder();
                 IConfigurationRoot config = builder.SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("appsettings.json", true, true).Build();
-                string? connect = config.GetConnectionString("DefaultConnection");
+                string connect = config.GetConnectionString("DefaultConnection");
                 optionsBuilder.UseSqlServer(connect);
             }
         }
@@ -124,8 +124,6 @@ namespace DataAccess.Entity
                     .HasColumnName("IssueID");
 
                 entity.Property(e => e.CableRoutingName).HasMaxLength(100);
-
-                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.CreatorId).HasColumnName("CreatorID");
 
@@ -252,7 +250,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<OtherMaterial>(entity =>
             {
                 entity.HasKey(e => e.OtherMaterialsId)
-                    .HasName("PK__OtherMat__14E82B147FC9ACD5");
+                    .HasName("PK__OtherMat__14E82B14F0790151");
 
                 entity.Property(e => e.OtherMaterialsId).HasColumnName("OtherMaterialsID");
 
@@ -355,7 +353,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<RequestCable>(entity =>
             {
                 entity.HasKey(e => new { e.RequestId, e.CableId, e.StartPoint, e.EndPoint })
-                    .HasName("PK__RequestC__8A3E7AD04B5EDAF8");
+                    .HasName("PK__RequestC__8A3E7AD0D8A3B7A9");
 
                 entity.ToTable("RequestCable");
 
@@ -406,7 +404,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<RequestOtherMaterial>(entity =>
             {
                 entity.HasKey(e => new { e.RequestId, e.OtherMaterialsId, e.Quantity })
-                    .HasName("PK__RequestO__D03A972A305E536E");
+                    .HasName("PK__RequestO__D03A972AB5B944E4");
 
                 entity.Property(e => e.RequestId).HasColumnName("RequestID");
 
@@ -492,7 +490,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<TransactionCable>(entity =>
             {
                 entity.HasKey(e => new { e.TransactionId, e.CableId })
-                    .HasName("PK__Transact__FC2F10D40D5697E0");
+                    .HasName("PK__Transact__FC2F10D4FEA5CEBF");
 
                 entity.ToTable("TransactionCable");
 
@@ -520,7 +518,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<TransactionHistory>(entity =>
             {
                 entity.HasKey(e => e.TransactionId)
-                    .HasName("PK__Transact__55433A4BCAE4516C");
+                    .HasName("PK__Transact__55433A4B4113C039");
 
                 entity.ToTable("TransactionHistory");
 
@@ -576,7 +574,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<TransactionOtherMaterial>(entity =>
             {
                 entity.HasKey(e => new { e.TransactionId, e.OtherMaterialsId })
-                    .HasName("PK__Transact__040DB8FA0DB69461");
+                    .HasName("PK__Transact__040DB8FA987230D7");
 
                 entity.Property(e => e.TransactionId).HasColumnName("TransactionID");
 
@@ -606,8 +604,6 @@ namespace DataAccess.Entity
                 entity.Property(e => e.UserId)
                     .ValueGeneratedNever()
                     .HasColumnName("UserID");
-
-                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(50)

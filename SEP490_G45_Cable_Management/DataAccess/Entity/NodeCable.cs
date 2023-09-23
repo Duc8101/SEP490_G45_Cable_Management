@@ -9,7 +9,7 @@ namespace DataAccess.Entity
         public Guid CableId { get; set; }
         public Guid NodeId { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdateAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
         public int OrderIndex { get; set; }
 

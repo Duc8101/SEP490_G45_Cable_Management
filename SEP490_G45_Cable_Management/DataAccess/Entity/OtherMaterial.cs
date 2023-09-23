@@ -18,7 +18,7 @@ namespace DataAccess.Entity
         public string? Code { get; set; }
         public int? SupplierId { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdateAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
         public int? WarehouseId { get; set; }
         public int MaxQuantity { get; set; }

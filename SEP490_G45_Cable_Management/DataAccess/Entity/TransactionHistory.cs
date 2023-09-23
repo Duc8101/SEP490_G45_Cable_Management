@@ -16,7 +16,7 @@ namespace DataAccess.Entity
         public string? Description { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdateAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
         public int? WareHouseId { get; set; }
         public Guid RequestId { get; set; }

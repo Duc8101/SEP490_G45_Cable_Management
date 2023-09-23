@@ -18,7 +18,7 @@ namespace DataAccess.Entity
         public float Longitude { get; set; }
         public float Latitude { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdateAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
         public string? Address { get; set; }
         public string? NodeCode { get; set; }

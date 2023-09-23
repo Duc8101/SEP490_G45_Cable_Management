@@ -11,7 +11,7 @@ namespace DataAccess.Entity
         public int EndPoint { get; set; }
         public int Length { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdateAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
         public int? RecoveryDestWarehouseId { get; set; }
         public string? Status { get; set; }

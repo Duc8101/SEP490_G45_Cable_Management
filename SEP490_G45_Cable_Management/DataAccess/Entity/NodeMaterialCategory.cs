@@ -10,7 +10,7 @@ namespace DataAccess.Entity
         public Guid NodeId { get; set; }
         public int Quantity { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdateAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
 
         public virtual Node Node { get; set; } = null!;

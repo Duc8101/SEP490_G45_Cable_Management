@@ -13,7 +13,7 @@ namespace DataAccess.Entity
         public int CableCategoryId { get; set; }
         public string CableCategoryName { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdateAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
 
         public virtual ICollection<Cable> Cables { get; set; }

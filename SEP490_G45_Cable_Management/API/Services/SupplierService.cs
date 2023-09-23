@@ -27,7 +27,7 @@ namespace API.Services
                         Country = DTO.Country == null ? null : DTO.Country.Trim(),
                         SupplierDescription = DTO.SupplierDescription == null || DTO.SupplierDescription.Trim().Length == 0 ? null : DTO.SupplierDescription.Trim(),
                         CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
+                        UpdateAt = null,
                         IsDeleted = false,
                         CreatorId = Guid.Parse(CreatorID)
                     };
@@ -90,7 +90,7 @@ namespace API.Services
             }
 
             supplier.SupplierName = DTO.SupplierName.Trim();
-            supplier.Country = DTO.Country == null ? null : DTO.Country.Trim();
+            supplier.Country = DTO.Country == null || DTO.Country.Trim().Length == 0 ? null : DTO.Country.Trim();
             supplier.SupplierDescription = DTO.SupplierDescription == null || DTO.SupplierDescription.Trim().Length == 0 ? null : DTO.SupplierDescription.Trim();
             supplier.UpdateAt = DateTime.Now;
             // update supplier

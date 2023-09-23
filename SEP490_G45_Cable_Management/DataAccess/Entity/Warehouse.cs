@@ -23,10 +23,8 @@ namespace DataAccess.Entity
         public string? WarehouseName { get; set; }
         public Guid? WarehouseKeeperId { get; set; }
         public Guid CreatorId { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime? UpdatedDate { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdateAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
         public string? WarehouseAddress { get; set; }
 
