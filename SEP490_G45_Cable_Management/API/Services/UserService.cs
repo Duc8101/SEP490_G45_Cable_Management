@@ -16,15 +16,15 @@ namespace API.Services
     {
         private readonly DAOUser daoUser = new DAOUser();
 
-        public async Task<ResponseDTO<string>> Login(LoginDTO DTO)
+        public async Task<ResponseDTO<string?>> Login(LoginDTO DTO)
         {
             User? user = await daoUser.getUser(DTO);
             // if username or password incorrect
             if (user == null) {
-                return new ResponseDTO<string>("","Username or password wrong", StatusCodes.Status401Unauthorized);
+                return new ResponseDTO<string?>(null,"Username or password wrong", StatusCodes.Status401Unauthorized);
             }
             string AccessToken = getAccessToken(user);
-            return new ResponseDTO<string>(AccessToken);
+            return new ResponseDTO<string?>(AccessToken);
         }
 
         private string getAccessToken(User user)
