@@ -21,7 +21,7 @@ namespace API.Services
             User? user = await daoUser.getUser(DTO);
             // if username or password incorrect
             if (user == null) {
-                return new ResponseDTO<string>("Username or password wrong", StatusCodes.Status401Unauthorized);
+                return new ResponseDTO<string>("","Username or password wrong", StatusCodes.Status401Unauthorized);
             }
             string AccessToken = getAccessToken(user);
             return new ResponseDTO<string>(AccessToken);
@@ -76,7 +76,7 @@ namespace API.Services
             // if user exist
             if(await daoUser.isExist(user.UserName, user.Email))
             {
-                return new ResponseDTO<bool>("Email hoặc username đã được sử dụng", StatusCodes.Status409Conflict);
+                return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", StatusCodes.Status409Conflict);
             }
             int number = await daoUser.AddUser(user);
             // if register successful
@@ -84,7 +84,7 @@ namespace API.Services
             {
                 return new ResponseDTO<bool>(true);
             }
-            return new ResponseDTO<bool>("Đăng ký không thành công", StatusCodes.Status409Conflict);
+            return new ResponseDTO<bool>(false, "Đăng ký không thành công", StatusCodes.Status409Conflict);
         }
 
     }

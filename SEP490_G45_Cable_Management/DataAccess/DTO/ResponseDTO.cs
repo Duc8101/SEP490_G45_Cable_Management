@@ -25,7 +25,7 @@ namespace DataAccess.DTO
             Data = data;
             Message = message;
             Code = code;
-            Success = true;
+            Success = false;
         }
 
         public ResponseDTO(T data)
@@ -36,11 +36,5 @@ namespace DataAccess.DTO
             Success = true;
         }
 
-        public ResponseDTO(string message, int code)
-        {
-            Message = message;
-            Code = code;
-            Success = false;
-        }
     }
 }
