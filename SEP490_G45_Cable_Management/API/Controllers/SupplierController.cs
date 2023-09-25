@@ -34,9 +34,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<PagedResultDTO<SupplierListDTO>> List(string? filter /* list supplier based on supplier name */, int pageSize = 12 /* number of row in a page */, int currentPage = 1 )
+        public async Task<PagedResultDTO<SupplierListDTO>> List(string? filter /* list supplier based on supplier name */, int page /* current page */)
         {
-            return await service.List(filter, pageSize, currentPage);
+            return await service.List(filter, page);
         }
 
         [HttpPut("{SupplierID}")]

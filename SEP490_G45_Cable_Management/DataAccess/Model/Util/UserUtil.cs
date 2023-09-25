@@ -13,7 +13,7 @@ namespace DataAccess.Model.Util
 {
     public class UserUtil
     {
-        private const int MAX_SIZE = 8;
+        private const int MAX_SIZE = 8; // randow password 8 characters
         public static string HashPassword(string password)
         {
             using (SHA256 sha256 = SHA256.Create())

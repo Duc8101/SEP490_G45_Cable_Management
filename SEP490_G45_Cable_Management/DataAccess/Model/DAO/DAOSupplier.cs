@@ -1,4 +1,5 @@
-﻿using DataAccess.Entity;
+﻿using DataAccess.Const;
+using DataAccess.Entity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -22,16 +23,16 @@ namespace DataAccess.Model.DAO
                && x.IsDeleted == false);
         }
 
-        public async Task<List<Supplier>> getList(string? filter, int pageSize, int currentPage)
+        public async Task<List<Supplier>> getList(string? filter, int page)
         {
             List<Supplier> list;
             if (filter == null || filter.Trim().Length == 0)
             {
-                list = await context.Suppliers.Where(s => s.IsDeleted == false).OrderByDescending(x => x.UpdateAt).Skip((currentPage - 1) * pageSize).Take(pageSize).ToListAsync();
+                list = await context.Suppliers.Where(s => s.IsDeleted == false).OrderByDescending(x => x.UpdateAt).Skip((page - 1) * PageSizeConst.MAX_PAGE_SIZE_SUPPLIER_LIST).Take(PageSizeConst.MAX_PAGE_SIZE_SUPPLIER_LIST).ToListAsync();
             }
             else
             {
-                list = await context.Suppliers.Where(s => s.IsDeleted == false && s.SupplierName.ToLower().Contains(filter.ToLower().Trim())).OrderByDescending(x => x.UpdateAt).Skip((currentPage - 1) * pageSize).Take(pageSize).ToListAsync();
+                list = await context.Suppliers.Where(s => s.IsDeleted == false && s.SupplierName.ToLower().Contains(filter.ToLower().Trim())).OrderByDescending(x => x.UpdateAt).Skip((page - 1) * PageSizeConst.MAX_PAGE_SIZE_SUPPLIER_LIST).Take(PageSizeConst.MAX_PAGE_SIZE_SUPPLIER_LIST).ToListAsync();
             }
             return list;
         }

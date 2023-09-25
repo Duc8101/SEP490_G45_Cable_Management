@@ -67,11 +67,11 @@ namespace API.Services
             return result;
         }
 
-        public async Task<PagedResultDTO<SupplierListDTO>> List(string? filter, int pageSize/* number of row in a page*/, int currentPage)
+        public async Task<PagedResultDTO<SupplierListDTO>> List(string? filter, int page)
         {
-            List<Supplier> list = await daoSupplier.getList(filter, pageSize, currentPage);
+            List<Supplier> list = await daoSupplier.getList(filter, page);
             List<SupplierListDTO> result = getList(list);
-            PagedResultDTO<SupplierListDTO> pageResult = new PagedResultDTO<SupplierListDTO>(currentPage, pageSize, result, 0);
+            PagedResultDTO<SupplierListDTO> pageResult = new PagedResultDTO<SupplierListDTO>(page, PageSizeConst.MAX_PAGE_SIZE_SUPPLIER_LIST, result, 0);
             return pageResult;
         }
 
