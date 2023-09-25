@@ -8,6 +8,6 @@ namespace DataAccess.Const
 {
     public class PageSizeConst
     {
-        public const int MAX_PAGE_SIZE_SUPPLIER_LIST = 12;
+        public const int MAX_SUPPLIER_LIST_IN_PAGE = 12;
     }
 }

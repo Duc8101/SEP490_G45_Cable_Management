@@ -71,7 +71,7 @@ namespace API.Services
         {
             List<Supplier> list = await daoSupplier.getList(filter, page);
             List<SupplierListDTO> result = getList(list);
-            PagedResultDTO<SupplierListDTO> pageResult = new PagedResultDTO<SupplierListDTO>(page, PageSizeConst.MAX_PAGE_SIZE_SUPPLIER_LIST, result, 0);
+            PagedResultDTO<SupplierListDTO> pageResult = new PagedResultDTO<SupplierListDTO>(page, PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE, result, 0);
             return pageResult;
         }
 
