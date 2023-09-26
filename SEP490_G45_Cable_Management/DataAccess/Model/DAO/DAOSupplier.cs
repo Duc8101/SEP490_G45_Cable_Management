@@ -28,7 +28,7 @@ namespace DataAccess.Model.DAO
             List<Supplier> list;
             if (filter == null || filter.Trim().Length == 0)
             {
-                list = await context.Suppliers.Where(s => s.IsDeleted == false).OrderByDescending(x => x.UpdateAt).Skip((page - 1) * PageSizeConst.MAX_PAGE_SIZE_SUPPLIER_LIST).Take(PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).ToListAsync();
+                list = await context.Suppliers.Where(s => s.IsDeleted == false).OrderByDescending(x => x.UpdateAt).Skip((page - 1) * PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).Take(PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).ToListAsync();
             }
             else
             {
