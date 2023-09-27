@@ -81,12 +81,12 @@ namespace API.Services
             // if supplier id not exist
             if (supplier == null)
             {
-                throw new ApplicationException(MessageConst.SUPPLIER_NOT_FOUND);
+                return new ResponseDTO<bool>(false, "Không tìm thấy nhà cung cấp", (int) HttpStatusCode.NotFound);
             }
             // if supplier already exist
-            if( await daoSupplier.isSupplierExist(SupplierID, DTO.SupplierName))
+            if(await daoSupplier.isSupplierExist(SupplierID, DTO.SupplierName))
             {
-                throw new ApplicationException("Nhà cung cấp đã tồn tại");
+                return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int) HttpStatusCode.NotAcceptable);
             }
 
             supplier.SupplierName = DTO.SupplierName.Trim();
@@ -109,7 +109,7 @@ namespace API.Services
             // if supplier not exist
             if(supplier == null)
             {
-                throw new ApplicationException(MessageConst.SUPPLIER_NOT_FOUND);
+                return new ResponseDTO<bool>(false, "Không tìm thấy nhà cung cấp", (int) HttpStatusCode.NotFound);
             }
             // delete supplier
             int number = await daoSupplier.DeleteSupplier(supplier); 

@@ -18,8 +18,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Create(SupplierCreateUpdateDTO DTO)
         { 
-            // if admin or warehouse
-            if (isAdmin() || isWarehouseKeeper())
+            // if admin
+            if (isAdmin())
             {
                 // get user id
                 string? CreatorID = getUserID();
@@ -34,17 +34,23 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<PagedResultDTO<SupplierListDTO>> List(string? filter /* list supplier based on supplier name */, int page /* current page */)
         {
-            return await service.List(filter, page);
+            // if admin or warehouse
+            if (isAdmin() || isWarehouseKeeper())
+            {
+                return await service.List(filter, page);
+            }
+            throw new UnauthorizedAccessException();
         }
 
         [HttpPut("{SupplierID}")]
         [Authorize]
         public async Task<ResponseDTO<bool>> Update(int SupplierID, SupplierCreateUpdateDTO DTO)
         {
-            // if admin or warehouse
-            if (isAdmin() || isWarehouseKeeper())
+            // if admin
+            if (isAdmin())
             {
                 return await service.Update(SupplierID, DTO);  
             }
@@ -55,8 +61,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Delete(int SupplierID)
         {
-            // if admin or warehousekeeper
-            if (isAdmin() || isWarehouseKeeper())
+            // if admin
+            if (isAdmin())
             {
                 return await service.Delete(SupplierID);
             }

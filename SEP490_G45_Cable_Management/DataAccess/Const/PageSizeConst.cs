@@ -9,5 +9,6 @@ namespace DataAccess.Const
     public class PageSizeConst
     {
         public const int MAX_SUPPLIER_LIST_IN_PAGE = 12;
+        public const int MAX_CABLE_CATEGORY_LIST_IN_PAGE = 12;
     }
 }

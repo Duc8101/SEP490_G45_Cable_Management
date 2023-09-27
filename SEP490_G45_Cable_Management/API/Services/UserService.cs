@@ -21,7 +21,7 @@ namespace API.Services
             User? user = await daoUser.getUser(DTO);
             // if username or password incorrect
             if (user == null) {
-                return new ResponseDTO<string>("","Username or password wrong", StatusCodes.Status401Unauthorized);
+                return new ResponseDTO<string>("","Username or password wrong", (int) HttpStatusCode.NotAcceptable);
             }
             string AccessToken = getAccessToken(user);
             return new ResponseDTO<string>(AccessToken);
@@ -34,11 +34,12 @@ namespace API.Services
             IConfigurationRoot config = builder.SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true).Build();
             IConfigurationSection JWT = config.GetSection("Jwt");
-            // ---------------- generate token ----------------
+            // get credential
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
-            byte[] tokenKey = Encoding.UTF8.GetBytes(JWT["key"]);
-            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(tokenKey);
+            byte[] key = Encoding.UTF8.GetBytes(JWT["key"]);
+            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
             SigningCredentials credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            // get all role
             Dictionary<int, string> dic = RoleConst.getList();
             //  create list claim  to store user's information
             List<Claim> list = new List<Claim>()
@@ -51,6 +52,7 @@ namespace API.Services
                 new Claim("LastName",user.LastName),
                 new Claim(ClaimTypes.Role, dic[user.RoleId])
             };
+            // get access token
             JwtSecurityToken token = new JwtSecurityToken(JWT["Issuer"],
                 JWT["Audience"], list, expires: DateTime.Now.AddDays(14),
                 signingCredentials: credentials);
@@ -76,7 +78,7 @@ namespace API.Services
             // if user exist
             if(await daoUser.isExist(user.UserName, user.Email))
             {
-                return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", StatusCodes.Status409Conflict);
+                return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.Conflict);
             }
             int number = await daoUser.AddUser(user);
             // if register successful
@@ -84,7 +86,7 @@ namespace API.Services
             {
                 return new ResponseDTO<bool>(true);
             }
-            return new ResponseDTO<bool>(false, "Đăng ký không thành công", StatusCodes.Status409Conflict);
+            return new ResponseDTO<bool>(false, "Đăng ký không thành công", (int) HttpStatusCode.Conflict);
         }
 
     }
