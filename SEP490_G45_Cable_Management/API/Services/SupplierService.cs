@@ -40,7 +40,7 @@ namespace API.Services
                     }
                     return new ResponseDTO<bool>(false,"Tạo thất bại", (int) HttpStatusCode.Conflict);
                 }
-                throw new ApplicationException("Nhà cung cấp này đã tồn tại");
+                return new ResponseDTO<bool>(false, "Nhà cung cấp này đã tồn tại", (int) HttpStatusCode.NotAcceptable);
             }
             catch (Exception ex)
             {
@@ -59,6 +59,7 @@ namespace API.Services
                     SupplierName = supplier.SupplierName,
                     Country = supplier.Country,
                     SupplierDescription = supplier.SupplierDescription,
+                    CreatorId = supplier.CreatorId,
                     CreatedAt = supplier.CreatedAt,
                     UpdateAt = supplier.UpdateAt
                 };
@@ -66,7 +67,6 @@ namespace API.Services
             }
             return result;
         }
-
         public async Task<PagedResultDTO<SupplierListDTO>> List(string? filter, int page)
         {
             List<Supplier> list = await daoSupplier.getList(filter, page);

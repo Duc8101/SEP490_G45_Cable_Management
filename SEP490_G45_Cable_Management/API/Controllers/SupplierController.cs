@@ -1,6 +1,7 @@
 ﻿using API.Services;
 using DataAccess.DTO;
 using DataAccess.DTO.SupplierDTO;
+using DataAccess.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
