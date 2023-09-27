@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+
 namespace DataAccess.Model.Util
 {
     public class UserUtil
@@ -16,29 +17,28 @@ namespace DataAccess.Model.Util
         private const int MAX_SIZE = 8; // randow password 8 characters
         public static string HashPassword(string password)
         {
-            using (SHA256 sha256 = SHA256.Create())
+            // using SHA256 for hash password
+            byte[] hashPw = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(password));
+            string result = "";
+            for(int i = 0; i < hashPw.Length; i++)
             {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    builder.Append(bytes[i].ToString("x2"));
-                }
-                return builder.ToString();
+                // convert into hexadecimal
+                result = result + hashPw[i].ToString("x2");
             }
+            return result;
         }
 
         public static string RandomPassword()
         {
             Random random = new Random();
-            // string that contain both alphabets and numbers
-            string str = "abcdefghijklmnopqrstuvwxyz0123456789QWERTYUIOPASDFGHJKLZXCVBNM";
+            // password contain both alphabets and numbers
+            string format = "abcdefghijklmnopqrstuvwxyz0123456789QWERTYUIOPASDFGHJKLZXCVBNM";
             string result = "";
             for (int i = 0; i < MAX_SIZE; i++)
             {
                 // get random index character
-                int index = random.Next(str.Length);
-                result = result + str[index];
+                int index = random.Next(format.Length);
+                result = result + format[index];
             }
             return result;
         }
@@ -52,20 +52,25 @@ namespace DataAccess.Model.Util
 
         public static Task sendEmail(string subject, string body, string to)
         {
+            // get information of mail address
             ConfigurationBuilder builder = new ConfigurationBuilder();
             IConfigurationRoot config = builder.SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", true, true).Build();
+                .AddJsonFile("appsettings.json",true,true).Build();
             IConfigurationSection mail = config.GetSection("MailAddress");
+            // create message to send
             MimeMessage mime = new MimeMessage();
-            mime.From.Add(MailboxAddress.Parse(mail["Username"]));
-            mime.To.Add(MailboxAddress.Parse(to));
+            MailboxAddress mailFrom = MailboxAddress.Parse(mail["Username"]);
+            MailboxAddress mailTo = MailboxAddress.Parse(to);
+            mime.From.Add(mailFrom);
+            mime.To.Add(mailTo);
             mime.Subject = subject;
             mime.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = body };
-            using var stmp = new SmtpClient();
-            stmp.Connect(mail["Host"], 587, MailKit.Security.SecureSocketOptions.StartTls);
-            stmp.Authenticate(mail["Username"], mail["Password"]);
-            stmp.Send(mime);
-            stmp.Disconnect(true);
+            // send message
+            SmtpClient smtp = new SmtpClient();
+            smtp.Connect(mail["Host"]);
+            smtp.Authenticate(mail["Username"], mail["Password"]);
+            smtp.Send(mime);
+            smtp.Disconnect(true);
             return Task.CompletedTask;
         }
     }

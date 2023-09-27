@@ -9,7 +9,7 @@ namespace DataAccess.DTO
     public class PagedResultDTO<T> where T : class
     {
         public int CurrentPage { get; set; }
-        // number of row in a page
+        // max row in a page
         public int PageSize { get; set; }
         // number of all rows
         public int RowCount { get; set; }
