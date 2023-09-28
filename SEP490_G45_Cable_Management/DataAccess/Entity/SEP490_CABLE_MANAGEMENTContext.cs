@@ -63,8 +63,6 @@ namespace DataAccess.Entity
 
                 entity.Property(e => e.CableCategoryId).HasColumnName("CableCategoryID");
 
-                entity.Property(e => e.CableParentId).HasColumnName("CableParentID");
-
                 entity.Property(e => e.Code).HasMaxLength(50);
 
                 entity.Property(e => e.CreatorId).HasColumnName("CreatorID");
@@ -96,11 +94,13 @@ namespace DataAccess.Entity
                 entity.HasOne(d => d.Supplier)
                     .WithMany(p => p.Cables)
                     .HasForeignKey(d => d.SupplierId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Cable__SupplierI__6477ECF3");
 
                 entity.HasOne(d => d.Warehouse)
                     .WithMany(p => p.Cables)
                     .HasForeignKey(d => d.WarehouseId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Cable__Warehouse__6383C8BA");
             });
 
@@ -152,9 +152,9 @@ namespace DataAccess.Entity
             {
                 entity.ToTable("Node");
 
-                entity.Property(e => e.Id)
+                entity.Property(e => e.NodeId)
                     .ValueGeneratedNever()
-                    .HasColumnName("ID");
+                    .HasColumnName("NodeID");
 
                 entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
 
@@ -163,6 +163,7 @@ namespace DataAccess.Entity
                 entity.HasOne(d => d.Route)
                     .WithMany(p => p.Nodes)
                     .HasForeignKey(d => d.RouteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Node__RouteID__5FB337D6");
             });
 
@@ -250,7 +251,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<OtherMaterial>(entity =>
             {
                 entity.HasKey(e => e.OtherMaterialsId)
-                    .HasName("PK__OtherMat__14E82B14F0790151");
+                    .HasName("PK__OtherMat__14E82B14EC0B3293");
 
                 entity.Property(e => e.OtherMaterialsId).HasColumnName("OtherMaterialsID");
 
@@ -277,11 +278,13 @@ namespace DataAccess.Entity
                 entity.HasOne(d => d.Supplier)
                     .WithMany(p => p.OtherMaterials)
                     .HasForeignKey(d => d.SupplierId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__OtherMate__Suppl__6B24EA82");
 
                 entity.HasOne(d => d.Warehouse)
                     .WithMany(p => p.OtherMaterials)
                     .HasForeignKey(d => d.WarehouseId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__OtherMate__Wareh__6C190EBB");
             });
 
@@ -341,6 +344,7 @@ namespace DataAccess.Entity
                 entity.HasOne(d => d.Issue)
                     .WithMany(p => p.Requests)
                     .HasForeignKey(d => d.IssueId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Request__IssueID__71D1E811");
 
                 entity.HasOne(d => d.RequestCategory)
@@ -353,7 +357,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<RequestCable>(entity =>
             {
                 entity.HasKey(e => new { e.RequestId, e.CableId, e.StartPoint, e.EndPoint })
-                    .HasName("PK__RequestC__8A3E7AD0D8A3B7A9");
+                    .HasName("PK__RequestC__8A3E7AD00A4D9B91");
 
                 entity.ToTable("RequestCable");
 
@@ -404,7 +408,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<RequestOtherMaterial>(entity =>
             {
                 entity.HasKey(e => new { e.RequestId, e.OtherMaterialsId, e.Quantity })
-                    .HasName("PK__RequestO__D03A972AB5B944E4");
+                    .HasName("PK__RequestO__D03A972A29721FC3");
 
                 entity.Property(e => e.RequestId).HasColumnName("RequestID");
 
@@ -484,13 +488,14 @@ namespace DataAccess.Entity
                 entity.HasOne(d => d.Creator)
                     .WithMany(p => p.Suppliers)
                     .HasForeignKey(d => d.CreatorId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Supplier__Creato__60A75C0F");
             });
 
             modelBuilder.Entity<TransactionCable>(entity =>
             {
                 entity.HasKey(e => new { e.TransactionId, e.CableId })
-                    .HasName("PK__Transact__FC2F10D4FEA5CEBF");
+                    .HasName("PK__Transact__FC2F10D44F914028");
 
                 entity.ToTable("TransactionCable");
 
@@ -518,15 +523,13 @@ namespace DataAccess.Entity
             modelBuilder.Entity<TransactionHistory>(entity =>
             {
                 entity.HasKey(e => e.TransactionId)
-                    .HasName("PK__Transact__55433A4B4113C039");
+                    .HasName("PK__Transact__55433A4B42E070AF");
 
                 entity.ToTable("TransactionHistory");
 
                 entity.Property(e => e.TransactionId)
                     .ValueGeneratedNever()
                     .HasColumnName("TransactionID");
-
-                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Description).HasMaxLength(255);
 
@@ -574,7 +577,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<TransactionOtherMaterial>(entity =>
             {
                 entity.HasKey(e => new { e.TransactionId, e.OtherMaterialsId })
-                    .HasName("PK__Transact__040DB8FA987230D7");
+                    .HasName("PK__Transact__040DB8FA4376F547");
 
                 entity.Property(e => e.TransactionId).HasColumnName("TransactionID");
 

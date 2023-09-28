@@ -14,7 +14,6 @@ namespace DataAccess.Entity
         public Guid TransactionId { get; set; }
         public string? TransactionCategoryName { get; set; }
         public string? Description { get; set; }
-        public DateTime? CreatedDate { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }

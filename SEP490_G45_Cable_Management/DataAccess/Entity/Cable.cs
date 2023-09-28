@@ -13,16 +13,15 @@ namespace DataAccess.Entity
         }
 
         public Guid CableId { get; set; }
-        public int? WarehouseId { get; set; }
-        public int? SupplierId { get; set; }
+        public int WarehouseId { get; set; }
+        public int SupplierId { get; set; }
         public int StartPoint { get; set; }
         public int EndPoint { get; set; }
         public int Length { get; set; }
         public int? YearOfManufacture { get; set; }
-        public string? Code { get; set; }
+        public string Code { get; set; } = null!;
         public string? Status { get; set; }
         public Guid CreatorId { get; set; }
-        public Guid? CableParentId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
@@ -33,8 +32,8 @@ namespace DataAccess.Entity
 
         public virtual CableCategory CableCategory { get; set; } = null!;
         public virtual User Creator { get; set; } = null!;
-        public virtual Supplier? Supplier { get; set; }
-        public virtual Warehouse? Warehouse { get; set; }
+        public virtual Supplier Supplier { get; set; } = null!;
+        public virtual Warehouse Warehouse { get; set; } = null!;
         public virtual ICollection<NodeCable> NodeCables { get; set; }
         public virtual ICollection<RequestCable> RequestCables { get; set; }
         public virtual ICollection<TransactionCable> TransactionCables { get; set; }

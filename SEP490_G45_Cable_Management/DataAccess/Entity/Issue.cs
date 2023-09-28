@@ -12,8 +12,8 @@ namespace DataAccess.Entity
         }
 
         public Guid IssueId { get; set; }
-        public string? IssueName { get; set; }
-        public string? IssueCode { get; set; }
+        public string IssueName { get; set; } = null!;
+        public string IssueCode { get; set; } = null!;
         public string? Description { get; set; }
         public Guid CreatorId { get; set; }
         public DateTime CreatedAt { get; set; }

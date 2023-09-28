@@ -13,12 +13,12 @@ namespace DataAccess.Entity
         }
 
         public Guid RequestId { get; set; }
-        public string? RequestName { get; set; }
+        public string RequestName { get; set; } = null!;
         public string? Content { get; set; }
         public Guid CreatorId { get; set; }
         public Guid? ApproverId { get; set; }
-        public Guid? IssueId { get; set; }
-        public string? Status { get; set; }
+        public Guid IssueId { get; set; }
+        public string Status { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
@@ -28,7 +28,7 @@ namespace DataAccess.Entity
         public virtual User? Approver { get; set; }
         public virtual User Creator { get; set; } = null!;
         public virtual Warehouse? DeliverWarehouse { get; set; }
-        public virtual Issue? Issue { get; set; }
+        public virtual Issue Issue { get; set; } = null!;
         public virtual RequestCategory RequestCategory { get; set; } = null!;
         public virtual ICollection<RequestCable> RequestCables { get; set; }
         public virtual ICollection<RequestOtherMaterial> RequestOtherMaterials { get; set; }
