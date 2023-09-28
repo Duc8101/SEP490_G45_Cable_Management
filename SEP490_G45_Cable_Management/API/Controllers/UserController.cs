@@ -9,6 +9,7 @@ using MailKit.Net.Smtp;
 using System.Security.Claims;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 using DataAccess.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -34,6 +35,24 @@ namespace API.Controllers
         public async Task<ResponseDTO<bool>> ForgotPassword(ForgotPasswordDTO DTO)
         {
             return await service.ForgotPassword(DTO);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ResponseDTO<bool>> ChangePassword(ChangePasswordDTO DTO)
+        {
+            // if not login 
+            if (isGuest())
+            {
+                throw new UnauthorizedAccessException();
+            }
+            string? email = getEmail();
+            // if not found email
+            if(email == null)
+            {
+                throw new ApplicationException();
+            }
+            return await service.ChangePassword(DTO, email);
         }
 
         

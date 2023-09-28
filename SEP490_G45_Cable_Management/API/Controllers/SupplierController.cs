@@ -27,7 +27,7 @@ namespace API.Controllers
                 // if not found user id
                 if (CreatorID == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn", (int) HttpStatusCode.NotFound);
+                    throw new ApplicationException();
                 }
                 return await service.Create(DTO, CreatorID);             
             }

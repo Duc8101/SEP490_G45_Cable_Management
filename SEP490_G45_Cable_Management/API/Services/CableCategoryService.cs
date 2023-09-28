@@ -76,7 +76,7 @@ namespace API.Services
             if(number > 0) {  
                 return new ResponseDTO<bool>(true); 
             }
-            return new ResponseDTO<bool>(false, "Chỉnh sửa thất bại", (int)HttpStatusCode.Conflict);
+            return new ResponseDTO<bool>(false, "Chỉnh sửa thất bại", (int) HttpStatusCode.Conflict);
         }
     }
 }

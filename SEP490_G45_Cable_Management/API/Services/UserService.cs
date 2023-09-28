@@ -139,5 +139,32 @@ namespace API.Services
             }
         }
 
+        public async Task<ResponseDTO<bool>> ChangePassword(ChangePasswordDTO DTO, string email)
+        {
+            User? user = await daoUser.getUser(email);
+            // if email not exist
+            if (user == null)
+            {
+                return new ResponseDTO<bool>(false, "Không tìm thấy thông tin", (int) HttpStatusCode.NotFound);
+            }
+            // if current password not correct
+            if (!user.Password.Equals(UserUtil.HashPassword(DTO.CurrentPassword)))
+            {
+                return new ResponseDTO<bool>(false, "Mật khẩu hiện tại không chính xác", (int) HttpStatusCode.NotAcceptable);
+            }
+            // if confirm password not the same as new password
+            if (!DTO.ConfirmPassword.Equals(DTO.NewPassword))
+            {
+                return new ResponseDTO<bool>(false, "Mật khẩu xác nhận không trùng khớp với mật khẩu mới", (int) HttpStatusCode.NotAcceptable);
+            }
+            user.Password = UserUtil.HashPassword(DTO.NewPassword);
+            int number = await daoUser.UpdateUser(user); 
+            // if change successful
+            if (number > 0) { 
+                return new ResponseDTO<bool>(true); 
+            }
+            return new ResponseDTO<bool>(false, "Đổi mật khẩu thất bại", (int) HttpStatusCode.Conflict);
+        }
+
     }
 }

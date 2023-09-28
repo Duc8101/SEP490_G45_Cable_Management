@@ -46,5 +46,17 @@ namespace API.Controllers
             Claim? claim = getClaim("UserID");
             return claim == null ? null : claim.Value;
         }
+
+        protected bool isGuest()
+        {
+            string? role = getRole();
+            return role == null;
+        }
+
+        protected string? getEmail()
+        {
+            Claim? claim = getClaim(ClaimTypes.Email);
+            return claim == null ? null : claim.Value;
+        }
     }
 }
