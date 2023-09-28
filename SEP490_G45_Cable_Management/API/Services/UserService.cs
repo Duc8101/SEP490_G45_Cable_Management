@@ -59,34 +59,84 @@ namespace API.Services
             return handler.WriteToken(token);
         }
 
-        public async Task<ResponseDTO<bool>> Register(RegisterDTO DTO, string password)
+        public async Task<ResponseDTO<bool>> Register(RegisterDTO DTO)
         {
-            User user = new User()
+            try
             {
-                UserId = Guid.NewGuid(),
-                UserName = DTO.UserName,
-                LastName = DTO.LastName.Trim(),
-                FirstName = DTO.FirstName.Trim(),
-                Email = DTO.Email,
-                Password = password,
-                Phone = DTO.Phone,
-                RoleId = RoleConst.INT_ROLE_STAFF,
-                CreatedAt = DateTime.Now,
-                UpdateAt = null,
-                IsDeleted = false
-            };
-            // if user exist
-            if(await daoUser.isExist(user.UserName, user.Email))
-            {
-                return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.Conflict);
+                string newPw = UserUtil.RandomPassword();
+                string hashPw = UserUtil.HashPassword(newPw);
+                // get body email
+                string body = UserUtil.BodyEmailForRegister(newPw);
+                // send email
+                await UserUtil.sendEmail("Welcome to Cable Management System", body, DTO.Email);
+                // register
+                User user = new User()
+                {
+                    UserId = Guid.NewGuid(),
+                    UserName = DTO.UserName,
+                    LastName = DTO.LastName.Trim(),
+                    FirstName = DTO.FirstName.Trim(),
+                    Email = DTO.Email,
+                    Password = hashPw,
+                    Phone = DTO.Phone,
+                    RoleId = RoleConst.INT_ROLE_STAFF,
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = null,
+                    IsDeleted = false
+                };
+                // if user exist
+                if (await daoUser.isExist(user.UserName, user.Email))
+                {
+                    return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.NotAcceptable);
+                }
+                int number = await daoUser.CreateUser(user);
+                // if register successful
+                if (number > 0)
+                {
+                    return new ResponseDTO<bool>(true);
+                }
+                return new ResponseDTO<bool>(false, "Đăng ký không thành công", (int) HttpStatusCode.Conflict);
             }
-            int number = await daoUser.AddUser(user);
-            // if register successful
-            if(number > 0)
+            catch (Exception ex)
             {
-                return new ResponseDTO<bool>(true);
+                // if send email failed, throw message
+                throw new Exception(ex.Message);
             }
-            return new ResponseDTO<bool>(false, "Đăng ký không thành công", (int) HttpStatusCode.Conflict);
+        }
+
+        public async Task<ResponseDTO<bool>> ForgotPassword(ForgotPasswordDTO DTO)
+        {
+            User? user = await daoUser.getUser(DTO.Email);
+            // if email not exist
+            if (user == null)
+            {
+                return new ResponseDTO<bool>(false, "Email này chưa được đăng ký trong cơ sở dữ liệu", (int) HttpStatusCode.NotFound);
+            }
+
+            try
+            {
+                // get new password
+                string newPw = UserUtil.RandomPassword();
+                string hashPw = UserUtil.HashPassword(newPw);
+                // get body email
+                string body = UserUtil.BodyEmailForForgetPassword(newPw);
+                // send email
+                await UserUtil.sendEmail("Welcome to Cable Management System", body, DTO.Email);
+                // update user
+                user.Password = hashPw;
+                int number = await daoUser.UpdateUser(user);
+                // if update successful
+                if (number > 0)
+                {
+                    return new ResponseDTO<bool>(true);
+                }
+                return new ResponseDTO<bool>(false, "Không update được mật khẩu mới", (int) HttpStatusCode.Conflict);
+            }
+            catch (Exception ex)
+            {
+                // if send email failed, throw message
+                throw new Exception(ex.Message);
+            }
         }
 
     }

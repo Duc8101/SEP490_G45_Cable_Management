@@ -73,5 +73,13 @@ namespace DataAccess.Model.Util
             smtp.Disconnect(true);
             return Task.CompletedTask;
         }
+
+        public static string BodyEmailForForgetPassword(string password)
+        {
+            string body = "<h1>Mật khẩu mới</h1>\n" +
+                            "<p>Mật khẩu mới là: " + password + "</p>\n" +
+                            "<p>Không nên chia sẻ mật khẩu của bạn với người khác.</p>";
+            return body;
+        }
     }
 }
