@@ -10,8 +10,9 @@ namespace API.Services
     public class CableCategoryService
     {
         private readonly DAOCableCategory daoCableCategory = new DAOCableCategory();
-        private List<CableCategoryListDTO> getList(List<CableCategory> list)
+        private async Task<List<CableCategoryListDTO>> getList(string? name, int page)
         {
+            List<CableCategory> list = await daoCableCategory.getList(name, page);
             List<CableCategoryListDTO> result = new List<CableCategoryListDTO>();
             foreach(CableCategory cable in list)
             {
@@ -28,9 +29,8 @@ namespace API.Services
         }
         public async Task<PagedResultDTO<CableCategoryListDTO>> List(string? name, int page)
         {
-            List<CableCategory> list = await daoCableCategory.getList(name, page);
-            List<CableCategoryListDTO> result = getList(list);
-            PagedResultDTO<CableCategoryListDTO> pageResult = new PagedResultDTO<CableCategoryListDTO>(page, PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE, result);
+            List<CableCategoryListDTO> list = await getList(name, page);
+            PagedResultDTO<CableCategoryListDTO> pageResult = new PagedResultDTO<CableCategoryListDTO>(page, PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE, list);
             return pageResult;
         }
 

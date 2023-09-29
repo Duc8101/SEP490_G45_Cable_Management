@@ -23,10 +23,10 @@ namespace DataAccess.Model.DAO
                && x.IsDeleted == false);
         }
 
-        public async Task<List<Supplier>> getList(string? filter, int page)
+        public async Task<List<Supplier>> getList(string? name, int page)
         {
             List<Supplier> list;
-            if (filter == null || filter.Trim().Length == 0)
+            if (name == null || name.Trim().Length == 0)
             {
                 list = await context.Suppliers.Where(s => s.IsDeleted == false).OrderByDescending(x => x.UpdateAt).Skip((page - 1) * PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).Take(PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).ToListAsync();
             }

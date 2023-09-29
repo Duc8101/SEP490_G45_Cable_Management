@@ -3,6 +3,7 @@ using DataAccess.DTO;
 using DataAccess.DTO.SupplierDTO;
 using DataAccess.Entity;
 using DataAccess.Model.DAO;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;
 using System.Net;
@@ -48,8 +49,9 @@ namespace API.Services
             }
         }
 
-        private List<SupplierListDTO> getList(List<Supplier> list)
+        private async Task<List<SupplierListDTO>> getList(string? name, int page)
         {
+            List<Supplier> list = await daoSupplier.getList(name, page);
             List<SupplierListDTO> result = new List<SupplierListDTO>();
             foreach (Supplier supplier in list)
             {
@@ -67,11 +69,10 @@ namespace API.Services
             }
             return result;
         }
-        public async Task<PagedResultDTO<SupplierListDTO>> List(string? filter, int page)
-        {
-            List<Supplier> list = await daoSupplier.getList(filter, page);
-            List<SupplierListDTO> result = getList(list);
-            PagedResultDTO<SupplierListDTO> pageResult = new PagedResultDTO<SupplierListDTO>(page, PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE, result, 0);
+        public async Task<PagedResultDTO<SupplierListDTO>> List(string? name, int page)
+        { 
+            List<SupplierListDTO> list = await getList(name,page);
+            PagedResultDTO<SupplierListDTO> pageResult = new PagedResultDTO<SupplierListDTO>(page, PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE, list);
             return pageResult;
         }
 

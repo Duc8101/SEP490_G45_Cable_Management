@@ -36,12 +36,12 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<PagedResultDTO<SupplierListDTO>> List(string? filter /* list supplier based on supplier name */, int page /* current page */)
+        public async Task<PagedResultDTO<SupplierListDTO>> List(string? name, int page /* current page */)
         {
             // if admin or warehouse
             if (isAdmin() || isWarehouseKeeper())
             {
-                return await service.List(filter, page);
+                return await service.List(name, page);
             }
             throw new UnauthorizedAccessException();
         }
