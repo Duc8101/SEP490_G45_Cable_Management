@@ -26,9 +26,9 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ResponseDTO<bool>> Register(RegisterDTO DTO)
+        public async Task<ResponseDTO<bool>> Create(RegisterDTO DTO)
         {
-            return await service.Register(DTO);
+            return await service.Create(DTO);
         }
 
         [HttpPost]

@@ -23,5 +23,29 @@ namespace API.Controllers
             }
             throw new UnauthorizedAccessException();
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ResponseDTO<bool>> Create(OtherMaterialsCategoryCreateUpdateDTO DTO)
+        {
+            // if admin
+            if (isAdmin())
+            {
+                return await service.Create(DTO);
+            }
+            throw new UnauthorizedAccessException();
+        }
+
+        [HttpPut("{OtherMaterialsCategoryID}")]
+        [Authorize]
+        public async Task<ResponseDTO<bool>> Update(int OtherMaterialsCategoryID,OtherMaterialsCategoryCreateUpdateDTO DTO)
+        {
+            // if admin
+            if (isAdmin())
+            {
+                return await service.Update(OtherMaterialsCategoryID, DTO);
+            }
+            throw new UnauthorizedAccessException();
+        }
     }
 }

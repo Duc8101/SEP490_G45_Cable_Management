@@ -17,10 +17,9 @@ namespace DataAccess.Model.DAO
             return await context.SaveChangesAsync();
         }
 
-        public async Task<Supplier?> getSupplier(string name)
+        public async Task<bool> isExist(string SupplierName)
         {
-            return await context.Suppliers.FirstOrDefaultAsync(x => x.SupplierName.ToLower().Trim() == name.ToLower().Trim()
-               && x.IsDeleted == false);
+            return await context.Suppliers.AnyAsync(s => s.SupplierName == SupplierName.Trim());
         }
 
         public async Task<List<Supplier>> getList(string? name, int page)
@@ -32,7 +31,7 @@ namespace DataAccess.Model.DAO
             }
             else
             {
-                list = await context.Suppliers.Where(s => s.IsDeleted == false && s.SupplierName.ToLower().Contains(filter.ToLower().Trim())).OrderByDescending(x => x.UpdateAt).Skip((page - 1) * PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).Take(PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).ToListAsync();
+                list = await context.Suppliers.Where(s => s.IsDeleted == false && s.SupplierName.ToLower().Contains(name.ToLower().Trim())).OrderByDescending(x => x.UpdateAt).Skip((page - 1) * PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).Take(PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).ToListAsync();
             }
             return list;
         }
@@ -42,9 +41,9 @@ namespace DataAccess.Model.DAO
             return await context.Suppliers.SingleOrDefaultAsync(s => s.SupplierId == SupplierID);
         }
 
-        public async Task<bool> isSupplierExist(int SupplierID, string SupplierName)
+        public async Task<bool> isExist(int SupplierID, string SupplierName)
         {
-            return await context.Suppliers.AnyAsync(s => s.SupplierName.ToLower() == SupplierName.ToLower().Trim() && s.SupplierId != SupplierID);
+            return await context.Suppliers.AnyAsync(s => s.SupplierName == SupplierName.Trim() && s.SupplierId != SupplierID);
         }
 
         public async Task<int> UpdateSupplier(Supplier supplier)

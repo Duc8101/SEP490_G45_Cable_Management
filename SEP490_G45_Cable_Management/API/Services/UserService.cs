@@ -59,7 +59,7 @@ namespace API.Services
             return handler.WriteToken(token);
         }
 
-        public async Task<ResponseDTO<bool>> Register(RegisterDTO DTO)
+        public async Task<ResponseDTO<bool>> Create(RegisterDTO DTO)
         {
             try
             {

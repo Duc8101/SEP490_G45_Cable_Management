@@ -15,7 +15,7 @@ namespace DataAccess.Model.DAO
         public async Task<User?> getUser(LoginDTO DTO)
         {
             User? user = await context.Users.SingleOrDefaultAsync(u => u.UserName == DTO.UserName && u.IsDeleted == false);
-            // if username or password incorrect
+            // if username or password invalid
             if (user == null || string.Compare(user.Password, UserUtil.HashPassword(DTO.Password), false) != 0)
             {
                 return null;
@@ -31,7 +31,7 @@ namespace DataAccess.Model.DAO
 
         public async Task<bool> isExist(string username, string email)
         {
-            return await context.Users.AnyAsync(u => (u.UserName == username || u.Email == email) && u.IsDeleted == false);
+            return await context.Users.AnyAsync(u => u.UserName == username || u.Email == email);
         }
 
         public async Task<int> UpdateUser(User user)

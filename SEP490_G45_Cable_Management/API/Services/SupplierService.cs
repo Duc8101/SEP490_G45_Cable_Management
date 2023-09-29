@@ -16,37 +16,29 @@ namespace API.Services
         private readonly DAOSupplier daoSupplier = new DAOSupplier();
         public async Task<ResponseDTO<bool>> Create(SupplierCreateUpdateDTO DTO, string CreatorID)
         {
-            try
+            // if supplier already exist
+            if (await daoSupplier.isExist(DTO.SupplierName.Trim()))
             {
-                Supplier? supplier = await daoSupplier.getSupplier(DTO.SupplierName);
-                // if supplier not exist
-                if (supplier == null)
-                {
-                    supplier = new Supplier()
-                    {
-                        SupplierName = DTO.SupplierName.Trim(),
-                        Country = DTO.Country == null ? null : DTO.Country.Trim(),
-                        SupplierDescription = DTO.SupplierDescription == null || DTO.SupplierDescription.Trim().Length == 0 ? null : DTO.SupplierDescription.Trim(),
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = null,
-                        IsDeleted = false,
-                        CreatorId = Guid.Parse(CreatorID)
-                    };
-                    // create supplier
-                    int number = await daoSupplier.CreateSupplier(supplier);
-                    // if create successful
-                    if(number > 0)
-                    {
-                        return new ResponseDTO<bool>(true);
-                    }
-                    return new ResponseDTO<bool>(false,"Tạo thất bại", (int) HttpStatusCode.Conflict);
-                }
-                return new ResponseDTO<bool>(false, "Nhà cung cấp này đã tồn tại", (int) HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int) HttpStatusCode.NotAcceptable);
             }
-            catch (Exception ex)
+            Supplier supplier = new Supplier()
             {
-                throw new Exception(ex.Message);
+                SupplierName = DTO.SupplierName.Trim(),
+                Country = DTO.Country == null ? null : DTO.Country.Trim(),
+                SupplierDescription = DTO.SupplierDescription == null || DTO.SupplierDescription.Trim().Length == 0 ? null : DTO.SupplierDescription.Trim(),
+                CreatedAt = DateTime.Now,
+                UpdateAt = null,
+                IsDeleted = false,
+                CreatorId = Guid.Parse(CreatorID)
+            };
+            // create supplier
+            int number = await daoSupplier.CreateSupplier(supplier);
+            // if create successful
+            if(number > 0)
+            {
+                return new ResponseDTO<bool>(true);
             }
+            return new ResponseDTO<bool>(false,"Thêm thất bại", (int) HttpStatusCode.Conflict);
         }
 
         private async Task<List<SupplierListDTO>> getList(string? name, int page)
@@ -85,11 +77,10 @@ namespace API.Services
                 return new ResponseDTO<bool>(false, "Không tìm thấy nhà cung cấp", (int) HttpStatusCode.NotFound);
             }
             // if supplier already exist
-            if(await daoSupplier.isSupplierExist(SupplierID, DTO.SupplierName))
+            if (await daoSupplier.isExist(SupplierID, DTO.SupplierName))
             {
-                return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int) HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int)HttpStatusCode.NotAcceptable);
             }
-
             supplier.SupplierName = DTO.SupplierName.Trim();
             supplier.Country = DTO.Country == null || DTO.Country.Trim().Length == 0 ? null : DTO.Country.Trim();
             supplier.SupplierDescription = DTO.SupplierDescription == null || DTO.SupplierDescription.Trim().Length == 0 ? null : DTO.SupplierDescription.Trim();
