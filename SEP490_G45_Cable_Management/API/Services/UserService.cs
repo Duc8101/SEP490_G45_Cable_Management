@@ -35,7 +35,6 @@ namespace API.Services
                 .AddJsonFile("appsettings.json", true, true).Build();
             IConfigurationSection JWT = config.GetSection("Jwt");
             // get credential
-            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
             byte[] key = Encoding.UTF8.GetBytes(JWT["key"]);
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
             SigningCredentials credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -52,10 +51,11 @@ namespace API.Services
                 new Claim("LastName",user.LastName),
                 new Claim(ClaimTypes.Role, dic[user.RoleId])
             };
-            // get access token
             JwtSecurityToken token = new JwtSecurityToken(JWT["Issuer"],
                 JWT["Audience"], list, expires: DateTime.Now.AddDays(14),
                 signingCredentials: credentials);
+            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+            // get access token
             return handler.WriteToken(token);
         }
 
