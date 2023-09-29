@@ -36,6 +36,20 @@ namespace DataAccess.Model.DAO
             return list;
         }
 
+        public async Task<int> getRowCount(string? name)
+        {
+            List<Supplier> list;
+            if (name == null || name.Trim().Length == 0)
+            {
+                list = await context.Suppliers.Where(s => s.IsDeleted == false).OrderByDescending(x => x.UpdateAt).ToListAsync();
+            }
+            else
+            {
+                list = await context.Suppliers.Where(s => s.IsDeleted == false && s.SupplierName.ToLower().Contains(name.ToLower().Trim())).OrderByDescending(x => x.UpdateAt).ToListAsync();
+            }
+            return list.Count;
+        }
+
         public async Task<Supplier?> getSupplier(int SupplierID)
         {
             return await context.Suppliers.SingleOrDefaultAsync(s => s.SupplierId == SupplierID);

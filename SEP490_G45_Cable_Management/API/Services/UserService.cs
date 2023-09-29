@@ -15,6 +15,7 @@ namespace API.Services
     public class UserService
     {
         private readonly DAOUser daoUser = new DAOUser();
+        private readonly DAORole daoRole = new DAORole();
 
         public async Task<ResponseDTO<string>> Login(LoginDTO DTO)
         {
@@ -59,7 +60,7 @@ namespace API.Services
             return handler.WriteToken(token);
         }
 
-        public async Task<ResponseDTO<bool>> Create(RegisterDTO DTO)
+        public async Task<ResponseDTO<bool>> Create(UserCreateDTO DTO)
         {
             try
             {
@@ -164,6 +165,41 @@ namespace API.Services
                 return new ResponseDTO<bool>(true); 
             }
             return new ResponseDTO<bool>(false, "Đổi mật khẩu thất bại", (int) HttpStatusCode.Conflict);
+        }
+
+        private async Task<List<UserListDTO>> getList(string? filter, int page)
+        {
+            List<User> list = await daoUser.getList(filter, page);
+            List<UserListDTO> result = new List<UserListDTO>();
+            foreach (User user in list)
+            {
+                // get role
+                Role? role = await daoRole.getRole(user.RoleId);
+                if (role != null)
+                {
+                    UserListDTO DTO = new UserListDTO()
+                    {
+                        UserId = user.UserId,
+                        UserName = user.UserName,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Email = user.Email,
+                        Phone = user.Phone,
+                        RoleName = role.RoleName,
+                        CreatedAt = user.CreatedAt,
+                        UpdateAt = user.UpdateAt
+                    };
+                    result.Add(DTO);
+                }
+            }
+            return result;
+        }
+
+        public async Task<PagedResultDTO<UserListDTO>> List(string? filter, int page)
+        {
+            List<UserListDTO> list = await getList(filter, page);
+            int RowCount = await daoUser.getRowCount(filter);
+            return new PagedResultDTO<UserListDTO>(page, RowCount, PageSizeConst.MAX_USER_LIST_IN_PAGE, list);
         }
 
     }

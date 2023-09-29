@@ -10,6 +10,7 @@ using System.Security.Claims;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 using DataAccess.DTO;
 using Microsoft.AspNetCore.Authorization;
+using DataAccess.Entity;
 
 namespace API.Controllers
 {
@@ -25,10 +26,28 @@ namespace API.Controllers
             return await service.Login(DTO);
         }
 
-        [HttpPost]
-        public async Task<ResponseDTO<bool>> Create(RegisterDTO DTO)
+        [HttpGet]
+        [Authorize]
+        public async Task<PagedResultDTO<UserListDTO>> List(string? filter, int page)
         {
-            return await service.Create(DTO);
+            // if admin
+            if (isAdmin())
+            {
+                return await service.List(filter, page);
+            }
+            throw new UnauthorizedAccessException();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ResponseDTO<bool>> Create(UserCreateDTO DTO)
+        {
+            // if admin
+            if (isAdmin())
+            {
+                return await service.Create(DTO);
+            }
+            throw new UnauthorizedAccessException();
         }
 
         [HttpPost]

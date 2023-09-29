@@ -32,8 +32,8 @@ namespace API.Services
         public async Task<PagedResultDTO<OtherMaterialsCategoryListDTO>> List(int page)
         {
             List<OtherMaterialsCategoryListDTO> list = await getList(page);
-            PagedResultDTO<OtherMaterialsCategoryListDTO> result = new PagedResultDTO<OtherMaterialsCategoryListDTO>(page, PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE, list, 0);
-            return result;
+            int RowCount = await daoOtherMaterialsCategory.getRowCount();
+            return new PagedResultDTO<OtherMaterialsCategoryListDTO>(page, PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE, RowCount, list);
         }
 
         public async Task<ResponseDTO<bool>> Create(OtherMaterialsCategoryCreateUpdateDTO DTO)

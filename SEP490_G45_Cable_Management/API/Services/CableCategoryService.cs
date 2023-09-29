@@ -30,8 +30,8 @@ namespace API.Services
         public async Task<PagedResultDTO<CableCategoryListDTO>> List(string? name, int page)
         {
             List<CableCategoryListDTO> list = await getList(name, page);
-            PagedResultDTO<CableCategoryListDTO> pageResult = new PagedResultDTO<CableCategoryListDTO>(page, PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE, list);
-            return pageResult;
+            int RowCount = await daoCableCategory.getRowCount(name);
+            return new PagedResultDTO<CableCategoryListDTO>(page, PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE, RowCount, list);
         }
 
         public async Task<ResponseDTO<bool>> Create(CableCategoryCreateUpdateDTO DTO)

@@ -16,6 +16,12 @@ namespace DataAccess.Model.DAO
             return await context.OtherMaterialsCategories.Skip(PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE).ToListAsync();
         }
 
+        public async Task<int> getRowCount()
+        {
+            List<OtherMaterialsCategory> list = await context.OtherMaterialsCategories.ToListAsync();
+            return list.Count;
+        }
+
         public async Task<bool> isExist(string OtherMaterialsCategoryName)
         {
             return await context.OtherMaterialsCategories.AnyAsync(o => o.OtherMaterialsCategoryName == OtherMaterialsCategoryName.Trim());

@@ -18,7 +18,7 @@ namespace DataAccess.DTO
 
         // number of page
         public int PageCount { get; set; }
-
+        /*
         public int FirstRowOnPage
         {
             get { return Math.Min(RowCount, (CurrentPage - 1) * PageSize + 1); }
@@ -28,27 +28,27 @@ namespace DataAccess.DTO
         {
             get { return Math.Min(CurrentPage * PageSize, RowCount); }
         }
-
+        */
         public int Sum { get; set; }
 
 
-        public PagedResultDTO(int currentPage, int pageSize, List<T> results, int sum)
+        public PagedResultDTO(int currentPage, int pageSize, int rowCount, List<T> results, int sum)
         {
             CurrentPage = currentPage;
             PageSize = pageSize;
-            RowCount = results.Count;
+            RowCount = rowCount;
             Results = results;
-            PageCount = (int) Math.Ceiling((double)Results.Count / pageSize);
+            PageCount = (int) Math.Ceiling((double) rowCount / pageSize);
             Sum = sum;
         }
 
-        public PagedResultDTO(int currentPage, int pageSize, List<T> results)
+        public PagedResultDTO(int currentPage, int rowCount, int pageSize, List<T> results)
         {
             CurrentPage = currentPage;
             PageSize = pageSize;
-            RowCount = results.Count;
+            RowCount = rowCount;
             Results = results;
-            PageCount = (int) Math.Ceiling((double)Results.Count / pageSize);
+            PageCount = (int) Math.Ceiling((double) rowCount / pageSize);
         }
 
     }

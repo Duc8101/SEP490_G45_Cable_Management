@@ -20,6 +20,20 @@ namespace DataAccess.Model.DAO
             return await context.CableCategories.Where(c => c.CableCategoryName.ToLower().Contains(name.Trim().ToLower())).Skip(PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE).ToListAsync();
         }
 
+        public async Task<int> getRowCount(string? name)
+        {
+            List<CableCategory> list;
+            if (name == null || name.Trim().Length == 0)
+            {
+                list = await context.CableCategories.ToListAsync();
+            }
+            else
+            {
+                list = await context.CableCategories.Where(c => c.CableCategoryName.ToLower().Contains(name.Trim().ToLower())).ToListAsync();
+            }
+            return list.Count;
+        }
+
         public async Task<int> CreateCableCategory(CableCategory cable)
         {
             await context.CableCategories.AddAsync(cable);
