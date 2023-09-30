@@ -50,6 +50,36 @@ namespace API.Controllers
             throw new UnauthorizedAccessException();
         }
 
+        [HttpPut("{UserID}")]
+        [Authorize]
+        public async Task<ResponseDTO<bool>> Update(Guid UserID, UserUpdateDTO DTO)
+        {
+            // if admin
+            if (isAdmin())
+            {
+                return await service.Update(UserID, DTO);
+            }
+            throw new UnauthorizedAccessException();
+        }
+
+        [HttpDelete("{UserID}")]
+        [Authorize]
+        public async Task<ResponseDTO<bool>> Delete(Guid UserID)
+        {
+            // if admin
+            if (isAdmin())
+            {
+                string? UserLoginID = getUserID();
+                // if not found
+                if(UserLoginID == null)
+                {
+                    throw new ApplicationException();
+                }
+                return await service.Delete(UserID, Guid.Parse(UserLoginID));
+            }
+            throw new UnauthorizedAccessException();
+        }
+
         [HttpPost]
         public async Task<ResponseDTO<bool>> ForgotPassword(ForgotPasswordDTO DTO)
         {

@@ -76,5 +76,21 @@ namespace DataAccess.Model.DAO
             }
             return list.Count;
         }
+
+        public async Task<User?> getUser(Guid UserID)
+        {
+            return await context.Users.SingleOrDefaultAsync(u => u.UserId == UserID && u.IsDeleted == false);
+        }
+
+        public async Task<bool> isExist(Guid UserID, string username, string email)
+        {
+            return await context.Users.AnyAsync(u => (u.UserName == username || u.Email == email) && u.UserId != UserID);
+        }
+        public async Task<int> DeleteUser(User user)
+        {
+            user.IsDeleted = true;
+            return await UpdateUser(user);
+        }
+
     }
 }

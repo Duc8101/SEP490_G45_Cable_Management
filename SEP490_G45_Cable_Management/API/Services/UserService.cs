@@ -202,5 +202,55 @@ namespace API.Services
             return new PagedResultDTO<UserListDTO>(page, RowCount, PageSizeConst.MAX_USER_LIST_IN_PAGE, list);
         }
 
+        public async Task<ResponseDTO<bool>> Update(Guid UserID, UserUpdateDTO DTO)
+        {
+            User? user = await daoUser.getUser(UserID);
+            // if not found
+            if(user == null)
+            {
+                return new ResponseDTO<bool>(false, "Không tìm thấy người dùng" , (int) HttpStatusCode.NotFound);
+            }
+            // if username or email exist
+            if(await daoUser.isExist(UserID, DTO.UserName, DTO.Email))
+            {
+                return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.NotAcceptable);
+            }
+            user.UserName = DTO.UserName;
+            user.Email = DTO.Email;
+            user.FirstName = DTO.FirstName.Trim();
+            user.LastName = DTO.LastName.Trim();
+            user.Phone = DTO.Phone;
+            user.RoleId = DTO.RoleId;
+            int number = await daoUser.UpdateUser(user);
+            // if update successful
+            if(number > 0)
+            {
+                return new ResponseDTO<bool>(true);
+            }
+            return new ResponseDTO<bool>(false, "Không chỉnh sửa được", (int) HttpStatusCode.Conflict);
+        }
+
+        public async Task<ResponseDTO<bool>> Delete(Guid UserID, Guid UserLoginID)
+        {
+            User? user = await daoUser.getUser(UserID);
+            // if not found
+            if(user == null)
+            {
+                return new ResponseDTO<bool>(false, "Không tìm thấy user", (int) HttpStatusCode.NotFound);
+            }
+            // if user login's account
+            if(UserID.Equals(UserLoginID))
+            {
+                return new ResponseDTO<bool>(false, "Bạn không thể xóa tài khoản của mình", (int) HttpStatusCode.NotFound);
+            }
+            int number = await daoUser.DeleteUser(user);
+            // if delete suceesful
+            if(number > 0)
+            {
+                return new ResponseDTO<bool>(true);
+            }
+            return new ResponseDTO<bool>(false, "Xóa thất bại", (int) HttpStatusCode.Conflict);
+        }
+
     }
 }
