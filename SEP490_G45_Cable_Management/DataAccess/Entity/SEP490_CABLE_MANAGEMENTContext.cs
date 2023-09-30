@@ -46,8 +46,8 @@ namespace DataAccess.Entity
                 ConfigurationBuilder builder = new ConfigurationBuilder();
                 IConfigurationRoot config = builder.SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("appsettings.json", true, true).Build();
-                string connect = config.GetConnectionString("DefaultConnection");
-                optionsBuilder.UseSqlServer(connect);
+                string connection = config.GetConnectionString("DefaultConnection");
+                optionsBuilder.UseSqlServer(connection);
             }
         }
 
@@ -251,7 +251,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<OtherMaterial>(entity =>
             {
                 entity.HasKey(e => e.OtherMaterialsId)
-                    .HasName("PK__OtherMat__14E82B14D65FEB9A");
+                    .HasName("PK__OtherMat__14E82B142E543147");
 
                 entity.Property(e => e.OtherMaterialsId).HasColumnName("OtherMaterialsID");
 
@@ -357,7 +357,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<RequestCable>(entity =>
             {
                 entity.HasKey(e => new { e.RequestId, e.CableId, e.StartPoint, e.EndPoint })
-                    .HasName("PK__RequestC__8A3E7AD0D085B223");
+                    .HasName("PK__RequestC__8A3E7AD0443170C1");
 
                 entity.ToTable("RequestCable");
 
@@ -408,7 +408,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<RequestOtherMaterial>(entity =>
             {
                 entity.HasKey(e => new { e.RequestId, e.OtherMaterialsId, e.Quantity })
-                    .HasName("PK__RequestO__D03A972ACF208E09");
+                    .HasName("PK__RequestO__D03A972A83AF5924");
 
                 entity.Property(e => e.RequestId).HasColumnName("RequestID");
 
@@ -495,7 +495,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<TransactionCable>(entity =>
             {
                 entity.HasKey(e => new { e.TransactionId, e.CableId })
-                    .HasName("PK__Transact__FC2F10D457C6C6D4");
+                    .HasName("PK__Transact__FC2F10D4F6DC54E7");
 
                 entity.ToTable("TransactionCable");
 
@@ -523,7 +523,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<TransactionHistory>(entity =>
             {
                 entity.HasKey(e => e.TransactionId)
-                    .HasName("PK__Transact__55433A4B1E99353B");
+                    .HasName("PK__Transact__55433A4BAFD9F375");
 
                 entity.ToTable("TransactionHistory");
 
@@ -577,7 +577,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<TransactionOtherMaterial>(entity =>
             {
                 entity.HasKey(e => new { e.TransactionId, e.OtherMaterialsId })
-                    .HasName("PK__Transact__040DB8FA085B25CD");
+                    .HasName("PK__Transact__040DB8FAA71B893B");
 
                 entity.Property(e => e.TransactionId).HasColumnName("TransactionID");
 
