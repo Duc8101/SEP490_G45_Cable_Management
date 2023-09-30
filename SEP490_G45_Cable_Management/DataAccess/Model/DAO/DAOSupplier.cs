@@ -57,7 +57,7 @@ namespace DataAccess.Model.DAO
 
         public async Task<bool> isExist(int SupplierID, string SupplierName)
         {
-            return await context.Suppliers.AnyAsync(s => s.SupplierName == SupplierName.Trim() && s.SupplierId != SupplierID && s.IsDeleted == false);
+            return await context.Suppliers.AnyAsync(s => s.SupplierName == SupplierName.Trim() && s.SupplierId != SupplierID);
         }
 
         public async Task<int> UpdateSupplier(Supplier supplier)

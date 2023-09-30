@@ -25,5 +25,45 @@ namespace API.Controllers
             throw new UnauthorizedAccessException();
         }
 
+        [HttpPost]
+        [Authorize]
+        public async Task<ResponseDTO<bool>> Create(WarehouseCreateUpdateDTO DTO)
+        {
+            // if admin
+            if (isAdmin())
+            {
+                string? CreatorID = getUserID();
+                if(CreatorID == null)
+                {
+                    throw new ApplicationException();
+                }
+                return await service.Create(DTO, Guid.Parse(CreatorID));
+            }
+            throw new UnauthorizedAccessException();
+        }
+
+        [HttpPut("{WarehouseID}")]
+        [Authorize]
+        public async Task<ResponseDTO<bool>> Update(int WarehouseID, WarehouseCreateUpdateDTO DTO)
+        {
+            // if admin
+            if (isAdmin())
+            {
+                return await service.Update(WarehouseID, DTO);
+            }
+            throw new UnauthorizedAccessException();
+        }
+
+        [HttpDelete("{WarehouseID}")]
+        [Authorize]
+        public async Task<ResponseDTO<bool>> Delete(int WarehouseID)
+        {
+            // if admin
+            if (isAdmin())
+            {
+                return await service.Delete(WarehouseID);
+            }
+            throw new UnauthorizedAccessException();
+        }
     }
 }
