@@ -221,6 +221,7 @@ namespace API.Services
             user.LastName = DTO.LastName.Trim();
             user.Phone = DTO.Phone;
             user.RoleId = DTO.RoleId;
+            user.UpdateAt = DateTime.Now;
             int number = await daoUser.UpdateUser(user);
             // if update successful
             if(number > 0)

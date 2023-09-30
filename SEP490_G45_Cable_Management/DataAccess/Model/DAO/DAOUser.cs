@@ -65,14 +65,14 @@ namespace DataAccess.Model.DAO
             List<User> list;
             if (filter == null || filter.Trim().Length == 0)
             {
-                list = await context.Users.Where(u => u.IsDeleted == false).OrderByDescending(u => u.UpdateAt).ToListAsync();
+                list = await context.Users.Where(u => u.IsDeleted == false).ToListAsync();
             }
             else
             {
                 list = await context.Users.Where(u => u.IsDeleted == false && (u.FirstName.ToLower().Contains(filter.ToLower().Trim()) ||
                 u.LastName.ToLower().Contains(filter.ToLower().Trim()) || u.Role.RoleName.Contains(filter.ToLower().Trim())
                 || u.Email.ToLower().Contains(filter.ToLower().Trim()) || u.UserName.ToLower().Contains(filter.ToLower().Trim())))
-                    .OrderByDescending(u => u.UpdateAt).ToListAsync();
+                    .ToListAsync();
             }
             return list.Count;
         }

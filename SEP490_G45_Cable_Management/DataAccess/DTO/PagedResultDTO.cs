@@ -32,7 +32,7 @@ namespace DataAccess.DTO
         public int Sum { get; set; }
 
 
-        public PagedResultDTO(int currentPage, int pageSize, int rowCount, List<T> results, int sum)
+        public PagedResultDTO(int currentPage, int rowCount, int pageSize , List<T> results, int sum)
         {
             CurrentPage = currentPage;
             PageSize = pageSize;
