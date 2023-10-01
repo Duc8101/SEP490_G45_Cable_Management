@@ -13,5 +13,6 @@ namespace DataAccess.Const
         public const int MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE = 12;
         public const int MAX_USER_LIST_IN_PAGE = 12;
         public const int MAX_WAREHOUSE_LIST_IN_PAGE = 12;
+        public const int MAX_ISSUE_LIST_IN_PAGE = 12;
     }
 }
