@@ -70,7 +70,7 @@ namespace API.Services
                 string body = UserUtil.BodyEmailForRegister(newPw);
                 // send email
                 await UserUtil.sendEmail("Welcome to Cable Management System", body, DTO.Email);
-                // register
+                // create
                 User user = new User()
                 {
                     UserId = Guid.NewGuid(),
@@ -82,7 +82,6 @@ namespace API.Services
                     Phone = DTO.Phone,
                     RoleId = RoleConst.INT_ROLE_STAFF,
                     CreatedAt = DateTime.Now,
-                    UpdateAt = null,
                     IsDeleted = false
                 };
                 // if user exist
@@ -91,12 +90,12 @@ namespace API.Services
                     return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.NotAcceptable);
                 }
                 int number = await daoUser.CreateUser(user);
-                // if register successful
+                // if create successful
                 if (number > 0)
                 {
                     return new ResponseDTO<bool>(true);
                 }
-                return new ResponseDTO<bool>(false, "Đăng ký không thành công", (int) HttpStatusCode.Conflict);
+                return new ResponseDTO<bool>(false, "Tạo không thành công", (int) HttpStatusCode.Conflict);
             }
             catch (Exception ex)
             {

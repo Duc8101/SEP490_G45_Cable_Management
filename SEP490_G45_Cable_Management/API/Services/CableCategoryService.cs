@@ -45,7 +45,6 @@ namespace API.Services
              {
                  CableCategoryName = DTO.CableCategoryName.Trim(),
                  CreatedAt = DateTime.Now,
-                 UpdateAt = null,
                  IsDeleted = false,
              };
              int number = await daoCableCategory.CreateCableCategory(cable);

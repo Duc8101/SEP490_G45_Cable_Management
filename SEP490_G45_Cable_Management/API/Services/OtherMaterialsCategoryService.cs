@@ -47,7 +47,6 @@ namespace API.Services
             {
                 OtherMaterialsCategoryName = DTO.OtherMaterialsCategoryName.Trim(),
                 CreatedAt = DateTime.Now,
-                UpdateAt = null,
                 IsDeleted = false
             };
             int number = await daoOtherMaterialsCategory.CreateOtherMaterialsCategory(category);
