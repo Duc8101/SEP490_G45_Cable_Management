@@ -16,10 +16,11 @@ namespace DataAccess.Entity
         public string IssueCode { get; set; } = null!;
         public string? Description { get; set; }
         public Guid CreatorId { get; set; }
+        public DateTime? IssueDate { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
-        public string? Status { get; set; }
+        public string Status { get; set; } = null!;
         public string? CableRoutingName { get; set; }
         public string? Group { get; set; }
 
