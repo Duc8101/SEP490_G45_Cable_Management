@@ -253,7 +253,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<OtherMaterial>(entity =>
             {
                 entity.HasKey(e => e.OtherMaterialsId)
-                    .HasName("PK__OtherMat__14E82B141FA6F83E");
+                    .HasName("PK__OtherMat__14E82B141215ABDE");
 
                 entity.Property(e => e.OtherMaterialsId).HasColumnName("OtherMaterialsID");
 
@@ -359,7 +359,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<RequestCable>(entity =>
             {
                 entity.HasKey(e => new { e.RequestId, e.CableId, e.StartPoint, e.EndPoint })
-                    .HasName("PK__RequestC__8A3E7AD01474A98B");
+                    .HasName("PK__RequestC__8A3E7AD0F7079BFD");
 
                 entity.ToTable("RequestCable");
 
@@ -410,7 +410,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<RequestOtherMaterial>(entity =>
             {
                 entity.HasKey(e => new { e.RequestId, e.OtherMaterialsId, e.Quantity })
-                    .HasName("PK__RequestO__D03A972A68414108");
+                    .HasName("PK__RequestO__D03A972AD1F757AE");
 
                 entity.Property(e => e.RequestId).HasColumnName("RequestID");
 
@@ -497,7 +497,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<TransactionCable>(entity =>
             {
                 entity.HasKey(e => new { e.TransactionId, e.CableId })
-                    .HasName("PK__Transact__FC2F10D48A948DD7");
+                    .HasName("PK__Transact__FC2F10D4D9EF9A7E");
 
                 entity.ToTable("TransactionCable");
 
@@ -525,7 +525,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<TransactionHistory>(entity =>
             {
                 entity.HasKey(e => e.TransactionId)
-                    .HasName("PK__Transact__55433A4BC56E5899");
+                    .HasName("PK__Transact__55433A4B87A67517");
 
                 entity.ToTable("TransactionHistory");
 
@@ -579,7 +579,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<TransactionOtherMaterial>(entity =>
             {
                 entity.HasKey(e => new { e.TransactionId, e.OtherMaterialsId })
-                    .HasName("PK__Transact__040DB8FA206AB5F8");
+                    .HasName("PK__Transact__040DB8FAD1396A1B");
 
                 entity.Property(e => e.TransactionId).HasColumnName("TransactionID");
 
