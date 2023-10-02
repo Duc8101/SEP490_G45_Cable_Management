@@ -1,6 +1,5 @@
 ﻿using DataAccess.DTO;
 using DataAccess.DTO.RouteDTO;
-using DataAccess.Entity;
 using DataAccess.Model.DAO;
 using System.Net;
 
@@ -44,7 +43,7 @@ namespace API.Services
             // if create successful
             if(number > 0)
             {
-                return new ResponseDTO<bool>(true);
+                return new ResponseDTO<bool>(true, "Tạo thành công");
             }
             return new ResponseDTO<bool>(false, "Tạo thất bại", (int) HttpStatusCode.Conflict);
         }
@@ -61,7 +60,7 @@ namespace API.Services
             // if delete successful
             if(number > 0)
             {
-                return new ResponseDTO<bool>(true);
+                return new ResponseDTO<bool>(true, "Xóa thành công");
             }
             return new ResponseDTO<bool>(false, "Xóa thất bại", (int) HttpStatusCode.Conflict);
         }

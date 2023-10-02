@@ -28,10 +28,10 @@ namespace DataAccess.DTO
             Success = false;
         }
 
-        public ResponseDTO(T data)
+        public ResponseDTO(T data, string message)
         {
             Data = data;
-            Message = "";
+            Message = message;
             Code = (int) HttpStatusCode.OK;
             Success = true;
         }

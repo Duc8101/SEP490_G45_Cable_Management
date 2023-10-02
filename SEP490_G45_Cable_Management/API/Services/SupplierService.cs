@@ -14,32 +14,6 @@ namespace API.Services
     public class SupplierService
     {
         private readonly DAOSupplier daoSupplier = new DAOSupplier();
-        public async Task<ResponseDTO<bool>> Create(SupplierCreateUpdateDTO DTO, string CreatorID)
-        {
-            // if supplier already exist
-            if (await daoSupplier.isExist(DTO.SupplierName.Trim()))
-            {
-                return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int) HttpStatusCode.NotAcceptable);
-            }
-            Supplier supplier = new Supplier()
-            {
-                SupplierName = DTO.SupplierName.Trim(),
-                Country = DTO.Country == null ? null : DTO.Country.Trim(),
-                SupplierDescription = DTO.SupplierDescription == null || DTO.SupplierDescription.Trim().Length == 0 ? null : DTO.SupplierDescription.Trim(),
-                CreatedAt = DateTime.Now,
-                IsDeleted = false,
-                CreatorId = Guid.Parse(CreatorID)
-            };
-            // create supplier
-            int number = await daoSupplier.CreateSupplier(supplier);
-            // if create successful
-            if(number > 0)
-            {
-                return new ResponseDTO<bool>(true);
-            }
-            return new ResponseDTO<bool>(false,"Thêm thất bại", (int) HttpStatusCode.Conflict);
-        }
-
         private async Task<List<SupplierListDTO>> getList(string? name, int page)
         {
             List<Supplier> list = await daoSupplier.getList(name, page);
@@ -61,11 +35,36 @@ namespace API.Services
             return result;
         }
         public async Task<PagedResultDTO<SupplierListDTO>> List(string? name, int page)
-        { 
+        {
             List<SupplierListDTO> list = await getList(name, page);
             int RowCount = await daoSupplier.getRowCount(name);
             PagedResultDTO<SupplierListDTO> pageResult = new PagedResultDTO<SupplierListDTO>(page, PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE, RowCount, list);
             return pageResult;
+        }
+        public async Task<ResponseDTO<bool>> Create(SupplierCreateUpdateDTO DTO, string CreatorID)
+        {
+            // if supplier already exist
+            if (await daoSupplier.isExist(DTO.SupplierName.Trim()))
+            {
+                return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int) HttpStatusCode.NotAcceptable);
+            }
+            Supplier supplier = new Supplier()
+            {
+                SupplierName = DTO.SupplierName.Trim(),
+                Country = DTO.Country == null ? null : DTO.Country.Trim(),
+                SupplierDescription = DTO.SupplierDescription == null || DTO.SupplierDescription.Trim().Length == 0 ? null : DTO.SupplierDescription.Trim(),
+                CreatedAt = DateTime.Now,
+                IsDeleted = false,
+                CreatorId = Guid.Parse(CreatorID)
+            };
+            // create supplier
+            int number = await daoSupplier.CreateSupplier(supplier);
+            // if create successful
+            if(number > 0)
+            {
+                return new ResponseDTO<bool>(true, "Thêm thành công");
+            }
+            return new ResponseDTO<bool>(false,"Thêm thất bại", (int) HttpStatusCode.Conflict);
         }
 
         public async Task<ResponseDTO<bool>> Update(int SupplierID, SupplierCreateUpdateDTO DTO)
@@ -90,7 +89,7 @@ namespace API.Services
             // if update successful
             if (number > 0)
             {
-                return new ResponseDTO<bool>(true);
+                return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
             return new ResponseDTO<bool>(false, "Chỉnh sửa thất bại", (int) HttpStatusCode.Conflict);
         }
@@ -107,7 +106,7 @@ namespace API.Services
             int number = await daoSupplier.DeleteSupplier(supplier); 
             // if delete successful
             if (number > 0) {
-                return new ResponseDTO<bool>(true);
+                return new ResponseDTO<bool>(true, "Xóa thành công");
             }
             return new ResponseDTO<bool>(false, "Xóa thất bại", (int) HttpStatusCode.Conflict);
         }

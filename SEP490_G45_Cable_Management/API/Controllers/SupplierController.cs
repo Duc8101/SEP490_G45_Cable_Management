@@ -15,6 +15,19 @@ namespace API.Controllers
     public class SupplierController : BaseAPIController
     {
         private readonly SupplierService service = new SupplierService();
+
+        [HttpGet]
+        [Authorize]
+        public async Task<PagedResultDTO<SupplierListDTO>> List(string? name, int page /* current page */)
+        {
+            // if admin or warehouse
+            if (isAdmin() || isWarehouseKeeper())
+            {
+                return await service.List(name, page);
+            }
+            throw new UnauthorizedAccessException();
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<ResponseDTO<bool>> Create(SupplierCreateUpdateDTO DTO)
@@ -30,18 +43,6 @@ namespace API.Controllers
                     throw new ApplicationException();
                 }
                 return await service.Create(DTO, CreatorID);             
-            }
-            throw new UnauthorizedAccessException();
-        }
-
-        [HttpGet]
-        [Authorize]
-        public async Task<PagedResultDTO<SupplierListDTO>> List(string? name, int page /* current page */)
-        {
-            // if admin or warehouse
-            if (isAdmin() || isWarehouseKeeper())
-            {
-                return await service.List(name, page);
             }
             throw new UnauthorizedAccessException();
         }

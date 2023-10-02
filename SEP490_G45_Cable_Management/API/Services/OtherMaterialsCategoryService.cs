@@ -53,9 +53,9 @@ namespace API.Services
             // if create successful
             if(number > 0)
             {
-                return new ResponseDTO<bool>(true);
+                return new ResponseDTO<bool>(true, "Tạo thành công");
             }
-            return new ResponseDTO<bool>(false, "Có lỗi trong quá trình tạo", (int) HttpStatusCode.Conflict);
+            return new ResponseDTO<bool>(false, "Tạo thất bại", (int) HttpStatusCode.Conflict);
         }
 
         public async Task<ResponseDTO<bool>> Update(int OtherMaterialsCategoryID, OtherMaterialsCategoryCreateUpdateDTO DTO)
@@ -77,9 +77,9 @@ namespace API.Services
             // if update successful
             if(number > 0)
             {
-                return new ResponseDTO<bool>(true);
+                return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
-            return new ResponseDTO<bool>(false, "Có lỗi trong việc chỉnh sửa", (int) HttpStatusCode.Conflict);
+            return new ResponseDTO<bool>(false, "Chỉnh sửa thất bại", (int) HttpStatusCode.Conflict);
         }
     }
 }

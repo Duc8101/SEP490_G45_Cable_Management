@@ -25,7 +25,7 @@ namespace API.Services
                 return new ResponseDTO<string>("","Username or password wrong", (int) HttpStatusCode.NotAcceptable);
             }
             string AccessToken = getAccessToken(user);
-            return new ResponseDTO<string>(AccessToken);
+            return new ResponseDTO<string>(AccessToken,"");
         }
 
         private string getAccessToken(User user)
@@ -93,9 +93,9 @@ namespace API.Services
                 // if create successful
                 if (number > 0)
                 {
-                    return new ResponseDTO<bool>(true);
+                    return new ResponseDTO<bool>(true, "Tạo thành công");
                 }
-                return new ResponseDTO<bool>(false, "Tạo không thành công", (int) HttpStatusCode.Conflict);
+                return new ResponseDTO<bool>(false, "Tạo thất bại", (int) HttpStatusCode.Conflict);
             }
             catch (Exception ex)
             {
@@ -110,7 +110,7 @@ namespace API.Services
             // if email not exist
             if (user == null)
             {
-                return new ResponseDTO<bool>(false, "Email này chưa được đăng ký trong cơ sở dữ liệu", (int) HttpStatusCode.NotFound);
+                return new ResponseDTO<bool>(false, "Email này chưa được đăng ký", (int) HttpStatusCode.NotFound);
             }
 
             try
@@ -128,9 +128,9 @@ namespace API.Services
                 // if update successful
                 if (number > 0)
                 {
-                    return new ResponseDTO<bool>(true);
+                    return new ResponseDTO<bool>(true, "Đã đổi mật khẩu thành công. Vui lòng kiểm tra email của bạn");
                 }
-                return new ResponseDTO<bool>(false, "Không update được mật khẩu mới", (int) HttpStatusCode.Conflict);
+                return new ResponseDTO<bool>(false, "Không đổi được mật khẩu", (int) HttpStatusCode.Conflict);
             }
             catch (Exception ex)
             {
@@ -161,7 +161,7 @@ namespace API.Services
             int number = await daoUser.UpdateUser(user); 
             // if change successful
             if (number > 0) { 
-                return new ResponseDTO<bool>(true); 
+                return new ResponseDTO<bool>(true, "Đổi mật khẩu thành công"); 
             }
             return new ResponseDTO<bool>(false, "Đổi mật khẩu thất bại", (int) HttpStatusCode.Conflict);
         }
@@ -225,7 +225,7 @@ namespace API.Services
             // if update successful
             if(number > 0)
             {
-                return new ResponseDTO<bool>(true);
+                return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
             return new ResponseDTO<bool>(false, "Không chỉnh sửa được", (int) HttpStatusCode.Conflict);
         }
@@ -247,7 +247,7 @@ namespace API.Services
             // if delete suceesful
             if(number > 0)
             {
-                return new ResponseDTO<bool>(true);
+                return new ResponseDTO<bool>(true, "Xóa thành công");
             }
             return new ResponseDTO<bool>(false, "Xóa thất bại", (int) HttpStatusCode.Conflict);
         }
