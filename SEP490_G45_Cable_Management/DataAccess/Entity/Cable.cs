@@ -13,7 +13,7 @@ namespace DataAccess.Entity
         }
 
         public Guid CableId { get; set; }
-        public int WarehouseId { get; set; }
+        public int? WarehouseId { get; set; }
         public int SupplierId { get; set; }
         public int StartPoint { get; set; }
         public int EndPoint { get; set; }
@@ -33,7 +33,7 @@ namespace DataAccess.Entity
         public virtual CableCategory CableCategory { get; set; } = null!;
         public virtual User Creator { get; set; } = null!;
         public virtual Supplier Supplier { get; set; } = null!;
-        public virtual Warehouse Warehouse { get; set; } = null!;
+        public virtual Warehouse? Warehouse { get; set; }
         public virtual ICollection<NodeCable> NodeCables { get; set; }
         public virtual ICollection<RequestCable> RequestCables { get; set; }
         public virtual ICollection<TransactionCable> TransactionCables { get; set; }
