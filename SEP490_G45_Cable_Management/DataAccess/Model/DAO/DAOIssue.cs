@@ -49,7 +49,7 @@ namespace DataAccess.Model.DAO
 
         public async Task<Issue?> getIssue(Guid IssueID)
         {
-            return await context.Issues.SingleOrDefaultAsync(i => i.IssueId == IssueID);
+            return await context.Issues.SingleOrDefaultAsync(i => i.IssueId == IssueID && i.IsDeleted == false);
         }
         public async Task<int> UpdateIssue(Issue issue)
         {
