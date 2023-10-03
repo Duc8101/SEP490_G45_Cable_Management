@@ -252,7 +252,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<OtherMaterial>(entity =>
             {
                 entity.HasKey(e => e.OtherMaterialsId)
-                    .HasName("PK__OtherMat__14E82B14A2529237");
+                    .HasName("PK__OtherMat__14E82B14970BB153");
 
                 entity.Property(e => e.OtherMaterialsId).HasColumnName("OtherMaterialsID");
 
@@ -345,7 +345,6 @@ namespace DataAccess.Entity
                 entity.HasOne(d => d.Issue)
                     .WithMany(p => p.Requests)
                     .HasForeignKey(d => d.IssueId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Request__IssueID__71D1E811");
 
                 entity.HasOne(d => d.RequestCategory)
@@ -358,7 +357,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<RequestCable>(entity =>
             {
                 entity.HasKey(e => new { e.RequestId, e.CableId, e.StartPoint, e.EndPoint })
-                    .HasName("PK__RequestC__8A3E7AD0AE29EE96");
+                    .HasName("PK__RequestC__8A3E7AD028EF0049");
 
                 entity.ToTable("RequestCable");
 
@@ -409,7 +408,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<RequestOtherMaterial>(entity =>
             {
                 entity.HasKey(e => new { e.RequestId, e.OtherMaterialsId, e.Quantity })
-                    .HasName("PK__RequestO__D03A972ABEA2A936");
+                    .HasName("PK__RequestO__D03A972A805D5594");
 
                 entity.Property(e => e.RequestId).HasColumnName("RequestID");
 
@@ -496,7 +495,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<TransactionCable>(entity =>
             {
                 entity.HasKey(e => new { e.TransactionId, e.CableId })
-                    .HasName("PK__Transact__FC2F10D425048CB1");
+                    .HasName("PK__Transact__FC2F10D48F170351");
 
                 entity.ToTable("TransactionCable");
 
@@ -524,7 +523,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<TransactionHistory>(entity =>
             {
                 entity.HasKey(e => e.TransactionId)
-                    .HasName("PK__Transact__55433A4BDC39B6E7");
+                    .HasName("PK__Transact__55433A4B71D90F47");
 
                 entity.ToTable("TransactionHistory");
 
@@ -578,7 +577,7 @@ namespace DataAccess.Entity
             modelBuilder.Entity<TransactionOtherMaterial>(entity =>
             {
                 entity.HasKey(e => new { e.TransactionId, e.OtherMaterialsId })
-                    .HasName("PK__Transact__040DB8FA6122EBB7");
+                    .HasName("PK__Transact__040DB8FA612B1586");
 
                 entity.Property(e => e.TransactionId).HasColumnName("TransactionID");
 

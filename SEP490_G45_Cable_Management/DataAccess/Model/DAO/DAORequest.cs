@@ -62,5 +62,12 @@ namespace DataAccess.Model.DAO
             }
             return list.Count;
         }
+
+        public async Task<int> CreateRequest(Request request)
+        {
+            await context.Requests.AddAsync(request);
+            return await context.SaveChangesAsync();
+        }
+
     }
 }
