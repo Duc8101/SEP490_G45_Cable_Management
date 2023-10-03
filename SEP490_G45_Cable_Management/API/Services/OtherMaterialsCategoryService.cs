@@ -20,9 +20,7 @@ namespace API.Services
                 OtherMaterialsCategoryListDTO DTO = new OtherMaterialsCategoryListDTO()
                 {
                     OtherMaterialsCategoryId = item.OtherMaterialsCategoryId,
-                    OtherMaterialsCategoryName = item.OtherMaterialsCategoryName,
-                    CreatedAt = item.CreatedAt,
-                    UpdateAt = item.UpdateAt,
+                    OtherMaterialsCategoryName = item.OtherMaterialsCategoryName
                 };
                 result.Add(DTO);
             }

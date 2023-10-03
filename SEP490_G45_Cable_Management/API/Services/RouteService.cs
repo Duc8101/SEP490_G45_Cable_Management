@@ -18,7 +18,6 @@ namespace API.Services
                 {
                     RouteId = route.RouteId,
                     RouteName = route.RouteName,
-                    CreatedAt = route.CreatedAt,
                 };
                 result.Add(DTO);
             }

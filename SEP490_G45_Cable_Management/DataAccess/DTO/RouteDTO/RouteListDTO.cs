@@ -9,6 +9,5 @@ namespace DataAccess.DTO.RouteDTO
     public class RouteListDTO : RouteCreateDTO
     {
         public Guid RouteId { get; set; }
-        public DateTime CreatedAt { get; set; }
     }
 }

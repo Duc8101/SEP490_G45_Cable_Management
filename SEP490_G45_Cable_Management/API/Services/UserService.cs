@@ -184,9 +184,7 @@ namespace API.Services
                         LastName = user.LastName,
                         Email = user.Email,
                         Phone = user.Phone,
-                        RoleName = role.RoleName,
-                        CreatedAt = user.CreatedAt,
-                        UpdateAt = user.UpdateAt
+                        RoleName = role.RoleName
                     };
                     result.Add(DTO);
                 }

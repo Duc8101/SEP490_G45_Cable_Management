@@ -10,7 +10,5 @@ namespace DataAccess.DTO.UserDTO
     {
         public Guid UserId { get; set; }
         public string RoleName { get; set; } = null!;
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdateAt { get; set; }
     }
 }

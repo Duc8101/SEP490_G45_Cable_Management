@@ -25,10 +25,7 @@ namespace API.Services
                     SupplierId = supplier.SupplierId,
                     SupplierName = supplier.SupplierName,
                     Country = supplier.Country,
-                    SupplierDescription = supplier.SupplierDescription,
-                    CreatorId = supplier.CreatorId,
-                    CreatedAt = supplier.CreatedAt,
-                    UpdateAt = supplier.UpdateAt
+                    SupplierDescription = supplier.SupplierDescription
                 };
                 result.Add(DTO);
             }

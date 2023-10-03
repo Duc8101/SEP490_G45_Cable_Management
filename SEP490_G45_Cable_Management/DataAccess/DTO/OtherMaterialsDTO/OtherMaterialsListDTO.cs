@@ -15,8 +15,5 @@ namespace DataAccess.DTO.OtherMaterialsDTO
         public string SupplierName { get; set; } = null!;
         public string WarehouseName { get; set; } = null!;
         public string OtherMaterialsCategoryName { get; set; } = null!;
-
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdateAt { get; set; }
     }
 }

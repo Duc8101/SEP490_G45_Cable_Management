@@ -9,7 +9,5 @@ namespace DataAccess.DTO.OtherMaterialsCategoryDTO
     public class OtherMaterialsCategoryListDTO : OtherMaterialsCategoryCreateUpdateDTO
     {
         public int OtherMaterialsCategoryId { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdateAt { get; set; }
     }
 }

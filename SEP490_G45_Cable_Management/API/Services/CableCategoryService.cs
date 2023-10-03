@@ -20,8 +20,6 @@ namespace API.Services
                 {
                     CableCategoryId = cable.CableCategoryId,
                     CableCategoryName = cable.CableCategoryName,
-                    CreatedAt = cable.CreatedAt,
-                    UpdateAt = cable.UpdateAt
                 };
                 result.Add(DTO);
             }

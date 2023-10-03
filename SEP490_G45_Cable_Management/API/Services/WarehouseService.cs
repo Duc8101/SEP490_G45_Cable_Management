@@ -22,10 +22,7 @@ namespace API.Services
                     WarehouseId = item.WarehouseId,
                     WarehouseName = item.WarehouseName,
                     WarehouseKeeperId = item.WarehouseKeeperId,
-                    WarehouseAddress = item.WarehouseAddress,
-                    CreatorId = item.CreatorId,
-                    CreatedAt = item.CreatedAt,
-                    UpdateAt = item.UpdateAt
+                    WarehouseAddress = item.WarehouseAddress
                 };
                 result.Add(DTO);
             }

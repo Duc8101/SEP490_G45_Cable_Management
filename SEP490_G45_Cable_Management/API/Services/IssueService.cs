@@ -25,10 +25,7 @@ namespace API.Services
                     Description = issue.Description,
                     IssueDate = issue.IssueDate,
                     CableRoutingName = issue.CableRoutingName,
-                    Group = issue.Group,
-                    CreatorId = issue.CreatorId,
-                    CreatedAt = issue.CreatedAt,
-                    UpdateAt = issue.UpdateAt
+                    Group = issue.Group
                 };
                 result.Add(DTO);
             }
