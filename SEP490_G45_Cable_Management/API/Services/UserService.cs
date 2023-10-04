@@ -16,7 +16,6 @@ namespace API.Services
     {
         private readonly DAOUser daoUser = new DAOUser();
         private readonly DAORole daoRole = new DAORole();
-
         public async Task<ResponseDTO<string>> Login(LoginDTO DTO)
         {
             User? user = await daoUser.getUser(DTO);

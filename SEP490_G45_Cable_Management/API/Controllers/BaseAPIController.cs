@@ -41,6 +41,11 @@ namespace API.Controllers
             return User.Claims.Where(c => c.Type == type).FirstOrDefault();
         }
 
+        /*protected List<Claim> getListClaim()
+        {
+            return User.Claims.ToList();
+        }*/
+
         protected string? getUserID()
         {
             Claim? claim = getClaim("UserID");
