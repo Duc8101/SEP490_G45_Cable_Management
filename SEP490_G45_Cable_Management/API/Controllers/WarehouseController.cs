@@ -22,7 +22,7 @@ namespace API.Controllers
             {
                 return await service.List(name, page);
             }
-            throw new UnauthorizedAccessException();
+           throw new UnauthorizedAccessException();
         }
 
         [HttpPost]

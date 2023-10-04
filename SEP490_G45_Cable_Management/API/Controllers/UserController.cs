@@ -27,15 +27,15 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<PagedResultDTO<UserListDTO>> List(string? filter, int page)
         {
             // if admin
-            if (isAdmin())
-            {
+            //if (isAdmin())
+            //{
                 return await service.List(filter, page);
-            }
-            throw new UnauthorizedAccessException();
+            //}
+            //throw new UnauthorizedAccessException();
         }
 
         [HttpPost]

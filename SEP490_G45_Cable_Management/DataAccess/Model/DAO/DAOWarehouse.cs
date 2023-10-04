@@ -17,7 +17,8 @@ namespace DataAccess.Model.DAO
             {
                 return await context.Warehouses.Where(w => w.IsDeleted == false).Skip(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE).OrderByDescending(w => w.UpdateAt).ToListAsync();
             }
-            return await context.Warehouses.Where(w => w.IsDeleted == false && w.WarehouseName.ToLower().Contains(name.ToLower().Trim())).Skip(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE).OrderByDescending(w => w.UpdateAt).ToListAsync();
+            return await context.Warehouses.Where(w => w.IsDeleted == false && w.WarehouseName != null && w.WarehouseName.ToLower().Contains(name.ToLower().Trim()))
+                .Skip(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE).OrderByDescending(w => w.UpdateAt).ToListAsync();
         }
 
         public async Task<int> getRowCount(string? name)
@@ -29,7 +30,7 @@ namespace DataAccess.Model.DAO
             }
             else
             {
-                list = await context.Warehouses.Where(w => w.IsDeleted == false && w.WarehouseName.ToLower().Contains(name.ToLower().Trim())).ToListAsync();
+                list = await context.Warehouses.Where(w => w.IsDeleted == false && w.WarehouseName != null && w.WarehouseName.ToLower().Contains(name.ToLower().Trim())).ToListAsync();
             }
             return list.Count;
         }
