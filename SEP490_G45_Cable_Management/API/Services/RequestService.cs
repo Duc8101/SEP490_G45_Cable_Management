@@ -45,6 +45,22 @@ namespace API.Services
             int RowCount = await daoRequest.getRowCount(name, status);
             return new PagedResultDTO<RequestListDTO>(page, RowCount,PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, list);
         }
+
+        public async Task<ResponseDTO<bool>> CreateExport(RequestCreateExportDTO DTO, Guid CreatorID)
+        {
+            Issue? issue = await daoIssue.getIssue(DTO.IssueId);
+            // if not found issue
+            if (issue == null)
+            {
+                return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int) HttpStatusCode.NotFound);
+            }
+            // if issue approved
+            if (issue.Status.Equals(RequestConst.STATUS_APPROVED))
+            {
+                return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int) HttpStatusCode.NotAcceptable);
+            }
+            return new ResponseDTO<bool>(true,"");
+        }
         /*public async Task<ResponseDTO<bool>> Create(RequestCreateDTO DTO, Guid CreatorID)
         {
             // if not request deliver warehouse

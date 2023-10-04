@@ -23,22 +23,22 @@ namespace API.Controllers
             }
             return await service.List(name, status, page);
         }
-        /*
+
         [HttpPost]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Create(RequestCreateDTO DTO)
+        public async Task<ResponseDTO<bool>> CreateExport(RequestCreateExportDTO DTO)
         {
             // if admin or staff
-            if(isAdmin() || isStaff())
+            if (isAdmin() || isStaff())
             {
                 string? CreatorID = getUserID();
-                if(CreatorID == null)
+                if (CreatorID == null)
                 {
                     throw new ApplicationException();
                 }
-                return await service.Create(DTO, Guid.Parse(CreatorID));
+                return await service.CreateExport(DTO, Guid.Parse(CreatorID));
             }
             throw new UnauthorizedAccessException();
-        }*/
+        }
     }
 }
