@@ -10,7 +10,7 @@ namespace DataAccess.Entity
         public int Quantity { get; set; }
         public string? Note { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime? UpdateAt { get; set; }
+        public DateTime UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
 
         public virtual OtherMaterial OtherMaterials { get; set; } = null!;

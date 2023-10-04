@@ -4,7 +4,6 @@ using DataAccess.Model.DAO;
 using DataAccess.Entity;
 using DataAccess.Const;
 using System.Net;
-using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace API.Services
 {
@@ -21,7 +20,7 @@ namespace API.Services
             foreach (Cable item in list)
             {
                 Warehouse? ware = item.WarehouseId == null ? null : await daoWare.getWarehouse(item.WarehouseId.Value);
-                Supplier? supplier = await daoSupplier.getSupplier(item.SupplierId);
+                Supplier? supplier = item.SupplierId == null ? null : await daoSupplier.getSupplier(item.SupplierId.Value);
                 CableCategory? category = await daoCategory.getCableCategory(item.CableCategoryId);
                 if(ware != null && supplier != null && category != null)
                 {
@@ -70,6 +69,7 @@ namespace API.Services
                 Status = DTO.Status.Trim(),
                 CreatorId = CreatorID,
                 CreatedAt = DateTime.Now,
+                UpdateAt = DateTime.Now,
                 IsDeleted = false,
                 IsExportedToUse = false,
                 CableCategoryId = DTO.CableCategoryId,

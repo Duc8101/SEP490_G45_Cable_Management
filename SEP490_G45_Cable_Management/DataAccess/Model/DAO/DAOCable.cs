@@ -34,17 +34,25 @@ namespace DataAccess.Model.DAO
                 .OrderByDescending(c => c.UpdateAt).ToListAsync();
             }
 
+            if (isExportedToUse)
+            {
+                return await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == true
+                && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim())
+                || (c.Code != null && c.Code.ToLower().Contains(filter.ToLower().Trim())) || (c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))))
+               .Skip(PageSizeConst.MAX_CABLE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_LIST_IN_PAGE).OrderByDescending(c => c.UpdateAt).ToListAsync();
+            }
+
             if (WarehouseID == null)
             {
-                return await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == isExportedToUse
-                && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim()) || c.Code.ToLower().Contains(filter.ToLower().Trim()) 
-                || c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))).Skip(PageSizeConst.MAX_CABLE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_LIST_IN_PAGE)
+                return await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false
+                && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim()) || (c.Code != null && c.Code.ToLower().Contains(filter.ToLower().Trim()))
+                || (c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())) )).Skip(PageSizeConst.MAX_CABLE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_LIST_IN_PAGE)
                 .OrderByDescending(c => c.UpdateAt).ToListAsync();
             }
 
-            return await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == isExportedToUse
+            return await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false
             && c.WarehouseId == WarehouseID && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim())
-            || c.Code.ToLower().Contains(filter.ToLower().Trim()) || c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())))
+            || (c.Code != null && c.Code.ToLower().Contains(filter.ToLower().Trim())) || (c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))))
                 .Skip(PageSizeConst.MAX_CABLE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_LIST_IN_PAGE).OrderByDescending(c => c.UpdateAt).ToListAsync();
         }
 
@@ -77,7 +85,7 @@ namespace DataAccess.Model.DAO
                 {
                     list = await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == true
                     && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim())
-                    || c.Code.ToLower().Contains(filter.ToLower().Trim()) || c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())))
+                    || (c.Code != null && c.Code.ToLower().Contains(filter.ToLower().Trim())) || (c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))))
                    .ToListAsync();
                 }
                 else
@@ -86,14 +94,14 @@ namespace DataAccess.Model.DAO
                     if (WarehouseID == null)
                     {
                         list = await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false
-                        && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim()) || c.Code.ToLower().Contains(filter.ToLower().Trim()) 
-                        || c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))).ToListAsync();
+                        && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim()) || (c.Code != null && c.Code.ToLower().Contains(filter.ToLower().Trim())) 
+                        || (c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())))).ToListAsync();
                     }
                     else
                     {
                         list = await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false
                         && c.WarehouseId == WarehouseID && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim())
-                        || c.Code.ToLower().Contains(filter.ToLower().Trim()) || c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())))
+                        || (c.Code != null && c.Code.ToLower().Contains(filter.ToLower().Trim())) || (c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))))
                         .ToListAsync();
                     }    
                 }
@@ -130,7 +138,7 @@ namespace DataAccess.Model.DAO
                 {
                     list = await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == true
                     && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim())
-                    || c.Code.ToLower().Contains(filter.ToLower().Trim()) || c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())))
+                    || (c.Code != null && c.Code.ToLower().Contains(filter.ToLower().Trim())) || (c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))))
                    .ToListAsync();
                 }
                 else
@@ -139,14 +147,14 @@ namespace DataAccess.Model.DAO
                     if (WarehouseID == null)
                     {
                         list = await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false
-                        && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim()) || c.Code.ToLower().Contains(filter.ToLower().Trim())
-                        || c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))).ToListAsync();
+                        && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim()) || (c.Code != null && c.Code.ToLower().Contains(filter.ToLower().Trim()))
+                        || (c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())))).ToListAsync();
                     }
                     else
                     {
                         list = await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false
                         && c.WarehouseId == WarehouseID && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim())
-                        || c.Code.ToLower().Contains(filter.ToLower().Trim()) || c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())))
+                        || (c.Code != null && c.Code.ToLower().Contains(filter.ToLower().Trim())) || (c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))))
                         .ToListAsync();
                     }
                 }

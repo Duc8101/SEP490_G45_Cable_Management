@@ -9,6 +9,6 @@ namespace DataAccess.Model.DAO
 {
     public class BaseDAO
     {
-        protected readonly SEP490_CABLE_MANAGEMENTContext context = new SEP490_CABLE_MANAGEMENTContext();
+        protected readonly CableManagementContext context = new CableManagementContext();
     }
 }

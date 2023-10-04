@@ -11,9 +11,9 @@ namespace DataAccess.Entity
         }
 
         public Guid RouteId { get; set; }
-        public string RouteName { get; set; } = null!;
+        public string? RouteName { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime? UpdateAt { get; set; }
+        public DateTime UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
 
         public virtual ICollection<Node> Nodes { get; set; }

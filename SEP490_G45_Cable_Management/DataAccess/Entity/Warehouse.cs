@@ -15,16 +15,18 @@ namespace DataAccess.Entity
             RequestOtherMaterialRecoveryDestWarehouses = new HashSet<RequestOtherMaterial>();
             Requests = new HashSet<Request>();
             TransactionHistoryFromWarehouses = new HashSet<TransactionHistory>();
-            TransactionHistoryToWareHouses = new HashSet<TransactionHistory>();
-            TransactionHistoryWareHouses = new HashSet<TransactionHistory>();
+            TransactionHistoryToWarehouses = new HashSet<TransactionHistory>();
+            TransactionHistoryWarehouses = new HashSet<TransactionHistory>();
         }
 
         public int WarehouseId { get; set; }
-        public string WarehouseName { get; set; } = null!;
-        public Guid? WarehouseKeeperId { get; set; }
+        public string? WarehouseName { get; set; }
+        public Guid? WarehouseKeeperid { get; set; }
         public Guid CreatorId { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime? UpdateAt { get; set; }
+        public DateTime UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
         public string? WarehouseAddress { get; set; }
 
@@ -38,7 +40,7 @@ namespace DataAccess.Entity
         public virtual ICollection<RequestOtherMaterial> RequestOtherMaterialRecoveryDestWarehouses { get; set; }
         public virtual ICollection<Request> Requests { get; set; }
         public virtual ICollection<TransactionHistory> TransactionHistoryFromWarehouses { get; set; }
-        public virtual ICollection<TransactionHistory> TransactionHistoryToWareHouses { get; set; }
-        public virtual ICollection<TransactionHistory> TransactionHistoryWareHouses { get; set; }
+        public virtual ICollection<TransactionHistory> TransactionHistoryToWarehouses { get; set; }
+        public virtual ICollection<TransactionHistory> TransactionHistoryWarehouses { get; set; }
     }
 }

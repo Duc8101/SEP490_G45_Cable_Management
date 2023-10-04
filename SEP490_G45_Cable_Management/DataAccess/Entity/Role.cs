@@ -11,9 +11,9 @@ namespace DataAccess.Entity
         }
 
         public int RoleId { get; set; }
-        public string RoleName { get; set; } = null!;
+        public string Rolename { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
-        public DateTime? UpdateAt { get; set; }
+        public DateTime UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
 
         public virtual ICollection<User> Users { get; set; }

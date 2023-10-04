@@ -12,15 +12,15 @@ namespace DataAccess.Entity
         }
 
         public Guid IssueId { get; set; }
-        public string IssueName { get; set; } = null!;
-        public string IssueCode { get; set; } = null!;
+        public string? IssueName { get; set; }
+        public string? IssueCode { get; set; }
         public string? Description { get; set; }
         public Guid CreatorId { get; set; }
-        public DateTime? IssueDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime? UpdateAt { get; set; }
+        public DateTime UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
-        public string Status { get; set; } = null!;
+        public string? Status { get; set; }
         public string? CableRoutingName { get; set; }
         public string? Group { get; set; }
 

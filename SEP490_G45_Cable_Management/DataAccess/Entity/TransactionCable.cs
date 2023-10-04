@@ -12,7 +12,7 @@ namespace DataAccess.Entity
         public int Length { get; set; }
         public string? Note { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime? UpdateAt { get; set; }
+        public DateTime UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
 
         public virtual Cable Cable { get; set; } = null!;
