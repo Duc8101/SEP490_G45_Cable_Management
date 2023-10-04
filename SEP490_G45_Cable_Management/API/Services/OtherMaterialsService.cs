@@ -20,8 +20,8 @@ namespace API.Services
             foreach (OtherMaterial item in list)
             {
                 OtherMaterialsCategory? category = await daoCategory.getOtherMaterialsCategory(item.OtherMaterialsCategoryId);
-                Supplier? supplier = await daoSupplier.getSupplier(item.SupplierId);
-                Warehouse? ware = await daoWarehouse.getWarehouse(item.WarehouseId);
+                Supplier? supplier = item.SupplierId == null ? null : await daoSupplier.getSupplier(item.SupplierId.Value);
+                Warehouse? ware = item.WarehouseId == null ? null : await daoWarehouse.getWarehouse(item.WarehouseId.Value);
                 if (category != null && supplier != null && ware != null)
                 {
                     OtherMaterialsListDTO DTO = new OtherMaterialsListDTO()
@@ -49,6 +49,31 @@ namespace API.Services
 
         public async Task<ResponseDTO<bool>> Create(OtherMaterialsCreateUpdateDTO DTO)
         {
+            if(DTO.Code == null || DTO.Code.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Mã hàng không được để trống", (int) HttpStatusCode.NotAcceptable);
+            }
+
+            if (DTO.Unit == null || DTO.Unit.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Đơn vị không được để trống", (int)HttpStatusCode.NotAcceptable);
+            }
+
+            if (DTO.Quantity == null)
+            {
+                return new ResponseDTO<bool>(false, "Số lượng không được để trống", (int) HttpStatusCode.NotAcceptable);
+            }
+
+            if (DTO.Status == null || DTO.Status.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Trạng thái không được để trống", (int) HttpStatusCode.NotAcceptable);
+            }
+
+            if(DTO.WarehouseId == null)
+            {
+                return new ResponseDTO<bool>(false, "Kho không được để trống", (int) HttpStatusCode.NotAcceptable);
+            }
+
             OtherMaterial? material = await daoOtherMaterials.getOtherMaterial(DTO);
             int number;
             // if not exist
@@ -61,6 +86,7 @@ namespace API.Services
                     Code = DTO.Code.Trim(),
                     SupplierId = DTO.SupplierId,
                     CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
                     IsDeleted = false,
                     WarehouseId = DTO.WarehouseId,
                     Status = DTO.Status.Trim(),
@@ -89,8 +115,33 @@ namespace API.Services
             {
                 return new ResponseDTO<bool>(false, "Không tìm thấy vật liệu", (int) HttpStatusCode.NotFound);
             }
+
+            if (DTO.Code == null || DTO.Code.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Mã hàng không được để trống", (int)HttpStatusCode.NotAcceptable);
+            }
+
+            if (DTO.Unit == null || DTO.Unit.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Đơn vị không được để trống", (int)HttpStatusCode.NotAcceptable);
+            }
+
+            if (DTO.Quantity == null)
+            {
+                return new ResponseDTO<bool>(false, "Số lượng không được để trống", (int)HttpStatusCode.NotAcceptable);
+            }
+
+            if (DTO.Status == null || DTO.Status.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Trạng thái không được để trống", (int)HttpStatusCode.NotAcceptable);
+            }
+
+            if (DTO.WarehouseId == null)
+            {
+                return new ResponseDTO<bool>(false, "Kho không được để trống", (int)HttpStatusCode.NotAcceptable);
+            }
             // if exist
-            if(await daoOtherMaterials.isExist(DTO))
+            if (await daoOtherMaterials.isExist(DTO))
             {
                 return new ResponseDTO<bool>(false, "Vật liệu đã tồn tại", (int) HttpStatusCode.NotAcceptable);
             }

@@ -23,7 +23,7 @@ namespace API.Services
                     IssueName = issue.IssueName,
                     IssueCode = issue.IssueCode,
                     Description = issue.Description,
-                    IssueDate = issue.IssueDate,
+                    CreatedDate = issue.CreatedDate,
                     CableRoutingName = issue.CableRoutingName,
                     Group = issue.Group
                 };
@@ -39,6 +39,16 @@ namespace API.Services
         }
         public async Task<ResponseDTO<bool>> Create(IssueCreateDTO DTO, Guid CreatorID)
         {
+            if(DTO.IssueName == null || DTO.IssueName.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Tên sự vụ không được để trống", (int) HttpStatusCode.NotAcceptable);
+            }
+
+            if (DTO.IssueCode == null || DTO.IssueCode.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Mã sự vụ không được để trống", (int) HttpStatusCode.NotAcceptable);
+            }
+
             Issue issue = new Issue()
             {
                 IssueId = Guid.NewGuid(),
@@ -46,7 +56,8 @@ namespace API.Services
                 IssueCode = DTO.IssueCode.Trim(),
                 Description = DTO.Description == null || DTO.Description.Trim().Length == 0 ? null : DTO.Description.Trim(),
                 CreatedAt = DateTime.Now,
-                IssueDate = DTO.IssueDate,
+                UpdateAt = DateTime.Now,
+                CreatedDate = DTO.CreatedDate,
                 CableRoutingName = DTO.CableRoutingName == null || DTO.CableRoutingName.Trim().Length == 0 ? null : DTO.CableRoutingName.Trim(),
                 Group = DTO.Group == null || DTO.Group.Trim().Length == 0 ? null : DTO.Group.Trim(),
                 CreatorId = CreatorID,
@@ -69,10 +80,20 @@ namespace API.Services
             {
                 return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int) HttpStatusCode.NotFound);
             }
+
+            if (DTO.IssueName == null || DTO.IssueName.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Tên sự vụ không được để trống", (int)HttpStatusCode.NotAcceptable);
+            }
+
+            if (DTO.IssueCode == null || DTO.IssueCode.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Mã sự vụ không được để trống", (int)HttpStatusCode.NotAcceptable);
+            }
             issue.IssueName = DTO.IssueName.Trim();
             issue.IssueCode = DTO.IssueCode.Trim();
             issue.Description = DTO.Description == null || DTO.Description.Trim().Length == 0 ? null : DTO.Description.Trim();
-            issue.IssueDate = DTO.IssueDate;
+            issue.CreatedDate = DTO.CreatedDate;
             issue.CableRoutingName = DTO.CableRoutingName == null || DTO.CableRoutingName.Trim().Length == 0 ? null : DTO.CableRoutingName.Trim();
             issue.Group = DTO.Group == null || DTO.Group.Trim().Length == 0 ? null : DTO.Group.Trim();
             issue.Status = DTO.Status;

@@ -8,10 +8,10 @@ namespace DataAccess.DTO.IssueDTO
 {
     public class IssueCreateDTO
     {
-        public string IssueName { get; set; } = null!;
-        public string IssueCode { get; set; } = null!;
+        public string? IssueName { get; set; }
+        public string? IssueCode { get; set; }
         public string? Description { get; set; }
-        public DateTime? IssueDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
         public string? CableRoutingName { get; set; }
         public string? Group { get; set; }
 

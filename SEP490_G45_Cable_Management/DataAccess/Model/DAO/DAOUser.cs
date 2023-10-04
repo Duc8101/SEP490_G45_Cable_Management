@@ -16,7 +16,7 @@ namespace DataAccess.Model.DAO
     {
         public async Task<User?> getUser(LoginDTO DTO)
         {
-            User? user = await context.Users.SingleOrDefaultAsync(u => u.UserName == DTO.UserName && u.IsDeleted == false);
+            User? user = await context.Users.SingleOrDefaultAsync(u => u.Username == DTO.UserName && u.IsDeleted == false);
             // if username or password invalid
             if (user == null || string.Compare(user.Password, UserUtil.HashPassword(DTO.Password), false) != 0)
             {
@@ -33,7 +33,7 @@ namespace DataAccess.Model.DAO
 
         public async Task<bool> isExist(string username, string email)
         {
-            return await context.Users.AnyAsync(u => u.UserName == username || u.Email == email);
+            return await context.Users.AnyAsync(u => u.Username == username || u.Email == email);
         }
 
         public async Task<int> UpdateUser(User user)
@@ -54,9 +54,9 @@ namespace DataAccess.Model.DAO
                 return await context.Users.Where(u => u.IsDeleted == false).Skip(PageSizeConst.MAX_USER_LIST_IN_PAGE * (page - 1)).
                     Take(PageSizeConst.MAX_USER_LIST_IN_PAGE).OrderByDescending(u => u.UpdateAt).ToListAsync();
             }
-            return await context.Users.Where(u => u.IsDeleted == false && (u.FirstName.ToLower().Contains(filter.ToLower().Trim()) || 
-            u.LastName.ToLower().Contains(filter.ToLower().Trim()) || u.Role.RoleName.Contains(filter.ToLower().Trim()) 
-            || u.Email.ToLower().Contains(filter.ToLower().Trim()) || u.UserName.ToLower().Contains(filter.ToLower().Trim())))
+            return await context.Users.Where(u => u.IsDeleted == false && (u.Firstname.ToLower().Contains(filter.ToLower().Trim()) || 
+            u.Lastname.ToLower().Contains(filter.ToLower().Trim()) || u.Role.Rolename.Contains(filter.ToLower().Trim()) 
+            || u.Email.ToLower().Contains(filter.ToLower().Trim()) || u.Username.ToLower().Contains(filter.ToLower().Trim())))
                 .Skip(PageSizeConst.MAX_USER_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_USER_LIST_IN_PAGE).ToListAsync();
         }
 
@@ -69,9 +69,9 @@ namespace DataAccess.Model.DAO
             }
             else
             {
-                list = await context.Users.Where(u => u.IsDeleted == false && (u.FirstName.ToLower().Contains(filter.ToLower().Trim()) ||
-                u.LastName.ToLower().Contains(filter.ToLower().Trim()) || u.Role.RoleName.Contains(filter.ToLower().Trim())
-                || u.Email.ToLower().Contains(filter.ToLower().Trim()) || u.UserName.ToLower().Contains(filter.ToLower().Trim())))
+                list = await context.Users.Where(u => u.IsDeleted == false && (u.Firstname.ToLower().Contains(filter.ToLower().Trim()) ||
+                u.Lastname.ToLower().Contains(filter.ToLower().Trim()) || u.Role.Rolename.Contains(filter.ToLower().Trim())
+                || u.Email.ToLower().Contains(filter.ToLower().Trim()) || u.Username.ToLower().Contains(filter.ToLower().Trim())))
                     .ToListAsync();
             }
             return list.Count;
@@ -84,7 +84,7 @@ namespace DataAccess.Model.DAO
 
         public async Task<bool> isExist(Guid UserID, string username, string email)
         {
-            return await context.Users.AnyAsync(u => (u.UserName == username || u.Email == email) && u.UserId != UserID);
+            return await context.Users.AnyAsync(u => (u.Username == username || u.Email == email) && u.UserId != UserID);
         }
         public async Task<int> DeleteUser(User user)
         {

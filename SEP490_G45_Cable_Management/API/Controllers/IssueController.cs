@@ -14,14 +14,14 @@ namespace API.Controllers
     {
         private readonly IssueService service = new IssueService();
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<PagedResultDTO<IssueListDTO>> List(string? filter, int page)
         {
             // if guest
-            if(isGuest())
-            {
-                throw new UnauthorizedAccessException();  
-            }
+            //if(isGuest())
+            //{
+                //throw new UnauthorizedAccessException();  
+            //}
             return await service.List(filter, page);
         }
 

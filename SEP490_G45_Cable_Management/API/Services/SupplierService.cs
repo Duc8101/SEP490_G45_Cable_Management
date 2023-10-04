@@ -35,7 +35,7 @@ namespace API.Services
         {
             List<SupplierListDTO> list = await getList(name, page);
             int RowCount = await daoSupplier.getRowCount(name);
-            PagedResultDTO<SupplierListDTO> pageResult = new PagedResultDTO<SupplierListDTO>(page, PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE, RowCount, list);
+            PagedResultDTO<SupplierListDTO> pageResult = new PagedResultDTO<SupplierListDTO>(page, RowCount,PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE , list);
             return pageResult;
         }
         public async Task<ResponseDTO<bool>> Create(SupplierCreateUpdateDTO DTO, string CreatorID)

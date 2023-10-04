@@ -8,12 +8,12 @@ namespace DataAccess.DTO.OtherMaterialsDTO
 {
     public class OtherMaterialsCreateUpdateDTO
     {
-        public string Unit { get; set; } = null!;
-        public int Quantity { get; set; }
-        public string Code { get; set; } = null!;
+        public string? Unit { get; set; }
+        public int? Quantity { get; set; }
+        public string? Code { get; set; }
         public int SupplierId { get; set; }
-        public int WarehouseId { get; set; }
-        public string Status { get; set; } = null!;
+        public int? WarehouseId { get; set; }
+        public string? Status { get; set; }
         public int OtherMaterialsCategoryId { get; set; }
     }
 }

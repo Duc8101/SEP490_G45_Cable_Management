@@ -8,6 +8,6 @@ namespace DataAccess.DTO.OtherMaterialsCategoryDTO
 {
     public class OtherMaterialsCategoryCreateUpdateDTO
     {
-        public string OtherMaterialsCategoryName { get; set; } = null!;
+        public string? OtherMaterialsCategoryName { get; set; }
     }
 }

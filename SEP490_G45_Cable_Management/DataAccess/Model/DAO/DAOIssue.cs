@@ -20,7 +20,8 @@ namespace DataAccess.Model.DAO
                     .ToListAsync();
             }
             return await context.Issues.Where(i => i.IsDeleted == false && 
-            (i.IssueName.ToLower().Contains(filter.ToLower().Trim()) || i.IssueCode.ToLower().Contains(filter.ToLower().Trim())))
+            ((i.IssueName != null && i.IssueName.ToLower().Contains(filter.ToLower().Trim())) 
+            || (i.IssueCode != null && i.IssueCode.ToLower().Contains(filter.ToLower().Trim()))))
                 .Skip(PageSizeConst.MAX_ISSUE_LIST_IN_PAGE * (page - 1))
                 .Take(PageSizeConst.MAX_ISSUE_LIST_IN_PAGE).OrderByDescending(i => i.UpdateAt).ThenByDescending(i => i.Status)
                 .ToListAsync();
@@ -35,8 +36,8 @@ namespace DataAccess.Model.DAO
             }
             else
             {
-                list = await context.Issues.Where(i => i.IsDeleted == false && (i.IssueName.ToLower().Contains(filter.ToLower().Trim()) 
-                || i.IssueCode.ToLower().Contains(filter.ToLower().Trim()))).ToListAsync();
+                list = await context.Issues.Where(i => i.IsDeleted == false && ((i.IssueName != null && i.IssueName.ToLower().Contains(filter.ToLower().Trim())) 
+                || (i.IssueCode != null && i.IssueCode.ToLower().Contains(filter.ToLower().Trim())))).ToListAsync();
             }
             return list.Count;
         }

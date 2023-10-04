@@ -8,7 +8,7 @@ namespace DataAccess.DTO.WarehouseDTO
 {
     public class WarehouseCreateUpdateDTO
     {
-        public string WarehouseName { get; set; } = null!;
+        public string? WarehouseName { get; set; }
         public Guid? WarehouseKeeperId { get; set; }
         public string? WarehouseAddress { get; set; }
     }

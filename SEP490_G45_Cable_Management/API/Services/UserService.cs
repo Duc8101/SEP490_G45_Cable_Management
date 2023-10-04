@@ -44,12 +44,12 @@ namespace API.Services
             //  create list claim  to store user's information
             List<Claim> list = new List<Claim>()
             {
-                new Claim("username", user.UserName),
+                new Claim("username", user.Username),
                 new Claim("UserID", user.UserId.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim("phone",user.Phone),
-                new Claim("FirstName",user.FirstName),
-                new Claim("LastName",user.LastName),
+                new Claim("phone",user.Phone == null ? "" : user.Phone),
+                new Claim("FirstName",user.Firstname),
+                new Claim("LastName",user.Lastname),
                 new Claim(ClaimTypes.Role, dic[user.RoleId])
             };
             JwtSecurityToken token = new JwtSecurityToken(JWT["Issuer"],
@@ -74,18 +74,20 @@ namespace API.Services
                 User user = new User()
                 {
                     UserId = Guid.NewGuid(),
-                    UserName = DTO.UserName,
-                    LastName = DTO.LastName.Trim(),
-                    FirstName = DTO.FirstName.Trim(),
+                    Username = DTO.UserName,
+                    Lastname = DTO.LastName.Trim(),
+                    Firstname = DTO.FirstName.Trim(),
                     Email = DTO.Email,
                     Password = hashPw,
                     Phone = DTO.Phone,
                     RoleId = RoleConst.INT_ROLE_STAFF,
                     CreatedAt = DateTime.Now,
+                    CreatedDate = DateTime.Now,
+                    UpdateAt = DateTime.Now,
                     IsDeleted = false
                 };
                 // if user exist
-                if (await daoUser.isExist(user.UserName, user.Email))
+                if (await daoUser.isExist(user.Username, user.Email))
                 {
                     return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.NotAcceptable);
                 }
@@ -179,12 +181,12 @@ namespace API.Services
                     UserListDTO DTO = new UserListDTO()
                     {
                         UserId = user.UserId,
-                        UserName = user.UserName,
-                        FirstName = user.FirstName,
-                        LastName = user.LastName,
+                        UserName = user.Username,
+                        FirstName = user.Firstname,
+                        LastName = user.Lastname,
                         Email = user.Email,
                         Phone = user.Phone,
-                        RoleName = role.RoleName
+                        RoleName = role.Rolename
                     };
                     result.Add(DTO);
                 }
@@ -212,10 +214,10 @@ namespace API.Services
             {
                 return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.NotAcceptable);
             }
-            user.UserName = DTO.UserName;
+            user.Username = DTO.UserName;
             user.Email = DTO.Email;
-            user.FirstName = DTO.FirstName.Trim();
-            user.LastName = DTO.LastName.Trim();
+            user.Firstname = DTO.FirstName.Trim();
+            user.Lastname = DTO.LastName.Trim();
             user.Phone = DTO.Phone;
             user.RoleId = DTO.RoleId;
             user.UpdateAt = DateTime.Now;

@@ -20,8 +20,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<PagedResultDTO<SupplierListDTO>> List(string? name, int page /* current page */)
         {
-            // if admin or warehouse
-            if (isAdmin() || isWarehouseKeeper())
+            // if admin or warehouse or leader
+            if (isAdmin() || isWarehouseKeeper() || isLeader())
             {
                 return await service.List(name, page);
             }

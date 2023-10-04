@@ -36,10 +36,14 @@ namespace API.Services
 
         public async Task<ResponseDTO<bool>> Create(OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
+            if(DTO.OtherMaterialsCategoryName == null || DTO.OtherMaterialsCategoryName.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Tên vật liệu không được để trống", (int)HttpStatusCode.NotAcceptable);
+            }
             // if name exist
             if(await daoOtherMaterialsCategory.isExist(DTO.OtherMaterialsCategoryName.Trim()))
             {
-                return new ResponseDTO<bool>(false, "Loại cáp này đã tồn tại" , (int) HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Loại vật liệu này đã tồn tại" , (int) HttpStatusCode.NotAcceptable);
             }
             OtherMaterialsCategory category = new OtherMaterialsCategory()
             {
@@ -62,12 +66,17 @@ namespace API.Services
             // if not found
             if(category == null)
             {
-                return new ResponseDTO<bool>(false, "Không tìm thấy loại cáp này" , (int) HttpStatusCode.NotFound);
+                return new ResponseDTO<bool>(false, "Không tìm thấy loại vật liệu này" , (int) HttpStatusCode.NotFound);
+            }
+
+            if (DTO.OtherMaterialsCategoryName == null || DTO.OtherMaterialsCategoryName.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Tên vật liệu không được để trống", (int)HttpStatusCode.NotAcceptable);
             }
             // if already exist
-            if(await daoOtherMaterialsCategory.isExist(OtherMaterialsCategoryID, DTO.OtherMaterialsCategoryName.Trim()))
+            if (await daoOtherMaterialsCategory.isExist(OtherMaterialsCategoryID, DTO.OtherMaterialsCategoryName.Trim()))
             {
-                return new ResponseDTO<bool>(false, "Loại cáp này đã tồn tại", (int) HttpStatusCode.NotFound);
+                return new ResponseDTO<bool>(false, "Loại vật liệu này đã tồn tại", (int) HttpStatusCode.NotFound);
             }
             category.OtherMaterialsCategoryName = DTO.OtherMaterialsCategoryName.Trim();
             category.UpdateAt = DateTime.Now;

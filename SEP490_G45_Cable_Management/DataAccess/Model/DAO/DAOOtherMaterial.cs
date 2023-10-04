@@ -19,9 +19,10 @@ namespace DataAccess.Model.DAO
                 return await context.OtherMaterials.Where(o => o.IsDeleted == false).Skip(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE * (page - 1))
                     .Take(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE).OrderByDescending(o => o.UpdateAt).ToListAsync();
             }
-            return await context.OtherMaterials.Where(o => o.IsDeleted == false && (o.OtherMaterialsCategory.OtherMaterialsCategoryName
-            .ToLower().Contains(filter.ToLower().Trim()) || o.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())
-            || o.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim())))
+            return await context.OtherMaterials.Where(o => o.IsDeleted == false 
+            && ((o.OtherMaterialsCategory.OtherMaterialsCategoryName != null && o.OtherMaterialsCategory.OtherMaterialsCategoryName
+            .ToLower().Contains(filter.ToLower().Trim())) || (o.Supplier != null && o.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))
+            || (o.Warehouse != null && o.Warehouse.WarehouseName != null && o.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim()))))
                 .Skip(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE)
                 .OrderByDescending(o => o.UpdateAt).ToListAsync();
         }
@@ -35,9 +36,10 @@ namespace DataAccess.Model.DAO
             }
             else
             {
-                list = await context.OtherMaterials.Where(o => o.IsDeleted == false && (o.OtherMaterialsCategory.OtherMaterialsCategoryName
-                .ToLower().Contains(filter.ToLower().Trim()) || o.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())
-                || o.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim()))).ToListAsync();
+                list = await context.OtherMaterials.Where(o => o.IsDeleted == false 
+                && ((o.OtherMaterialsCategory.OtherMaterialsCategoryName != null && o.OtherMaterialsCategory.OtherMaterialsCategoryName.ToLower().Contains(filter.ToLower().Trim())) 
+                || (o.Supplier != null && o.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))
+                || (o.Warehouse != null && o.Warehouse.WarehouseName != null && o.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim())))).ToListAsync();
             }
             return list.Count;
         }
@@ -51,14 +53,18 @@ namespace DataAccess.Model.DAO
             }
             else
             {
-                list = await context.OtherMaterials.Where(o => o.IsDeleted == false && (o.OtherMaterialsCategory.OtherMaterialsCategoryName
-                .ToLower().Contains(filter.ToLower().Trim()) || o.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())
-                || o.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim()))).ToListAsync();
+                list = await context.OtherMaterials.Where(o => o.IsDeleted == false && 
+                ((o.OtherMaterialsCategory.OtherMaterialsCategoryName != null && o.OtherMaterialsCategory.OtherMaterialsCategoryName.ToLower().Contains(filter.ToLower().Trim())) 
+                || (o.Supplier != null && o.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))
+                || (o.Warehouse != null && o.Warehouse.WarehouseName != null && o.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim())))).ToListAsync();
             }
             int sum = 0;
             foreach (OtherMaterial material in list)
             {
-                sum = sum + material.Quantity;
+                if(material.Quantity != null)
+                {
+                    sum = sum + material.Quantity.Value;
+                } 
             }
             return sum;
         }
@@ -66,8 +72,8 @@ namespace DataAccess.Model.DAO
         public async Task<OtherMaterial?> getOtherMaterial(OtherMaterialsCreateUpdateDTO DTO)
         {
             return await context.OtherMaterials.Where(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == DTO.OtherMaterialsCategoryId
-            && o.Unit == DTO.Unit.Trim() && o.Code == DTO.Code.Trim() && o.SupplierId == DTO.SupplierId && o.Status == DTO.Status.Trim()
-            && o.WarehouseId == DTO.WarehouseId).FirstOrDefaultAsync();
+            && (DTO.Unit != null && o.Unit == DTO.Unit.Trim()) && (DTO.Code != null && o.Code == DTO.Code.Trim()) && o.SupplierId == DTO.SupplierId 
+            && (DTO.Status != null && o.Status == DTO.Status.Trim()) && o.WarehouseId == DTO.WarehouseId).FirstOrDefaultAsync();
         }
 
         public async Task<int> CreateMaterial(OtherMaterial material)
@@ -90,7 +96,7 @@ namespace DataAccess.Model.DAO
         public async Task<bool> isExist(OtherMaterialsCreateUpdateDTO DTO)
         {
             return await context.OtherMaterials.AnyAsync(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == DTO.OtherMaterialsCategoryId
-            && o.Unit == DTO.Unit.Trim() && o.Code == DTO.Code.Trim() && o.SupplierId == DTO.SupplierId && o.Status == DTO.Status.Trim()
+            && (DTO.Unit != null && o.Unit == DTO.Unit.Trim()) && (DTO.Code != null && o.Code == DTO.Code.Trim()) && o.SupplierId == DTO.SupplierId && (DTO.Status != null && o.Status == DTO.Status.Trim())
             && o.WarehouseId == DTO.WarehouseId);
         }
 

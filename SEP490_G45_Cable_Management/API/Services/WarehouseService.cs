@@ -21,7 +21,7 @@ namespace API.Services
                 {
                     WarehouseId = item.WarehouseId,
                     WarehouseName = item.WarehouseName,
-                    WarehouseKeeperId = item.WarehouseKeeperId,
+                    WarehouseKeeperId = item.WarehouseKeeperid,
                     WarehouseAddress = item.WarehouseAddress
                 };
                 result.Add(DTO);
@@ -37,6 +37,10 @@ namespace API.Services
 
         public async Task<ResponseDTO<bool>> Create(WarehouseCreateUpdateDTO DTO, Guid CreatorID)
         {
+            if(DTO.WarehouseName == null || DTO.WarehouseName.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Tên kho không được để trống", (int) HttpStatusCode.NotAcceptable);
+            }
             // if warehouse already exist
             if(await daoWarehouse.isExist(DTO.WarehouseName.Trim()))
             {
@@ -45,11 +49,12 @@ namespace API.Services
             Warehouse ware = new Warehouse()
             {
                 WarehouseName = DTO.WarehouseName.Trim(),
-                WarehouseKeeperId = DTO.WarehouseKeeperId,
+                WarehouseKeeperid = DTO.WarehouseKeeperId,
                 WarehouseAddress = DTO.WarehouseAddress == null || DTO.WarehouseAddress.Trim().Length == 0 ? null : DTO.WarehouseAddress.Trim(),
                 CreatorId = CreatorID,
                 CreatedAt = DateTime.Now,
-                UpdateAt = null,
+                UpdateAt = DateTime.Now,
+                CreatedDate = DateTime.Now,
                 IsDeleted = false,
             };
             int number = await daoWarehouse.CreateWarehouse(ware);
@@ -70,13 +75,17 @@ namespace API.Services
                 return new ResponseDTO<bool>(false, "Không tìm thấy kho", (int) HttpStatusCode.NotFound);
             }
 
+            if (DTO.WarehouseName == null || DTO.WarehouseName.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Tên kho không được để trống", (int)HttpStatusCode.NotAcceptable);
+            }
             // if ware exist
-            if(await daoWarehouse.isExist(WarehouseID, DTO.WarehouseName.Trim()))
+            if (await daoWarehouse.isExist(WarehouseID, DTO.WarehouseName.Trim()))
             {
                 return new ResponseDTO<bool>(false, "Kho đã tồn tại", (int) HttpStatusCode.NotAcceptable);
             }
             ware.WarehouseName = DTO.WarehouseName.Trim();
-            ware.WarehouseKeeperId = DTO.WarehouseKeeperId;
+            ware.WarehouseKeeperid = DTO.WarehouseKeeperId;
             ware.WarehouseAddress = DTO.WarehouseAddress == null || DTO.WarehouseAddress.Trim().Length == 0 ? null : DTO.WarehouseAddress.Trim();
             ware.UpdateAt = DateTime.Now;
             int number = await daoWarehouse.UpdateWarehouse(ware);
