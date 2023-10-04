@@ -103,7 +103,5 @@ namespace API.Controllers
             }
             return await service.ChangePassword(DTO, email);
         }
-
-        
     }
 }
