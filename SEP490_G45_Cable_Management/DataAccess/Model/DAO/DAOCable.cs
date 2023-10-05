@@ -14,24 +14,22 @@ namespace DataAccess.Model.DAO
     {
         public async Task<List<Cable>> getList(string? filter, int? WarehouseID, bool isExportedToUse , int page)
         {
-            if(filter == null || filter.Trim().Length == 0)
+            IQueryable<Cable> query;
+            if (filter == null || filter.Trim().Length == 0)
             {
                 if(isExportedToUse)
                 {
                     return await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == true).Skip(PageSizeConst.MAX_CABLE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_LIST_IN_PAGE)
                     .OrderByDescending(c => c.UpdateAt).ToListAsync();
                 }
-
-                // if cable of all warehouse
-                if(WarehouseID == null)
+                query = context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false);
+                // if cable of a warehouse
+                if(WarehouseID != null)
                 {
-                    return await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false)
-                        .Skip(PageSizeConst.MAX_CABLE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_LIST_IN_PAGE)
-                    .OrderByDescending(c => c.UpdateAt).ToListAsync();
+                    query = query.Where(c => c.WarehouseId == WarehouseID);
                 }
-                return await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false
-                && c.WarehouseId == WarehouseID).Skip(PageSizeConst.MAX_CABLE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_LIST_IN_PAGE)
-                .OrderByDescending(c => c.UpdateAt).ToListAsync();
+                return await query.Skip(PageSizeConst.MAX_CABLE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_LIST_IN_PAGE)
+                    .OrderByDescending(c => c.UpdateAt).ToListAsync();
             }
 
             if (isExportedToUse)
@@ -42,22 +40,21 @@ namespace DataAccess.Model.DAO
                .Skip(PageSizeConst.MAX_CABLE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_LIST_IN_PAGE).OrderByDescending(c => c.UpdateAt).ToListAsync();
             }
 
-            if (WarehouseID == null)
-            {
-                return await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false
+            query = context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false
                 && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim()) || (c.Code != null && c.Code.ToLower().Contains(filter.ToLower().Trim()))
-                || (c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())) )).Skip(PageSizeConst.MAX_CABLE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_LIST_IN_PAGE)
-                .OrderByDescending(c => c.UpdateAt).ToListAsync();
+                || (c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))));
+            // if cable of a warehouse
+            if (WarehouseID != null)
+            {
+                query = query.Where(c => c.WarehouseId == WarehouseID);
             }
-
-            return await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false
-            && c.WarehouseId == WarehouseID && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim())
-            || (c.Code != null && c.Code.ToLower().Contains(filter.ToLower().Trim())) || (c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))))
-                .Skip(PageSizeConst.MAX_CABLE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_LIST_IN_PAGE).OrderByDescending(c => c.UpdateAt).ToListAsync();
+            return await query.Skip(PageSizeConst.MAX_CABLE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_LIST_IN_PAGE)
+                .OrderByDescending(c => c.UpdateAt).ToListAsync();
         }
 
         public async Task<int> getRowCount(string? filter, int? WarehouseID, bool isExportedToUse)
         {
+            IQueryable<Cable> query;
             List<Cable> list;
             if (filter == null || filter.Trim().Length == 0)
             {
@@ -67,16 +64,13 @@ namespace DataAccess.Model.DAO
                 }
                 else
                 {
-                    //if cable of all warehouse
-                    if (WarehouseID == null)
+                    query = context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false);
+                    //if cable of a warehouse
+                    if (WarehouseID != null)
                     {
-                        list = await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false).ToListAsync();
+                        query = query.Where(c => c.WarehouseId == WarehouseID);                 
                     }
-                    else
-                    {
-                        list = await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false
-                        && c.WarehouseId == WarehouseID).ToListAsync();
-                    }
+                    list = await query.ToListAsync();
                 }     
             }
             else
@@ -90,20 +84,15 @@ namespace DataAccess.Model.DAO
                 }
                 else
                 {
+                    query = context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false
+                        && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim()) || (c.Code != null && c.Code.ToLower().Contains(filter.ToLower().Trim()))
+                        || (c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))));
                     //if cable of all warehouse
-                    if (WarehouseID == null)
+                    if(WarehouseID != null)
                     {
-                        list = await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false
-                        && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim()) || (c.Code != null && c.Code.ToLower().Contains(filter.ToLower().Trim())) 
-                        || (c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())))).ToListAsync();
+                        query = query.Where(c => c.WarehouseId == WarehouseID);
                     }
-                    else
-                    {
-                        list = await context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false
-                        && c.WarehouseId == WarehouseID && (c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim())
-                        || (c.Code != null && c.Code.ToLower().Contains(filter.ToLower().Trim())) || (c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))))
-                        .ToListAsync();
-                    }    
+                    list = await query.ToListAsync();
                 }
             }
             return list.Count;

@@ -17,5 +17,6 @@ namespace DataAccess.Const
         public const int MAX_OTHER_MATERIAL_LIST_IN_PAGE = 12;
         public const int MAX_CABLE_LIST_IN_PAGE = 12;
         public const int MAX_REQUEST_LIST_IN_PAGE = 12;
+        public const int MAX_TRANSACTION_LIST_IN_PAGE = 12;
     }
 }
