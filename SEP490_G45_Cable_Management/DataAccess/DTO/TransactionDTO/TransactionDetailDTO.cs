@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.DTO.TransactionDTO
 {
-    public class TransactionDetailDTO : TransactionListDTO
+    public class TransactionDetailDTO : TransactionHistoryDTO
     {
         public TransactionDetailDTO()
         {

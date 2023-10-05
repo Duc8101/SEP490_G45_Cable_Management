@@ -14,12 +14,25 @@ namespace API.Controllers
         private readonly TransactionService service = new TransactionService();
         [HttpGet]
         //[Authorize]
-        public async Task<PagedResultDTO<TransactionListDTO>> List(string? filter, int? WareHouseID, int page)
+        public async Task<ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>> List(string? filter, int? WareHouseID, int page)
         {
             // if admin
             //if (isAdmin())
             //{
                 return await service.List(filter, WareHouseID, page);
+            //}
+            //throw new UnauthorizedAccessException();
+        }
+
+        [HttpGet("{TransactionID}")]
+        //[Authorize]
+
+        public async Task<ResponseDTO<TransactionDetailDTO?>> Detail(Guid TransactionID)
+        {
+            // if admin
+            //if (isAdmin())
+            //{
+                return await service.Detail(TransactionID);
             //}
             //throw new UnauthorizedAccessException();
         }

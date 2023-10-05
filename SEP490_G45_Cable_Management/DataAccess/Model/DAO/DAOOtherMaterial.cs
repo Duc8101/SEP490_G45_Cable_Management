@@ -93,6 +93,11 @@ namespace DataAccess.Model.DAO
             return await context.OtherMaterials.SingleOrDefaultAsync(o => o.OtherMaterialsId == ID && o.IsDeleted == false);
         }
 
+        public async Task<OtherMaterial?> getOtherMaterialIncludeDeleted(int ID)
+        {
+            return await context.OtherMaterials.SingleOrDefaultAsync(o => o.OtherMaterialsId == ID);
+        }
+
         public async Task<bool> isExist(OtherMaterialsCreateUpdateDTO DTO)
         {
             return await context.OtherMaterials.AnyAsync(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == DTO.OtherMaterialsCategoryId

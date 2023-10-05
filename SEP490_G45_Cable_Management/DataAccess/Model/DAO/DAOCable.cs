@@ -173,6 +173,11 @@ namespace DataAccess.Model.DAO
             return await context.Cables.SingleOrDefaultAsync(c => c.IsDeleted == false && c.CableId == CableID);
         }
 
+        public async Task<Cable?> getCableIncludeDeleted(Guid CableID)
+        {
+            return await context.Cables.SingleOrDefaultAsync(c => c.CableId == CableID);
+        }
+
         public async Task<int> UpdateCable(Cable cable)
         {
             context.Cables.Update(cable);
