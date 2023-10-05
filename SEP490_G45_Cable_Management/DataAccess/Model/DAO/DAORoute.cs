@@ -12,12 +12,12 @@ namespace DataAccess.Model.DAO
     {
         public async Task<List<Route>> getList(string? name)
         {
-            if(name == null || name.Trim().Length == 0)
+            IQueryable<Route> query = context.Routes.Where(r => r.IsDeleted == false);
+            if(name != null && name.Trim().Length != 0)
             {
-                return await context.Routes.Where(r => r.IsDeleted == false).OrderByDescending(r => r.CreatedAt).ToListAsync();
+                query = query.Where(r => r.RouteName != null && r.RouteName.ToLower().Contains(name.ToLower().Trim());
             }
-            return await context.Routes.Where(r => r.IsDeleted == false && r.RouteName.ToLower().Contains(name.ToLower().Trim()))
-                .OrderByDescending(r => r.CreatedAt).ToListAsync();
+            return await query.OrderByDescending(r => r.CreatedAt).ToListAsync();
         }
 
         public async Task<bool> isExist(string name)

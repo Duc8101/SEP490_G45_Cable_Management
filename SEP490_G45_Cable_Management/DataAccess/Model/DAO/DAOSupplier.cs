@@ -22,32 +22,26 @@ namespace DataAccess.Model.DAO
             return await context.Suppliers.AnyAsync(s => s.SupplierName == SupplierName.Trim());
         }
 
+        private IQueryable<Supplier> getQuery(string? name)
+        {
+            IQueryable<Supplier> query = context.Suppliers.Where(s => s.IsDeleted == false);
+            if (name != null && name.Trim().Length != 0)
+            {
+                query = query.Where(s => s.SupplierName.ToLower().Contains(name.ToLower().Trim()));
+            }
+            return query;
+        }
+
         public async Task<List<Supplier>> getList(string? name, int page)
         {
-            List<Supplier> list;
-            if (name == null || name.Trim().Length == 0)
-            {
-                list = await context.Suppliers.Where(s => s.IsDeleted == false).OrderByDescending(x => x.UpdateAt).Skip((page - 1) * PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).Take(PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).ToListAsync();
-            }
-            else
-            {
-                list = await context.Suppliers.Where(s => s.IsDeleted == false && s.SupplierName.ToLower().Contains(name.ToLower().Trim())).OrderByDescending(x => x.UpdateAt).Skip((page - 1) * PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).Take(PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).ToListAsync();
-            }
-            return list;
+            IQueryable<Supplier> query = getQuery(name);
+            return await query.Skip((page - 1) * PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).Take(PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).ToListAsync();
         }
 
         public async Task<int> getRowCount(string? name)
         {
-            List<Supplier> list;
-            if (name == null || name.Trim().Length == 0)
-            {
-                list = await context.Suppliers.Where(s => s.IsDeleted == false).OrderByDescending(x => x.UpdateAt).ToListAsync();
-            }
-            else
-            {
-                list = await context.Suppliers.Where(s => s.IsDeleted == false && s.SupplierName.ToLower().Contains(name.ToLower().Trim())).OrderByDescending(x => x.UpdateAt).ToListAsync();
-            }
-            return list.Count;
+            IQueryable<Supplier> query = getQuery(name);
+            return await query.CountAsync();
         }
 
         public async Task<Supplier?> getSupplier(int SupplierID)

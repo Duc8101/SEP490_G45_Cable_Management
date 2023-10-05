@@ -11,28 +11,24 @@ namespace DataAccess.Model.DAO
 {
     public class DAOWarehouse : BaseDAO
     {
+        private IQueryable<Warehouse> getQuery(string? name)
+        {
+            IQueryable<Warehouse> query = context.Warehouses.Where(w => w.IsDeleted == false);
+            if (name != null && name.Trim().Length != 0)
+            {
+                query = query.Where(w => w.WarehouseName != null && w.WarehouseName.ToLower().Contains(name.ToLower().Trim()));
+            }
+            return query;
+        }
         public async Task<List<Warehouse>> getList(string? name, int page)
         {
-            if (name == null || name.Trim().Length == 0)
-            {
-                return await context.Warehouses.Where(w => w.IsDeleted == false).Skip(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE).OrderByDescending(w => w.UpdateAt).ToListAsync();
-            }
-            return await context.Warehouses.Where(w => w.IsDeleted == false && w.WarehouseName != null && w.WarehouseName.ToLower().Contains(name.ToLower().Trim()))
-                .Skip(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE).OrderByDescending(w => w.UpdateAt).ToListAsync();
-        }
+            IQueryable<Warehouse> query = getQuery(name);
+            return await query.Skip(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE).OrderByDescending(w => w.UpdateAt).ToListAsync();        }
 
         public async Task<int> getRowCount(string? name)
         {
-            List<Warehouse> list;
-            if (name == null || name.Trim().Length == 0)
-            {
-                list = await context.Warehouses.Where(w => w.IsDeleted == false).ToListAsync();
-            }
-            else
-            {
-                list = await context.Warehouses.Where(w => w.IsDeleted == false && w.WarehouseName != null && w.WarehouseName.ToLower().Contains(name.ToLower().Trim())).ToListAsync();
-            }
-            return list.Count;
+            IQueryable<Warehouse> query = getQuery(name);
+            return await query.CountAsync();
         }
 
         public async Task<bool> isExist(string name)

@@ -11,56 +11,31 @@ namespace DataAccess.Model.DAO
 {
     public class DAORequest : BaseDAO
     {
-        public async Task<List<Request>> getList(string? name, string? status, int page)
+        private IQueryable<Request> getQuery(string? name, string? status)
         {
-            if (name == null || name.Trim().Length == 0)
+            IQueryable<Request> query = context.Requests.Where(r => r.IsDeleted == false);
+            if (name != null && name.Trim().Length != 0)
             {
-                if(status == null)
-                {
-                    return await context.Requests.Where(r => r.IsDeleted == false).Skip(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE * (page - 1))
-                        .Take(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE).OrderByDescending(r => r.CreatedAt).ToListAsync();
-                }
-                return await context.Requests.Where(r => r.IsDeleted == false && r.Status == status.Trim()).Skip(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE * (page - 1))
-                       .Take(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE).OrderByDescending(r => r.CreatedAt).ToListAsync();
+                query = query.Where(r => r.RequestName != null && r.RequestName.ToLower().Contains(name.ToLower().Trim()));
             }
 
-            if (status == null)
+            if(status != null)
             {
-                return await context.Requests.Where(r => r.IsDeleted == false && r.RequestName.ToLower().Contains(name.ToLower().Trim()))
-                    .Skip(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE * (page - 1))
-                    .Take(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE).OrderByDescending(r => r.CreatedAt).ToListAsync();
+                query = query.Where(r => r.Status == status.Trim());
             }
-            return await context.Requests.Where(r => r.IsDeleted == false && r.RequestName.ToLower().Contains(name.ToLower().Trim())
-            && r.Status == status.Trim()).Skip(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE * (page - 1))
-            .Take(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE).OrderByDescending(r => r.CreatedAt).ToListAsync();
+            return query;
+        }
+        public async Task<List<Request>> getList(string? name, string? status, int page)
+        {
+            IQueryable<Request> query = getQuery(name, status);
+            return await query.Skip(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE)
+                .OrderByDescending(r => r.CreatedAt).ToListAsync();
         }
 
         public async Task<int> getRowCount(string? name, string? status)
         {
-            List<Request> list;
-            if (name == null || name.Trim().Length == 0)
-            {
-                if (status == null)
-                {
-                    list = await context.Requests.Where(r => r.IsDeleted == false).ToListAsync();
-                }
-                else
-                {
-                    list = await context.Requests.Where(r => r.IsDeleted == false && r.Status == status.Trim()).ToListAsync();
-                }
-            }
-            else
-            {
-                if (status == null)
-                {
-                    list = await context.Requests.Where(r => r.IsDeleted == false && r.RequestName.ToLower().Contains(name.ToLower().Trim())).ToListAsync();
-                }
-                else
-                {
-                    list = await context.Requests.Where(r => r.IsDeleted == false && r.RequestName.ToLower().Contains(name.ToLower().Trim()) && r.Status == status.Trim()).ToListAsync();
-                }
-            }
-            return list.Count;
+            IQueryable<Request> query = getQuery(name, status);
+            return await query.CountAsync();
         }
 
         public async Task<int> CreateRequest(Request request)

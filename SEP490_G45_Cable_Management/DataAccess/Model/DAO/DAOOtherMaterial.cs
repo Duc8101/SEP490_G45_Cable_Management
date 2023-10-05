@@ -12,52 +12,34 @@ namespace DataAccess.Model.DAO
 {
     public class DAOOtherMaterial : BaseDAO
     {
+        private IQueryable<OtherMaterial> getQuery(string? filter)
+        {
+            IQueryable<OtherMaterial> query = context.OtherMaterials.Where(o => o.IsDeleted == false);
+            if (filter != null && filter.Trim().Length != 0)
+            {
+                query = query.Where(o => (o.OtherMaterialsCategory.OtherMaterialsCategoryName != null && o.OtherMaterialsCategory.OtherMaterialsCategoryName.ToLower().Contains(filter.ToLower().Trim())) 
+                || (o.Supplier != null && o.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))
+                || (o.Warehouse != null && o.Warehouse.WarehouseName != null && o.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim())));
+            }
+            return query;
+        }
         public async Task<List<OtherMaterial>> getList(string? filter, int page)
         {
-            if(filter == null || filter.Trim().Length == 0)
-            {
-                return await context.OtherMaterials.Where(o => o.IsDeleted == false).Skip(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE * (page - 1))
-                    .Take(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE).OrderByDescending(o => o.UpdateAt).ToListAsync();
-            }
-            return await context.OtherMaterials.Where(o => o.IsDeleted == false 
-            && ((o.OtherMaterialsCategory.OtherMaterialsCategoryName != null && o.OtherMaterialsCategory.OtherMaterialsCategoryName
-            .ToLower().Contains(filter.ToLower().Trim())) || (o.Supplier != null && o.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))
-            || (o.Warehouse != null && o.Warehouse.WarehouseName != null && o.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim()))))
-                .Skip(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE)
+            IQueryable<OtherMaterial> query = getQuery(filter);
+            return await query.Skip(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE)
                 .OrderByDescending(o => o.UpdateAt).ToListAsync();
         }
 
         public async Task<int> getRowCount(string? filter)
         {
-            List<OtherMaterial> list;
-            if (filter == null || filter.Trim().Length == 0)
-            {
-                list = await context.OtherMaterials.Where(o => o.IsDeleted == false).ToListAsync();
-            }
-            else
-            {
-                list = await context.OtherMaterials.Where(o => o.IsDeleted == false 
-                && ((o.OtherMaterialsCategory.OtherMaterialsCategoryName != null && o.OtherMaterialsCategory.OtherMaterialsCategoryName.ToLower().Contains(filter.ToLower().Trim())) 
-                || (o.Supplier != null && o.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))
-                || (o.Warehouse != null && o.Warehouse.WarehouseName != null && o.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim())))).ToListAsync();
-            }
-            return list.Count;
+            IQueryable<OtherMaterial> query = getQuery(filter);
+            return await query.CountAsync();
         }
 
         public async Task<int> getSum(string? filter)
         {
-            List<OtherMaterial> list;
-            if (filter == null || filter.Trim().Length == 0)
-            {
-                list = await context.OtherMaterials.Where(o => o.IsDeleted == false).ToListAsync();
-            }
-            else
-            {
-                list = await context.OtherMaterials.Where(o => o.IsDeleted == false && 
-                ((o.OtherMaterialsCategory.OtherMaterialsCategoryName != null && o.OtherMaterialsCategory.OtherMaterialsCategoryName.ToLower().Contains(filter.ToLower().Trim())) 
-                || (o.Supplier != null && o.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()))
-                || (o.Warehouse != null && o.Warehouse.WarehouseName != null && o.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim())))).ToListAsync();
-            }
+            IQueryable<OtherMaterial> query = getQuery(filter);
+            List<OtherMaterial> list = await query.ToListAsync();
             int sum = 0;
             foreach (OtherMaterial material in list)
             {

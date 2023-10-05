@@ -11,27 +11,25 @@ namespace DataAccess.Model.DAO
 {
     public class DAOCableCategory : BaseDAO
     {
+        private IQueryable<CableCategory> getQuery(string? name)
+        {
+            IQueryable<CableCategory> query = context.CableCategories;
+            if(name != null && name.Trim().Length != 0)
+            {
+                query = query.Where(c => c.CableCategoryName.ToLower().Contains(name.Trim().ToLower()));
+            }
+            return query;
+        }
         public async Task<List<CableCategory>> getList(string? name, int page)
         {
-            if(name == null || name.Trim().Length == 0)
-            {
-                return await context.CableCategories.Skip(PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE).ToListAsync();
-            }
-            return await context.CableCategories.Where(c => c.CableCategoryName.ToLower().Contains(name.Trim().ToLower())).Skip(PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE).ToListAsync();
+            IQueryable<CableCategory> query = getQuery(name);
+            return await query.Skip(PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE).ToListAsync();
         }
 
         public async Task<int> getRowCount(string? name)
         {
-            List<CableCategory> list;
-            if (name == null || name.Trim().Length == 0)
-            {
-                list = await context.CableCategories.ToListAsync();
-            }
-            else
-            {
-                list = await context.CableCategories.Where(c => c.CableCategoryName.ToLower().Contains(name.Trim().ToLower())).ToListAsync();
-            }
-            return list.Count;
+            IQueryable<CableCategory> query = getQuery(name);
+            return await query.CountAsync();
         }
 
         public async Task<int> CreateCableCategory(CableCategory cable)
