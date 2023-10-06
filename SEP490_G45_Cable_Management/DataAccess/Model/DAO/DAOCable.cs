@@ -79,5 +79,10 @@ namespace DataAccess.Model.DAO
             cable.IsDeleted = true;
             return await UpdateCable(cable);
         }
+
+        public async Task<List<Cable>> getList(int CableCategoryID)
+        {
+            return await context.Cables.Include(c => c.CableCategory).Where(c => c.CableCategoryId == CableCategoryID).ToListAsync();
+        }
     }
 }

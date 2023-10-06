@@ -75,6 +75,12 @@ namespace DataAccess.Model.DAO
             return await context.OtherMaterials.SingleOrDefaultAsync(o => o.OtherMaterialsId == ID && o.IsDeleted == false);
         }
 
+        public async Task<List<OtherMaterial>> getList(int CategoryID)
+        {
+            return await context.OtherMaterials.Include(o => o.OtherMaterialsCategory).Where(o => o.OtherMaterialsCategoryId == CategoryID).ToListAsync();
+
+        }
+
         public async Task<OtherMaterial?> getOtherMaterialIncludeDeleted(int ID)
         {
             return await context.OtherMaterials.SingleOrDefaultAsync(o => o.OtherMaterialsId == ID);

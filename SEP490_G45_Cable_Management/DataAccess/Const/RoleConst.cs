@@ -13,10 +13,10 @@ namespace DataAccess.Const
         public const int INT_ROLE_LEADER = 2;
         public const int INT_ROLE_STAFF = 3;
         public const int INT_ROLE_WAREHOUSE_KEEPER = 4;
-        public const string STRING_ROLE_ADMIN = "admin";
-        public const string STRING_ROLE_LEADER = "leader";
-        public const string STRING_ROLE_STAFF = "staff";
-        public const string STRING_ROLE_WAREHOUSE_KEEPER = "warehouse-keeper";
+        public const string STRING_ROLE_ADMIN = "Admin";
+        public const string STRING_ROLE_LEADER = "Leader";
+        public const string STRING_ROLE_STAFF = "Staff";
+        public const string STRING_ROLE_WAREHOUSE_KEEPER = "WareHouse Keeper";
 
         public static Dictionary<int, string> getList()
         {
