@@ -28,7 +28,7 @@ namespace API.Controllers
 
         [HttpGet]
         //[Authorize]
-        public async Task<PagedResultDTO<UserListDTO>> List(string? filter, int page)
+        public async Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> List(string? filter, int page)
         {
             // if admin
             //if (isAdmin())

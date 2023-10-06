@@ -14,7 +14,7 @@ namespace API.Controllers
         private readonly OtherMaterialsService service = new OtherMaterialsService();
         [HttpGet]
         [Authorize]
-        public async Task<PagedResultDTO<OtherMaterialsListDTO>> List(string? filter, int page)
+        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, int page)
         {
             // if admin, warehouse keeper , leader
             if(isAdmin() || isWarehouseKeeper() || isLeader())

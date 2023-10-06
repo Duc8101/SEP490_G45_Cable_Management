@@ -193,11 +193,23 @@ namespace API.Services
             return result;
         }
 
-        public async Task<PagedResultDTO<UserListDTO>> List(string? filter, int page)
+        private async Task<bool> isSuccessfulGetList(string? filter, int page)
         {
-            List<UserListDTO> list = await getList(filter, page);
-            int RowCount = await daoUser.getRowCount(filter);
-            return new PagedResultDTO<UserListDTO>(page, RowCount, PageSizeConst.MAX_USER_LIST_IN_PAGE, list);
+            List<User> list = await daoUser.getList(filter, page);
+            List<UserListDTO> result = await getList(filter, page);
+            return list.Count == result.Count;
+        }
+        public async Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> List(string? filter, int page)
+        {
+            // if get data successful
+            if(await isSuccessfulGetList(filter, page))
+            {
+                List<UserListDTO> list = await getList(filter, page);
+                int RowCount = await daoUser.getRowCount(filter);
+                PagedResultDTO<UserListDTO> result = new PagedResultDTO<UserListDTO>(page, RowCount, PageSizeConst.MAX_USER_LIST_IN_PAGE, list);
+                return new ResponseDTO<PagedResultDTO<UserListDTO>?>(result , "");
+            }    
+            return new ResponseDTO<PagedResultDTO<UserListDTO>?>(null, "Có lỗi khi lấy dữ liệu" , (int) HttpStatusCode.NotAcceptable);
         }
 
         public async Task<ResponseDTO<bool>> Update(Guid UserID, UserUpdateDTO DTO)

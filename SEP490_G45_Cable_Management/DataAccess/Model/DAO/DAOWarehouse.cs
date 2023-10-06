@@ -47,6 +47,11 @@ namespace DataAccess.Model.DAO
             return await context.Warehouses.SingleOrDefaultAsync(w => w.WarehouseId == ID && w.IsDeleted == false);
         }
 
+        public async Task<Warehouse?> getWarehouseIncludeDeleted(int ID)
+        {
+            return await context.Warehouses.SingleOrDefaultAsync(w => w.WarehouseId == ID);
+        }
+
         public async Task<bool> isExist(int ID, string name)
         {
             return await context.Warehouses.AnyAsync(w => w.WarehouseName == name.Trim() && w.WarehouseId != ID);

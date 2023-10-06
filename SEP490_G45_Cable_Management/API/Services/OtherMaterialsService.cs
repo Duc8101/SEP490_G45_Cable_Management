@@ -20,8 +20,8 @@ namespace API.Services
             foreach (OtherMaterial item in list)
             {
                 OtherMaterialsCategory? category = await daoCategory.getOtherMaterialsCategory(item.OtherMaterialsCategoryId);
-                Supplier? supplier = item.SupplierId == null ? null : await daoSupplier.getSupplier(item.SupplierId.Value);
-                Warehouse? ware = item.WarehouseId == null ? null : await daoWarehouse.getWarehouse(item.WarehouseId.Value);
+                Supplier? supplier = item.SupplierId == null ? null : await daoSupplier.getSupplierIncludeDeleted(item.SupplierId.Value);
+                Warehouse? ware = item.WarehouseId == null ? null : await daoWarehouse.getWarehouseIncludeDeleted(item.WarehouseId.Value);
                 if (category != null && supplier != null && ware != null)
                 {
                     OtherMaterialsListDTO DTO = new OtherMaterialsListDTO()
@@ -39,12 +39,24 @@ namespace API.Services
             }
             return result;
         }
-        public async Task<PagedResultDTO<OtherMaterialsListDTO>> List(string? filter, int page)
+        private async Task<bool> isSuccessfulGetList(string? filter, int page)
         {
-            List<OtherMaterialsListDTO> list = await getList(filter, page);
-            int RowCount = await daoOtherMaterials.getRowCount(filter);
-            int sum = await daoOtherMaterials.getSum(filter);
-            return new PagedResultDTO<OtherMaterialsListDTO>(page, RowCount, PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE, list, sum);
+            List<OtherMaterial> list = await daoOtherMaterials.getList(filter, page);
+            List<OtherMaterialsListDTO> result = await getList(filter, page);
+            return list.Count == result.Count;
+        }
+        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, int page)
+        {
+            // if get list successful
+            if(await isSuccessfulGetList(filter, page))
+            {
+                List<OtherMaterialsListDTO> list = await getList(filter, page);
+                int RowCount = await daoOtherMaterials.getRowCount(filter);
+                int sum = await daoOtherMaterials.getSum(filter);
+                PagedResultDTO<OtherMaterialsListDTO> result = new PagedResultDTO<OtherMaterialsListDTO>(page, RowCount, PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE, list, sum);
+                return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(result, "");
+            }
+            return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(null, "Có lỗi khi lấy dữ liệu", (int) HttpStatusCode.NotAcceptable);
         }
 
         public async Task<ResponseDTO<bool>> Create(OtherMaterialsCreateUpdateDTO DTO)
