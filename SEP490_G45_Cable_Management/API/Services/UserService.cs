@@ -52,7 +52,7 @@ namespace API.Services
                 new Claim(ClaimTypes.Role, dic[user.RoleId])
             };
             JwtSecurityToken token = new JwtSecurityToken(JWT["Issuer"],
-                JWT["Audience"], list, expires: DateTime.Now.AddDays(14),
+                JWT["Audience"], list, expires: DateTime.Now.AddDays(1),
                 signingCredentials: credentials);
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
             // get access token
