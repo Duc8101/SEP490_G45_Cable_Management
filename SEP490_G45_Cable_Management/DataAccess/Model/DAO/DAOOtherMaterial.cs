@@ -14,7 +14,8 @@ namespace DataAccess.Model.DAO
     {
         private IQueryable<OtherMaterial> getQuery(string? filter)
         {
-            IQueryable<OtherMaterial> query = context.OtherMaterials.Where(o => o.IsDeleted == false);
+            IQueryable<OtherMaterial> query = context.OtherMaterials.Include(o => o.OtherMaterialsCategory).Include(o => o.Supplier).Include(o => o.Warehouse)
+                .Where(o => o.IsDeleted == false);
             if (filter != null && filter.Trim().Length != 0)
             {
                 query = query.Where(o => (o.OtherMaterialsCategory.OtherMaterialsCategoryName != null && o.OtherMaterialsCategory.OtherMaterialsCategoryName.ToLower().Contains(filter.ToLower().Trim())) 
@@ -79,11 +80,6 @@ namespace DataAccess.Model.DAO
         {
             return await context.OtherMaterials.Include(o => o.OtherMaterialsCategory).Where(o => o.OtherMaterialsCategoryId == CategoryID).ToListAsync();
 
-        }
-
-        public async Task<OtherMaterial?> getOtherMaterialIncludeDeleted(int ID)
-        {
-            return await context.OtherMaterials.SingleOrDefaultAsync(o => o.OtherMaterialsId == ID);
         }
 
         public async Task<bool> isExist(OtherMaterialsCreateUpdateDTO DTO)

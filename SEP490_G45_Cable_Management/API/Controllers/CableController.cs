@@ -14,15 +14,15 @@ namespace API.Controllers
         private readonly CableService service = new CableService();
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<PagedResultDTO<CableListDTO>> List(string? filter, int? WarehouseID, bool isExportedToUse, int page)
         {
             // if admin, warehouse keeper, leader
-            if(isAdmin() || isWarehouseKeeper() || isLeader())
-            {
+            //if(isAdmin() || isWarehouseKeeper() || isLeader())
+            //{
                 return await service.List(filter, WarehouseID, isExportedToUse, page);
-            }
-            throw new UnauthorizedAccessException();
+            //}
+            //throw new UnauthorizedAccessException();
         }
 
         [HttpPost]

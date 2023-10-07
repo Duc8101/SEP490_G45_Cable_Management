@@ -33,8 +33,8 @@ namespace UnitTests
         public static async Task Main(string [] args)
         {
             Program program = new Program();
-            string? name = await program.getCableCategoryName(Guid.Parse("F27884E0-D7DD-4045-B06E-167C95F9E7D8"));
-            Console.WriteLine(name == null);
+            List<TransactionHistory> list = await program.daoHistory.getList(null, null, 1);
+            Console.WriteLine(list.Count);
         }
     }
 }

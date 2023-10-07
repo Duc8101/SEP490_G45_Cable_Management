@@ -13,7 +13,7 @@ namespace DataAccess.Model.DAO
     {
         public async Task<List<TransactionOtherMaterial>> getList(Guid TransactionID)
         {
-            return await context.TransactionOtherMaterials.Where(t => t.TransactionId == TransactionID).ToListAsync();
+            return await context.TransactionOtherMaterials.Include(t => t.OtherMaterials).ThenInclude(t => t.OtherMaterialsCategory).Where(t => t.TransactionId == TransactionID).ToListAsync();
         }
 
         private IQueryable<TransactionOtherMaterial> getQuery(int? MaterialCategoryID, int? WarehouseID, int? year)

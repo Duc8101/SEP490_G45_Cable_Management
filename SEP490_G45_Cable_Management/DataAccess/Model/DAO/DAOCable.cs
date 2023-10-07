@@ -14,7 +14,8 @@ namespace DataAccess.Model.DAO
     {
         private IQueryable<Cable> getQuery(string? filter, int? WarehouseID, bool isExportedToUse)
         {
-            IQueryable<Cable> query = context.Cables.Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == isExportedToUse);
+            IQueryable<Cable> query = context.Cables.Include(c => c.CableCategory).Include(c => c.Supplier).Include(c => c.Warehouse)
+                .Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == isExportedToUse);
             if (filter != null && filter.Trim().Length != 0)
             {
                 query = query.Where(c => c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim())
@@ -61,11 +62,6 @@ namespace DataAccess.Model.DAO
         public async Task<Cable?> getCable(Guid CableID)
         {
             return await context.Cables.SingleOrDefaultAsync(c => c.IsDeleted == false && c.CableId == CableID);
-        }
-
-        public async Task<Cable?> getCableIncludeDeleted(Guid CableID)
-        {
-            return await context.Cables.SingleOrDefaultAsync(c => c.CableId == CableID);
         }
 
         public async Task<int> UpdateCable(Cable cable)

@@ -14,7 +14,7 @@ namespace API.Controllers
         private readonly TransactionService service = new TransactionService();
         [HttpGet]
         //[Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>> List(string? filter, int? WareHouseID, int page)
+        public async Task<PagedResultDTO<TransactionHistoryDTO>> List(string? filter, int? WareHouseID, int page)
         {
             // if admin
             //if (isAdmin())

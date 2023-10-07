@@ -13,15 +13,15 @@ namespace API.Controllers
     {
         private readonly OtherMaterialsService service = new OtherMaterialsService();
         [HttpGet]
-        [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, int page)
+        //[Authorize]
+        public async Task<PagedResultDTO<OtherMaterialsListDTO>> List(string? filter, int page)
         {
             // if admin, warehouse keeper , leader
-            if(isAdmin() || isWarehouseKeeper() || isLeader())
-            {
+            //if(isAdmin() || isWarehouseKeeper() || isLeader())
+            //{
                 return await service.List(filter, page);
-            }
-            throw new UnauthorizedAccessException();
+            //}
+            //throw new UnauthorizedAccessException();
         }
 
         [HttpPost]

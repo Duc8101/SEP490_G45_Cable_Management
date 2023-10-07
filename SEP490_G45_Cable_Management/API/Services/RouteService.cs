@@ -26,8 +26,13 @@ namespace API.Services
 
         public async Task<ResponseDTO<bool>> Create(RouteCreateDTO DTO)
         {
+            if(DTO.RouteName == null || DTO.RouteName.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Tên tuyến không được để trống", (int)HttpStatusCode.NotAcceptable);
+
+            }
             // if exist
-            if(await daoRoute.isExist(DTO.RouteName.Trim()))
+            if (await daoRoute.isExist(DTO.RouteName.Trim()))
             {
                 return new ResponseDTO<bool>(false, "Tên tuyến đã tồn tại", (int) HttpStatusCode.NotAcceptable);
             }

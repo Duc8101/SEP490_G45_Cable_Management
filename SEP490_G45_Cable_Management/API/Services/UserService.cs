@@ -5,6 +5,7 @@ using DataAccess.Entity;
 using DataAccess.Model.DAO;
 using DataAccess.Model.Util;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
@@ -15,7 +16,6 @@ namespace API.Services
     public class UserService
     {
         private readonly DAOUser daoUser = new DAOUser();
-        private readonly DAORole daoRole = new DAORole();
         public async Task<ResponseDTO<string>> Login(LoginDTO DTO)
         {
             User? user = await daoUser.getUser(DTO);
@@ -173,43 +173,26 @@ namespace API.Services
             List<UserListDTO> result = new List<UserListDTO>();
             foreach (User user in list)
             {
-                // get role
-                Role? role = await daoRole.getRole(user.RoleId);
-                if (role != null)
+                UserListDTO DTO = new UserListDTO()
                 {
-                    UserListDTO DTO = new UserListDTO()
-                    {
-                        UserId = user.UserId,
-                        UserName = user.Username,
-                        FirstName = user.Firstname,
-                        LastName = user.Lastname,
-                        Email = user.Email,
-                        Phone = user.Phone,
-                        RoleName = role.Rolename
-                    };
-                    result.Add(DTO);
-                }
+                    UserId = user.UserId,
+                    UserName = user.Username,
+                    FirstName = user.Firstname,
+                    LastName = user.Lastname,
+                    Email = user.Email,
+                    Phone = user.Phone,
+                    RoleName = user.Role.Rolename
+                };
+                result.Add(DTO);
             }
             return result;
         }
 
-        private async Task<bool> isSuccessfulGetList(string? filter, int page)
+        public async Task<PagedResultDTO<UserListDTO>> List(string? filter, int page)
         {
-            List<User> list = await daoUser.getList(filter, page);
-            List<UserListDTO> result = await getList(filter, page);
-            return list.Count == result.Count;
-        }
-        public async Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> List(string? filter, int page)
-        {
-            // if get data successful
-            if(await isSuccessfulGetList(filter, page))
-            {
-                List<UserListDTO> list = await getList(filter, page);
-                int RowCount = await daoUser.getRowCount(filter);
-                PagedResultDTO<UserListDTO> result = new PagedResultDTO<UserListDTO>(page, RowCount, PageSizeConst.MAX_USER_LIST_IN_PAGE, list);
-                return new ResponseDTO<PagedResultDTO<UserListDTO>?>(result , "");
-            }    
-            return new ResponseDTO<PagedResultDTO<UserListDTO>?>(null, "Có lỗi khi lấy dữ liệu" , (int) HttpStatusCode.NotAcceptable);
+            List<UserListDTO> list = await getList(filter, page);
+            int RowCount = await daoUser.getRowCount(filter);
+            return new PagedResultDTO<UserListDTO>(page, RowCount, PageSizeConst.MAX_USER_LIST_IN_PAGE, list);
         }
 
         public async Task<ResponseDTO<bool>> Update(Guid UserID, UserUpdateDTO DTO)

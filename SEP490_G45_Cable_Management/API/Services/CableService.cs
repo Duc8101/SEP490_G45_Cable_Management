@@ -10,35 +10,26 @@ namespace API.Services
     public class CableService
     {
         private readonly DAOCable daoCable = new DAOCable();
-        private readonly DAOWarehouse daoWare = new DAOWarehouse();
-        private readonly DAOSupplier daoSupplier = new DAOSupplier();
-        private readonly DAOCableCategory daoCategory = new DAOCableCategory();
         private async Task<List<CableListDTO>> getList(string? filter, int? WarehouseID, bool isExportedToUse, int page)
         {
             List<Cable> list = await daoCable.getList(filter, WarehouseID, isExportedToUse, page);
             List<CableListDTO> result = new List<CableListDTO>();
             foreach (Cable item in list)
             {
-                Warehouse? ware = item.WarehouseId == null ? null : await daoWare.getWarehouse(item.WarehouseId.Value);
-                Supplier? supplier = item.SupplierId == null ? null : await daoSupplier.getSupplier(item.SupplierId.Value);
-                CableCategory? category = await daoCategory.getCableCategory(item.CableCategoryId);
-                if(ware != null && supplier != null && category != null)
+                CableListDTO DTO = new CableListDTO()
                 {
-                    CableListDTO DTO = new CableListDTO()
-                    {
-                        CableId = item.CableId,
-                        WarehouseName = ware.WarehouseName,
-                        SupplierName = supplier.SupplierName,
-                        StartPoint = item.StartPoint,
-                        EndPoint = item.EndPoint,
-                        Length = item.Length,
-                        YearOfManufacture = item.YearOfManufacture,
-                        Code = item.Code,
-                        Status = item.Status,
-                        CableCategoryName = category.CableCategoryName
-                    };
-                    result.Add(DTO);
-                }
+                    CableId = item.CableId,
+                    WarehouseName = item.Warehouse == null ? null : item.Warehouse.WarehouseName,
+                    SupplierName = item.Supplier == null ? null : item.Supplier.SupplierName,
+                    StartPoint = item.StartPoint,
+                    EndPoint = item.EndPoint,
+                    Length = item.Length,
+                    YearOfManufacture = item.YearOfManufacture,
+                    Code = item.Code,
+                    Status = item.Status,
+                    CableCategoryName = item.CableCategory.CableCategoryName
+                };
+                result.Add(DTO);
             }
             return result;
         }

@@ -49,11 +49,6 @@ namespace DataAccess.Model.DAO
             return await context.Suppliers.SingleOrDefaultAsync(s => s.SupplierId == SupplierID && s.IsDeleted == false);
         }
 
-        public async Task<Supplier?> getSupplierIncludeDeleted(int SupplierID)
-        {
-            return await context.Suppliers.SingleOrDefaultAsync(s => s.SupplierId == SupplierID);
-        }
-
         public async Task<bool> isExist(int SupplierID, string SupplierName)
         {
             return await context.Suppliers.AnyAsync(s => s.SupplierName == SupplierName.Trim() && s.SupplierId != SupplierID);

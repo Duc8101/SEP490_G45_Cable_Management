@@ -14,7 +14,8 @@ namespace DataAccess.Model.DAO
     {
         private IQueryable<TransactionHistory> getQuery(string? filter, int? WareHouseID)
         {
-            IQueryable<TransactionHistory> query = context.TransactionHistories.Where(t => t.IsDeleted == false);
+            IQueryable<TransactionHistory> query = context.TransactionHistories.Include(w => w.Issue).Include(w => w.FromWarehouse)
+                .Include(w => w.ToWarehouse).Where(t => t.IsDeleted == false);
             if (filter != null && filter.Trim().Length != 0)
             {
                 query = query.Where(t => (t.Warehouse != null && t.Warehouse.WarehouseName != null && t.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim()))
@@ -40,7 +41,8 @@ namespace DataAccess.Model.DAO
         }
         public async Task<TransactionHistory?> getTransactionHistory(Guid TransactionID)
         {
-            return await context.TransactionHistories.SingleOrDefaultAsync(t => t.TransactionId == TransactionID);
+            return await context.TransactionHistories.Include(w => w.Issue).Include(w => w.FromWarehouse)
+                .Include(w => w.ToWarehouse).SingleOrDefaultAsync(t => t.TransactionId == TransactionID);
         }
     }
 }

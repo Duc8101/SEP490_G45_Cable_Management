@@ -49,7 +49,7 @@ namespace DataAccess.Model.DAO
 
         private IQueryable<User> getQuery(string? filter)
         {
-            IQueryable<User> query = context.Users.Where(u => u.IsDeleted == false);
+            IQueryable<User> query = context.Users.Include(u => u.Role).Where(u => u.IsDeleted == false);
             if (filter != null && filter.Trim().Length != 0)
             {
                 query = query.Where(u => u.Firstname.ToLower().Contains(filter.ToLower().Trim()) || u.Lastname.ToLower().Contains(filter.ToLower().Trim()) 
