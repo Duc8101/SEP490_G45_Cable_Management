@@ -2,6 +2,7 @@
 using DataAccess.DTO.CableDTO;
 using DataAccess.Entity;
 using Microsoft.EntityFrameworkCore;
+using MimeKit.Cryptography;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +17,13 @@ namespace DataAccess.Model.DAO
         {
             IQueryable<Cable> query = context.Cables.Include(c => c.CableCategory).Include(c => c.Supplier).Include(c => c.Warehouse)
                 .Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == isExportedToUse);
+            // if search base on name
             if (filter != null && filter.Trim().Length != 0)
             {
                 query = query.Where(c => c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim())
                 || (c.Code != null && c.Code.ToLower().Contains(filter.ToLower().Trim())) || (c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())));
             }
-
+            // if not export and choose warehouse
             if(isExportedToUse == false && WarehouseID != null)
             {
                 query = query.Where(c => c.WarehouseId == WarehouseID);
@@ -80,5 +82,37 @@ namespace DataAccess.Model.DAO
         {
             return await context.Cables.Include(c => c.CableCategory).Where(c => c.CableCategoryId == CableCategoryID).ToListAsync();
         }
+
+        private async Task<List<Cable>> getList(int CableCategoryID, int? WareHouseID)
+        {
+            IQueryable<Cable> query = context.Cables.Where(c => c.CableCategoryId == CableCategoryID 
+            && c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false);
+            // if choose warehouse
+            if(WareHouseID != null)
+            {
+                query = query.Where(c => c.WarehouseId == WareHouseID);
+            }
+            return await query.ToListAsync();
+        }
+
+        public async Task<List<CableCategory>> getListCategory(int? WarehouseID)
+        {
+            IQueryable<Cable> query = getQuery(null, WarehouseID, false);
+            List<CableCategory> result = await query.Select(c => c.CableCategory).Distinct().ToListAsync();
+            return result;
+        }
+
+        public async Task<int> getSum(int CategoryID, int? WarehouseID)
+        {
+            List<Cable> list = await getList(CategoryID, WarehouseID);
+            int sum = 0;
+            foreach (Cable cable in list)
+            {
+                sum = sum + cable.Length;
+            }
+            return sum;
+        }
+
+
     }
 }

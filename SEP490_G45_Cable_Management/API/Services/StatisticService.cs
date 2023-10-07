@@ -70,5 +70,43 @@ namespace API.Services
             data.LengthInDecember = await daoTransactionCable.getLengthPerMonth(CableCategoryID, WarehouseID, year, 12);
             return new ResponseDTO<CableFluctuationPerYear?>(data, "");
         }
+
+        public async Task<List<CableCategoryStatistic>> CableCategory(int? WarehouseID)
+        {
+             // get list cable category
+             List<CableCategory> list = await daoCable.getListCategory(WarehouseID);
+             List<CableCategoryStatistic> result = new List<CableCategoryStatistic>();
+             foreach (CableCategory category in list)
+             {
+                // get sum of length
+                int sumLength = await daoCable.getSum(category.CableCategoryId, WarehouseID);
+                CableCategoryStatistic statistic = new CableCategoryStatistic()
+                {
+                    CableCategoryId = category.CableCategoryId,
+                    CableCategoryName = category.CableCategoryName,
+                    SumOfLength = sumLength,
+                };
+                result.Add(statistic);
+             }
+             return result;
+        }
+
+        public async Task<List<OtherMaterialCateogoryStatistic>> MaterialCategory(int? WarehouseID)
+        {
+            List<OtherMaterialsCategory> list = await daoOtherMaterial.getListCategory(WarehouseID);
+            List<OtherMaterialCateogoryStatistic> result = new List<OtherMaterialCateogoryStatistic>();
+            foreach(OtherMaterialsCategory material in list)
+            {
+                int sum = await daoOtherMaterial.getSum(material.OtherMaterialsCategoryId, WarehouseID);
+                OtherMaterialCateogoryStatistic statistic = new OtherMaterialCateogoryStatistic()
+                {
+                    CategoryId = material.OtherMaterialsCategoryId,
+                    CategoryName = material.OtherMaterialsCategoryName,
+                    SumOfQuantity = sum
+                };
+                result.Add(statistic);
+            }
+            return result;
+        }
     }
 }

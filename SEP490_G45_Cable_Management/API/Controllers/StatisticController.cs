@@ -31,7 +31,31 @@ namespace API.Controllers
             // if admin or leader
             //if(isAdmin() || isLeader())
             //{
-            return await service.CableFluctuationPerYear(CableCategoryID, WarehouseID, year);
+                return await service.CableFluctuationPerYear(CableCategoryID, WarehouseID, year);
+            //}
+            //throw new UnauthorizedAccessException();
+        }
+
+        [HttpGet]
+        //[Authorize]
+        public async Task<List<CableCategoryStatistic>> CableCategory(int? WarehouseID)
+        {
+            // if admin or leader
+            //if(isAdmin() || isLeader())
+            //{
+                return await service.CableCategory(WarehouseID);
+            //}
+            //throw new UnauthorizedAccessException();
+        }
+
+        [HttpGet]
+        //[Authorize]
+        public async Task<List<OtherMaterialCateogoryStatistic>> MaterialCategory(int? WarehouseID)
+        {
+            // if admin or leader
+            //if(isAdmin() || isLeader())
+            //{
+                return await service.MaterialCategory(WarehouseID);
             //}
             //throw new UnauthorizedAccessException();
         }

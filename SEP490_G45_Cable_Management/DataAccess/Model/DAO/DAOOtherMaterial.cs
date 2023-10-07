@@ -94,5 +94,42 @@ namespace DataAccess.Model.DAO
             material.IsDeleted = true;
             return await UpdateMaterial(material);
         }
+
+        public async Task<List<OtherMaterialsCategory>> getListCategory(int? WarehouseID)
+        {
+            IQueryable<OtherMaterial> query = context.OtherMaterials.Include(o => o.OtherMaterialsCategory).Where(o => o.IsDeleted == false);
+            // if choose warehouse
+            if(WarehouseID != null)
+            {
+                query = query.Where(o => o.WarehouseId == WarehouseID);
+            }
+            List<OtherMaterialsCategory> result = await query.Select(o => o.OtherMaterialsCategory).Distinct().ToListAsync();
+            return result;
+        }
+
+        private async Task<List<OtherMaterial>> getList(int CategoryID, int? WarehouseID)
+        {
+            IQueryable<OtherMaterial> query = context.OtherMaterials.Where(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == CategoryID);
+            // if choose warehouse
+            if(WarehouseID != null)
+            {
+                query = query.Where(o => o.WarehouseId == WarehouseID);
+            }
+            return await query.ToListAsync();
+        }
+
+        public async Task<int> getSum(int CategoryID, int? WarehouseID)
+        {
+            List<OtherMaterial> list = await getList(CategoryID, WarehouseID);
+            int sum = 0;
+            foreach (OtherMaterial item in list)
+            {
+                if(item.Quantity != null)
+                {
+                    sum = sum + item.Quantity.Value;
+                }
+            }
+            return sum;
+        }
     }
 }
