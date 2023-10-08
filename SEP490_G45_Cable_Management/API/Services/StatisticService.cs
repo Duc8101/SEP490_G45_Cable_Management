@@ -1,7 +1,7 @@
 ﻿using DataAccess.DTO;
 using DataAccess.DTO.StatisticDTO;
 using DataAccess.Entity;
-using DataAccess.Model.DAO;
+using API.Model.DAO;
 using System.Net;
 
 namespace API.Services

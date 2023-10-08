@@ -2,7 +2,7 @@
 using DataAccess.DTO;
 using DataAccess.DTO.SupplierDTO;
 using DataAccess.Entity;
-using DataAccess.Model.DAO;
+using API.Model.DAO;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;

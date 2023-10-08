@@ -2,8 +2,8 @@
 using DataAccess.DTO;
 using DataAccess.DTO.UserDTO;
 using DataAccess.Entity;
-using DataAccess.Model.DAO;
-using DataAccess.Model.Util;
+using API.Model.DAO;
+using API.Model.Util;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;

@@ -1,6 +1,6 @@
 ﻿using DataAccess.DTO.RequestDTO;
 using DataAccess.DTO;
-using DataAccess.Model.DAO;
+using API.Model.DAO;
 using DataAccess.Entity;
 using DataAccess.Const;
 using System.Net;
@@ -11,7 +11,6 @@ namespace API.Services
     public class RequestService
     {
         private readonly DAORequest daoRequest = new DAORequest();
-        private readonly DAORequestCategory daoCategory = new DAORequestCategory();
         private readonly DAOIssue daoIssue = new DAOIssue();
         private readonly DAORequestCable daoRequestCable = new DAORequestCable();
         private readonly DAOCable daoCable = new DAOCable();
@@ -21,21 +20,17 @@ namespace API.Services
             List<RequestListDTO> result = new List<RequestListDTO>();
             foreach (Request item in list)
             {
-                RequestCategory? category = await daoCategory.getRequestCategory(item.RequestCategoryId);
-                if (category != null)
+                RequestListDTO DTO = new RequestListDTO()
                 {
-                    RequestListDTO DTO = new RequestListDTO()
-                    {
-                        RequestId = item.RequestId,
-                        RequestName = item.RequestName,
-                        Content = item.Content,
-                        CreatorId = item.CreatorId,
-                        ApproverId = item.ApproverId,
-                        Status = item.Status,
-                        RequestCategoryName = category.RequestCategoryName
-                    };
-                    result.Add(DTO);
-                }
+                    RequestId = item.RequestId,
+                    RequestName = item.RequestName,
+                    Content = item.Content,
+                    CreatorId = item.CreatorId,
+                    ApproverId = item.ApproverId,
+                    Status = item.Status,
+                    RequestCategoryName = item.RequestCategory.RequestCategoryName
+                };
+                result.Add(DTO);
             }
             return result;
         }
@@ -55,7 +50,7 @@ namespace API.Services
                 return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int) HttpStatusCode.NotFound);
             }
             // if issue approved
-            if (issue.Status.Equals(RequestConst.STATUS_APPROVED))
+            if (issue.Status != null && issue.Status.Equals(RequestConst.STATUS_APPROVED))
             {
                 return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int) HttpStatusCode.NotAcceptable);
             }

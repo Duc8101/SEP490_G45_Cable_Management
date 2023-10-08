@@ -1,6 +1,5 @@
 ﻿using API.Services;
 using DataAccess.DTO.UserDTO;
-using DataAccess.Model.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;

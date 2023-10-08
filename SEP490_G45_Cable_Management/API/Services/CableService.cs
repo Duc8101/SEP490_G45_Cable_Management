@@ -1,6 +1,6 @@
 ﻿using DataAccess.DTO.CableDTO;
 using DataAccess.DTO;
-using DataAccess.Model.DAO;
+using API.Model.DAO;
 using DataAccess.Entity;
 using DataAccess.Const;
 using System.Net;

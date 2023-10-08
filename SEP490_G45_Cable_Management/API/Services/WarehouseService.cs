@@ -1,6 +1,6 @@
 ﻿using DataAccess.DTO.WarehouseDTO;
 using DataAccess.DTO;
-using DataAccess.Model.DAO;
+using API.Model.DAO;
 using System.ComponentModel;
 using DataAccess.Entity;
 using DataAccess.Const;
