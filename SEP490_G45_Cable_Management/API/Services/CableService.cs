@@ -1,9 +1,9 @@
 ﻿using DataAccess.DTO.CableDTO;
 using DataAccess.DTO;
-using API.Model.DAO;
 using DataAccess.Entity;
 using DataAccess.Const;
 using System.Net;
+using API.Model;
 
 namespace API.Services
 {

@@ -2,8 +2,8 @@
 using DataAccess.DTO;
 using DataAccess.DTO.CableCategoryDTO;
 using DataAccess.Entity;
-using API.Model.DAO;
 using System.Net;
+using API.Model;
 
 namespace API.Services
 {

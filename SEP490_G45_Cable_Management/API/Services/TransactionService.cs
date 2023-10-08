@@ -1,6 +1,5 @@
 ﻿using DataAccess.DTO.TransactionDTO;
 using DataAccess.DTO;
-using API.Model.DAO;
 using DataAccess.Entity;
 using Org.BouncyCastle.Utilities.Collections;
 using DataAccess.Const;
@@ -9,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Xml.Linq;
 using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using API.Model;
 
 namespace API.Services
 {

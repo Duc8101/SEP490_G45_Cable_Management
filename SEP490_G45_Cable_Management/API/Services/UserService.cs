@@ -2,14 +2,14 @@
 using DataAccess.DTO;
 using DataAccess.DTO.UserDTO;
 using DataAccess.Entity;
-using API.Model.DAO;
-using API.Model.Util;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
+using API.Model;
+using DataAccess;
 
 namespace API.Services
 {

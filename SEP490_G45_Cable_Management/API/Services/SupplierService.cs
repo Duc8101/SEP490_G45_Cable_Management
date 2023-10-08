@@ -2,12 +2,12 @@
 using DataAccess.DTO;
 using DataAccess.DTO.SupplierDTO;
 using DataAccess.Entity;
-using API.Model.DAO;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;
 using System.Net;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using API.Model;
 
 namespace API.Services
 {

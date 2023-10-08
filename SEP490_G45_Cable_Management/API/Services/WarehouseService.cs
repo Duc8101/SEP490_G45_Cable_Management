@@ -1,10 +1,10 @@
 ﻿using DataAccess.DTO.WarehouseDTO;
 using DataAccess.DTO;
-using API.Model.DAO;
 using System.ComponentModel;
 using DataAccess.Entity;
 using DataAccess.Const;
 using System.Net;
+using API.Model;
 
 namespace API.Services
 {

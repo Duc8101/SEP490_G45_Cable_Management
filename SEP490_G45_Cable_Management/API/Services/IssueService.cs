@@ -1,10 +1,10 @@
 ﻿using DataAccess.DTO.IssueDTO;
 using DataAccess.DTO;
-using API.Model.DAO;
 using DataAccess.Entity;
 using DataAccess.Const;
 using System.Net;
 using System.Text.RegularExpressions;
+using API.Model;
 
 namespace API.Services
 {

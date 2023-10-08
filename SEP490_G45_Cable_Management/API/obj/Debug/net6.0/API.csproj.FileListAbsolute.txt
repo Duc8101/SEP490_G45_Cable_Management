@@ -76,3 +76,5 @@ D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\
 D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Text.Encoding.CodePages.dll
 D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
 D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Text.Encoding.CodePages.dll
+D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Humanizer.dll
+D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll

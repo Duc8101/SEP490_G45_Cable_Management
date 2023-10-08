@@ -1,5 +1,4 @@
 D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\bin\Debug\net6.0\DataAccess.deps.json
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\bin\Debug\net6.0\DataAccess.runtimeconfig.json
 D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\bin\Debug\net6.0\DataAccess.dll
 D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\bin\Debug\net6.0\DataAccess.pdb
 D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\DataAccess.csproj.AssemblyReference.cache
@@ -10,5 +9,4 @@ D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\obj
 D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\DataAccess.dll
 D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\refint\DataAccess.dll
 D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\DataAccess.pdb
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\DataAccess.genruntimeconfig.cache
 D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\ref\DataAccess.dll

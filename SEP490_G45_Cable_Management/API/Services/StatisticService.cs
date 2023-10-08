@@ -1,8 +1,8 @@
 ﻿using DataAccess.DTO;
 using DataAccess.DTO.StatisticDTO;
 using DataAccess.Entity;
-using API.Model.DAO;
 using System.Net;
+using API.Model;
 
 namespace API.Services
 {

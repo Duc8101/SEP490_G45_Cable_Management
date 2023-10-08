@@ -1,10 +1,10 @@
 ﻿using DataAccess.DTO.RequestDTO;
 using DataAccess.DTO;
-using API.Model.DAO;
 using DataAccess.Entity;
 using DataAccess.Const;
 using System.Net;
 using DataAccess.DTO.CableDTO;
+using API.Model;
 
 namespace API.Services
 {
