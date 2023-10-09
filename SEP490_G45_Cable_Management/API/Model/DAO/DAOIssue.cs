@@ -17,8 +17,8 @@ namespace API.Model.DAO
             IQueryable<Issue> query = context.Issues.Where(i => i.IsDeleted == false);
             if (filter != null && filter.Trim().Length != 0)
             {
-                query = query.Where(i => i.IssueName != null && i.IssueName.ToLower().Contains(filter.ToLower().Trim())
-                || i.IssueCode != null && i.IssueCode.ToLower().Contains(filter.ToLower().Trim()));
+                query = query.Where(i => i.IssueName.ToLower().Contains(filter.ToLower().Trim())
+                || i.IssueCode.ToLower().Contains(filter.ToLower().Trim()));
             }
             return query;
         }

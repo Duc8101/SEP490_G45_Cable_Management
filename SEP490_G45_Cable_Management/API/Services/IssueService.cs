@@ -39,12 +39,12 @@ namespace API.Services
         }
         public async Task<ResponseDTO<bool>> Create(IssueCreateDTO DTO, Guid CreatorID)
         {
-            if(DTO.IssueName == null || DTO.IssueName.Trim().Length == 0)
+            if(DTO.IssueName.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Tên sự vụ không được để trống", (int) HttpStatusCode.NotAcceptable);
             }
 
-            if (DTO.IssueCode == null || DTO.IssueCode.Trim().Length == 0)
+            if(DTO.IssueCode.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Mã sự vụ không được để trống", (int) HttpStatusCode.NotAcceptable);
             }
@@ -81,12 +81,12 @@ namespace API.Services
                 return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int) HttpStatusCode.NotFound);
             }
 
-            if (DTO.IssueName == null || DTO.IssueName.Trim().Length == 0)
+            if (DTO.IssueName.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Tên sự vụ không được để trống", (int)HttpStatusCode.NotAcceptable);
             }
 
-            if (DTO.IssueCode == null || DTO.IssueCode.Trim().Length == 0)
+            if (DTO.IssueCode.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Mã sự vụ không được để trống", (int)HttpStatusCode.NotAcceptable);
             }

@@ -8,6 +8,7 @@ namespace DataAccess.DTO.RouteDTO
 {
     public class RouteCreateDTO
     {
-        public string? RouteName { get; set; }
+        //public string? RouteName { get; set; }
+        public string RouteName { get; set; } = null!;
     }
 }

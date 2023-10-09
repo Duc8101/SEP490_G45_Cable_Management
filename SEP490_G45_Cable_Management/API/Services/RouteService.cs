@@ -26,7 +26,7 @@ namespace API.Services
 
         public async Task<ResponseDTO<bool>> Create(RouteCreateDTO DTO)
         {
-            if(DTO.RouteName == null || DTO.RouteName.Trim().Length == 0)
+            if(DTO.RouteName.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Tên tuyến không được để trống", (int)HttpStatusCode.NotAcceptable);
 
@@ -41,6 +41,7 @@ namespace API.Services
                 RouteId = Guid.NewGuid(),
                 RouteName = DTO.RouteName.Trim(),
                 CreatedAt = DateTime.Now,
+                UpdateAt = DateTime.Now,
                 IsDeleted = false
             };
             int number = await daoRoute.CreateRoute(route);

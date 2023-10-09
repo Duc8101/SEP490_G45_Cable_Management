@@ -11,7 +11,8 @@ namespace DataAccess.Entity
         }
 
         public int RequestCategoryId { get; set; }
-        public string? RequestCategoryName { get; set; }
+        //public string? RequestCategoryName { get; set; }
+        public string RequestCategoryName { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdateAt { get; set; }
         public bool IsDeleted { get; set; }

@@ -21,7 +21,7 @@ namespace API.Model.DAO
             if (filter != null && filter.Trim().Length != 0)
             {
                 query = query.Where(c => c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim())
-                || c.Code != null && c.Code.ToLower().Contains(filter.ToLower().Trim()) || c.Supplier != null && c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()));
+                || c.Code.ToLower().Contains(filter.ToLower().Trim()) || c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()));
             }
             // if not export and choose warehouse
             if (isExportedToUse == false && WarehouseID != null)
@@ -52,7 +52,8 @@ namespace API.Model.DAO
         public async Task<bool> isExist(CableCreateUpdateDTO DTO)
         {
             return await context.Cables.AnyAsync(c => c.IsDeleted == false && c.Code == DTO.Code.Trim() && c.Status == DTO.Status.Trim()
-            && c.SupplierId == DTO.SupplierId && c.StartPoint == DTO.StartPoint && c.EndPoint == DTO.EndPoint && c.YearOfManufacture == DTO.YearOfManufacture);
+            && c.SupplierId == DTO.SupplierId && c.StartPoint == DTO.StartPoint && c.EndPoint == DTO.EndPoint 
+            && c.YearOfManufacture == DTO.YearOfManufacture);
         }
 
         public async Task<int> CreateCable(Cable cable)

@@ -50,7 +50,7 @@ namespace API.Services
                 return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int) HttpStatusCode.NotFound);
             }
             // if issue approved
-            if (issue.Status != null && issue.Status.Equals(RequestConst.STATUS_APPROVED))
+            if (issue.Status.Equals(RequestConst.STATUS_APPROVED))
             {
                 return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int) HttpStatusCode.NotAcceptable);
             }

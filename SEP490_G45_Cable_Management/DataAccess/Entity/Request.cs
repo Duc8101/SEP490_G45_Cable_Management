@@ -13,7 +13,8 @@ namespace DataAccess.Entity
         }
 
         public Guid RequestId { get; set; }
-        public string? RequestName { get; set; }
+        //public string? RequestName { get; set; }
+        public string RequestName { get; set; } = null!;
         public string? Content { get; set; }
         public Guid CreatorId { get; set; }
         public Guid? ApproverId { get; set; }

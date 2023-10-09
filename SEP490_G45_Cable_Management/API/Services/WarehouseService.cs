@@ -37,7 +37,7 @@ namespace API.Services
 
         public async Task<ResponseDTO<bool>> Create(WarehouseCreateUpdateDTO DTO, Guid CreatorID)
         {
-            if(DTO.WarehouseName == null || DTO.WarehouseName.Trim().Length == 0)
+            if(DTO.WarehouseName.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Tên kho không được để trống", (int) HttpStatusCode.NotAcceptable);
             }
@@ -75,7 +75,7 @@ namespace API.Services
                 return new ResponseDTO<bool>(false, "Không tìm thấy kho", (int) HttpStatusCode.NotFound);
             }
 
-            if (DTO.WarehouseName == null || DTO.WarehouseName.Trim().Length == 0)
+            if (DTO.WarehouseName.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Tên kho không được để trống", (int) HttpStatusCode.NotAcceptable);
             }

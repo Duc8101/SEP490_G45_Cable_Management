@@ -22,7 +22,7 @@ namespace API.Services
                     Unit = item.Unit,
                     Quantity = item.Quantity,
                     Code = item.Code,
-                    SupplierName = item.Supplier == null ? null : item.Supplier.SupplierName,
+                    SupplierName = item.Supplier.SupplierName,
                     WarehouseName = item.Warehouse == null ? null : item.Warehouse.WarehouseName,
                     OtherMaterialsCategoryName = item.OtherMaterialsCategory.OtherMaterialsCategoryName
                 };
@@ -41,19 +41,14 @@ namespace API.Services
 
         public async Task<ResponseDTO<bool>> Create(OtherMaterialsCreateUpdateDTO DTO)
         {
-            if(DTO.Code == null || DTO.Code.Trim().Length == 0)
+            if(DTO.Code.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Mã hàng không được để trống", (int) HttpStatusCode.NotAcceptable);
             }
 
-            if (DTO.Unit == null || DTO.Unit.Trim().Length == 0)
+            if (DTO.Unit.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Đơn vị không được để trống", (int)HttpStatusCode.NotAcceptable);
-            }
-
-            if (DTO.Quantity == null)
-            {
-                return new ResponseDTO<bool>(false, "Số lượng không được để trống", (int) HttpStatusCode.NotAcceptable);
             }
 
             if (DTO.Status == null || DTO.Status.Trim().Length == 0)
@@ -108,19 +103,14 @@ namespace API.Services
                 return new ResponseDTO<bool>(false, "Không tìm thấy vật liệu", (int) HttpStatusCode.NotFound);
             }
 
-            if (DTO.Code == null || DTO.Code.Trim().Length == 0)
+            if (DTO.Code.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Mã hàng không được để trống", (int)HttpStatusCode.NotAcceptable);
             }
 
-            if (DTO.Unit == null || DTO.Unit.Trim().Length == 0)
+            if (DTO.Unit.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Đơn vị không được để trống", (int)HttpStatusCode.NotAcceptable);
-            }
-
-            if (DTO.Quantity == null)
-            {
-                return new ResponseDTO<bool>(false, "Số lượng không được để trống", (int)HttpStatusCode.NotAcceptable);
             }
 
             if (DTO.Status == null || DTO.Status.Trim().Length == 0)

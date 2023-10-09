@@ -36,7 +36,7 @@ namespace API.Services
 
         public async Task<ResponseDTO<bool>> Create(OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
-            if(DTO.OtherMaterialsCategoryName == null || DTO.OtherMaterialsCategoryName.Trim().Length == 0)
+            if(DTO.OtherMaterialsCategoryName.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Tên vật liệu không được để trống", (int)HttpStatusCode.NotAcceptable);
             }
@@ -49,6 +49,7 @@ namespace API.Services
             {
                 OtherMaterialsCategoryName = DTO.OtherMaterialsCategoryName.Trim(),
                 CreatedAt = DateTime.Now,
+                UpdateAt = DateTime.Now,
                 IsDeleted = false
             };
             int number = await daoOtherMaterialsCategory.CreateOtherMaterialsCategory(category);
@@ -69,7 +70,7 @@ namespace API.Services
                 return new ResponseDTO<bool>(false, "Không tìm thấy loại vật liệu này" , (int) HttpStatusCode.NotFound);
             }
 
-            if (DTO.OtherMaterialsCategoryName == null || DTO.OtherMaterialsCategoryName.Trim().Length == 0)
+            if (DTO.OtherMaterialsCategoryName.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Tên vật liệu không được để trống", (int)HttpStatusCode.NotAcceptable);
             }

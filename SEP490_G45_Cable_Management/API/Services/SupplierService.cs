@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;
 using System.Net;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using API.Model.DAO;
 
 namespace API.Services
@@ -40,6 +39,10 @@ namespace API.Services
         }
         public async Task<ResponseDTO<bool>> Create(SupplierCreateUpdateDTO DTO, string CreatorID)
         {
+            if(DTO.SupplierName.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Tên nhà cung cấp không được để trống", (int) HttpStatusCode.NotAcceptable);
+            }
             // if supplier already exist
             if (await daoSupplier.isExist(DTO.SupplierName.Trim()))
             {
@@ -72,10 +75,15 @@ namespace API.Services
             {
                 return new ResponseDTO<bool>(false, "Không tìm thấy nhà cung cấp", (int) HttpStatusCode.NotFound);
             }
+            if (DTO.SupplierName.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Tên nhà cung cấp không được để trống", (int) HttpStatusCode.NotAcceptable);
+            }
+
             // if supplier already exist
             if (await daoSupplier.isExist(SupplierID, DTO.SupplierName))
             {
-                return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int)HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int) HttpStatusCode.NotAcceptable);
             }
             supplier.SupplierName = DTO.SupplierName.Trim();
             supplier.Country = DTO.Country == null || DTO.Country.Trim().Length == 0 ? null : DTO.Country.Trim();

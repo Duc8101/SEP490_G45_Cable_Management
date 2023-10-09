@@ -9,7 +9,8 @@ namespace DataAccess.DTO.StatisticDTO
     public class OtherMaterialCateogoryStatistic
     {
         public int CategoryId { get; set; }
-        public string? CategoryName { get; set; }
+        //public string? CategoryName { get; set; }
+        public string CategoryName { get; set; } = null!;
         public int SumOfQuantity { get; set; }
     }
 }

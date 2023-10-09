@@ -15,7 +15,7 @@ namespace API.Model.DAO
             IQueryable<DataAccess.Entity.Route> query = context.Routes.Where(r => r.IsDeleted == false);
             if (name != null && name.Trim().Length != 0)
             {
-                query = query.Where(r => r.RouteName != null && r.RouteName.ToLower().Contains(name.ToLower().Trim()));
+                query = query.Where(r => r.RouteName.ToLower().Contains(name.ToLower().Trim()));
             }
             return await query.OrderByDescending(r => r.CreatedAt).ToListAsync();
         }

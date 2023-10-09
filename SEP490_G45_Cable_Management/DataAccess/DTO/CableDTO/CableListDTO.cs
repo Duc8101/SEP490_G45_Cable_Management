@@ -10,7 +10,8 @@ namespace DataAccess.DTO.CableDTO
     {
         public Guid CableId { get; set; }
         public string? WarehouseName { get; set; }
-        public string? SupplierName { get; set; }
+        //public string? SupplierName { get; set; }
+        public string SupplierName { get; set; } = null!;
         public int StartPoint { get; set; }
         public int EndPoint { get; set; }
         public int Length { get; set; }

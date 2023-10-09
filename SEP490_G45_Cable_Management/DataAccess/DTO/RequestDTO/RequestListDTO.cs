@@ -14,7 +14,7 @@ namespace DataAccess.DTO.RequestDTO
         public Guid CreatorId { get; set; }
         public Guid? ApproverId { get; set; }
         public string? Status { get; set; }
-
-        public string? RequestCategoryName { get; set; }
+        //public string? RequestCategoryName { get; set; }
+        public string RequestCategoryName { get; set; } = null!;
     }
 }

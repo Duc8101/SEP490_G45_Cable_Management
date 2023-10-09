@@ -18,9 +18,9 @@ namespace API.Model.DAO
                 .Where(o => o.IsDeleted == false);
             if (filter != null && filter.Trim().Length != 0)
             {
-                query = query.Where(o => o.OtherMaterialsCategory.OtherMaterialsCategoryName != null && o.OtherMaterialsCategory.OtherMaterialsCategoryName.ToLower().Contains(filter.ToLower().Trim())
-                || o.Supplier != null && o.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())
-                || o.Warehouse != null && o.Warehouse.WarehouseName != null && o.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim()));
+                query = query.Where(o => o.OtherMaterialsCategory.OtherMaterialsCategoryName.ToLower().Contains(filter.ToLower().Trim())
+                || o.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())
+                || (o.Warehouse != null && o.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim())));
             }
             return query;
         }
@@ -44,10 +44,7 @@ namespace API.Model.DAO
             int sum = 0;
             foreach (OtherMaterial material in list)
             {
-                if (material.Quantity != null)
-                {
-                    sum = sum + material.Quantity.Value;
-                }
+                sum = sum + material.Quantity;
             }
             return sum;
         }
@@ -85,7 +82,7 @@ namespace API.Model.DAO
         public async Task<bool> isExist(OtherMaterialsCreateUpdateDTO DTO)
         {
             return await context.OtherMaterials.AnyAsync(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == DTO.OtherMaterialsCategoryId
-            && DTO.Unit != null && o.Unit == DTO.Unit.Trim() && DTO.Code != null && o.Code == DTO.Code.Trim() && o.SupplierId == DTO.SupplierId && DTO.Status != null && o.Status == DTO.Status.Trim()
+            && DTO.Unit != null && o.Unit == DTO.Unit.Trim() && o.Code == DTO.Code.Trim() && o.SupplierId == DTO.SupplierId && DTO.Status != null && o.Status == DTO.Status.Trim()
             && o.WarehouseId == DTO.WarehouseId);
         }
 
@@ -124,10 +121,7 @@ namespace API.Model.DAO
             int sum = 0;
             foreach (OtherMaterial item in list)
             {
-                if (item.Quantity != null)
-                {
-                    sum = sum + item.Quantity.Value;
-                }
+                sum = sum + item.Quantity;
             }
             return sum;
         }

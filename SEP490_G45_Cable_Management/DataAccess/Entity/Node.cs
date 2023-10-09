@@ -21,8 +21,10 @@ namespace DataAccess.Entity
         public DateTime UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
         public string? Address { get; set; }
-        public string? NodeCode { get; set; }
-        public string? NodeNumberSign { get; set; }
+        //public string? NodeCode { get; set; }
+        //public string? NodeNumberSign { get; set; }
+        public string NodeCode { get; set; } = null!;
+        public string NodeNumberSign { get; set; } = null!;
         public string? Note { get; set; }
         public int NumberOrder { get; set; }
         public Guid? RouteId { get; set; }

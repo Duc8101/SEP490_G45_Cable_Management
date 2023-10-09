@@ -20,7 +20,8 @@ namespace DataAccess.Entity
         }
 
         public int WarehouseId { get; set; }
-        public string? WarehouseName { get; set; }
+        //public string? WarehouseName { get; set; }
+        public string WarehouseName { get; set; } = null!;
         public Guid? WarehouseKeeperid { get; set; }
         public Guid CreatorId { get; set; }
         public DateTime CreatedDate { get; set; }
