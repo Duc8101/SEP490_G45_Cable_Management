@@ -54,6 +54,7 @@ namespace API.Services
                 Country = DTO.Country == null ? null : DTO.Country.Trim(),
                 SupplierDescription = DTO.SupplierDescription == null || DTO.SupplierDescription.Trim().Length == 0 ? null : DTO.SupplierDescription.Trim(),
                 CreatedAt = DateTime.Now,
+                UpdateAt = DateTime.Now,
                 IsDeleted = false,
                 CreatorId = Guid.Parse(CreatorID)
             };
