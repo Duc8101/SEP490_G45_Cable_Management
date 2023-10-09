@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "woaJfUroVWV2CsXYYAK5CAMiDufZf+vHTrHqNirdACLPJkt5MXHERWvT73aXyBbEhl+8Ei5C+NPOTgGeypeUNA==",
+  "dgSpecHash": "mGexMJVgITp2sgjOSRTYMrJYCdeiTQdJtxlQmA0Us6mVx4vKI294VHUM3xY6QS5JC4r++Z+sQ4ILsgj2RFqahg==",
   "success": true,
   "projectFilePath": "D:\\SEP490\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\API\\API.csproj",
   "expectedPackageFiles": [
@@ -41,6 +41,7 @@
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.identitymodel.tokens\\6.10.0\\microsoft.identitymodel.tokens.6.10.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.18.1\\microsoft.visualstudio.azure.containers.tools.targets.1.18.1.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\mimekit\\4.2.0\\mimekit.4.2.0.nupkg.sha512",

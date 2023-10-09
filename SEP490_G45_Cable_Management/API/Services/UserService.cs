@@ -35,7 +35,7 @@ namespace API.Services
                 .AddJsonFile("appsettings.json", true, true).Build();
             IConfigurationSection JWT = config.GetSection("Jwt");
             // get credential
-            byte[] key = Encoding.UTF8.GetBytes(JWT["key"]);
+            byte[] key = Encoding.UTF8.GetBytes(JWT["Key"]);
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
             SigningCredentials credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             // get all role
