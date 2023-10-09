@@ -2,7 +2,7 @@
 using DataAccess.DTO.StatisticDTO;
 using DataAccess.Entity;
 using System.Net;
-using API.Model;
+using API.Model.DAO;
 
 namespace API.Services
 {

@@ -9,7 +9,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Text;
 using API.Model;
-using DataAccess;
+using API.Model.DAO;
 
 namespace API.Services
 {

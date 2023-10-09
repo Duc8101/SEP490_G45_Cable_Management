@@ -4,7 +4,7 @@ using DataAccess.Entity;
 using DataAccess.Const;
 using System.Net;
 using System.Text.RegularExpressions;
-using API.Model;
+using API.Model.DAO;
 
 namespace API.Services
 {

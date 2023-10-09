@@ -3,7 +3,7 @@ using DataAccess.DTO;
 using DataAccess.DTO.CableCategoryDTO;
 using DataAccess.Entity;
 using System.Net;
-using API.Model;
+using API.Model.DAO;
 
 namespace API.Services
 {

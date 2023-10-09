@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Xml.Linq;
 using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using API.Model;
+using API.Model.DAO;
 
 namespace API.Services
 {

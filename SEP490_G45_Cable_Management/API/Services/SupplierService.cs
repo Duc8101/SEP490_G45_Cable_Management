@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;
 using System.Net;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using API.Model;
+using API.Model.DAO;
 
 namespace API.Services
 {

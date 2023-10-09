@@ -4,7 +4,7 @@ using DataAccess.Entity;
 using DataAccess.Const;
 using System.Net;
 using DataAccess.DTO.CableDTO;
-using API.Model;
+using API.Model.DAO;
 
 namespace API.Services
 {

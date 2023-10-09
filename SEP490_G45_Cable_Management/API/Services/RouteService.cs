@@ -1,7 +1,7 @@
 ﻿using DataAccess.DTO;
 using DataAccess.DTO.RouteDTO;
 using System.Net;
-using API.Model;
+using API.Model.DAO;
 
 namespace API.Services
 {
