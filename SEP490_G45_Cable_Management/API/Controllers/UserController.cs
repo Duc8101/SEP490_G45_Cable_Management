@@ -99,7 +99,7 @@ namespace API.Controllers
             // if not found email
             if(email == null)
             {
-                return new ResponseDTO<bool>(false, "Không tìm thấy email", (int) HttpStatusCode.NotFound);
+                return new ResponseDTO<bool>(false, "Không tìm thấy email. Cần xác minh lại thông tin đăng nhập", (int) HttpStatusCode.NotFound);
             }
             return await service.ChangePassword(DTO, email);
         }
