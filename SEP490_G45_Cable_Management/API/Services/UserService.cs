@@ -61,8 +61,21 @@ namespace API.Services
 
         public async Task<ResponseDTO<bool>> Create(UserCreateDTO DTO)
         {
-            try
+            if(DTO.FirstName.Trim().Length == 0 || DTO.LastName.Trim().Length == 0)
             {
+                return new ResponseDTO<bool>(false, "Tên người dùng không được để trống", (int) HttpStatusCode.NotAcceptable);
+            }
+            if (DTO.Phone.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Số điện thoại không được để trống", (int)HttpStatusCode.NotAcceptable);
+            }
+            // if user exist
+            if (await daoUser.isExist(DTO.UserName, DTO.Email))
+            {
+                return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.NotAcceptable);
+            }
+            try
+            {         
                 string newPw = UserUtil.RandomPassword();
                 string hashPw = UserUtil.HashPassword(newPw);
                 // get body email
@@ -85,11 +98,6 @@ namespace API.Services
                     UpdateAt = DateTime.Now,
                     IsDeleted = false
                 };
-                // if user exist
-                if (await daoUser.isExist(user.Username, user.Email))
-                {
-                    return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.NotAcceptable);
-                }
                 int number = await daoUser.CreateUser(user);
                 // if create successful
                 if (number > 0)
@@ -100,7 +108,7 @@ namespace API.Services
             }
             catch (Exception ex)
             {
-                // if send email failed, throw message
+                // if email not valid, throw message
                 throw new Exception(ex.Message);
             }
         }
@@ -207,6 +215,14 @@ namespace API.Services
             if(await daoUser.isExist(UserID, DTO.UserName, DTO.Email))
             {
                 return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.NotAcceptable);
+            }
+            if (DTO.FirstName.Trim().Length == 0 || DTO.LastName.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Tên người dùng không được để trống", (int)HttpStatusCode.NotAcceptable);
+            }
+            if (DTO.Phone.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Số điện thoại không được để trống", (int)HttpStatusCode.NotAcceptable);
             }
             user.Username = DTO.UserName;
             user.Email = DTO.Email;

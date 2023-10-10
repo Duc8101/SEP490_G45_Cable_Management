@@ -14,7 +14,8 @@ namespace DataAccess.Entity
         public int SupplierId { get; set; }
         public string SupplierName { get; set; } = null!;
         public string? Country { get; set; }
-        public Guid? CreatorId { get; set; }
+        //public Guid? CreatorId { get; set; }
+        public Guid CreatorId { get; set; }
         public string? SupplierDescription { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdateAt { get; set; }
