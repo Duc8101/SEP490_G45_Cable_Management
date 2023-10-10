@@ -25,10 +25,10 @@ namespace API.Model.DAO
             return user;
         }
 
-        public async Task<int> CreateUser(User user)
+        public async Task CreateUser(User user)
         {
             await context.Users.AddAsync(user);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public async Task<bool> isExist(string username, string email)
@@ -36,10 +36,10 @@ namespace API.Model.DAO
             return await context.Users.AnyAsync(u => u.Username == username || u.Email == email);
         }
 
-        public async Task<int> UpdateUser(User user)
+        public async Task UpdateUser(User user)
         {
             context.Users.Update(user);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public async Task<User?> getUser(string email)
@@ -80,10 +80,10 @@ namespace API.Model.DAO
         {
             return await context.Users.AnyAsync(u => (u.Username == username || u.Email == email) && u.UserId != UserID);
         }
-        public async Task<int> DeleteUser(User user)
+        public async Task DeleteUser(User user)
         {
             user.IsDeleted = true;
-            return await UpdateUser(user);
+            await UpdateUser(user);
         }
 
     }

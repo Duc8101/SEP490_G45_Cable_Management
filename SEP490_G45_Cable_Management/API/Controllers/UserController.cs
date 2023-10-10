@@ -10,6 +10,7 @@ using static Org.BouncyCastle.Math.EC.ECCurve;
 using DataAccess.DTO;
 using Microsoft.AspNetCore.Authorization;
 using DataAccess.Entity;
+using System.Net;
 
 namespace API.Controllers
 {
@@ -27,14 +28,14 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<PagedResultDTO<UserListDTO>> List(string? filter, int page)
+        public async Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> List(string? filter, int page)
         {
             // if admin
-            //if (isAdmin())
-            //{
+            if (isAdmin())
+            {
                 return await service.List(filter, page);
-            //}
-            //throw new UnauthorizedAccessException();
+            }
+            return new ResponseDTO<PagedResultDTO<UserListDTO>?>(null, "Bạn không có quyền truy cập" , (int) HttpStatusCode.Forbidden);
         }
 
         [HttpPost]
@@ -46,7 +47,7 @@ namespace API.Controllers
             {
                 return await service.Create(DTO);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }
 
         [HttpPut("{UserID}")]
@@ -58,7 +59,7 @@ namespace API.Controllers
             {
                 return await service.Update(UserID, DTO);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }
 
         [HttpDelete("{UserID}")]
@@ -72,11 +73,11 @@ namespace API.Controllers
                 // if not found
                 if(UserLoginID == null)
                 {
-                    throw new ApplicationException();
+                    return new ResponseDTO<bool>(false, "Không tìm thấy ID", (int)HttpStatusCode.NotFound);
                 }
                 return await service.Delete(UserID, Guid.Parse(UserLoginID));
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPost]
@@ -92,13 +93,13 @@ namespace API.Controllers
             // if not login 
             if (isGuest())
             {
-                throw new UnauthorizedAccessException();
+                return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
             }
             string? email = getEmail();
             // if not found email
             if(email == null)
             {
-                throw new ApplicationException();
+                return new ResponseDTO<bool>(false, "Không tìm thấy email", (int) HttpStatusCode.NotFound);
             }
             return await service.ChangePassword(DTO, email);
         }

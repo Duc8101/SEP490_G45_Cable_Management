@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using API.Model;
 using API.Model.DAO;
+using System.Linq.Expressions;
 
 namespace API.Services
 {
@@ -21,7 +22,7 @@ namespace API.Services
             User? user = await daoUser.getUser(DTO);
             // if username or password incorrect
             if (user == null) {
-                return new ResponseDTO<string>("","Username or password wrong", (int) HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<string>("","Username or password wrong", (int) HttpStatusCode.BadRequest);
             }
             string AccessToken = getAccessToken(user);
             return new ResponseDTO<string>(AccessToken,"");
@@ -98,18 +99,12 @@ namespace API.Services
                     UpdateAt = DateTime.Now,
                     IsDeleted = false
                 };
-                int number = await daoUser.CreateUser(user);
-                // if create successful
-                if (number > 0)
-                {
-                    return new ResponseDTO<bool>(true, "Tạo thành công");
-                }
-                return new ResponseDTO<bool>(false, "Tạo thất bại", (int) HttpStatusCode.Conflict);
+                await daoUser.CreateUser(user);
+                return new ResponseDTO<bool>(true, "Tạo thành công");
             }
             catch (Exception ex)
             {
-                // if email not valid or send email failed, throw message
-                throw new Exception(ex.Message);
+                return new ResponseDTO<bool>(false, ex.Message, ex.HResult);
             }
         }
 
@@ -133,13 +128,8 @@ namespace API.Services
                 await UserUtil.sendEmail("Welcome to Cable Management System", body, DTO.Email);
                 // update user
                 user.Password = hashPw;
-                int number = await daoUser.UpdateUser(user);
-                // if update successful
-                if (number > 0)
-                {
-                    return new ResponseDTO<bool>(true, "Đã đổi mật khẩu thành công. Vui lòng kiểm tra email của bạn");
-                }
-                return new ResponseDTO<bool>(false, "Không đổi được mật khẩu", (int) HttpStatusCode.Conflict);
+                await daoUser.UpdateUser(user);
+                return new ResponseDTO<bool>(true, "Đã đổi mật khẩu thành công. Vui lòng kiểm tra email của bạn");
             }
             catch (Exception ex)
             {
@@ -167,12 +157,15 @@ namespace API.Services
                 return new ResponseDTO<bool>(false, "Mật khẩu xác nhận không trùng khớp với mật khẩu mới", (int) HttpStatusCode.NotAcceptable);
             }
             user.Password = UserUtil.HashPassword(DTO.NewPassword);
-            int number = await daoUser.UpdateUser(user); 
-            // if change successful
-            if (number > 0) { 
-                return new ResponseDTO<bool>(true, "Đổi mật khẩu thành công"); 
+            try
+            {
+                await daoUser.UpdateUser(user);
+                return new ResponseDTO<bool>(true, "Đổi mật khẩu thành công");
             }
-            return new ResponseDTO<bool>(false, "Đổi mật khẩu thất bại", (int) HttpStatusCode.Conflict);
+            catch (Exception ex)
+            {
+                return new ResponseDTO<bool>(false, ex.Message, ex.HResult);
+            }
         }
 
         private async Task<List<UserListDTO>> getList(string? filter, int page)
@@ -196,11 +189,19 @@ namespace API.Services
             return result;
         }
 
-        public async Task<PagedResultDTO<UserListDTO>> List(string? filter, int page)
+        public async Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> List(string? filter, int page)
         {
             List<UserListDTO> list = await getList(filter, page);
             int RowCount = await daoUser.getRowCount(filter);
-            return new PagedResultDTO<UserListDTO>(page, RowCount, PageSizeConst.MAX_USER_LIST_IN_PAGE, list);
+            PagedResultDTO<UserListDTO> result = new PagedResultDTO<UserListDTO>(page, RowCount, PageSizeConst.MAX_USER_LIST_IN_PAGE, list);
+            try
+            {
+                return new ResponseDTO<PagedResultDTO<UserListDTO>?>(result, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<PagedResultDTO<UserListDTO>?>(null, ex.Message, ex.HResult);
+            }
         }
 
         public async Task<ResponseDTO<bool>> Update(Guid UserID, UserUpdateDTO DTO)
@@ -214,30 +215,32 @@ namespace API.Services
             // if username or email exist
             if(await daoUser.isExist(UserID, DTO.UserName, DTO.Email))
             {
-                return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.BadRequest);
             }
             if (DTO.FirstName.Trim().Length == 0 || DTO.LastName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên người dùng không được để trống", (int)HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Tên người dùng không được để trống", (int) HttpStatusCode.BadRequest);
             }
             if (DTO.Phone.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Số điện thoại không được để trống", (int)HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Số điện thoại không được để trống", (int) HttpStatusCode.BadRequest);
             }
-            user.Username = DTO.UserName;
-            user.Email = DTO.Email;
-            user.Firstname = DTO.FirstName.Trim();
-            user.Lastname = DTO.LastName.Trim();
-            user.Phone = DTO.Phone;
-            user.RoleId = DTO.RoleId;
-            user.UpdateAt = DateTime.Now;
-            int number = await daoUser.UpdateUser(user);
-            // if update successful
-            if(number > 0)
+            try
             {
+                user.Username = DTO.UserName;
+                user.Email = DTO.Email;
+                user.Firstname = DTO.FirstName.Trim();
+                user.Lastname = DTO.LastName.Trim();
+                user.Phone = DTO.Phone;
+                user.RoleId = DTO.RoleId;
+                user.UpdateAt = DateTime.Now;
+                await daoUser.UpdateUser(user);
                 return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
-            return new ResponseDTO<bool>(false, "Không chỉnh sửa được", (int) HttpStatusCode.Conflict);
+            catch(Exception ex)
+            {
+                return new ResponseDTO<bool>(false, ex.Message, ex.HResult);
+            }
         }
 
         public async Task<ResponseDTO<bool>> Delete(Guid UserID, Guid UserLoginID)
@@ -251,15 +254,17 @@ namespace API.Services
             // if user login's account
             if(UserID.Equals(UserLoginID))
             {
-                return new ResponseDTO<bool>(false, "Bạn không thể xóa tài khoản của mình", (int) HttpStatusCode.NotFound);
+                return new ResponseDTO<bool>(false, "Bạn không thể xóa tài khoản của mình", (int) HttpStatusCode.BadRequest);
             }
-            int number = await daoUser.DeleteUser(user);
-            // if delete suceesful
-            if(number > 0)
+            try
             {
+                await daoUser.DeleteUser(user);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
             }
-            return new ResponseDTO<bool>(false, "Xóa thất bại", (int) HttpStatusCode.Conflict);
+            catch(Exception ex)
+            {
+                return new ResponseDTO<bool>(false, ex.Message, (int) HttpStatusCode.Conflict);
+            }    
         }
 
     }
