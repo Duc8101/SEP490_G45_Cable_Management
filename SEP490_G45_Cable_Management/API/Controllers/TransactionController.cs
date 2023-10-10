@@ -13,28 +13,28 @@ namespace API.Controllers
     {
         private readonly TransactionService service = new TransactionService();
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public async Task<PagedResultDTO<TransactionHistoryDTO>> List(string? filter, int? WareHouseID, int page)
         {
             // if admin
-            //if (isAdmin())
-            //{
+            if (isAdmin())
+            {
                 return await service.List(filter, WareHouseID, page);
-            //}
-            //throw new UnauthorizedAccessException();
+            }
+            throw new UnauthorizedAccessException();
         }
 
         [HttpGet("{TransactionID}")]
-        //[Authorize]
+        [Authorize]
 
         public async Task<ResponseDTO<TransactionDetailDTO?>> Detail(Guid TransactionID)
         {
             // if admin
-            //if (isAdmin())
-            //{
+            if (isAdmin())
+            {
                 return await service.Detail(TransactionID);
-            //}
-            //throw new UnauthorizedAccessException();
+            }
+            throw new UnauthorizedAccessException();
         }
     }
 }
