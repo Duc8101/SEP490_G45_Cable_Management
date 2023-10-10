@@ -17,15 +17,24 @@ namespace API.Services
     public class UserService
     {
         private readonly DAOUser daoUser = new DAOUser();
-        public async Task<ResponseDTO<string>> Login(LoginDTO DTO)
+        public async Task<ResponseDTO<string?>> Login(LoginDTO DTO)
         {
-            User? user = await daoUser.getUser(DTO);
-            // if username or password incorrect
-            if (user == null) {
-                return new ResponseDTO<string>("","Username or password wrong", (int) HttpStatusCode.BadRequest);
+            try
+            {
+                User? user = await daoUser.getUser(DTO);
+                // if username or password incorrect
+                if (user == null)
+                {
+                    return new ResponseDTO<string?>(null, "Username or password wrong", (int) HttpStatusCode.NotAcceptable);
+                }
+                string AccessToken = getAccessToken(user);
+                return new ResponseDTO<string?>(AccessToken, string.Empty);
             }
-            string AccessToken = getAccessToken(user);
-            return new ResponseDTO<string>(AccessToken,"");
+            catch (Exception ex)
+            {
+                return new ResponseDTO<string?>(null, ex.Message, (int) HttpStatusCode.Conflict);
+            }
+           
         }
 
         private string getAccessToken(User user)
@@ -133,8 +142,7 @@ namespace API.Services
             }
             catch (Exception ex)
             {
-                // if send email failed, throw message
-                throw new Exception(ex.Message);
+                return new ResponseDTO<bool>(false, ex.Message , (int) HttpStatusCode.Conflict);
             }
         }
 
@@ -164,7 +172,7 @@ namespace API.Services
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message, ex.HResult);
+                return new ResponseDTO<bool>(false, ex.Message, (int) HttpStatusCode.Conflict);
             }
         }
 
@@ -200,7 +208,7 @@ namespace API.Services
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<PagedResultDTO<UserListDTO>?>(null, ex.Message, ex.HResult);
+                return new ResponseDTO<PagedResultDTO<UserListDTO>?>(null, ex.Message, (int) HttpStatusCode.Conflict);
             }
         }
 
@@ -215,15 +223,15 @@ namespace API.Services
             // if username or email exist
             if(await daoUser.isExist(UserID, DTO.UserName, DTO.Email))
             {
-                return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.BadRequest);
+                return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.NotAcceptable);
             }
             if (DTO.FirstName.Trim().Length == 0 || DTO.LastName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên người dùng không được để trống", (int) HttpStatusCode.BadRequest);
+                return new ResponseDTO<bool>(false, "Tên người dùng không được để trống", (int) HttpStatusCode.NotAcceptable);
             }
             if (DTO.Phone.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Số điện thoại không được để trống", (int) HttpStatusCode.BadRequest);
+                return new ResponseDTO<bool>(false, "Số điện thoại không được để trống", (int) HttpStatusCode.NotAcceptable);
             }
             try
             {
@@ -239,7 +247,7 @@ namespace API.Services
             }
             catch(Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message, ex.HResult);
+                return new ResponseDTO<bool>(false, ex.Message, (int) HttpStatusCode.Conflict);
             }
         }
 
@@ -254,7 +262,7 @@ namespace API.Services
             // if user login's account
             if(UserID.Equals(UserLoginID))
             {
-                return new ResponseDTO<bool>(false, "Bạn không thể xóa tài khoản của mình", (int) HttpStatusCode.BadRequest);
+                return new ResponseDTO<bool>(false, "Bạn không thể xóa tài khoản của mình", (int) HttpStatusCode.NotAcceptable);
             }
             try
             {

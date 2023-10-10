@@ -21,7 +21,7 @@ namespace API.Controllers
         private readonly UserService service = new UserService();
 
         [HttpPost]
-        public async Task<ResponseDTO<string>> Login(LoginDTO DTO)
+        public async Task<ResponseDTO<string?>> Login(LoginDTO DTO)
         {
             return await service.Login(DTO);
         }
