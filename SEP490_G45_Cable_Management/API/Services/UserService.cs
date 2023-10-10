@@ -31,9 +31,9 @@ namespace API.Services
                 string AccessToken = getAccessToken(user);
                 return new ResponseDTO<string?>(AccessToken, string.Empty);
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
-                return new ResponseDTO<string?>(null, ex.Message, (int) HttpStatusCode.Conflict);
+                return new ResponseDTO<string?>(null, ex.Message, ex.ErrorCode);
             }
            
         }
@@ -142,7 +142,7 @@ namespace API.Services
             }
             catch (SqlException ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message , ex.HResult);
+                return new ResponseDTO<bool>(false, ex.Message , ex.ErrorCode);
             }
         }
 
@@ -170,9 +170,9 @@ namespace API.Services
                 await daoUser.UpdateUser(user);
                 return new ResponseDTO<bool>(true, "Đổi mật khẩu thành công");
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message, ex.HResult);
+                return new ResponseDTO<bool>(false, ex.Message, ex.ErrorCode);
             }
         }
 
@@ -208,7 +208,7 @@ namespace API.Services
             }
             catch (SqlException ex)
             {
-                return new ResponseDTO<PagedResultDTO<UserListDTO>?>(null, ex.Message, ex.HResult);
+                return new ResponseDTO<PagedResultDTO<UserListDTO>?>(null, ex.Message, ex.ErrorCode);
             }
         }
 
@@ -247,7 +247,7 @@ namespace API.Services
             }
             catch(SqlException ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message, ex.HResult);
+                return new ResponseDTO<bool>(false, ex.Message, ex.ErrorCode);
             }
         }
 
@@ -271,7 +271,7 @@ namespace API.Services
             }
             catch(SqlException ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message, ex.HResult);
+                return new ResponseDTO<bool>(false, ex.Message, ex.ErrorCode);
             }    
         }
 
