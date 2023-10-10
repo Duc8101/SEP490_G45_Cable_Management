@@ -108,7 +108,7 @@ namespace API.Services
             }
             catch (Exception ex)
             {
-                // if email not valid, throw message
+                // if email not valid or send email failed, throw message
                 throw new Exception(ex.Message);
             }
         }
