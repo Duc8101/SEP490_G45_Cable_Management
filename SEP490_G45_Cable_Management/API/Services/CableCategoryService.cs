@@ -25,11 +25,20 @@ namespace API.Services
             }
             return result;
         }
-        public async Task<PagedResultDTO<CableCategoryListDTO>> List(string? name, int page)
+        public async Task<ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>> List(string? name, int page)
         {
-            List<CableCategoryListDTO> list = await getList(name, page);
-            int RowCount = await daoCableCategory.getRowCount(name);
-            return new PagedResultDTO<CableCategoryListDTO>(page, PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE, RowCount, list);
+            try
+            {
+                List<CableCategoryListDTO> list = await getList(name, page);
+                int RowCount = await daoCableCategory.getRowCount(name);
+                PagedResultDTO<CableCategoryListDTO> result =  new PagedResultDTO<CableCategoryListDTO>(page, PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE, RowCount, list);
+                return new ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>(result, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }
+           
         }
 
         public async Task<ResponseDTO<bool>> Create(CableCategoryCreateUpdateDTO DTO)

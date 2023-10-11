@@ -1,11 +1,13 @@
 ﻿using API.Services;
 using DataAccess.DTO;
 using DataAccess.DTO.CableCategoryDTO;
+using DataAccess.DTO.UserDTO;
 using DataAccess.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Net;
 using System.Xml.Linq;
 
 namespace API.Controllers
@@ -17,14 +19,14 @@ namespace API.Controllers
         private readonly CableCategoryService service = new CableCategoryService();
         [HttpGet]
         [Authorize]
-        public async Task<PagedResultDTO<CableCategoryListDTO>> List(string? name, int page)
+        public async Task<ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>> List(string? name, int page)
         {
-            // if admin
-            if (isAdmin())
+            // if admin or leader
+            if (isAdmin() || isLeader())
             {
                 return await service.List(name, page);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPost]
