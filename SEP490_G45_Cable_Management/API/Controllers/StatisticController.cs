@@ -1,9 +1,11 @@
 ﻿using API.Services;
 using DataAccess.DTO;
 using DataAccess.DTO.StatisticDTO;
+using DataAccess.DTO.UserDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace API.Controllers
 {
@@ -21,7 +23,7 @@ namespace API.Controllers
             {
                 return await service.MaterialFluctuationPerYear(MaterialCategoryID, WarehouseID, year);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<MaterialFluctuationPerYear?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpGet]
@@ -33,7 +35,7 @@ namespace API.Controllers
             {
                 return await service.CableFluctuationPerYear(CableCategoryID, WarehouseID, year);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<CableFluctuationPerYear?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpGet]

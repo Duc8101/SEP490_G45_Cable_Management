@@ -44,7 +44,7 @@ namespace API.Controllers
                 }
                 return await service.Create(DTO, CreatorID);             
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }
 
         [HttpPut("{SupplierID}")]
