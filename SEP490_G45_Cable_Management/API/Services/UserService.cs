@@ -12,6 +12,7 @@ using API.Model;
 using API.Model.DAO;
 using System.Linq.Expressions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
 {
@@ -31,9 +32,9 @@ namespace API.Services
                 string AccessToken = getAccessToken(user);
                 return new ResponseDTO<string?>(AccessToken, string.Empty);
             }
-            catch (SqlException ex)
+            catch (Exception ex)
             {
-                return new ResponseDTO<string?>(null, ex.Message, ex.ErrorCode);
+                return new ResponseDTO<string?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
            
         }
@@ -72,21 +73,21 @@ namespace API.Services
 
         public async Task<ResponseDTO<bool>> Create(UserCreateDTO DTO)
         {
-            if(DTO.FirstName.Trim().Length == 0 || DTO.LastName.Trim().Length == 0)
+            if (DTO.FirstName.Trim().Length == 0 || DTO.LastName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên người dùng không được để trống", (int) HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Tên người dùng không được để trống", (int)HttpStatusCode.NotAcceptable);
             }
             if (DTO.Phone.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Số điện thoại không được để trống", (int)HttpStatusCode.NotAcceptable);
             }
-            // if user exist
-            if (await daoUser.isExist(DTO.UserName, DTO.Email))
-            {
-                return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.NotAcceptable);
-            }
             try
-            {         
+            {     
+                // if user exist
+                if (await daoUser.isExist(DTO.UserName, DTO.Email))
+                {
+                    return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int)HttpStatusCode.NotAcceptable);
+                }
                 string newPw = UserUtil.RandomPassword();
                 string hashPw = UserUtil.HashPassword(newPw);
                 // get body email
@@ -114,7 +115,7 @@ namespace API.Services
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message, ex.HResult);
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -140,9 +141,9 @@ namespace API.Services
                 await daoUser.UpdateUser(user);
                 return new ResponseDTO<bool>(true, "Đã đổi mật khẩu thành công. Vui lòng kiểm tra email của bạn");
             }
-            catch (SqlException ex)
+            catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message , ex.ErrorCode);
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
 
@@ -170,9 +171,9 @@ namespace API.Services
                 await daoUser.UpdateUser(user);
                 return new ResponseDTO<bool>(true, "Đổi mật khẩu thành công");
             }
-            catch (SqlException ex)
+            catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message, ex.ErrorCode);
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
 
@@ -206,9 +207,9 @@ namespace API.Services
                 PagedResultDTO<UserListDTO> result = new PagedResultDTO<UserListDTO>(page, RowCount, PageSizeConst.MAX_USER_LIST_IN_PAGE, list);
                 return new ResponseDTO<PagedResultDTO<UserListDTO>?>(result, string.Empty);
             }
-            catch (SqlException ex)
+            catch (Exception ex)
             {
-                return new ResponseDTO<PagedResultDTO<UserListDTO>?>(null, ex.Message, ex.ErrorCode);
+                return new ResponseDTO<PagedResultDTO<UserListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
 
@@ -245,9 +246,9 @@ namespace API.Services
                 await daoUser.UpdateUser(user);
                 return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
-            catch(SqlException ex)
+            catch(Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message, ex.ErrorCode);
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
 
@@ -259,7 +260,7 @@ namespace API.Services
                 // if not found
                 if (user == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy user", (int)HttpStatusCode.NotFound);
+                    return new ResponseDTO<bool>(false, "Không tìm thấy user", (int) HttpStatusCode.NotFound);
                 }
                 // if user login's account
                 if (UserID.Equals(UserLoginID))
@@ -269,9 +270,9 @@ namespace API.Services
                 await daoUser.DeleteUser(user);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
             }
-            catch(SqlException ex)
+            catch(Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message, ex.ErrorCode);
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }    
         }
 
