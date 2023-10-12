@@ -40,7 +40,7 @@ namespace API.Services
                 List<CableListDTO> list = await getList(filter, WarehouseID, isExportedToUse, page);
                 int RowCount = await daoCable.getRowCount(filter, WarehouseID, isExportedToUse);
                 int sum = await daoCable.getSum(filter, WarehouseID, isExportedToUse);
-                PagedResultDTO<CableListDTO> result = new PagedResultDTO<CableListDTO>(page, RowCount, PageSizeConst.MAX_CABLE_LIST_IN_PAGE, list, sum);
+                PagedResultDTO<CableListDTO> result = new PagedResultDTO<CableListDTO>(page, RowCount, PageSizeConst.MAX_CABLE_LIST_IN_PAGE , list, sum);
                 return new ResponseDTO<PagedResultDTO<CableListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)

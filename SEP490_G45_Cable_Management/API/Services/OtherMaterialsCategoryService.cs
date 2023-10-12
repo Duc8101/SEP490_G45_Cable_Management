@@ -33,7 +33,7 @@ namespace API.Services
             {
                 List<OtherMaterialsCategoryListDTO> list = await getList(name, page);
                 int RowCount = await daoOtherMaterialsCategory.getRowCount(name);
-                PagedResultDTO<OtherMaterialsCategoryListDTO> result = new PagedResultDTO<OtherMaterialsCategoryListDTO>(page, PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE, RowCount, list);
+                PagedResultDTO<OtherMaterialsCategoryListDTO> result = new PagedResultDTO<OtherMaterialsCategoryListDTO>(page, RowCount, PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE, list);
                 return new ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)

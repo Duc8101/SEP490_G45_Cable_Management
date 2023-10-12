@@ -31,7 +31,7 @@ namespace API.Services
             {
                 List<CableCategoryListDTO> list = await getList(name, page);
                 int RowCount = await daoCableCategory.getRowCount(name);
-                PagedResultDTO<CableCategoryListDTO> result =  new PagedResultDTO<CableCategoryListDTO>(page, PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE, RowCount, list);
+                PagedResultDTO<CableCategoryListDTO> result =  new PagedResultDTO<CableCategoryListDTO>(page, RowCount,PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE , list);
                 return new ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)

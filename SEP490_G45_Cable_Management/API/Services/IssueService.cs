@@ -37,7 +37,7 @@ namespace API.Services
             {
                 List<IssueListDTO> list = await getList(filter, page);
                 int RowCount = await daoIssue.getRowCount(filter);
-                PagedResultDTO<IssueListDTO> result = new PagedResultDTO<IssueListDTO>(page, RowCount, PageSizeConst.MAX_ISSUE_LIST_IN_PAGE, list);
+                PagedResultDTO<IssueListDTO> result = new PagedResultDTO<IssueListDTO>(page, RowCount,PageSizeConst.MAX_ISSUE_LIST_IN_PAGE , list);
                 return new ResponseDTO<PagedResultDTO<IssueListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
