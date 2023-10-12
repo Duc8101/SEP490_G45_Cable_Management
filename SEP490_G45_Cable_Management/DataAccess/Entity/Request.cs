@@ -19,7 +19,8 @@ namespace DataAccess.Entity
         public Guid CreatorId { get; set; }
         public Guid? ApproverId { get; set; }
         public Guid? IssueId { get; set; }
-        public string? Status { get; set; }
+        //public string? Status { get; set; }
+        public string Status { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdateAt { get; set; }
         public bool IsDeleted { get; set; }

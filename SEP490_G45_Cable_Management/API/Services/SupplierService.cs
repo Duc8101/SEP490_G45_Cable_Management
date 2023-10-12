@@ -30,12 +30,19 @@ namespace API.Services
             }
             return result;
         }
-        public async Task<PagedResultDTO<SupplierListDTO>> List(string? name, int page)
+        public async Task<ResponseDTO<PagedResultDTO<SupplierListDTO>?>> List(string? name, int page)
         {
-            List<SupplierListDTO> list = await getList(name, page);
-            int RowCount = await daoSupplier.getRowCount(name);
-            PagedResultDTO<SupplierListDTO> pageResult = new PagedResultDTO<SupplierListDTO>(page, RowCount,PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE , list);
-            return pageResult;
+            try
+            {
+                List<SupplierListDTO> list = await getList(name, page);
+                int RowCount = await daoSupplier.getRowCount(name);
+                PagedResultDTO<SupplierListDTO> result = new PagedResultDTO<SupplierListDTO>(page, RowCount, PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE, list);
+                return new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(result, string.Empty);
+            }
+            catch(Exception ex)
+            {
+                return new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }
         }
         public async Task<ResponseDTO<bool>> Create(SupplierCreateUpdateDTO DTO, string CreatorID)
         {
@@ -43,78 +50,85 @@ namespace API.Services
             {
                 return new ResponseDTO<bool>(false, "Tên nhà cung cấp không được để trống", (int) HttpStatusCode.NotAcceptable);
             }
-            // if supplier already exist
-            if (await daoSupplier.isExist(DTO.SupplierName.Trim()))
+            try
             {
-                return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int) HttpStatusCode.NotAcceptable);
-            }
-            Supplier supplier = new Supplier()
-            {
-                SupplierName = DTO.SupplierName.Trim(),
-                Country = DTO.Country == null ? null : DTO.Country.Trim(),
-                SupplierDescription = DTO.SupplierDescription == null || DTO.SupplierDescription.Trim().Length == 0 ? null : DTO.SupplierDescription.Trim(),
-                CreatedAt = DateTime.Now,
-                UpdateAt = DateTime.Now,
-                IsDeleted = false,
-                CreatorId = Guid.Parse(CreatorID)
-            };
-            // create supplier
-            int number = await daoSupplier.CreateSupplier(supplier);
-            // if create successful
-            if(number > 0)
-            {
+                // if supplier already exist
+                if (await daoSupplier.isExist(DTO.SupplierName.Trim()))
+                {
+                    return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int)HttpStatusCode.NotAcceptable);
+                }
+                Supplier supplier = new Supplier()
+                {
+                    SupplierName = DTO.SupplierName.Trim(),
+                    Country = DTO.Country == null || DTO.Country.Trim().Length == 0 ? null : DTO.Country.Trim(),
+                    SupplierDescription = DTO.SupplierDescription == null || DTO.SupplierDescription.Trim().Length == 0 ? null : DTO.SupplierDescription.Trim(),
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
+                    IsDeleted = false,
+                    CreatorId = Guid.Parse(CreatorID)
+                };
+                // create supplier
+                await daoSupplier.CreateSupplier(supplier);
                 return new ResponseDTO<bool>(true, "Thêm thành công");
             }
-            return new ResponseDTO<bool>(false,"Thêm thất bại", (int) HttpStatusCode.Conflict);
+            catch(Exception ex)
+            {
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ResponseDTO<bool>> Update(int SupplierID, SupplierCreateUpdateDTO DTO)
         {
-            Supplier? supplier = await daoSupplier.getSupplier(SupplierID);
-            // if supplier id not exist
-            if (supplier == null)
+            try
             {
-                return new ResponseDTO<bool>(false, "Không tìm thấy nhà cung cấp", (int) HttpStatusCode.NotFound);
-            }
-            if (DTO.SupplierName.Trim().Length == 0)
-            {
-                return new ResponseDTO<bool>(false, "Tên nhà cung cấp không được để trống", (int) HttpStatusCode.NotAcceptable);
-            }
+                Supplier? supplier = await daoSupplier.getSupplier(SupplierID);
+                // if supplier id not exist
+                if (supplier == null)
+                {
+                    return new ResponseDTO<bool>(false, "Không tìm thấy nhà cung cấp", (int)HttpStatusCode.NotFound);
+                }
+                if (DTO.SupplierName.Trim().Length == 0)
+                {
+                    return new ResponseDTO<bool>(false, "Tên nhà cung cấp không được để trống", (int) HttpStatusCode.NotAcceptable);
+                }
 
-            // if supplier already exist
-            if (await daoSupplier.isExist(SupplierID, DTO.SupplierName))
-            {
-                return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int) HttpStatusCode.NotAcceptable);
-            }
-            supplier.SupplierName = DTO.SupplierName.Trim();
-            supplier.Country = DTO.Country == null || DTO.Country.Trim().Length == 0 ? null : DTO.Country.Trim();
-            supplier.SupplierDescription = DTO.SupplierDescription == null || DTO.SupplierDescription.Trim().Length == 0 ? null : DTO.SupplierDescription.Trim();
-            supplier.UpdateAt = DateTime.Now;
-            // update supplier
-            int number = await daoSupplier.UpdateSupplier(supplier);
-            // if update successful
-            if (number > 0)
-            {
+                // if supplier already exist
+                if (await daoSupplier.isExist(SupplierID, DTO.SupplierName))
+                {
+                    return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int)HttpStatusCode.NotAcceptable);
+                }
+                supplier.SupplierName = DTO.SupplierName.Trim();
+                supplier.Country = DTO.Country == null || DTO.Country.Trim().Length == 0 ? null : DTO.Country.Trim();
+                supplier.SupplierDescription = DTO.SupplierDescription == null || DTO.SupplierDescription.Trim().Length == 0 ? null : DTO.SupplierDescription.Trim();
+                supplier.UpdateAt = DateTime.Now;
+                // update supplier
+                await daoSupplier.UpdateSupplier(supplier);
                 return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
-            return new ResponseDTO<bool>(false, "Chỉnh sửa thất bại", (int) HttpStatusCode.Conflict);
+            catch(Exception ex)
+            {
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }  
         }
 
         public async Task<ResponseDTO<bool>> Delete(int SupplierID)
         {
-            Supplier? supplier = await daoSupplier.getSupplier(SupplierID); 
-            // if supplier not exist
-            if(supplier == null)
+            try
             {
-                return new ResponseDTO<bool>(false, "Không tìm thấy nhà cung cấp", (int) HttpStatusCode.NotFound);
-            }
-            // delete supplier
-            int number = await daoSupplier.DeleteSupplier(supplier); 
-            // if delete successful
-            if (number > 0) {
+                Supplier? supplier = await daoSupplier.getSupplier(SupplierID);
+                // if supplier not exist
+                if (supplier == null)
+                {
+                    return new ResponseDTO<bool>(false, "Không tìm thấy nhà cung cấp", (int) HttpStatusCode.NotFound);
+                }
+                // delete supplier
+                await daoSupplier.DeleteSupplier(supplier);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
             }
-            return new ResponseDTO<bool>(false, "Xóa thất bại", (int) HttpStatusCode.Conflict);
+            catch(Exception ex)
+            {
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }
         }
     }
 }

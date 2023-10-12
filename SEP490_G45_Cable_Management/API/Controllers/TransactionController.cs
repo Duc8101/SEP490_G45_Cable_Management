@@ -4,6 +4,7 @@ using DataAccess.DTO.TransactionDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace API.Controllers
 {
@@ -14,14 +15,14 @@ namespace API.Controllers
         private readonly TransactionService service = new TransactionService();
         [HttpGet]
         [Authorize]
-        public async Task<PagedResultDTO<TransactionHistoryDTO>> List(string? filter, int? WareHouseID, int page)
+        public async Task<ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>> List(string? filter, int? WareHouseID, int page = 1)
         {
             // if admin
             if (isAdmin())
             {
                 return await service.List(filter, WareHouseID, page);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>(null, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }
 
         [HttpGet("{TransactionID}")]
@@ -34,7 +35,7 @@ namespace API.Controllers
             {
                 return await service.Detail(TransactionID);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<TransactionDetailDTO?>(null, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }
     }
 }

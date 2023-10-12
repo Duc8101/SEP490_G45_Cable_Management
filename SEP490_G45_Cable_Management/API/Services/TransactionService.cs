@@ -39,11 +39,19 @@ namespace API.Services
             }
             return result;
         }
-        public async Task<PagedResultDTO<TransactionHistoryDTO>> List(string? filter, int? WareHouseID, int page)
+        public async Task<ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>> List(string? filter, int? WareHouseID, int page)
         {
-            List<TransactionHistoryDTO> list = await getListTransactionHistory(filter, WareHouseID, page);
-            int RowCount = await daoHistory.getRowCount(filter, WareHouseID);
-            return new PagedResultDTO<TransactionHistoryDTO>(page, RowCount, PageSizeConst.MAX_TRANSACTION_LIST_IN_PAGE, list);
+            try
+            {
+                List<TransactionHistoryDTO> list = await getListTransactionHistory(filter, WareHouseID, page);
+                int RowCount = await daoHistory.getRowCount(filter, WareHouseID);
+                PagedResultDTO<TransactionHistoryDTO> result = new PagedResultDTO<TransactionHistoryDTO>(page, RowCount, PageSizeConst.MAX_TRANSACTION_LIST_IN_PAGE, list);
+                return new ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>(result, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }          
         }
         private async Task<List<TransactionCableDTO>> getListTransactionCable(Guid TransactionID)
         {
@@ -86,28 +94,35 @@ namespace API.Services
 
         public async Task<ResponseDTO<TransactionDetailDTO?>> Detail(Guid TransactionID)
         {
-            TransactionHistory? history = await daoHistory.getTransactionHistory(TransactionID);
-            if(history == null)
+            try
             {
-                return new ResponseDTO<TransactionDetailDTO?>(null, "Không tìm thấy giao dịch", (int) HttpStatusCode.NotFound);
+                TransactionHistory? history = await daoHistory.getTransactionHistory(TransactionID);
+                if (history == null)
+                {
+                    return new ResponseDTO<TransactionDetailDTO?>(null, "Không tìm thấy giao dịch", (int) HttpStatusCode.NotFound);
+                }
+                List<TransactionCableDTO> listCable = await getListTransactionCable(TransactionID);
+                List<TransactionMaterialDTO> listMaterial = await getListTransactionMaterial(TransactionID);
+                TransactionDetailDTO DTO = new TransactionDetailDTO()
+                {
+                    TransactionId = history.TransactionId,
+                    TransactionCategoryName = history.TransactionCategoryName,
+                    Description = history.Description,
+                    CreatedAt = history.CreatedAt,
+                    WarehouseId = history.WarehouseId,
+                    IssueCode = history.Issue == null ? null : history.Issue.IssueCode,
+                    FromWarehouseName = history.FromWarehouse == null ? null : history.FromWarehouse.WarehouseName,
+                    ToWarehouseName = history.ToWarehouse == null ? null : history.ToWarehouse.WarehouseName,
+                    CreatedDate = history.CreatedDate,
+                    CableTransactions = listCable,
+                    MaterialsTransaction = listMaterial,
+                };
+                return new ResponseDTO<TransactionDetailDTO?>(DTO, "");
             }
-            List<TransactionCableDTO> listCable = await getListTransactionCable(TransactionID);
-            List<TransactionMaterialDTO> listMaterial = await getListTransactionMaterial(TransactionID);
-            TransactionDetailDTO DTO = new TransactionDetailDTO()
+            catch (Exception ex)
             {
-                TransactionId = history.TransactionId,
-                TransactionCategoryName = history.TransactionCategoryName,
-                Description = history.Description,
-                CreatedAt = history.CreatedAt,
-                WarehouseId = history.WarehouseId,
-                IssueCode = history.Issue == null ? null : history.Issue.IssueCode,
-                FromWarehouseName = history.FromWarehouse == null ? null : history.FromWarehouse.WarehouseName,
-                ToWarehouseName = history.ToWarehouse == null ? null : history.ToWarehouse.WarehouseName,
-                CreatedDate = history.CreatedDate,
-                CableTransactions = listCable,
-                MaterialsTransaction = listMaterial,
-            };
-            return new ResponseDTO<TransactionDetailDTO?>(DTO, "");
+                return new ResponseDTO<TransactionDetailDTO?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }         
         }
     }
 }

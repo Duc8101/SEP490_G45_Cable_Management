@@ -18,8 +18,8 @@ namespace API.Model.DAO
                 .Include(w => w.ToWarehouse).Where(t => t.IsDeleted == false);
             if (filter != null && filter.Trim().Length != 0)
             {
-                query = query.Where(t => t.Warehouse != null && t.Warehouse.WarehouseName != null && t.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim())
-                || t.TransactionCategoryName != null && t.TransactionCategoryName.Contains(filter.ToLower().Trim()));
+                query = query.Where(t => (t.Warehouse != null && t.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim()))
+                || (t.TransactionCategoryName != null && t.TransactionCategoryName.Contains(filter.ToLower().Trim())));
             }
             if (WareHouseID != null)
             {

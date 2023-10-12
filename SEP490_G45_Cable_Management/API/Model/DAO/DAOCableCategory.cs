@@ -32,10 +32,10 @@ namespace API.Model.DAO
             return await query.CountAsync();
         }
 
-        public async Task<int> CreateCableCategory(CableCategory cable)
+        public async Task CreateCableCategory(CableCategory cable)
         {
             await context.CableCategories.AddAsync(cable);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public async Task<bool> isExist(string name)
@@ -53,10 +53,10 @@ namespace API.Model.DAO
             return await context.CableCategories.AnyAsync(c => c.CableCategoryName == name.Trim() && c.CableCategoryId != ID);
         }
 
-        public async Task<int> UpdateCableCategory(CableCategory cable)
+        public async Task UpdateCableCategory(CableCategory cable)
         {
             context.CableCategories.Update(cable);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
     }
 }

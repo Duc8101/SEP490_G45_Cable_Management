@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using API.Services;
+using System.Net;
 
 namespace API.Controllers
 {
@@ -14,38 +15,38 @@ namespace API.Controllers
         private readonly OtherMaterialsCategoryService service = new OtherMaterialsCategoryService();
         [HttpGet]
         [Authorize]
-        public async Task<PagedResultDTO<OtherMaterialsCategoryListDTO>> List(int page)
+        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>> List(string? name, int page = 1)
         {
-            // if admin
-            if (isAdmin())
+            // if admin or leader
+            if (isAdmin() || isLeader())
             {
-                return await service.List(page);
+                return await service.List(name, page);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPost]
         [Authorize]
         public async Task<ResponseDTO<bool>> Create(OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
-            // if admin
-            if (isAdmin())
+            // if admin or leader
+            if (isAdmin() || isLeader())
             {
                 return await service.Create(DTO);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }
 
         [HttpPut("{OtherMaterialsCategoryID}")]
         [Authorize]
         public async Task<ResponseDTO<bool>> Update(int OtherMaterialsCategoryID,OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
-            // if admin
-            if (isAdmin())
+            // if admin or leader
+            if (isAdmin() || isLeader())
             {
                 return await service.Update(OtherMaterialsCategoryID, DTO);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }
     }
 }

@@ -11,15 +11,15 @@ namespace API.Model.DAO
 {
     public class DAOSupplier : BaseDAO
     {
-        public async Task<int> CreateSupplier(Supplier supplier)
+        public async Task CreateSupplier(Supplier supplier)
         {
             await context.Suppliers.AddAsync(supplier);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public async Task<bool> isExist(string SupplierName)
         {
-            return await context.Suppliers.AnyAsync(s => s.SupplierName == SupplierName.Trim());
+            return await context.Suppliers.AnyAsync(s => s.SupplierName == SupplierName.Trim() && s.IsDeleted == false);
         }
 
         private IQueryable<Supplier> getQuery(string? name)
@@ -51,19 +51,19 @@ namespace API.Model.DAO
 
         public async Task<bool> isExist(int SupplierID, string SupplierName)
         {
-            return await context.Suppliers.AnyAsync(s => s.SupplierName == SupplierName.Trim() && s.SupplierId != SupplierID);
+            return await context.Suppliers.AnyAsync(s => s.SupplierName == SupplierName.Trim() && s.SupplierId != SupplierID && s.IsDeleted == false);
         }
 
-        public async Task<int> UpdateSupplier(Supplier supplier)
+        public async Task UpdateSupplier(Supplier supplier)
         {
             context.Suppliers.Update(supplier);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteSupplier(Supplier supplier)
+        public async Task DeleteSupplier(Supplier supplier)
         {
             supplier.IsDeleted = true;
-            return await UpdateSupplier(supplier);
+            await UpdateSupplier(supplier);
         }
     }
 }

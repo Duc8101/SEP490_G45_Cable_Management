@@ -43,47 +43,62 @@ namespace API.Services
 
         public async Task<ResponseDTO<bool>> Create(CableCategoryCreateUpdateDTO DTO)
         {
-             // if category already exist
-             if (await daoCableCategory.isExist(DTO.CableCategoryName.Trim()))
+             if(DTO.CableCategoryName.Trim().Length == 0)
              {
-                return new ResponseDTO<bool>(false, "Loại cáp này đã tồn tại", (int) HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Tên cáp không được để trống", (int) HttpStatusCode.NotAcceptable);
              }
-             CableCategory cable = new CableCategory()
+             try
              {
-                 CableCategoryName = DTO.CableCategoryName.Trim(),
-                 CreatedAt = DateTime.Now,
-                 UpdateAt = DateTime.Now,
-                 IsDeleted = false,
-             };
-             int number = await daoCableCategory.CreateCableCategory(cable);
-             // if create successful
-             if(number > 0)
-             {
+                // if category already exist
+                if (await daoCableCategory.isExist(DTO.CableCategoryName.Trim()))
+                {
+                    return new ResponseDTO<bool>(false, "Loại cáp này đã tồn tại", (int)HttpStatusCode.NotAcceptable);
+                }
+                CableCategory cable = new CableCategory()
+                {
+                    CableCategoryName = DTO.CableCategoryName.Trim(),
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
+                    IsDeleted = false,
+                };
+                await daoCableCategory.CreateCableCategory(cable);
                 return new ResponseDTO<bool>(true, "Tạo thành công");
              }
-             return new ResponseDTO<bool>(false,"Tạo thất bại", (int) HttpStatusCode.Conflict);
+             catch (Exception ex)
+             {
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ResponseDTO<bool>> Update(int CableCategoryID, CableCategoryCreateUpdateDTO DTO)
         {
-            CableCategory? cable = await daoCableCategory.getCableCategory(CableCategoryID);
-            // if not found cable
-            if (cable == null) {
-                return new ResponseDTO<bool>(false, "Không tìm thấy cáp", (int) HttpStatusCode.NotFound);
-            }
-            // if cable already exist
-            if(await daoCableCategory.isExist(CableCategoryID, DTO.CableCategoryName.Trim()))
+            try
             {
-                return new ResponseDTO<bool>(false, "Loại cáp này đã tồn tại", (int) HttpStatusCode.NotAcceptable);
+                CableCategory? cable = await daoCableCategory.getCableCategory(CableCategoryID);
+                // if not found cable
+                if (cable == null)
+                {
+                    return new ResponseDTO<bool>(false, "Không tìm thấy cáp", (int) HttpStatusCode.NotFound);
+                }
+                if (DTO.CableCategoryName.Trim().Length == 0)
+                {
+                    return new ResponseDTO<bool>(false, "Tên cáp không được để trống", (int) HttpStatusCode.NotAcceptable);
+                }
+                // if cable already exist
+                if (await daoCableCategory.isExist(CableCategoryID, DTO.CableCategoryName.Trim()))
+                {
+                    return new ResponseDTO<bool>(false, "Loại cáp này đã tồn tại", (int) HttpStatusCode.NotAcceptable);
+                }
+                cable.CableCategoryName = DTO.CableCategoryName.Trim();
+                cable.UpdateAt = DateTime.Now;
+                await daoCableCategory.UpdateCableCategory(cable);
+                return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
-            cable.CableCategoryName = DTO.CableCategoryName.Trim();
-            cable.UpdateAt = DateTime.Now;
-            int number = await daoCableCategory.UpdateCableCategory(cable);
-            // if update successful
-            if(number > 0) {  
-                return new ResponseDTO<bool>(true, "Chỉnh sửa thành công"); 
+            catch (Exception ex)
+            {
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
-            return new ResponseDTO<bool>(false, "Chỉnh sửa thất bại", (int) HttpStatusCode.Conflict);
+            
         }
     }
 }

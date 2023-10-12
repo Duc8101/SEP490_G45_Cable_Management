@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit.Encodings;
+using System.Net;
 
 namespace API.Controllers
 {
@@ -14,23 +15,23 @@ namespace API.Controllers
     {
         private readonly IssueService service = new IssueService();
         [HttpGet]
-        //[Authorize]
-        public async Task<PagedResultDTO<IssueListDTO>> List(string? filter, int page)
+        [Authorize]
+        public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List(string? filter, int page = 1)
         {
-            // if guest
-            //if(isGuest())
-            //{
-                //throw new UnauthorizedAccessException();  
-            //}
-            return await service.List(filter, page);
+            // if admin, leader, staff
+            if(isAdmin() || isLeader() || isStaff())
+            {
+                return await service.List(filter, page);
+            }
+            return new ResponseDTO<PagedResultDTO<IssueListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }
 
         [HttpPost]
         [Authorize]
         public async Task<ResponseDTO<bool>> Create(IssueCreateDTO DTO)
         {
-            // if admin or staff
-            if(isAdmin() || isStaff())
+            // if admin, leader, staff
+            if (isAdmin() || isLeader() || isStaff())
             {
                 string? CreatorID = getUserID();
                 if(CreatorID == null)
@@ -39,31 +40,31 @@ namespace API.Controllers
                 }
                 return await service.Create(DTO, Guid.Parse(CreatorID));
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }
 
         [HttpPut("{IssueID}")]
         [Authorize]
         public async Task<ResponseDTO<bool>> Update(Guid IssueID, IssueUpdateDTO DTO)
         {
-            // if admin or staff
-            if (isAdmin() || isStaff())
+            // if admin, leader, staff
+            if (isAdmin() || isLeader() || isStaff())
             {
                 return await service.Update(IssueID, DTO);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpDelete("{IssueID}")]
         [Authorize]
         public async Task<ResponseDTO<bool>> Delete(Guid IssueID)
         {
-            // if admin or staff
-            if (isAdmin() || isStaff())
+            // if admin, leader, staff
+            if (isAdmin() || isLeader() || isStaff())
             {
                 return await service.Delete(IssueID);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
     }
 }

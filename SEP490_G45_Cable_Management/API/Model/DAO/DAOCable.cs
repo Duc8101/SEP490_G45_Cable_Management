@@ -51,15 +51,15 @@ namespace API.Model.DAO
 
         public async Task<bool> isExist(CableCreateUpdateDTO DTO)
         {
-            return await context.Cables.AnyAsync(c => c.IsDeleted == false && c.Code == DTO.Code.Trim() && c.Status == DTO.Status.Trim()
+            return await context.Cables.AnyAsync(c => c.IsDeleted == false && c.Code == DTO.Code.Trim() && c.Status == (DTO.Status == null || DTO.Status.Length == 0 ? null : DTO.Status.Trim())
             && c.SupplierId == DTO.SupplierId && c.StartPoint == DTO.StartPoint && c.EndPoint == DTO.EndPoint 
             && c.YearOfManufacture == DTO.YearOfManufacture);
         }
 
-        public async Task<int> CreateCable(Cable cable)
+        public async Task CreateCable(Cable cable)
         {
             await context.Cables.AddAsync(cable);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public async Task<Cable?> getCable(Guid CableID)
@@ -67,16 +67,16 @@ namespace API.Model.DAO
             return await context.Cables.SingleOrDefaultAsync(c => c.IsDeleted == false && c.CableId == CableID);
         }
 
-        public async Task<int> UpdateCable(Cable cable)
+        public async Task UpdateCable(Cable cable)
         {
             context.Cables.Update(cable);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteCable(Cable cable)
+        public async Task DeleteCable(Cable cable)
         {
             cable.IsDeleted = true;
-            return await UpdateCable(cable);
+            await UpdateCable(cable);
         }
 
         public async Task<List<Cable>> getList(int CableCategoryID)

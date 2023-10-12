@@ -115,7 +115,7 @@ namespace API.Services
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
 

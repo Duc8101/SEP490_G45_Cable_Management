@@ -14,9 +14,9 @@ namespace API.Services
         private readonly DAOIssue daoIssue = new DAOIssue();
         private readonly DAORequestCable daoRequestCable = new DAORequestCable();
         private readonly DAOCable daoCable = new DAOCable();
-        private async Task<List<RequestListDTO>> getList(string? name, string? status, int page)
+        private async Task<List<RequestListDTO>> getList(string? name, string? status, Guid? IssueID, int page)
         {
-            List<Request> list = await daoRequest.getList(name, status, page);
+            List<Request> list = await daoRequest.getList(name, status, IssueID, page);
             List<RequestListDTO> result = new List<RequestListDTO>();
             foreach (Request item in list)
             {
@@ -34,13 +34,20 @@ namespace API.Services
             }
             return result;
         }
-        public async Task<PagedResultDTO<RequestListDTO>> List(string? name, string? status, int page)
+        public async Task<ResponseDTO<PagedResultDTO<RequestListDTO>?>> List(string? name, string? status, Guid? IssueID, int page)
         {
-            List<RequestListDTO> list = await getList(name, status, page);
-            int RowCount = await daoRequest.getRowCount(name, status);
-            return new PagedResultDTO<RequestListDTO>(page, RowCount,PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, list);
+            try
+            {
+                List<RequestListDTO> list = await getList(name, status, IssueID, page);
+                int RowCount = await daoRequest.getRowCount(name, IssueID, status);
+                PagedResultDTO<RequestListDTO> result = new PagedResultDTO<RequestListDTO>(page, RowCount, PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, list);
+                return new ResponseDTO<PagedResultDTO<RequestListDTO>?>(result, string.Empty);
+            }
+            catch(Exception ex)
+            {
+                return new ResponseDTO<PagedResultDTO<RequestListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }
         }
-
         public async Task<ResponseDTO<bool>> CreateExport(RequestCreateExportDTO DTO, Guid CreatorID)
         {
             Issue? issue = await daoIssue.getIssue(DTO.IssueId);

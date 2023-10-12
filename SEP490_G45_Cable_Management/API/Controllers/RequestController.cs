@@ -4,6 +4,7 @@ using DataAccess.DTO.RequestDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace API.Controllers
 {
@@ -14,16 +15,16 @@ namespace API.Controllers
         private readonly RequestService service = new RequestService();
         [HttpGet]
         [Authorize]
-        public async Task<PagedResultDTO<RequestListDTO>> List(string? name , string? status , int page)
+        public async Task<ResponseDTO<PagedResultDTO<RequestListDTO>?>> List(string? name , string? status, Guid? IssueID , int page = 1)
         {
-            // if guest
-            if (isGuest())
+            // if admin, leader
+            if (isAdmin() || isLeader())
             {
-                throw new UnauthorizedAccessException();
+                return await service.List(name, status, IssueID, page);
             }
-            return await service.List(name, status, page);
+            return new ResponseDTO<PagedResultDTO<RequestListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }
-
+        /*
         [HttpPost]
         [Authorize]
         public async Task<ResponseDTO<bool>> CreateExport(RequestCreateExportDTO DTO)
@@ -39,6 +40,6 @@ namespace API.Controllers
                 return await service.CreateExport(DTO, Guid.Parse(CreatorID));
             }
             throw new UnauthorizedAccessException();
-        }
+        }*/
     }
 }

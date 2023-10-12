@@ -52,20 +52,20 @@ namespace API.Model.DAO
         public async Task<OtherMaterial?> getOtherMaterial(OtherMaterialsCreateUpdateDTO DTO)
         {
             return await context.OtherMaterials.Where(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == DTO.OtherMaterialsCategoryId
-            && DTO.Unit != null && o.Unit == DTO.Unit.Trim() && DTO.Code != null && o.Code == DTO.Code.Trim() && o.SupplierId == DTO.SupplierId
-            && DTO.Status != null && o.Status == DTO.Status.Trim() && o.WarehouseId == DTO.WarehouseId).FirstOrDefaultAsync();
+            && o.Unit == DTO.Unit.Trim() && o.Code == DTO.Code.Trim() && o.SupplierId == DTO.SupplierId
+            && o.Status == (DTO.Status == null || DTO.Status.Trim().Length == 0 ? null : DTO.Status.Trim()) && o.WarehouseId == DTO.WarehouseId).FirstOrDefaultAsync();
         }
 
-        public async Task<int> CreateMaterial(OtherMaterial material)
+        public async Task CreateMaterial(OtherMaterial material)
         {
             await context.OtherMaterials.AddAsync(material);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
-        public async Task<int> UpdateMaterial(OtherMaterial material)
+        public async Task UpdateMaterial(OtherMaterial material)
         {
             context.OtherMaterials.Update(material);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public async Task<OtherMaterial?> getOtherMaterial(int ID)
@@ -86,10 +86,10 @@ namespace API.Model.DAO
             && o.WarehouseId == DTO.WarehouseId);
         }
 
-        public async Task<int> DeleteMaterial(OtherMaterial material)
+        public async Task DeleteMaterial(OtherMaterial material)
         {
             material.IsDeleted = true;
-            return await UpdateMaterial(material);
+            await UpdateMaterial(material);
         }
 
         public async Task<List<OtherMaterialsCategory>> getListCategory(int? WarehouseID)

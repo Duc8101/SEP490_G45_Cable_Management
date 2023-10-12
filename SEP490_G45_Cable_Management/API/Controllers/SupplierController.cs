@@ -1,6 +1,7 @@
 ﻿using API.Services;
 using DataAccess.DTO;
 using DataAccess.DTO.SupplierDTO;
+using DataAccess.DTO.UserDTO;
 using DataAccess.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,14 +19,14 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<PagedResultDTO<SupplierListDTO>> List(string? name, int page /* current page */)
+        public async Task<ResponseDTO<PagedResultDTO<SupplierListDTO>?>> List(string? name, int page = 1 /* current page */)
         {
             // if admin or warehouse or leader
             if (isAdmin() || isWarehouseKeeper() || isLeader())
             {
                 return await service.List(name, page);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPost]
@@ -40,7 +41,7 @@ namespace API.Controllers
                 // if not found user id
                 if (CreatorID == null)
                 {
-                    throw new ApplicationException();
+                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra lại thông tin đăng nhập", (int) HttpStatusCode.NotFound);
                 }
                 return await service.Create(DTO, CreatorID);             
             }
@@ -56,7 +57,7 @@ namespace API.Controllers
             {
                 return await service.Update(SupplierID, DTO);  
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }
 
         [HttpDelete("{SupplierID}")]
@@ -68,7 +69,7 @@ namespace API.Controllers
             {
                 return await service.Delete(SupplierID);
             }
-             throw new UnauthorizedAccessException();  
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }
     }
 }

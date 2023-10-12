@@ -35,26 +35,26 @@ namespace API.Model.DAO
             return await query.CountAsync();
         }
 
-        public async Task<int> CreateIssue(Issue issue)
+        public async Task CreateIssue(Issue issue)
         {
             await context.Issues.AddAsync(issue);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public async Task<Issue?> getIssue(Guid IssueID)
         {
             return await context.Issues.SingleOrDefaultAsync(i => i.IssueId == IssueID && i.IsDeleted == false);
         }
-        public async Task<int> UpdateIssue(Issue issue)
+        public async Task UpdateIssue(Issue issue)
         {
             context.Issues.Update(issue);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteIssue(Issue issue)
+        public async Task DeleteIssue(Issue issue)
         {
             issue.IsDeleted = true;
-            return await UpdateIssue(issue);
+            await UpdateIssue(issue);
         }
     }
 }

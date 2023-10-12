@@ -6,20 +6,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace API.Model.DAO
 {
     public class DAOOtherMaterialsCategory : BaseDAO
     {
-        public async Task<List<OtherMaterialsCategory>> getList(int page)
+        private IQueryable<OtherMaterialsCategory> getQuery(string? name)
         {
-            return await context.OtherMaterialsCategories.Skip(PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE).ToListAsync();
+            IQueryable<OtherMaterialsCategory> query = context.OtherMaterialsCategories;
+            if(name != null && name.Trim().Length != 0)
+            {
+                query = query.Where(o => o.OtherMaterialsCategoryName.ToLower().Contains(name.ToLower().Trim())); 
+            }
+            return query;
+        }
+        public async Task<List<OtherMaterialsCategory>> getList(string? name, int page)
+        {
+            IQueryable<OtherMaterialsCategory> query = getQuery(name);
+            return await query.Skip(PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE).ToListAsync();
         }
 
-        public async Task<int> getRowCount()
+        public async Task<int> getRowCount(string? name)
         {
-            List<OtherMaterialsCategory> list = await context.OtherMaterialsCategories.ToListAsync();
-            return list.Count;
+            IQueryable<OtherMaterialsCategory> query = getQuery(name);
+            return await query.CountAsync();
         }
 
         public async Task<bool> isExist(string OtherMaterialsCategoryName)
@@ -27,10 +38,10 @@ namespace API.Model.DAO
             return await context.OtherMaterialsCategories.AnyAsync(o => o.OtherMaterialsCategoryName == OtherMaterialsCategoryName.Trim());
         }
 
-        public async Task<int> CreateOtherMaterialsCategory(OtherMaterialsCategory category)
+        public async Task CreateOtherMaterialsCategory(OtherMaterialsCategory category)
         {
             await context.OtherMaterialsCategories.AddAsync(category);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public async Task<OtherMaterialsCategory?> getOtherMaterialsCategory(int OtherMaterialsCategoryID)
@@ -43,10 +54,10 @@ namespace API.Model.DAO
             return await context.OtherMaterialsCategories.AnyAsync(o => o.OtherMaterialsCategoryName == OtherMaterialsCategoryName.Trim() && o.OtherMaterialsCategoryId != OtherMaterialsCategoryID);
         }
 
-        public async Task<int> UpdateOtherMaterialsCategory(OtherMaterialsCategory category)
+        public async Task UpdateOtherMaterialsCategory(OtherMaterialsCategory category)
         {
             context.OtherMaterialsCategories.Update(category);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
     }
 }

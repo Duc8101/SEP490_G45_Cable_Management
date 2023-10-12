@@ -35,31 +35,31 @@ namespace API.Controllers
             {
                 return await service.CableFluctuationPerYear(CableCategoryID, WarehouseID, year);
             }
-            return new ResponseDTO<CableFluctuationPerYear?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            return new ResponseDTO<CableFluctuationPerYear?>(null, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<List<CableCategoryStatistic>> CableCategory(int? WarehouseID)
+        public async Task<ResponseDTO<List<CableCategoryStatistic>?>> CableCategory(int? WarehouseID)
         {
             // if admin or leader
             if(isAdmin() || isLeader())
             {
                 return await service.CableCategory(WarehouseID);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<List<CableCategoryStatistic>?>(null, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<List<OtherMaterialCateogoryStatistic>> MaterialCategory(int? WarehouseID)
+        public async Task<ResponseDTO<List<OtherMaterialCateogoryStatistic>?>> MaterialCategory(int? WarehouseID)
         {
             // if admin or leader
             if(isAdmin() || isLeader())
             {
                 return await service.MaterialCategory(WarehouseID);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<List<OtherMaterialCateogoryStatistic>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
     }
 }
