@@ -55,7 +55,7 @@ namespace API.Services
                 // if supplier already exist
                 if (await daoSupplier.isExist(DTO.SupplierName.Trim()))
                 {
-                    return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int) HttpStatusCode.NotAcceptable);
                 }
                 Supplier supplier = new Supplier()
                 {
