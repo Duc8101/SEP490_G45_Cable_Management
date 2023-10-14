@@ -4,6 +4,7 @@ using DataAccess.DTO.WarehouseDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace API.Controllers
 {
@@ -15,14 +16,14 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<PagedResultDTO<WarehouseListDTO>> List(string? name , int page)
+        public async Task<ResponseDTO<PagedResultDTO<WarehouseListDTO>?>> List(string? name , int page)
         {
             // if admin, warehousekeeper, leader
             if(isAdmin() || isWarehouseKeeper() || isLeader())
             {
                 return await service.List(name, page);
             }
-           throw new UnauthorizedAccessException();
+            return new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }
 
         [HttpPost]
@@ -35,11 +36,11 @@ namespace API.Controllers
                 string? CreatorID = getUserID();
                 if(CreatorID == null)
                 {
-                    throw new ApplicationException();
+                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int) HttpStatusCode.NotFound);
                 }
                 return await service.Create(DTO, Guid.Parse(CreatorID));
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }
 
         [HttpPut("{WarehouseID}")]
@@ -51,7 +52,7 @@ namespace API.Controllers
             {
                 return await service.Update(WarehouseID, DTO);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpDelete("{WarehouseID}")]
@@ -63,7 +64,7 @@ namespace API.Controllers
             {
                 return await service.Delete(WarehouseID);
             }
-            throw new UnauthorizedAccessException();
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }
     }
 }

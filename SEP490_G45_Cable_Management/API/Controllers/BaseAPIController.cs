@@ -7,6 +7,10 @@ namespace API.Controllers
 {
     public class BaseAPIController : ControllerBase
     {
+        private Claim? getClaim(string type)
+        {
+            return User.Claims.Where(c => c.Type == type).FirstOrDefault();
+        }
         private string? getRole()
         {
             Claim? claim = getClaim(ClaimTypes.Role);
@@ -34,16 +38,6 @@ namespace API.Controllers
         {
             string? role = getRole();
             return role != null && role.Equals(RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
-        }
-
-        private Claim? getClaim(string type)
-        {
-            return User.Claims.Where(c => c.Type == type).FirstOrDefault();
-        }
-
-        protected List<Claim> getListClaim()
-        {
-            return User.Claims.ToList();
         }
 
         protected string? getUserID()

@@ -37,10 +37,10 @@ namespace API.Model.DAO
             return await context.Warehouses.AnyAsync(w => w.WarehouseName == name.Trim());
         }
 
-        public async Task<int> CreateWarehouse(Warehouse ware)
+        public async Task CreateWarehouse(Warehouse ware)
         {
             await context.Warehouses.AddAsync(ware);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public async Task<Warehouse?> getWarehouse(int ID)
@@ -53,16 +53,16 @@ namespace API.Model.DAO
             return await context.Warehouses.AnyAsync(w => w.WarehouseName == name.Trim() && w.WarehouseId != ID);
         }
 
-        public async Task<int> UpdateWarehouse(Warehouse ware)
+        public async Task UpdateWarehouse(Warehouse ware)
         {
             context.Warehouses.Update(ware);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteWarehouse(Warehouse ware)
+        public async Task DeleteWarehouse(Warehouse ware)
         {
             ware.IsDeleted = true;
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
     }
