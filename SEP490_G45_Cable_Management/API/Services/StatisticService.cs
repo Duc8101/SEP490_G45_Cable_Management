@@ -24,7 +24,7 @@ namespace API.Services
                     // if not found
                     if (list.Count == 0)
                     {
-                        return new ResponseDTO<MaterialFluctuationPerYear?>(null, "Không tìm thấy vật liệu", (int)HttpStatusCode.NotFound);
+                        return new ResponseDTO<MaterialFluctuationPerYear?>(null, "Không tìm thấy vật liệu", (int) HttpStatusCode.NotFound);
                     }
                     data.MaterialName = list[0].OtherMaterialsCategory.OtherMaterialsCategoryName;
                 }
