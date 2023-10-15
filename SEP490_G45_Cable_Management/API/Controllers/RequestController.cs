@@ -35,22 +35,21 @@ namespace API.Controllers
             return new ResponseDTO<PagedResultDTO<RequestListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }
 
-        /*
-        [HttpPost]
+        [HttpPost("Export")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> CreateExport(RequestCreateExportDTO DTO)
+        public async Task<ResponseDTO<bool>> Create(RequestCreateExportDTO DTO)
         {
-            // if admin or staff
-            if (isAdmin() || isStaff())
+            // if warehouse keeper or staff
+            if (isWarehouseKeeper() || isStaff())
             {
                 string? CreatorID = getUserID();
                 if (CreatorID == null)
                 {
-                    throw new ApplicationException();
+                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
                 }
                 return await service.CreateExport(DTO, Guid.Parse(CreatorID));
             }
-            throw new UnauthorizedAccessException();
-        }*/
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+        }
     }
 }

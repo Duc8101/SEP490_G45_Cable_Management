@@ -5,6 +5,7 @@ using DataAccess.Const;
 using System.Net;
 using DataAccess.DTO.CableDTO;
 using API.Model.DAO;
+using DataAccess.DTO.OtherMaterialsDTO;
 
 namespace API.Services
 {
@@ -14,6 +15,8 @@ namespace API.Services
         private readonly DAOIssue daoIssue = new DAOIssue();
         private readonly DAORequestCable daoRequestCable = new DAORequestCable();
         private readonly DAOCable daoCable = new DAOCable();
+        private readonly DAOOtherMaterial daoOtherMaterial = new DAOOtherMaterial();
+        private readonly DAORequestOtherMaterial daoRequestMaterial = new DAORequestOtherMaterial();
         private async Task<List<RequestListDTO>> getList(string? name, string? status, Guid? CreatorID, int page)
         {
             List<Request> list = await daoRequest.getList(name, status, CreatorID, page);
@@ -48,34 +51,123 @@ namespace API.Services
                 return new ResponseDTO<PagedResultDTO<RequestListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
-        /*public async Task<ResponseDTO<bool>> CreateExport(RequestCreateExportDTO DTO, Guid CreatorID)
+
+        private async Task<ResponseDTO<bool>> isCableValid(List<CableExportDTO> list)
         {
-            Issue? issue = await daoIssue.getIssue(DTO.IssueId);
-            // if not found issue
-            if (issue == null)
+            if(list.Count == 0)
             {
-                return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int) HttpStatusCode.NotFound);
+                return new ResponseDTO<bool>(true, string.Empty);
             }
-            // if issue approved
-            if (issue.Status.Equals(RequestConst.STATUS_APPROVED))
+            foreach(CableExportDTO export in list)
             {
-                return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int) HttpStatusCode.NotAcceptable);
-            }
-            return new ResponseDTO<bool>(true,"");
-        }*/
-        /*public async Task<ResponseDTO<bool>> Create(RequestCreateDTO DTO, Guid CreatorID)
-        {
-            // if not request deliver warehouse
-            if(DTO.RequestCategoryId != RequestCategoryConst.CATEGORY_DELIVER)
-            {
-                // if empty issue
-                if(DTO.IssueId == null)
+                Cable? cable = await daoCable.getCable(export.CableId);
+                // if exist cable not found
+                if(cable == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không được để trống sự vụ", (int) HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Không tìm thấy cáp với ID " + export.CableId, (int) HttpStatusCode.NotFound);
                 }
-                Issue? issue = await daoIssue.getIssue(DTO.IssueId.Value);
+                // if invalid start point, end point or deleted
+                if(export.StartPoint < cable.StartPoint || export.EndPoint > cable.EndPoint || export.StartPoint > export.EndPoint || cable.IsDeleted)
+                {
+                    return new ResponseDTO<bool>(false, "Cáp với ID: " + export.CableId + " có chỉ số đầu hoặc chỉ số cuối không hợp lệ hoặc đã bị hủy", (int) HttpStatusCode.NotAcceptable);
+                }
+                // if cable in use
+                if (cable.IsExportedToUse)
+                {
+                    return new ResponseDTO<bool>(false, "Cáp với ID: " + export.CableId + " đã được sử dụng", (int) HttpStatusCode.NotAcceptable);
+                }
+            }
+            return new ResponseDTO<bool>(true, string.Empty);
+        }
+
+        private async Task<ResponseDTO<bool>> isMaterialValid(List<OtherMaterialsExportDTO> list)
+        {
+            if (list.Count == 0)
+            {
+                return new ResponseDTO<bool>(true, string.Empty);
+            }
+            foreach (OtherMaterialsExportDTO export in list)
+            {
+                OtherMaterial? material = await daoOtherMaterial.getOtherMaterial(export.OtherMaterialsId);
+                // if not found
+                if(material == null)
+                {
+                    return new ResponseDTO<bool>(false, "Không tìm thấy vật liệu vs ID = " + export.OtherMaterialsId, (int) HttpStatusCode.NotFound);
+                }
+                // if not enough quantity
+                if(material.Quantity < export.Quantity)
+                {
+                    return new ResponseDTO<bool>(false, "Vật liệu vs ID = " + export.OtherMaterialsId + " không có đủ số lượng", (int) HttpStatusCode.NotAcceptable);
+                }
+            }
+            return new ResponseDTO<bool>(true, string.Empty);
+        }
+        private async Task CreateRequestCable(List<CableExportDTO> list, Guid RequestID)
+        {
+            if (list.Count > 0)
+            {
+                foreach (CableExportDTO item in list)
+                {
+                    RequestCable request = new RequestCable()
+                    {
+                        RequestId = RequestID,
+                        CableId = item.CableId,
+                        StartPoint = item.StartPoint,
+                        EndPoint = item.EndPoint,
+                        Length = item.EndPoint - item.StartPoint,
+                        RecoveryDestWarehouseId = item.WarehouseId,
+                        CreatedAt = DateTime.Now,
+                        UpdateAt = DateTime.Now,
+                        IsDeleted = false,
+                    };
+                    await daoRequestCable.CreateRequestCable(request);
+                }
+            }
+        }
+        private async Task CreateRequestMaterial(List<OtherMaterialsExportDTO> list, Guid RequestID)
+        {
+            if (list.Count > 0)
+            {
+                foreach(OtherMaterialsExportDTO item in list)
+                {
+                    RequestOtherMaterial request = new RequestOtherMaterial()
+                    {
+                        RequestId = RequestID,
+                        OtherMaterialsId = item.OtherMaterialsId,
+                        Quantity = item.Quantity,
+                        CreatedAt = DateTime.Now,
+                        UpdateAt = DateTime.Now,
+                        IsDeleted = false,
+                        RecoveryDestWarehouseId = item.WarehouseId,
+                    };
+                    await daoRequestMaterial.CreateRequestOtherMaterial(request);
+                }
+            }
+        }
+        private async Task SetCableInRequest(Guid RequestID)
+        {
+            List<RequestCable> list = await daoRequestCable.getList(RequestID);
+            foreach (RequestCable item in list)
+            {
+                item.Cable.IsInRequest = true;
+                await daoCable.UpdateCable(item.Cable);
+            }
+        }
+        public async Task<ResponseDTO<bool>> CreateExport(RequestCreateExportDTO DTO, Guid CreatorID)
+        {
+            if(DTO.RequestName.Trim().Length == 0)
+            {
+                return new ResponseDTO<bool>(false, "Tên yêu cầu không được để trống", (int) HttpStatusCode.NotAcceptable);
+            }
+            if(DTO.RequestCategoryId != RequestCategoryConst.CATEGORY_EXPORT)
+            {
+                return new ResponseDTO<bool>(false, "Không phải yêu cầu xuất kho", (int) HttpStatusCode.NotAcceptable);
+            }
+            try
+            {
+                Issue? issue = await daoIssue.getIssue(DTO.IssueId);
                 // if not found issue
-                if(issue == null)
+                if (issue == null)
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int) HttpStatusCode.NotFound);
                 }
@@ -84,40 +176,41 @@ namespace API.Services
                 {
                     return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int) HttpStatusCode.NotAcceptable);
                 }
-            }
-            // ------------------------- create request ----------------------------
-            Request request = new Request()
-            {
-                RequestId = Guid.NewGuid(),
-                RequestName = DTO.RequestName.Trim(),
-                Content = DTO.Content == null || DTO.Content.Trim().Length == 0 ? null : DTO.Content.Trim(),
-                CreatorId = CreatorID,
-                IssueId = DTO.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER ? null : DTO.IssueId,
-                Status = RequestConst.STATUS_PENDING,
-                CreatedAt = DateTime.Now,
-                IsDeleted = false,
-                RequestCategoryId = DTO.RequestCategoryId,
-                DeliverWarehouseId = DTO.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER ? DTO.DeliverWarehouseId : null
-            };
-            int number = await daoRequest.CreateRequest(request);
-            if (number == 0)
-            {
-                return new ResponseDTO<bool>(false, "Tạo yêu cầu thất bại", (int) HttpStatusCode.Conflict);
-            }
-            // ------------------------- create request cable ----------------------------
-            number = 0;
-            // if import cable
-            if(DTO.CableImportDTOs.Count != 0)
-            {
-                foreach(CableImportDTO import in DTO.CableImportDTOs)
+                ResponseDTO<bool> response = await isCableValid(DTO.CableExportDTOs);
+                // if cable invalid
+                if(response.Success == false)
                 {
-                    Cable? cable = await daoCable.getCable(import.CableId);
-                    RequestCable requestCable = new RequestCable()
-                    {
-                        RequestId = request.RequestId,
-                    };
+                    return response;
                 }
-            }      
-        }*/
+                response = await isMaterialValid(DTO.OtherMaterialsExportDTOs);
+                // if material invalid
+                if (response.Success == false)
+                {
+                    return response;
+                }
+                Request request = new Request()
+                {
+                    RequestId = Guid.NewGuid(),
+                    RequestName = DTO.RequestName.Trim(),
+                    Content = DTO.Content == null || DTO.Content.Trim().Length == 0 ? null : DTO.Content.Trim(),
+                    IssueId = DTO.IssueId,
+                    CreatorId = CreatorID,
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
+                    IsDeleted = false,
+                    RequestCategoryId = RequestCategoryConst.CATEGORY_EXPORT,
+                    Status = RequestConst.STATUS_PENDING,
+                };
+                await daoRequest.CreateRequest(request);
+                await CreateRequestCable(DTO.CableExportDTOs, request.RequestId);
+                await CreateRequestMaterial(DTO.OtherMaterialsExportDTOs, request.RequestId);
+                //await SetCableInRequest(request.RequestId);
+                return new ResponseDTO<bool>(true, "Tạo yêu cầu thành công");
+            }
+            catch(Exception ex)
+            {
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }  
+        }
     }
 }

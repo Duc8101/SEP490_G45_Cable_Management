@@ -10,5 +10,6 @@ namespace DataAccess.DTO.RequestDTO
     {
         public string RequestName { get; set; } = null!;
         public string? Content { get; set; }
+        public int RequestCategoryId { get; set; }
     }
 }

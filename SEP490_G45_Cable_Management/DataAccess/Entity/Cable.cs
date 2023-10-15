@@ -28,7 +28,8 @@ namespace DataAccess.Entity
         public DateTime CreatedAt { get; set; }
         public DateTime UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
-        public bool? IsExportedToUse { get; set; }
+        //public bool? IsExportedToUse { get; set; }
+        public bool IsExportedToUse { get; set; }
         public int CableCategoryId { get; set; }
         public bool? IsInRequest { get; set; }
         public string? Description { get; set; }

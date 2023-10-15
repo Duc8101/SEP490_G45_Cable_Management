@@ -41,10 +41,10 @@ namespace API.Model.DAO
             return await query.CountAsync();
         }
 
-        public async Task<int> CreateRequest(Request request)
+        public async Task CreateRequest(Request request)
         {
             await context.Requests.AddAsync(request);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
     }
