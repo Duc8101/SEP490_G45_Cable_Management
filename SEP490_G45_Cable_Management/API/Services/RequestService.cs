@@ -14,9 +14,9 @@ namespace API.Services
         private readonly DAOIssue daoIssue = new DAOIssue();
         private readonly DAORequestCable daoRequestCable = new DAORequestCable();
         private readonly DAOCable daoCable = new DAOCable();
-        private async Task<List<RequestListDTO>> getList(string? name, string? status, Guid? IssueID, int page)
+        private async Task<List<RequestListDTO>> getList(string? name, string? status, Guid? CreatorID, int page)
         {
-            List<Request> list = await daoRequest.getList(name, status, IssueID, page);
+            List<Request> list = await daoRequest.getList(name, status, CreatorID, page);
             List<RequestListDTO> result = new List<RequestListDTO>();
             foreach (Request item in list)
             {
@@ -25,8 +25,8 @@ namespace API.Services
                     RequestId = item.RequestId,
                     RequestName = item.RequestName,
                     Content = item.Content,
-                    CreatorId = item.CreatorId,
-                    ApproverId = item.ApproverId,
+                    CreatorName = item.Creator.Lastname + " " + item.Creator.Firstname,
+                    ApproverName = item.Approver == null ? null : item.Approver.Lastname + " " + item.Approver.Firstname,
                     Status = item.Status,
                     RequestCategoryName = item.RequestCategory.RequestCategoryName
                 };
@@ -34,12 +34,12 @@ namespace API.Services
             }
             return result;
         }
-        public async Task<ResponseDTO<PagedResultDTO<RequestListDTO>?>> List(string? name, string? status, Guid? IssueID, int page)
+        public async Task<ResponseDTO<PagedResultDTO<RequestListDTO>?>> List(string? name, string? status, Guid? CreatorID, int page)
         {
             try
             {
-                List<RequestListDTO> list = await getList(name, status, IssueID, page);
-                int RowCount = await daoRequest.getRowCount(name, IssueID, status);
+                List<RequestListDTO> list = await getList(name, status, CreatorID, page);
+                int RowCount = await daoRequest.getRowCount(name, status, CreatorID);
                 PagedResultDTO<RequestListDTO> result = new PagedResultDTO<RequestListDTO>(page, RowCount, PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, list);
                 return new ResponseDTO<PagedResultDTO<RequestListDTO>?>(result, string.Empty);
             }
@@ -48,7 +48,7 @@ namespace API.Services
                 return new ResponseDTO<PagedResultDTO<RequestListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> CreateExport(RequestCreateExportDTO DTO, Guid CreatorID)
+        /*public async Task<ResponseDTO<bool>> CreateExport(RequestCreateExportDTO DTO, Guid CreatorID)
         {
             Issue? issue = await daoIssue.getIssue(DTO.IssueId);
             // if not found issue
@@ -62,7 +62,7 @@ namespace API.Services
                 return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int) HttpStatusCode.NotAcceptable);
             }
             return new ResponseDTO<bool>(true,"");
-        }
+        }*/
         /*public async Task<ResponseDTO<bool>> Create(RequestCreateDTO DTO, Guid CreatorID)
         {
             // if not request deliver warehouse

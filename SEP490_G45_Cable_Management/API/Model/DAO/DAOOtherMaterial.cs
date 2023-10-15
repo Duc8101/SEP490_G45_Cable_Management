@@ -12,7 +12,7 @@ namespace API.Model.DAO
 {
     public class DAOOtherMaterial : BaseDAO
     {
-        private IQueryable<OtherMaterial> getQuery(string? filter)
+        private IQueryable<OtherMaterial> getQuery(string? filter, Guid? WareHouseKeeperID)
         {
             IQueryable<OtherMaterial> query = context.OtherMaterials.Include(o => o.OtherMaterialsCategory).Include(o => o.Supplier).Include(o => o.Warehouse)
                 .Where(o => o.IsDeleted == false);
@@ -22,24 +22,28 @@ namespace API.Model.DAO
                 || o.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())
                 || (o.Warehouse != null && o.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim())));
             }
+            if(WareHouseKeeperID != null)
+            {
+                query = query.Where(o => o.Warehouse != null && o.Warehouse.WarehouseKeeperid == WareHouseKeeperID);
+            }
             return query;
         }
-        public async Task<List<OtherMaterial>> getList(string? filter, int page)
+        public async Task<List<OtherMaterial>> getList(string? filter, Guid? WareHouseKeeperID, int page)
         {
-            IQueryable<OtherMaterial> query = getQuery(filter);
+            IQueryable<OtherMaterial> query = getQuery(filter, WareHouseKeeperID);
             return await query.Skip(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE)
                 .OrderByDescending(o => o.UpdateAt).ToListAsync();
         }
 
-        public async Task<int> getRowCount(string? filter)
+        public async Task<int> getRowCount(string? filter, Guid? WareHouseKeeperID)
         {
-            IQueryable<OtherMaterial> query = getQuery(filter);
+            IQueryable<OtherMaterial> query = getQuery(filter, WareHouseKeeperID);
             return await query.CountAsync();
         }
 
-        public async Task<int> getSum(string? filter)
+        public async Task<int> getSum(string? filter, Guid? WareHouseKeeperID)
         {
-            IQueryable<OtherMaterial> query = getQuery(filter);
+            IQueryable<OtherMaterial> query = getQuery(filter, WareHouseKeeperID);
             List<OtherMaterial> list = await query.ToListAsync();
             int sum = 0;
             foreach (OtherMaterial material in list)
@@ -52,7 +56,7 @@ namespace API.Model.DAO
         public async Task<OtherMaterial?> getOtherMaterial(OtherMaterialsCreateUpdateDTO DTO)
         {
             return await context.OtherMaterials.Where(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == DTO.OtherMaterialsCategoryId
-            && o.Unit == DTO.Unit.Trim() && o.Code == DTO.Code.Trim() && o.SupplierId == DTO.SupplierId
+            && o.Unit == DTO.Unit.Trim() && o.Code == DTO.Code.Trim() /*&& o.SupplierId == DTO.SupplierId*/
             && o.Status == (DTO.Status == null || DTO.Status.Trim().Length == 0 ? null : DTO.Status.Trim()) && o.WarehouseId == DTO.WarehouseId).FirstOrDefaultAsync();
         }
 
@@ -82,7 +86,7 @@ namespace API.Model.DAO
         public async Task<bool> isExist(OtherMaterialsCreateUpdateDTO DTO)
         {
             return await context.OtherMaterials.AnyAsync(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == DTO.OtherMaterialsCategoryId
-            && DTO.Unit != null && o.Unit == DTO.Unit.Trim() && o.Code == DTO.Code.Trim() && o.SupplierId == DTO.SupplierId && DTO.Status != null && o.Status == DTO.Status.Trim()
+            && o.Unit == DTO.Unit.Trim() && o.Code == DTO.Code.Trim() /*&& o.SupplierId == DTO.SupplierId*/ && DTO.Status != null && o.Status == DTO.Status.Trim()
             && o.WarehouseId == DTO.WarehouseId);
         }
 

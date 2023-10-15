@@ -10,9 +10,9 @@ namespace API.Services
     public class OtherMaterialsService
     {
         private readonly DAOOtherMaterial daoOtherMaterials = new DAOOtherMaterial();
-        private async Task<List<OtherMaterialsListDTO>> getList(string? filter, int page)
+        private async Task<List<OtherMaterialsListDTO>> getList(string? filter, Guid? WareHouseKeeperID, int page)
         {
-            List<OtherMaterial> list = await daoOtherMaterials.getList(filter, page);
+            List<OtherMaterial> list = await daoOtherMaterials.getList(filter, WareHouseKeeperID, page);
             List<OtherMaterialsListDTO> result = new List<OtherMaterialsListDTO>();
             foreach (OtherMaterial item in list)
             {
@@ -22,7 +22,7 @@ namespace API.Services
                     Unit = item.Unit,
                     Quantity = item.Quantity,
                     Code = item.Code,
-                    SupplierName = item.Supplier.SupplierName,
+                    //SupplierName = item.Supplier.SupplierName,
                     WarehouseName = item.Warehouse == null ? null : item.Warehouse.WarehouseName,
                     OtherMaterialsCategoryName = item.OtherMaterialsCategory.OtherMaterialsCategoryName
                 };
@@ -31,13 +31,13 @@ namespace API.Services
             return result;
         }
 
-        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, int page)
+        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, Guid? WareHouseKeeperID, int page)
         {
             try
             {
-                List<OtherMaterialsListDTO> list = await getList(filter, page);
-                int RowCount = await daoOtherMaterials.getRowCount(filter);
-                int sum = await daoOtherMaterials.getSum(filter);
+                List<OtherMaterialsListDTO> list = await getList(filter, WareHouseKeeperID, page);
+                int RowCount = await daoOtherMaterials.getRowCount(filter, WareHouseKeeperID);
+                int sum = await daoOtherMaterials.getSum(filter, WareHouseKeeperID);
                 PagedResultDTO<OtherMaterialsListDTO> result = new PagedResultDTO<OtherMaterialsListDTO>(page, RowCount, PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE, list, sum);
                 return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(result, string.Empty);
             }
@@ -80,7 +80,7 @@ namespace API.Services
                         Unit = DTO.Unit.Trim(),
                         Quantity = DTO.Quantity,
                         Code = DTO.Code.Trim(),
-                        SupplierId = DTO.SupplierId,
+                        SupplierId =  1/*DTO.SupplierId*/,
                         CreatedAt = DateTime.Now,
                         UpdateAt = DateTime.Now,
                         IsDeleted = false,
@@ -142,7 +142,7 @@ namespace API.Services
                 material.Unit = DTO.Unit.Trim();
                 material.Quantity = DTO.Quantity;
                 material.Code = DTO.Code.Trim();
-                material.SupplierId = DTO.SupplierId;
+                /*material.SupplierId = DTO.SupplierId;*/
                 material.WarehouseId = DTO.WarehouseId;
                 material.Status = DTO.Status.Trim();
                 material.OtherMaterialsCategoryId = DTO.OtherMaterialsCategoryId;

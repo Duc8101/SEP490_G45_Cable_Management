@@ -11,9 +11,9 @@ namespace API.Model.DAO
 {
     public class DAORequest : BaseDAO
     {
-        private IQueryable<Request> getQuery(string? name, Guid? IssueID, string? status)
+        private IQueryable<Request> getQuery(string? name, string? status, Guid? CreatorID)
         {
-            IQueryable<Request> query = context.Requests.Include(r => r.RequestCategory).Where(r => r.IsDeleted == false);
+            IQueryable<Request> query = context.Requests.Include(r => r.RequestCategory).Include(r => r.Creator).Include(r => r.Approver).Include(r => r.Issue).Where(r => r.IsDeleted == false);
             if (name != null && name.Trim().Length != 0)
             {
                 query = query.Where(r => r.RequestName != null && r.RequestName.ToLower().Contains(name.ToLower().Trim()));
@@ -22,22 +22,22 @@ namespace API.Model.DAO
             {
                 query = query.Where(r => r.Status == status.Trim());
             }
-            if(IssueID != null)
+            if(CreatorID != null)
             {
-                query = query.Where(r => r.IssueId == IssueID);
+                query = query.Where(r => r.CreatorId == CreatorID);
             }
             return query;
         }
-        public async Task<List<Request>> getList(string? name, string? status, Guid? IssueID, int page)
+        public async Task<List<Request>> getList(string? name, string? status, Guid? CreatorID, int page)
         {
-            IQueryable<Request> query = getQuery(name, IssueID, status);
+            IQueryable<Request> query = getQuery(name, status, CreatorID);
             return await query.Skip(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE)
-                .OrderBy(r => r.Status == RequestConst.STATUS_PENDING).ThenByDescending(r => r.UpdateAt).ToListAsync();
+                .OrderByDescending(r => r.Status).ThenByDescending(r => r.UpdateAt).ToListAsync();
         }
 
-        public async Task<int> getRowCount(string? name, Guid? IssueID, string? status)
+        public async Task<int> getRowCount(string? name, string? status, Guid? CreatorID)
         {
-            IQueryable<Request> query = getQuery(name, IssueID, status);
+            IQueryable<Request> query = getQuery(name, status, CreatorID);
             return await query.CountAsync();
         }
 

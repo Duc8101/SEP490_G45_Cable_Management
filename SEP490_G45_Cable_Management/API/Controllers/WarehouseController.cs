@@ -16,7 +16,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<WarehouseListDTO>?>> List(string? name , int page)
+        public async Task<ResponseDTO<PagedResultDTO<WarehouseListDTO>?>> List(string? name , int page = 1)
         {
             // if admin, warehousekeeper, leader
             if(isAdmin() || isWarehouseKeeper() || isLeader())

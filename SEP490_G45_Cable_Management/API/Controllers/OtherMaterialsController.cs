@@ -17,10 +17,20 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, int page = 1)
         {
-            // if admin, warehouse keeper
-            if(isAdmin() || isWarehouseKeeper())
+            // if admin
+            if(isAdmin())
             {
-                return await service.List(filter, page);
+                return await service.List(filter, null, page);
+            }
+            // if warehouse keeper
+            if(isWarehouseKeeper())
+            {
+                string? WareHouseKeeperID = getUserID();
+                if(WareHouseKeeperID == null)
+                {
+                    return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(null, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int) HttpStatusCode.NotFound);
+                }
+                return await service.List(filter, Guid.Parse(WareHouseKeeperID), page);
             }
             return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(null, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }
