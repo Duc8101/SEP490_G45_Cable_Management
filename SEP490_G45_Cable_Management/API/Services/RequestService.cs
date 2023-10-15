@@ -198,7 +198,7 @@ namespace API.Services
                     CreatedAt = DateTime.Now,
                     UpdateAt = DateTime.Now,
                     IsDeleted = false,
-                    RequestCategoryId = RequestCategoryConst.CATEGORY_EXPORT,
+                    RequestCategoryId = DTO.RequestCategoryId,
                     Status = RequestConst.STATUS_PENDING,
                 };
                 await daoRequest.CreateRequest(request);
