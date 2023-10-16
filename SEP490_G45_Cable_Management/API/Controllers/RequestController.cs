@@ -60,11 +60,16 @@ namespace API.Controllers
             if (isAdmin())
             {
                 string? ApproverID = getUserID();
+                string? email = getEmail();
                 if (ApproverID == null)
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
                 }
-                return await service.Approve(RequestID, Guid.Parse(ApproverID));
+                if (email == null)
+                {
+                    return new ResponseDTO<bool>(false, "Không tìm thấy email của bạn. Vui lòng kiểm tra thông tin đăng nhập");
+                }
+                return await service.Approve(RequestID, Guid.Parse(ApproverID), email);
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }

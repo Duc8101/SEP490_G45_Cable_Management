@@ -55,7 +55,6 @@ namespace API.Services
                 return new ResponseDTO<PagedResultDTO<RequestListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
-
         private async Task<ResponseDTO<bool>> isCableValid(List<CableExportDTO> list)
         {
             if(list.Count == 0)
@@ -83,7 +82,6 @@ namespace API.Services
             }
             return new ResponseDTO<bool>(true, string.Empty);
         }
-
         private async Task<ResponseDTO<bool>> isMaterialValid(List<OtherMaterialsExportDTO> list)
         {
             if (list.Count == 0)
@@ -372,7 +370,7 @@ namespace API.Services
             }
             return list;
         }
-        private async Task<ResponseDTO<bool>> ApproveRequestExport(Guid RequestID, Guid ApproverID, Request request)
+        private async Task<ResponseDTO<bool>> ApproveRequestExport(Guid RequestID, Guid ApproverID, Request request, string email)
         {
             List<RequestCable> requestCables = await daoRequestCable.getList(RequestID);
             List<Cable> listCableExported = new List<Cable>();
@@ -407,9 +405,6 @@ namespace API.Services
                     {
                         cable.IsExportedToUse = true;
                         listCableExported.Add(cable);
-/*                        cable.UpdateAt = DateTime.Now;
-                        cable.WarehouseId = null;
-                        await daoCable.UpdateCable(cable);*/
                         continue;
                     }
                     // ------------------------------ cut cable -----------------------------------
@@ -442,37 +437,40 @@ namespace API.Services
             request.UpdateAt = DateTime.Now;
             await daoRequest.UpdateRequest(request);
             // ------------------------------- add transaction cable --------------------------------
-            foreach(Cable cableExported in listCableExported)
+            if(listCableExported.Count > 0)
             {
-                TransactionHistory history = new TransactionHistory()
+                foreach (Cable cableExported in listCableExported)
                 {
-                    TransactionId = Guid.NewGuid(),
-                    TransactionCategoryName = TransactionCategoryConst.CATEGORY_EXPORT,
-                    CreatedDate = DateTime.Now,
-                    CreatedAt = DateTime.Now,
-                    UpdateAt = DateTime.Now,
-                    IsDeleted = false,
-                    WarehouseId = cableExported.WarehouseId,
-                    RequestId = RequestID,
-                    IssueId = request.IssueId,
-                };
-                await daoHistory.CreateTransactionHistory(history);
-                TransactionCable transactionCable = new TransactionCable()
-                {
-                    TransactionId = history.TransactionId,
-                    CableId = cableExported.CableId,
-                    StartPoint = cableExported.StartPoint,
-                    EndPoint = cableExported.EndPoint,
-                    Length = cableExported.Length,
-                    CreatedAt = DateTime.Now,
-                    UpdateAt = DateTime.Now,
-                    IsDeleted = false
-                };
-                await daoTransactionCable.CreateTransactionCable(transactionCable);
-                // update cable
-                cableExported.WarehouseId = null;
-                cableExported.UpdateAt = DateTime.Now;
-                await daoCable.UpdateCable(cableExported);
+                    TransactionHistory history = new TransactionHistory()
+                    {
+                        TransactionId = Guid.NewGuid(),
+                        TransactionCategoryName = TransactionCategoryConst.CATEGORY_EXPORT,
+                        CreatedDate = DateTime.Now,
+                        CreatedAt = DateTime.Now,
+                        UpdateAt = DateTime.Now,
+                        IsDeleted = false,
+                        WarehouseId = cableExported.WarehouseId,
+                        RequestId = RequestID,
+                        IssueId = request.IssueId,
+                    };
+                    await daoHistory.CreateTransactionHistory(history);
+                    TransactionCable transactionCable = new TransactionCable()
+                    {
+                        TransactionId = history.TransactionId,
+                        CableId = cableExported.CableId,
+                        StartPoint = cableExported.StartPoint,
+                        EndPoint = cableExported.EndPoint,
+                        Length = cableExported.Length,
+                        CreatedAt = DateTime.Now,
+                        UpdateAt = DateTime.Now,
+                        IsDeleted = false
+                    };
+                    await daoTransactionCable.CreateTransactionCable(transactionCable);
+                    // update cable
+                    cableExported.WarehouseId = null;
+                    cableExported.UpdateAt = DateTime.Now;
+                    await daoCable.UpdateCable(cableExported);
+                }
             }
             // ------------------------------- add transaction material --------------------------------
             List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(RequestID);
@@ -509,7 +507,7 @@ namespace API.Services
             }
             return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
         }
-        public async Task<ResponseDTO<bool>> Approve(Guid RequestID, Guid ApproverID)
+        public async Task<ResponseDTO<bool>> Approve(Guid RequestID, Guid ApproverID, string email)
         {
             try
             {
@@ -524,7 +522,7 @@ namespace API.Services
                 }
                 if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT)
                 {
-                    return await ApproveRequestExport(RequestID, ApproverID, request);
+                    return await ApproveRequestExport(RequestID, ApproverID, request, email);
                 }
                 return new ResponseDTO<bool>(false, string.Empty, (int) HttpStatusCode.Conflict);
             }catch(Exception ex)
