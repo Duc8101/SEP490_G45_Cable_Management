@@ -165,7 +165,7 @@ namespace API.Services
                     return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int) HttpStatusCode.NotFound);
                 }
                 // if issue approved
-                if (issue.Status.Equals(RequestConst.STATUS_APPROVED))
+                if (issue.Status.Equals(IssueConst.STATUS_DONE))
                 {
                     return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int) HttpStatusCode.NotAcceptable);
                 }
@@ -421,10 +421,22 @@ namespace API.Services
                         if(cut.IsExportedToUse)
                         {
                             listCableExported.Add(cut);
-                            // update request cable
-                            item.CableId = cut.CableId;
-                            item.UpdateAt = DateTime.Now;
-                            await daoRequestCable.UpdateRequestCable(item);
+                            // ----------------update request cable -----------------
+                            await daoRequestCable.DeleteRequestCable(item);
+                            RequestCable update = new RequestCable()
+                            {
+                                RequestId = RequestID,
+                                CableId = cut.CableId,
+                                StartPoint = item.StartPoint,
+                                EndPoint = item.EndPoint,
+                                Length = item.EndPoint - item.StartPoint,
+                                // RecoveryDestWarehouseId = item.WarehouseId,
+                                CreatedAt = item.CreatedAt,
+                                UpdateAt = DateTime.Now,
+                                IsDeleted = false,
+                            };
+                            await daoRequestCable.CreateRequestCable(update);
+                            // ------------------------------------------------------
                         }
                     }
                     // delete cable parent

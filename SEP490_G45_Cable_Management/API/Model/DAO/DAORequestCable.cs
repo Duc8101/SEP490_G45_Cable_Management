@@ -26,5 +26,11 @@ namespace API.Model.DAO
             context.RequestCables.Update(request);
             await context.SaveChangesAsync();
         }
+
+        public async Task DeleteRequestCable(RequestCable request)
+        {
+            context.RequestCables.Remove(request);
+            await context.SaveChangesAsync();
+        }
     }
 }
