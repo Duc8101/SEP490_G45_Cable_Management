@@ -44,5 +44,11 @@ namespace API.Model.DAO
             return await context.TransactionHistories.Include(w => w.Issue).Include(w => w.FromWarehouse)
                 .Include(w => w.ToWarehouse).SingleOrDefaultAsync(t => t.TransactionId == TransactionID);
         }
+
+        public async Task CreateTransactionHistory(TransactionHistory history)
+        {
+            await context.TransactionHistories.AddAsync(history);
+            await context.SaveChangesAsync();
+        }
     }
 }

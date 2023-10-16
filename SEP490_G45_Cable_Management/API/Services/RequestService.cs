@@ -6,6 +6,7 @@ using System.Net;
 using DataAccess.DTO.CableDTO;
 using API.Model.DAO;
 using DataAccess.DTO.OtherMaterialsDTO;
+using Org.BouncyCastle.Asn1.Cmp;
 
 namespace API.Services
 {
@@ -17,6 +18,9 @@ namespace API.Services
         private readonly DAOCable daoCable = new DAOCable();
         private readonly DAOOtherMaterial daoOtherMaterial = new DAOOtherMaterial();
         private readonly DAORequestOtherMaterial daoRequestMaterial = new DAORequestOtherMaterial();
+        private readonly DAOTransactionCable daoTransactionCable = new DAOTransactionCable();
+        private readonly DAOTransactionOtherMaterial daoTransactionMaterial = new DAOTransactionOtherMaterial();
+        private readonly DAOTransactionHistory daoHistory = new DAOTransactionHistory();    
         private async Task<List<RequestListDTO>> getList(string? name, string? status, Guid? CreatorID, int page)
         {
             List<Request> list = await daoRequest.getList(name, status, CreatorID, page);
@@ -115,7 +119,7 @@ namespace API.Services
                         StartPoint = item.StartPoint,
                         EndPoint = item.EndPoint,
                         Length = item.EndPoint - item.StartPoint,
-                        RecoveryDestWarehouseId = item.WarehouseId,
+                       // RecoveryDestWarehouseId = item.WarehouseId,
                         CreatedAt = DateTime.Now,
                         UpdateAt = DateTime.Now,
                         IsDeleted = false,
@@ -144,16 +148,7 @@ namespace API.Services
                 }
             }
         }
-        private async Task SetCableInRequest(Guid RequestID)
-        {
-            List<RequestCable> list = await daoRequestCable.getList(RequestID);
-            foreach (RequestCable item in list)
-            {
-                item.Cable.IsInRequest = true;
-                await daoCable.UpdateCable(item.Cable);
-            }
-        }
-        public async Task<ResponseDTO<bool>> CreateExport(RequestCreateExportDTO DTO, Guid CreatorID)
+        public async Task<ResponseDTO<bool>> CreateRequestExport(RequestCreateExportDTO DTO, Guid CreatorID)
         {
             if(DTO.RequestName.Trim().Length == 0)
             {
@@ -204,7 +199,6 @@ namespace API.Services
                 await daoRequest.CreateRequest(request);
                 await CreateRequestCable(DTO.CableExportDTOs, request.RequestId);
                 await CreateRequestMaterial(DTO.OtherMaterialsExportDTOs, request.RequestId);
-                //await SetCableInRequest(request.RequestId);
                 return new ResponseDTO<bool>(true, "Tạo yêu cầu thành công");
             }
             catch(Exception ex)
@@ -212,5 +206,333 @@ namespace API.Services
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }  
         }
+        private List<Cable> getListCableCut(int itemStartPoint, int itemEndPoint, Cable cable)
+        {
+            List<Cable> list = new List<Cable>();
+            if (itemStartPoint == cable.StartPoint && itemEndPoint < cable.EndPoint)
+            {
+                Cable cableCut1 = new Cable()
+                {
+                    CableId = Guid.NewGuid(),
+                    SupplierId = cable.SupplierId,
+                    YearOfManufacture = cable.YearOfManufacture,
+                    Code = cable.Code,
+                    Status = cable.Status,
+                    WarehouseId = cable.WarehouseId,
+                    StartPoint = itemStartPoint,
+                    EndPoint = itemEndPoint,
+                    Length = itemEndPoint - itemStartPoint,
+                    CreatorId = cable.CreatorId,
+                    CableParentId = cable.CableId,
+                    IsDeleted = false,
+                    IsExportedToUse = true,
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
+                    CableCategoryId = cable.CableCategoryId,
+                    IsInRequest = false,
+                    Description = cable.Description,
+                };
+                Cable cableCut2 = new Cable()
+                {
+                    CableId = Guid.NewGuid(),
+                    SupplierId = cable.SupplierId,
+                    YearOfManufacture = cable.YearOfManufacture,
+                    Code = cable.Code,
+                    Status = cable.Status,
+                    WarehouseId = cable.WarehouseId,
+                    StartPoint = itemEndPoint,
+                    EndPoint = cable.EndPoint,
+                    Length = cable.EndPoint - itemEndPoint,
+                    CreatorId = cable.CreatorId,
+                    CableParentId = cable.CableId,
+                    IsDeleted = false,
+                    IsExportedToUse = false,
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
+                    CableCategoryId = cable.CableCategoryId,
+                    IsInRequest = false,
+                    Description = cable.Description,
+                };
+                list.Add(cableCut1);
+                list.Add(cableCut2);
+            }else if (itemStartPoint > cable.StartPoint && itemEndPoint == cable.EndPoint)
+            {
+                Cable cableCut1 = new Cable()
+                {
+                    CableId = Guid.NewGuid(),
+                    SupplierId = cable.SupplierId,
+                    YearOfManufacture = cable.YearOfManufacture,
+                    Code = cable.Code,
+                    Status = cable.Status,
+                    WarehouseId = cable.WarehouseId,
+                    StartPoint = cable.StartPoint,
+                    EndPoint = itemStartPoint,
+                    Length = itemStartPoint - cable.StartPoint,
+                    CreatorId = cable.CreatorId,
+                    CableParentId = cable.CableId,
+                    IsDeleted = false,
+                    IsExportedToUse = false,
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
+                    CableCategoryId = cable.CableCategoryId,
+                    IsInRequest = false,
+                    Description = cable.Description,
+                };
+                Cable cableCut2 = new Cable()
+                {
+                    CableId = Guid.NewGuid(),
+                    SupplierId = cable.SupplierId,
+                    YearOfManufacture = cable.YearOfManufacture,
+                    Code = cable.Code,
+                    Status = cable.Status,
+                    WarehouseId = cable.WarehouseId,
+                    StartPoint = itemStartPoint,
+                    EndPoint = itemEndPoint,
+                    Length = itemEndPoint - itemStartPoint,
+                    CreatorId = cable.CreatorId,
+                    CableParentId = cable.CableId,
+                    IsDeleted = false,
+                    IsExportedToUse = true,
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
+                    CableCategoryId = cable.CableCategoryId,
+                    IsInRequest = false,
+                    Description = cable.Description,
+                };
+                list.Add(cableCut1);
+                list.Add(cableCut2);
+            }else if (itemStartPoint > cable.StartPoint && itemEndPoint < cable.EndPoint)
+            {
+                Cable cableCut1 = new Cable()
+                {
+                    CableId = Guid.NewGuid(),
+                    SupplierId = cable.SupplierId,
+                    YearOfManufacture = cable.YearOfManufacture,
+                    Code = cable.Code,
+                    Status = cable.Status,
+                    WarehouseId = cable.WarehouseId,
+                    StartPoint = cable.StartPoint,
+                    EndPoint = itemStartPoint,
+                    Length = itemStartPoint - cable.StartPoint,
+                    CreatorId = cable.CreatorId,
+                    CableParentId = cable.CableId,
+                    IsDeleted = false,
+                    IsExportedToUse = false,
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
+                    CableCategoryId = cable.CableCategoryId,
+                    IsInRequest = false,
+                    Description = cable.Description,
+                };
+                Cable cableCut2 = new Cable()
+                {
+                    CableId = Guid.NewGuid(),
+                    SupplierId = cable.SupplierId,
+                    YearOfManufacture = cable.YearOfManufacture,
+                    Code = cable.Code,
+                    Status = cable.Status,
+                    WarehouseId = cable.WarehouseId,
+                    StartPoint = itemStartPoint,
+                    EndPoint = itemEndPoint,
+                    Length = itemEndPoint - itemStartPoint,
+                    CreatorId = cable.CreatorId,
+                    CableParentId = cable.CableId,
+                    IsDeleted = false,
+                    IsExportedToUse = true,
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
+                    CableCategoryId = cable.CableCategoryId,
+                    IsInRequest = false,
+                    Description = cable.Description,
+                };
+                Cable cableCut3 = new Cable()
+                {
+                    CableId = Guid.NewGuid(),
+                    SupplierId = cable.SupplierId,
+                    YearOfManufacture = cable.YearOfManufacture,
+                    Code = cable.Code,
+                    Status = cable.Status,
+                    WarehouseId = cable.WarehouseId,
+                    StartPoint = itemEndPoint,
+                    EndPoint = cable.EndPoint,
+                    Length = cable.EndPoint - itemEndPoint,
+                    CreatorId = cable.CreatorId,
+                    CableParentId = cable.CableId,
+                    IsDeleted = false,
+                    IsExportedToUse = false,
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
+                    CableCategoryId = cable.CableCategoryId,
+                    IsInRequest = false,
+                    Description = cable.Description,
+                };
+                list.Add(cableCut1);
+                list.Add(cableCut2);
+                list.Add(cableCut3);
+            }
+            return list;
+        }
+        private async Task<ResponseDTO<bool>> ApproveRequestExport(Guid RequestID, Guid ApproverID, Request request)
+        {
+            List<RequestCable> requestCables = await daoRequestCable.getList(RequestID);
+            List<Cable> listCableExported = new List<Cable>();
+            if (requestCables.Count > 0)
+            {
+                foreach (RequestCable item in requestCables)
+                {
+                    Cable? cable;
+                    // if cable deleted
+                    if (item.Cable.IsDeleted)
+                    {
+                        cable = await daoCable.getCable(item.CableId, item.StartPoint, item.EndPoint);
+                    }
+                    else
+                    {
+                        cable = item.Cable;
+                    }
+                    // if not found
+                    if (cable == null)
+                    {
+                        return new ResponseDTO<bool>(false, "Không thể xuất kho " + item.Cable.CableCategory.CableCategoryName + " với ID: " + item.CableId
+                                + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ")", (int) HttpStatusCode.Conflict);
+                    }
+                    // if exported to use
+                    if (cable.IsExportedToUse)
+                    {
+                        return new ResponseDTO<bool>(false, item.Cable.CableCategory.CableCategoryName + " với ID: " + item.CableId
+                                + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ") đã được sử dụng!", (int) HttpStatusCode.Conflict);
+                    }
+
+                    if (cable.StartPoint == item.StartPoint && cable.EndPoint == item.EndPoint)
+                    {
+                        cable.IsExportedToUse = true;
+                        listCableExported.Add(cable);
+/*                        cable.UpdateAt = DateTime.Now;
+                        cable.WarehouseId = null;
+                        await daoCable.UpdateCable(cable);*/
+                        continue;
+                    }
+                    // ------------------------------ cut cable -----------------------------------
+                    List<Cable> cableCuts = getListCableCut(item.StartPoint, item.EndPoint, cable);
+                    if(cableCuts.Count == 0)
+                    {
+                        return new ResponseDTO<bool>(false, "Có lỗi trong việc lấy list các cable cut", (int) HttpStatusCode.Conflict);
+                    }
+                    foreach(Cable cut in cableCuts)
+                    {
+                        // add cable 
+                        await daoCable.CreateCable(cut);
+                        // if cable cut exported to use
+                        if(cut.IsExportedToUse)
+                        {
+                            listCableExported.Add(cut);
+                            // update request cable
+                            item.CableId = cut.CableId;
+                            item.UpdateAt = DateTime.Now;
+                            await daoRequestCable.UpdateRequestCable(item);
+                        }
+                    }
+                    // delete cable parent
+                    await daoCable.DeleteCable(cable);
+                }
+            }
+            // update request
+            request.ApproverId = ApproverID;
+            request.Status = RequestConst.STATUS_APPROVED;
+            request.UpdateAt = DateTime.Now;
+            await daoRequest.UpdateRequest(request);
+            // ------------------------------- add transaction cable --------------------------------
+            foreach(Cable cableExported in listCableExported)
+            {
+                TransactionHistory history = new TransactionHistory()
+                {
+                    TransactionId = Guid.NewGuid(),
+                    TransactionCategoryName = TransactionCategoryConst.CATEGORY_EXPORT,
+                    CreatedDate = DateTime.Now,
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
+                    IsDeleted = false,
+                    WarehouseId = cableExported.WarehouseId,
+                    RequestId = RequestID,
+                    IssueId = request.IssueId,
+                };
+                await daoHistory.CreateTransactionHistory(history);
+                TransactionCable transactionCable = new TransactionCable()
+                {
+                    TransactionId = history.TransactionId,
+                    CableId = cableExported.CableId,
+                    StartPoint = cableExported.StartPoint,
+                    EndPoint = cableExported.EndPoint,
+                    Length = cableExported.Length,
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
+                    IsDeleted = false
+                };
+                await daoTransactionCable.CreateTransactionCable(transactionCable);
+                // update cable
+                cableExported.WarehouseId = null;
+                cableExported.UpdateAt = DateTime.Now;
+                await daoCable.UpdateCable(cableExported);
+            }
+            // ------------------------------- add transaction material --------------------------------
+            List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(RequestID);
+            if (requestMaterials.Count > 0)
+            {
+                foreach (RequestOtherMaterial item in requestMaterials)
+                {
+                    TransactionHistory history = new TransactionHistory()
+                    {
+                        TransactionId = Guid.NewGuid(),
+                        TransactionCategoryName = TransactionCategoryConst.CATEGORY_EXPORT,
+                        CreatedDate = DateTime.Now,
+                        CreatedAt = DateTime.Now,
+                        UpdateAt = DateTime.Now,
+                        IsDeleted = false,
+                        WarehouseId = item.OtherMaterials.WarehouseId,
+                        RequestId = RequestID,
+                        IssueId = request.IssueId,
+                    };
+                    await daoHistory.CreateTransactionHistory(history);
+                    TransactionOtherMaterial material = new TransactionOtherMaterial()
+                    {
+                        TransactionId = history.TransactionId,
+                        OtherMaterialsId = item.Quantity,
+                        CreatedAt = DateTime.Now,
+                        UpdateAt = DateTime.Now,
+                        IsDeleted = false,
+                    };
+                    await daoTransactionMaterial.CreateTransactionMaterial(material);
+                    // update material quantity
+                    item.OtherMaterials.Quantity = item.OtherMaterials.Quantity - item.Quantity;
+                    await daoOtherMaterial.UpdateMaterial(item.OtherMaterials);
+                }
+            }
+            return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
+        }
+        public async Task<ResponseDTO<bool>> Approve(Guid RequestID, Guid ApproverID)
+        {
+            try
+            {
+                Request? request = await daoRequest.getRequest(RequestID);
+                if(request == null)
+                {
+                    return new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int) HttpStatusCode.NotFound);
+                }
+                if (!request.Status.Equals(RequestConst.STATUS_PENDING))
+                {
+                    return new ResponseDTO<bool>(false, "Yêu cầu đã được phê duyệt", (int) HttpStatusCode.Conflict);
+                }
+                if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT)
+                {
+                    return await ApproveRequestExport(RequestID, ApproverID, request);
+                }
+                return new ResponseDTO<bool>(false, string.Empty, (int) HttpStatusCode.Conflict);
+            }catch(Exception ex)
+            {
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }
+        }
+
+
     }
 }

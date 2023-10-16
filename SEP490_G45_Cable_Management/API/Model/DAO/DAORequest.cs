@@ -46,6 +46,17 @@ namespace API.Model.DAO
             await context.Requests.AddAsync(request);
             await context.SaveChangesAsync();
         }
+        public async Task<Request?> getRequest(Guid RequestID)
+        {
+            return await context.Requests.SingleOrDefaultAsync(r => r.RequestId == RequestID && r.IsDeleted == false);
+        }
+
+        public async Task UpdateRequest(Request request)
+        {
+            context.Requests.Update(request);
+            await context.SaveChangesAsync();
+        }
+
 
     }
 }

@@ -48,14 +48,14 @@ namespace API.Services
         {
             if(DTO.SupplierName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên nhà cung cấp không được để trống", (int) HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Tên nhà cung cấp không được để trống", (int) HttpStatusCode.Conflict);
             }
             try
             {
                 // if supplier already exist
                 if (await daoSupplier.isExist(DTO.SupplierName.Trim()))
                 {
-                    return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int) HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int) HttpStatusCode.Conflict);
                 }
                 Supplier supplier = new Supplier()
                 {
@@ -89,13 +89,13 @@ namespace API.Services
                 }
                 if (DTO.SupplierName.Trim().Length == 0)
                 {
-                    return new ResponseDTO<bool>(false, "Tên nhà cung cấp không được để trống", (int) HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Tên nhà cung cấp không được để trống", (int) HttpStatusCode.Conflict);
                 }
 
                 // if supplier already exist
                 if (await daoSupplier.isExist(SupplierID, DTO.SupplierName))
                 {
-                    return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
                 supplier.SupplierName = DTO.SupplierName.Trim();
                 supplier.Country = DTO.Country == null || DTO.Country.Trim().Length == 0 ? null : DTO.Country.Trim();

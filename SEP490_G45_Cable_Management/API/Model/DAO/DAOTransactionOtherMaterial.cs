@@ -48,5 +48,11 @@ namespace API.Model.DAO
                 .SumAsync(t => t.Quantity);
             return SumIncrease - SumDecrease;
         }
+
+        public async Task CreateTransactionMaterial(TransactionOtherMaterial material)
+        {
+            await context.TransactionOtherMaterials.AddAsync(material);
+            await context.SaveChangesAsync();
+        }
     }
 }

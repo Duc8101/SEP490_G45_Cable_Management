@@ -75,18 +75,18 @@ namespace API.Services
         {
             if (DTO.FirstName.Trim().Length == 0 || DTO.LastName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên người dùng không được để trống", (int)HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Tên người dùng không được để trống", (int)HttpStatusCode.Conflict);
             }
             if (DTO.Phone.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Số điện thoại không được để trống", (int)HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Số điện thoại không được để trống", (int)HttpStatusCode.Conflict);
             }
             try
             {     
                 // if user exist
                 if (await daoUser.isExist(DTO.UserName, DTO.Email))
                 {
-                    return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int)HttpStatusCode.Conflict);
                 }
                 string newPw = UserUtil.RandomPassword();
                 string hashPw = UserUtil.HashPassword(newPw);
@@ -155,17 +155,17 @@ namespace API.Services
                 // if email not exist
                 if (user == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy thông tin", (int) HttpStatusCode.NotFound);
+                    return new ResponseDTO<bool>(false, "Không tìm thấy thông tin của bạn", (int) HttpStatusCode.NotFound);
                 }
                 // if current password not correct
                 if (!user.Password.Equals(UserUtil.HashPassword(DTO.CurrentPassword)))
                 {
-                    return new ResponseDTO<bool>(false, "Mật khẩu hiện tại không chính xác", (int) HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Mật khẩu hiện tại không chính xác", (int) HttpStatusCode.Conflict);
                 }
                 // if confirm password not the same as new password
                 if (!DTO.ConfirmPassword.Equals(DTO.NewPassword))
                 {
-                    return new ResponseDTO<bool>(false, "Mật khẩu xác nhận không trùng khớp với mật khẩu mới", (int) HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Mật khẩu xác nhận không trùng khớp với mật khẩu mới", (int) HttpStatusCode.Conflict);
                 }
                 user.Password = UserUtil.HashPassword(DTO.NewPassword);
                 await daoUser.UpdateUser(user);
@@ -226,15 +226,15 @@ namespace API.Services
                 // if username or email exist
                 if (await daoUser.isExist(UserID, DTO.UserName, DTO.Email))
                 {
-                    return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int) HttpStatusCode.Conflict);
                 }
                 if (DTO.FirstName.Trim().Length == 0 || DTO.LastName.Trim().Length == 0)
                 {
-                    return new ResponseDTO<bool>(false, "Tên người dùng không được để trống", (int) HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Tên người dùng không được để trống", (int) HttpStatusCode.Conflict);
                 }
                 if (DTO.Phone.Trim().Length == 0)
                 {
-                    return new ResponseDTO<bool>(false, "Số điện thoại không được để trống", (int) HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Số điện thoại không được để trống", (int) HttpStatusCode.Conflict);
                 }
                 user.Username = DTO.UserName;
                 user.Email = DTO.Email;

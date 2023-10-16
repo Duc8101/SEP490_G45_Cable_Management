@@ -50,12 +50,12 @@ namespace API.Services
         {
             if(DTO.IssueName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên sự vụ không được để trống", (int) HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Tên sự vụ không được để trống", (int) HttpStatusCode.Conflict);
             }
 
             if(DTO.IssueCode.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Mã sự vụ không được để trống", (int) HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Mã sự vụ không được để trống", (int) HttpStatusCode.Conflict);
             }
 
             Issue issue = new Issue()
@@ -95,11 +95,11 @@ namespace API.Services
                 }
                 if (DTO.IssueName.Trim().Length == 0)
                 {
-                    return new ResponseDTO<bool>(false, "Tên sự vụ không được để trống", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Tên sự vụ không được để trống", (int) HttpStatusCode.Conflict);
                 }
                 if (DTO.IssueCode.Trim().Length == 0)
                 {
-                    return new ResponseDTO<bool>(false, "Mã sự vụ không được để trống", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Mã sự vụ không được để trống", (int) HttpStatusCode.Conflict);
                 }
                 issue.IssueName = DTO.IssueName.Trim();
                 issue.IssueCode = DTO.IssueCode.Trim();

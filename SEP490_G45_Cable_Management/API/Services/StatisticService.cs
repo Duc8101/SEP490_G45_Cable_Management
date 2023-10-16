@@ -61,7 +61,7 @@ namespace API.Services
                     // if not found
                     if (list.Count == 0)
                     {
-                        return new ResponseDTO<CableFluctuationPerYear?>(null, "Không tìm thấy cáp", (int)HttpStatusCode.NotFound);
+                        return new ResponseDTO<CableFluctuationPerYear?>(null, "Không tìm thấy cáp", (int) HttpStatusCode.NotFound);
                     }
                     data.CableName = list[0].CableCategory.CableCategoryName;
                 }

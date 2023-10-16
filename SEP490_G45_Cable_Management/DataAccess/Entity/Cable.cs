@@ -31,7 +31,8 @@ namespace DataAccess.Entity
         //public bool? IsExportedToUse { get; set; }
         public bool IsExportedToUse { get; set; }
         public int CableCategoryId { get; set; }
-        public bool? IsInRequest { get; set; }
+        //public bool? IsInRequest { get; set; }
+        public bool IsInRequest { get; set; }
         public string? Description { get; set; }
 
         public virtual CableCategory CableCategory { get; set; } = null!;

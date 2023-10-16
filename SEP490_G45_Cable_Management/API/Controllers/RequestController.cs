@@ -47,7 +47,24 @@ namespace API.Controllers
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
                 }
-                return await service.CreateExport(DTO, Guid.Parse(CreatorID));
+                return await service.CreateRequestExport(DTO, Guid.Parse(CreatorID));
+            }
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+        }
+
+        [HttpPut("{RequestID}")]
+        [Authorize]
+        public async Task<ResponseDTO<bool>> Approve(Guid RequestID)
+        {
+            // if admin
+            if (isAdmin())
+            {
+                string? ApproverID = getUserID();
+                if (ApproverID == null)
+                {
+                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
+                }
+                return await service.Approve(RequestID, Guid.Parse(ApproverID));
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }

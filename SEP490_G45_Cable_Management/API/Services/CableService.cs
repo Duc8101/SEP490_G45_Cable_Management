@@ -56,7 +56,7 @@ namespace API.Services
                 // if cable exist
                 if (await daoCable.isExist(DTO))
                 {
-                    return new ResponseDTO<bool>(false, "Cáp đã tồn tại trong hệ thống", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Cáp đã tồn tại trong hệ thống", (int) HttpStatusCode.Conflict);
                 }
                 Cable cable = new Cable()
                 {
@@ -93,7 +93,7 @@ namespace API.Services
                 // if not found
                 if (cable == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy cáp", (int)HttpStatusCode.NotFound);
+                    return new ResponseDTO<bool>(false, "Không tìm thấy cáp", (int) HttpStatusCode.NotFound);
                 }
                 cable.WarehouseId = DTO.WarehouseId;
                 cable.StartPoint = DTO.StartPoint;

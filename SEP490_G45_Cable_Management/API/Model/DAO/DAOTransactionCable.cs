@@ -49,5 +49,11 @@ namespace API.Model.DAO
                .SumAsync(t => t.Length);
             return sumIncrease - sumDecrease;
         }
+
+        public async Task CreateTransactionCable(TransactionCable transaction)
+        {
+            await context.TransactionCables.AddAsync(transaction);
+            await context.SaveChangesAsync();
+        }
     }
 }

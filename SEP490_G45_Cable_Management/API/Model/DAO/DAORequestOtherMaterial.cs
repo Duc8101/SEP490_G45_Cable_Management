@@ -1,4 +1,5 @@
 ﻿using DataAccess.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Model.DAO
 {
@@ -8,6 +9,11 @@ namespace API.Model.DAO
         {
             await context.RequestOtherMaterials.AddAsync(request);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<List<RequestOtherMaterial>> getList(Guid RequestID)
+        {
+            return await context.RequestOtherMaterials.Include(r => r.OtherMaterials).Where(r => r.RequestId == RequestID).ToListAsync();
         }
     }
 }

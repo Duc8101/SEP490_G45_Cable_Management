@@ -88,7 +88,7 @@ namespace API.Services
                 }
                 if (DTO.WarehouseName.Trim().Length == 0)
                 {
-                    return new ResponseDTO<bool>(false, "Tên kho không được để trống", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Tên kho không được để trống", (int)HttpStatusCode.Conflict);
                 }
                 /*// if ware exist
                 if (await daoWarehouse.isExist(WarehouseID, DTO.WarehouseName.Trim()))

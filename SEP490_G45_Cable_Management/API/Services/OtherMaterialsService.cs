@@ -51,22 +51,22 @@ namespace API.Services
         {
             if(DTO.Code.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Mã hàng không được để trống", (int) HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Mã hàng không được để trống", (int) HttpStatusCode.Conflict);
             }
 
             if (DTO.Unit.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Đơn vị không được để trống", (int)HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Đơn vị không được để trống", (int)HttpStatusCode.Conflict);
             }
 
             if (DTO.Status == null || DTO.Status.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Trạng thái không được để trống", (int) HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Trạng thái không được để trống", (int) HttpStatusCode.Conflict);
             }
 
             if(DTO.WarehouseId == null)
             {
-                return new ResponseDTO<bool>(false, "Kho không được để trống", (int) HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Kho không được để trống", (int) HttpStatusCode.Conflict);
             }
 
             try
@@ -117,27 +117,27 @@ namespace API.Services
 
                 if (DTO.Code.Trim().Length == 0)
                 {
-                    return new ResponseDTO<bool>(false, "Mã hàng không được để trống", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Mã hàng không được để trống", (int)HttpStatusCode.Conflict);
                 }
 
                 if (DTO.Unit.Trim().Length == 0)
                 {
-                    return new ResponseDTO<bool>(false, "Đơn vị không được để trống", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Đơn vị không được để trống", (int)HttpStatusCode.Conflict);
                 }
 
                 if (DTO.Status == null || DTO.Status.Trim().Length == 0)
                 {
-                    return new ResponseDTO<bool>(false, "Trạng thái không được để trống", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Trạng thái không được để trống", (int)HttpStatusCode.Conflict);
                 }
 
                 if (DTO.WarehouseId == null)
                 {
-                    return new ResponseDTO<bool>(false, "Kho không được để trống", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Kho không được để trống", (int)HttpStatusCode.Conflict);
                 }
                 // if exist
                 if (await daoOtherMaterials.isExist(DTO))
                 {
-                    return new ResponseDTO<bool>(false, "Vật liệu đã tồn tại", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Vật liệu đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
                 material.Unit = DTO.Unit.Trim();
                 material.Quantity = DTO.Quantity;

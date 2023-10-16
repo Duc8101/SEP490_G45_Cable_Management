@@ -45,14 +45,14 @@ namespace API.Services
         {
              if(DTO.CableCategoryName.Trim().Length == 0)
              {
-                return new ResponseDTO<bool>(false, "Tên cáp không được để trống", (int) HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Tên cáp không được để trống", (int) HttpStatusCode.Conflict);
              }
              try
              {
                 // if category already exist
                 if (await daoCableCategory.isExist(DTO.CableCategoryName.Trim()))
                 {
-                    return new ResponseDTO<bool>(false, "Loại cáp này đã tồn tại", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Loại cáp này đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
                 CableCategory cable = new CableCategory()
                 {
@@ -82,12 +82,12 @@ namespace API.Services
                 }
                 if (DTO.CableCategoryName.Trim().Length == 0)
                 {
-                    return new ResponseDTO<bool>(false, "Tên cáp không được để trống", (int) HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Tên cáp không được để trống", (int) HttpStatusCode.Conflict);
                 }
                 // if cable already exist
                 if (await daoCableCategory.isExist(CableCategoryID, DTO.CableCategoryName.Trim()))
                 {
-                    return new ResponseDTO<bool>(false, "Loại cáp này đã tồn tại", (int) HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Loại cáp này đã tồn tại", (int) HttpStatusCode.Conflict);
                 }
                 cable.CableCategoryName = DTO.CableCategoryName.Trim();
                 cable.UpdateAt = DateTime.Now;

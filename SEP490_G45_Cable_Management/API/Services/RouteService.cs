@@ -35,14 +35,14 @@ namespace API.Services
         {
             if(DTO.RouteName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên tuyến không được để trống", (int) HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Tên tuyến không được để trống", (int) HttpStatusCode.Conflict);
             }
             try
             {
                 // if exist
                 if (await daoRoute.isExist(DTO.RouteName.Trim()))
                 {
-                    return new ResponseDTO<bool>(false, "Tên tuyến đã tồn tại", (int) HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Tên tuyến đã tồn tại", (int) HttpStatusCode.Conflict);
                 }
                 DataAccess.Entity.Route route = new DataAccess.Entity.Route()
                 {

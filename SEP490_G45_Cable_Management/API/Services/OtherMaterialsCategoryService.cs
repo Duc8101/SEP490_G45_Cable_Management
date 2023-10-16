@@ -46,14 +46,14 @@ namespace API.Services
         {
             if(DTO.OtherMaterialsCategoryName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên vật liệu không được để trống", (int)HttpStatusCode.NotAcceptable);
+                return new ResponseDTO<bool>(false, "Tên vật liệu không được để trống", (int) HttpStatusCode.Conflict);
             }
             try
             {
                 // if name exist
                 if (await daoOtherMaterialsCategory.isExist(DTO.OtherMaterialsCategoryName.Trim()))
                 {
-                    return new ResponseDTO<bool>(false, "Loại vật liệu này đã tồn tại", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Loại vật liệu này đã tồn tại", (int) HttpStatusCode.Conflict);
                 }
                 OtherMaterialsCategory category = new OtherMaterialsCategory()
                 {
