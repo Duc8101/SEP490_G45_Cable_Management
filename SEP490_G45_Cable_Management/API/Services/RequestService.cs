@@ -72,12 +72,12 @@ namespace API.Services
                 // if invalid start point, end point or deleted
                 if(export.StartPoint < cable.StartPoint || export.EndPoint > cable.EndPoint || export.StartPoint > export.EndPoint || cable.IsDeleted)
                 {
-                    return new ResponseDTO<bool>(false, "Cáp với ID: " + export.CableId + " có chỉ số đầu hoặc chỉ số cuối không hợp lệ hoặc đã bị hủy", (int) HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Cáp với ID: " + export.CableId + " có chỉ số đầu hoặc chỉ số cuối không hợp lệ hoặc đã bị hủy", (int) HttpStatusCode.Conflict);
                 }
                 // if cable in use
                 if (cable.IsExportedToUse)
                 {
-                    return new ResponseDTO<bool>(false, "Cáp với ID: " + export.CableId + " đã được sử dụng", (int) HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Cáp với ID: " + export.CableId + " đã được sử dụng", (int) HttpStatusCode.Conflict);
                 }
             }
             return new ResponseDTO<bool>(true, string.Empty);
@@ -99,7 +99,7 @@ namespace API.Services
                 // if not enough quantity
                 if(material.Quantity < export.Quantity)
                 {
-                    return new ResponseDTO<bool>(false, "Vật liệu vs ID = " + export.OtherMaterialsId + " không có đủ số lượng", (int) HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Vật liệu vs ID = " + export.OtherMaterialsId + " không có đủ số lượng", (int) HttpStatusCode.Conflict);
                 }
             }
             return new ResponseDTO<bool>(true, string.Empty);
