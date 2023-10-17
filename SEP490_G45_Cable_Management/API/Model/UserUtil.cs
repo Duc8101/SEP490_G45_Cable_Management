@@ -9,6 +9,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using DataAccess.Entity;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace API.Model
 {
@@ -79,6 +81,18 @@ namespace API.Model
             string body = "<h1>Mật khẩu mới</h1>\n" +
                             "<p>Mật khẩu mới là: " + password + "</p>\n" +
                             "<p>Không nên chia sẻ mật khẩu của bạn với người khác.</p>";
+            return body;
+        }
+
+        public static string BodyEmailForAdminReceiveRequest(string RequestName, string RequestCategoryName, Issue? issue)
+        {
+            string body = "<h1>Yêu cầu với tên \"" + RequestName + "\"</h1>\n" +
+                            "<p>Loại yêu cầu: " + RequestCategoryName + "</p>\n";
+            if(issue != null)
+            {
+                body = body + "<p>Mã sụ vụ: " + issue.IssueCode + "</p>\n";
+            }
+            body = body + "<p>Vui lòng kiểm tra chi tiết yêu cầu</p>\n";
             return body;
         }
     }
