@@ -85,6 +85,10 @@ namespace API.Model.DAO
             user.IsDeleted = true;
             await UpdateUser(user);
         }
+        public async Task<List<string>> getEmailAdmins()
+        {
+            return await context.Users.Where(u => u.RoleId == RoleConst.INT_ROLE_ADMIN).Select(u => u.Email).ToListAsync();
+        }
 
     }
 }

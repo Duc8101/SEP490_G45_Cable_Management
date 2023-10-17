@@ -7,6 +7,7 @@ using DataAccess.DTO.CableDTO;
 using API.Model.DAO;
 using DataAccess.DTO.OtherMaterialsDTO;
 using Org.BouncyCastle.Asn1.Cmp;
+using API.Model;
 
 namespace API.Services
 {
@@ -20,7 +21,8 @@ namespace API.Services
         private readonly DAORequestOtherMaterial daoRequestMaterial = new DAORequestOtherMaterial();
         private readonly DAOTransactionCable daoTransactionCable = new DAOTransactionCable();
         private readonly DAOTransactionOtherMaterial daoTransactionMaterial = new DAOTransactionOtherMaterial();
-        private readonly DAOTransactionHistory daoHistory = new DAOTransactionHistory();    
+        private readonly DAOTransactionHistory daoHistory = new DAOTransactionHistory();
+        private readonly DAOUser daoUser = new DAOUser();
         private async Task<List<RequestListDTO>> getList(string? name, string? status, Guid? CreatorID, int page)
         {
             List<Request> list = await daoRequest.getList(name, status, CreatorID, page);
@@ -146,6 +148,17 @@ namespace API.Services
                 }
             }
         }
+       /* private async Task sendEmailToAdmin(Request request)
+        {
+            List<string> list = await daoUser.getEmailAdmins();
+            if (list.Count > 0)
+            {
+                foreach (string email in list)
+                {
+                    await UserUtil.sendEmail("[FPT TELECOM CABLE MANAGEMENT] Thông báo có yêu cầu mới");
+                }
+            }
+        }*/
         public async Task<ResponseDTO<bool>> CreateRequestExport(RequestCreateExportDTO DTO, Guid CreatorID)
         {
             if(DTO.RequestName.Trim().Length == 0)
@@ -164,7 +177,7 @@ namespace API.Services
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int) HttpStatusCode.NotFound);
                 }
-                // if issue approved
+                // if issue done
                 if (issue.Status.Equals(IssueConst.STATUS_DONE))
                 {
                     return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int) HttpStatusCode.NotAcceptable);
@@ -378,7 +391,8 @@ namespace API.Services
             {
                 foreach (RequestCable item in requestCables)
                 {
-                    Cable? cable;
+                    Cable cable = item.Cable;
+/*                    Cable? cable;
                     // if cable deleted
                     if (item.Cable.IsDeleted)
                     {
@@ -392,15 +406,15 @@ namespace API.Services
                     if (cable == null)
                     {
                         return new ResponseDTO<bool>(false, "Không thể xuất kho " + item.Cable.CableCategory.CableCategoryName + " với ID: " + item.CableId
-                                + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ")", (int) HttpStatusCode.Conflict);
+                                + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ")", (int)HttpStatusCode.Conflict);
                     }
                     // if exported to use
                     if (cable.IsExportedToUse)
                     {
                         return new ResponseDTO<bool>(false, item.Cable.CableCategory.CableCategoryName + " với ID: " + item.CableId
-                                + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ") đã được sử dụng!", (int) HttpStatusCode.Conflict);
+                                + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ") đã được sử dụng!", (int)HttpStatusCode.Conflict);
                     }
-
+*/                    // if start point, end point equal
                     if (cable.StartPoint == item.StartPoint && cable.EndPoint == item.EndPoint)
                     {
                         cable.IsExportedToUse = true;
@@ -415,7 +429,7 @@ namespace API.Services
                     }
                     foreach(Cable cut in cableCuts)
                     {
-                        // add cable 
+                        // add cable cut
                         await daoCable.CreateCable(cut);
                         // if cable cut exported to use
                         if(cut.IsExportedToUse)
