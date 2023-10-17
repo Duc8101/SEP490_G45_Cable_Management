@@ -86,7 +86,6 @@ namespace API.Services
             }
             
         }
-
         public async Task<ResponseDTO<List<CableCategoryStatistic>?>> CableCategory(int? WarehouseID)
         {
             try
@@ -113,7 +112,6 @@ namespace API.Services
                 return new ResponseDTO<List<CableCategoryStatistic>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }    
         }
-
         public async Task<ResponseDTO<List<OtherMaterialCateogoryStatistic>?>> MaterialCategory(int? WarehouseID)
         {
             try

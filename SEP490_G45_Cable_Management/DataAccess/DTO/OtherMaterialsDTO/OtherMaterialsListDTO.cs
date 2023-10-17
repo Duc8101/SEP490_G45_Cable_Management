@@ -13,8 +13,10 @@ namespace DataAccess.DTO.OtherMaterialsDTO
         public int? Quantity { get; set; }
         public string? Code { get; set; }
         //public string? SupplierName { get; set; }
-       // public string SupplierName { get; set; } = null!;
+        // public string SupplierName { get; set; } = null!;
+        public int? WarehouseId { get; set; }
         public string? WarehouseName { get; set; }
-        public string? OtherMaterialsCategoryName { get; set; }
+        public int OtherMaterialsCategoryId { get; set; }
+        public string OtherMaterialsCategoryName { get; set; } = null!;
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,10 +30,22 @@ namespace API.Model.DAO
                 .OrderByDescending(i => i.UpdateAt).ThenByDescending(i => i.Status).ToListAsync();
         }
 
+        public async Task<List<Issue>> getList(int page)
+        {
+            IQueryable<Issue> query = getQuery(null);
+            return await query.Where(i => i.Status == IssueConst.STATUS_DOING).Skip(PageSizeConst.MAX_ISSUE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_ISSUE_LIST_IN_PAGE).ToListAsync();
+        }
+
         public async Task<int> getRowCount(string? filter)
         {
             IQueryable<Issue> query = getQuery(filter);
             return await query.CountAsync();
+        }
+
+        public async Task<int> getRowCount()
+        {
+            IQueryable<Issue> query = getQuery(null);
+            return await query.Where(i => i.Status == IssueConst.STATUS_DOING).CountAsync();
         }
 
         public async Task CreateIssue(Issue issue)

@@ -19,7 +19,9 @@ namespace API.Services
                 CableListDTO DTO = new CableListDTO()
                 {
                     CableId = item.CableId,
+                    WarehouseId = item.WarehouseId,
                     WarehouseName = item.Warehouse == null ? null : item.Warehouse.WarehouseName,
+                    SupplierId = item.SupplierId,
                     SupplierName = item.Supplier.SupplierName,
                     StartPoint = item.StartPoint,
                     EndPoint = item.EndPoint,
@@ -27,6 +29,7 @@ namespace API.Services
                     YearOfManufacture = item.YearOfManufacture,
                     Code = item.Code,
                     Status = item.Status,
+                    CableCategoryId = item.CableCategoryId,
                     CableCategoryName = item.CableCategory.CableCategoryName
                 };
                 result.Add(DTO);

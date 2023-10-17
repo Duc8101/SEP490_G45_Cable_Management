@@ -22,8 +22,10 @@ namespace API.Services
                     Unit = item.Unit,
                     Quantity = item.Quantity,
                     Code = item.Code,
+                    WarehouseId = item.WarehouseId,
                     //SupplierName = item.Supplier.SupplierName,
                     WarehouseName = item.Warehouse == null ? null : item.Warehouse.WarehouseName,
+                    OtherMaterialsCategoryId = item.OtherMaterialsCategoryId,
                     OtherMaterialsCategoryName = item.OtherMaterialsCategory.OtherMaterialsCategoryName
                 };
                 result.Add(DTO);

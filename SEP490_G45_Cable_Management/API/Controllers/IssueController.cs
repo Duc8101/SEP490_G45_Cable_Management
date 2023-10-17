@@ -14,16 +14,27 @@ namespace API.Controllers
     public class IssueController : BaseAPIController
     {
         private readonly IssueService service = new IssueService();
-        [HttpGet]
+        [HttpGet("All")]
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List(string? filter, int page = 1)
         {
             // if admin, leader, staff
             if(isAdmin() || isLeader() || isStaff())
             {
-                return await service.List(filter, page);
+                return await service.ListAll(filter, page);
             }
             return new ResponseDTO<PagedResultDTO<IssueListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+        }
+
+        [HttpGet("Doing")]
+        public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List(int page = 1)
+        {
+            // if admin, leader, staff
+            if (isAdmin() || isLeader() || isStaff())
+            {
+                return await service.ListDoing(page);
+            }
+            return new ResponseDTO<PagedResultDTO<IssueListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPost]

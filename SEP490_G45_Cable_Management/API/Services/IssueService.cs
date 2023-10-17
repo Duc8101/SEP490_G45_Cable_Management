@@ -32,7 +32,28 @@ namespace API.Services
             }
             return result;
         }
-        public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List(string? filter, int page)
+        private async Task<List<IssueListDTO>> getList(int page)
+        {
+            List<Issue> list = await daoIssue.getList(page);
+            List<IssueListDTO> result = new List<IssueListDTO>();
+            foreach (Issue issue in list)
+            {
+                IssueListDTO DTO = new IssueListDTO()
+                {
+                    IssueId = issue.IssueId,
+                    IssueName = issue.IssueName,
+                    IssueCode = issue.IssueCode,
+                    Description = issue.Description,
+                    CreatedDate = issue.CreatedDate,
+                    CableRoutingName = issue.CableRoutingName,
+                    Group = issue.Group,
+                    Status = issue.Status,
+                };
+                result.Add(DTO);
+            }
+            return result;
+        }
+        public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> ListAll(string? filter, int page)
         {
             try
             {
@@ -45,6 +66,20 @@ namespace API.Services
             {
                 return new ResponseDTO<PagedResultDTO<IssueListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }    
+        }
+        public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> ListDoing(int page)
+        {
+            try
+            {
+                List<IssueListDTO> list = await getList(page);
+                int RowCount = await daoIssue.getRowCount();
+                PagedResultDTO<IssueListDTO> result = new PagedResultDTO<IssueListDTO>(page, RowCount, PageSizeConst.MAX_ISSUE_LIST_IN_PAGE, list);
+                return new ResponseDTO<PagedResultDTO<IssueListDTO>?>(result, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<PagedResultDTO<IssueListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+            }
         }
         public async Task<ResponseDTO<bool>> Create(IssueCreateDTO DTO, Guid CreatorID)
         {
