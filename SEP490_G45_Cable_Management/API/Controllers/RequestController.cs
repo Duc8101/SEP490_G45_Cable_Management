@@ -60,16 +60,28 @@ namespace API.Controllers
             if (isAdmin())
             {
                 string? ApproverID = getUserID();
-                string? email = getEmail();
                 if (ApproverID == null)
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
                 }
-                if (email == null)
+                return await service.Approve(RequestID, Guid.Parse(ApproverID));
+            }
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+        }
+
+        [HttpPut("{RequestID}")]
+        [Authorize]
+        public async Task<ResponseDTO<bool>> Reject(Guid RequestID)
+        {
+            // if admin
+            if (isAdmin())
+            {
+                string? RejectorID = getUserID();
+                if (RejectorID == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy email của bạn. Vui lòng kiểm tra thông tin đăng nhập");
+                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
                 }
-                return await service.Approve(RequestID, Guid.Parse(ApproverID), email);
+                return await service.Reject(RequestID, Guid.Parse(RejectorID));
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }

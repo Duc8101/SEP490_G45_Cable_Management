@@ -387,8 +387,7 @@ namespace API.Services
             }
             return list;
         }
-
-        private async Task<ResponseDTO<bool>> ApproveRequestExport(Guid RequestID, Guid ApproverID, Request request, string email)
+        private async Task<ResponseDTO<bool>> ApproveRequestExport(Guid RequestID, Guid ApproverID, Request request)
         {
             // ------------------------------- request cable ------------------------------
             List<RequestCable> requestCables = await daoRequestCable.getList(RequestID);
@@ -559,7 +558,7 @@ namespace API.Services
 
             return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
         }
-        public async Task<ResponseDTO<bool>> Approve(Guid RequestID, Guid ApproverID, string email)
+        public async Task<ResponseDTO<bool>> Approve(Guid RequestID, Guid ApproverID)
         {
             try
             {
@@ -574,7 +573,7 @@ namespace API.Services
                 }
                 if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT)
                 {
-                    return await ApproveRequestExport(RequestID, ApproverID, request, email);
+                    return await ApproveRequestExport(RequestID, ApproverID, request);
                 }
                 return new ResponseDTO<bool>(false, string.Empty, (int) HttpStatusCode.Conflict);
             }catch(Exception ex)
@@ -582,7 +581,30 @@ namespace API.Services
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
-
+        public async Task<ResponseDTO<bool>> Reject(Guid RequestID, Guid RejectorID)
+        {
+            try
+            {
+                Request? request = await daoRequest.getRequest(RequestID);
+                if(request == null)
+                {
+                    return new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int) HttpStatusCode.NotFound);
+                }
+                if (!request.Status.Equals(RequestConst.STATUS_PENDING))
+                {
+                    return new ResponseDTO<bool>(false, "Yêu cầu đã được phê duyệt", (int) HttpStatusCode.Conflict);
+                }
+                // ------------------- update request ---------------
+                request.ApproverId = RejectorID;
+                request.Status = RequestConst.STATUS_REJECTED;
+                request.UpdateAt = DateTime.Now;
+                await daoRequest.UpdateRequest(request);
+                return new ResponseDTO<bool>(false, string.Empty, (int) HttpStatusCode.Conflict);
+            }catch(Exception ex)
+            {
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }
+        }
 
     }
 }

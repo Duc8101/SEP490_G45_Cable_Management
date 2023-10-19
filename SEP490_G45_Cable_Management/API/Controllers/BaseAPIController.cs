@@ -57,5 +57,16 @@ namespace API.Controllers
             Claim? claim = getClaim(ClaimTypes.Email);
             return claim == null ? null : claim.Value;
         }
+
+        protected string? getFirstName()
+        {
+            Claim? claim = getClaim("FirstName");
+            return claim == null ? null : claim.Value;
+        }
+        protected string? getLastName()
+        {
+            Claim? claim = getClaim("LastName");
+            return claim == null ? null : claim.Value;
+        }
     }
 }
