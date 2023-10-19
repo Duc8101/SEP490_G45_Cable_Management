@@ -14,15 +14,15 @@ namespace API.Controllers
     {
         private readonly OtherMaterialsCategoryService service = new OtherMaterialsCategoryService();
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>> List(string? name, int page = 1)
         {
             // if admin or leader
-            if (isAdmin() || isLeader())
-            {
+            //if (isAdmin() || isLeader())
+            //{
                 return await service.List(name, page);
-            }
-            return new ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            //}
+           // return new ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPost]
@@ -38,15 +38,15 @@ namespace API.Controllers
         }
 
         [HttpPut("{OtherMaterialsCategoryID}")]
-        [Authorize]
+        //[Authorize]
         public async Task<ResponseDTO<bool>> Update(int OtherMaterialsCategoryID,OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
             // if admin or leader
-            if (isAdmin() || isLeader())
-            {
+            //if (isAdmin() || isLeader())
+            //{
                 return await service.Update(OtherMaterialsCategoryID, DTO);
-            }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
+            //}
+            //return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }
     }
 }

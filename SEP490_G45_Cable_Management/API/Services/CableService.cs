@@ -29,6 +29,8 @@ namespace API.Services
                     YearOfManufacture = item.YearOfManufacture,
                     Code = item.Code,
                     Status = item.Status,
+                    IsExportedToUse = item.IsExportedToUse,
+                    IsInRequest = item.IsInRequest,
                     CableCategoryId = item.CableCategoryId,
                     CableCategoryName = item.CableCategory.CableCategoryName
                 };

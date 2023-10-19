@@ -26,8 +26,8 @@ namespace API.Model.DAO
         public async Task<List<Issue>> getList(string? filter, int page)
         {
             IQueryable<Issue> query = getQuery(filter);
-            return await query.Skip(PageSizeConst.MAX_ISSUE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_ISSUE_LIST_IN_PAGE)
-                .OrderByDescending(i => i.Status).ThenByDescending(i => i.UpdateAt).ToListAsync();
+            return await query.OrderByDescending(i => i.Status).ThenByDescending(i => i.UpdateAt).Skip(PageSizeConst.MAX_ISSUE_LIST_IN_PAGE * (page - 1))
+                .Take(PageSizeConst.MAX_ISSUE_LIST_IN_PAGE).ToListAsync();
         }
 
         public async Task<List<Issue>> getList(int page)

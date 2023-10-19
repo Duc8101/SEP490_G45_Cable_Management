@@ -27,6 +27,7 @@ namespace API.Controllers
         }
 
         [HttpGet("Doing")]
+        [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List(int page = 1)
         {
             // if admin, leader, staff

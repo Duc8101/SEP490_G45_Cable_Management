@@ -22,5 +22,7 @@ namespace DataAccess.DTO.CableDTO
         public string? Status { get; set; } = null!;
         public int CableCategoryId { get; set; }
         public string CableCategoryName { get; set; } = null!;
+        public bool IsExportedToUse { get; set; }
+        public bool IsInRequest { get; set; }
     }
 }

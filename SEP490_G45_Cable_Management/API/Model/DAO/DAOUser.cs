@@ -62,7 +62,7 @@ namespace API.Model.DAO
         public async Task<List<User>> getList(string? filter, int page)
         {
             IQueryable<User> query = getQuery(filter);
-            return await query.Skip(PageSizeConst.MAX_USER_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_USER_LIST_IN_PAGE).OrderByDescending(u => u.UpdateAt).ToListAsync();
+            return await query.OrderByDescending(u => u.UpdateAt).Skip(PageSizeConst.MAX_USER_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_USER_LIST_IN_PAGE).ToListAsync();
         }
 
         public async Task<int> getRowCount(string? filter)

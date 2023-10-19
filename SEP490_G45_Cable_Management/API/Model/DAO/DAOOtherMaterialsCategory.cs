@@ -24,7 +24,7 @@ namespace API.Model.DAO
         public async Task<List<OtherMaterialsCategory>> getList(string? name, int page)
         {
             IQueryable<OtherMaterialsCategory> query = getQuery(name);
-            return await query.Skip(PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE).ToListAsync();
+            return await query.OrderByDescending(o => o.UpdateAt).Skip(PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE).ToListAsync();
         }
 
         public async Task<int> getRowCount(string? name)

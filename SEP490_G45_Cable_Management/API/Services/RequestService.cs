@@ -56,7 +56,7 @@ namespace API.Services
                 return new ResponseDTO<PagedResultDTO<RequestListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
-        // check cable valid in list cable export
+        // check cable valid when create request export
         private async Task<ResponseDTO<bool>> isCableValid(List<CableExportDTO> list)
         {
             if(list.Count == 0)
@@ -84,7 +84,7 @@ namespace API.Services
             }
             return new ResponseDTO<bool>(true, string.Empty);
         }
-        // check material valid in list material export
+        // check material valid when create request export
         private async Task<ResponseDTO<bool>> isMaterialValid(List<OtherMaterialsExportDTO> list)
         {
             if (list.Count == 0)
@@ -387,10 +387,76 @@ namespace API.Services
             }
             return list;
         }
+        // check cable valid when approve request export
+        private async Task<ResponseDTO<bool>> isCableValid(List<RequestCable> list)
+        {
+            if(list.Count == 0)
+            {
+                return new ResponseDTO<bool>(true, string.Empty);
+            }
+            foreach (RequestCable item in list)
+            {
+                Cable? cable;
+                // if cable deleted
+                if (item.Cable.IsDeleted)
+                {
+                    cable = await daoCable.getCable(item.CableId, item.StartPoint, item.EndPoint);
+                }
+                else
+                {
+                    cable = item.Cable;
+                }
+                // if not found cable or start point, end point invalid
+                if (cable == null || item.StartPoint < cable.StartPoint || item.EndPoint > cable.EndPoint)
+                {
+                    return new ResponseDTO<bool>(false, "Không thể xuất kho " + item.Cable.CableCategory.CableCategoryName + " với ID: " + item.CableId
+                               + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ")", (int)HttpStatusCode.Conflict);
+                }
+                // if cable exported
+                if (cable.IsExportedToUse == true)
+                {
+                    return new ResponseDTO<bool>(false, item.Cable.CableCategory.CableCategoryName + " với ID: " + item.CableId
+                        + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ") đã được sử dụng!", (int)HttpStatusCode.Conflict);
+                }
+            }
+            return new ResponseDTO<bool>(true, string.Empty);
+        }
+        // check material valid when approve request export
+        private ResponseDTO<bool> isMaterialValid(List<RequestOtherMaterial> list)
+        {
+            if (list.Count == 0)
+            {
+                return new ResponseDTO<bool>(true, string.Empty);
+            }
+            foreach (RequestOtherMaterial item in list)
+            {
+                // if not enough quantity
+                if (item.OtherMaterials.Quantity < item.Quantity)
+                {
+                    return new ResponseDTO<bool>(false, "Không đủ số lượng " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName, (int)HttpStatusCode.Conflict);
+                }
+            }
+            return new ResponseDTO<bool>(true, string.Empty);
+        }
         private async Task<ResponseDTO<bool>> ApproveRequestExport(Guid RequestID, Guid ApproverID, Request request)
         {
-            // ------------------------------- request cable ------------------------------
             List<RequestCable> requestCables = await daoRequestCable.getList(RequestID);
+            List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(RequestID);
+            // ------------------------------- check cable valid ------------------------------  
+            ResponseDTO<bool> check = await isCableValid(requestCables);
+            // if exist cable not valid
+            if(check.Success == false)
+            {
+                return check;
+            }
+            // ------------------------------- check material valid ------------------------------
+            check = isMaterialValid(requestMaterials);
+            // if exist material not valid
+            if (check.Success == false)
+            {
+                return check;
+            }
+            // ------------------------------- request cable ------------------------------         
             List<Cable> listCableExported = new List<Cable>();
             if (requestCables.Count > 0)
             {
@@ -406,20 +472,7 @@ namespace API.Services
                     {
                         cable = item.Cable;
                     }
-                    // if not found cable or start point, end point invalid
-                    if (cable == null || item.StartPoint < cable.StartPoint || item.EndPoint > cable.EndPoint)
-                    {
-                        return new ResponseDTO<bool>(false, "Không thể xuất kho " + item.Cable.CableCategory.CableCategoryName + " với ID: " + item.CableId
-                                   + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ")", (int) HttpStatusCode.Conflict);
-                    }
-                    // if cable exported
-                    if (cable.IsExportedToUse == true)
-                    {
-                        return new ResponseDTO<bool>(false, item.Cable.CableCategory.CableCategoryName + " với ID: " + item.CableId
-                            + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ") đã được sử dụng!", (int) HttpStatusCode.Conflict);
-                    }
-                    // if start point, end point valid
-                    if(cable.StartPoint <= item.StartPoint && cable.EndPoint >= item.EndPoint)
+                    if(cable != null)
                     {
                         // if start point, end point equal
                         if (cable.StartPoint == item.StartPoint && cable.EndPoint == item.EndPoint)
@@ -454,7 +507,7 @@ namespace API.Services
                                         EndPoint = item.EndPoint,
                                         Length = item.EndPoint - item.StartPoint,
                                         // RecoveryDestWarehouseId = item.WarehouseId,
-                                        CreatedAt = item.CreatedAt,
+                                        CreatedAt = DateTime.Now,
                                         UpdateAt = DateTime.Now,
                                         IsDeleted = false,
                                     };
@@ -473,16 +526,10 @@ namespace API.Services
                 }
             }
             // ------------------------------- request material ------------------------------
-            List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(RequestID);
             if (requestMaterials.Count > 0)
             {
                 foreach (RequestOtherMaterial item in requestMaterials)
                 {
-                    // if not enough quantity
-                    if(item.OtherMaterials.Quantity < item.Quantity)
-                    {
-                        return new ResponseDTO<bool>(false, "Không đủ số lượng " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName, (int) HttpStatusCode.Conflict);
-                    }
                     // update material quantity
                     item.OtherMaterials.Quantity = item.OtherMaterials.Quantity - item.Quantity;
                     await daoOtherMaterial.UpdateMaterial(item.OtherMaterials);
@@ -555,7 +602,6 @@ namespace API.Services
                     await daoTransactionMaterial.CreateTransactionMaterial(material);
                 }
             }
-
             return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
         }
         public async Task<ResponseDTO<bool>> Approve(Guid RequestID, Guid ApproverID)

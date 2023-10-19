@@ -23,7 +23,8 @@ namespace API.Model.DAO
         public async Task<List<Warehouse>> getList(string? name, int page)
         {
             IQueryable<Warehouse> query = getQuery(name);
-            return await query.Skip(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE).OrderByDescending(w => w.UpdateAt).ToListAsync();
+            return await query.OrderByDescending(w => w.UpdateAt).Skip(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE * (page - 1))
+                .Take(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE).ToListAsync();
         }
 
         public async Task<int> getRowCount(string? name)

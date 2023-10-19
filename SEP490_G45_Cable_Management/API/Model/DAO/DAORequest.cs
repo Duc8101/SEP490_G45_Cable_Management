@@ -31,8 +31,8 @@ namespace API.Model.DAO
         public async Task<List<Request>> getList(string? name, string? status, Guid? CreatorID, int page)
         {
             IQueryable<Request> query = getQuery(name, status, CreatorID);
-            return await query.Skip(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE)
-                .OrderByDescending(r => r.Status).ThenByDescending(r => r.UpdateAt).ToListAsync();
+            return await query.OrderByDescending(r => r.Status).ThenByDescending(r => r.UpdateAt).Skip(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE * (page - 1))
+                .Take(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE).ToListAsync();
         }
 
         public async Task<int> getRowCount(string? name, string? status, Guid? CreatorID)

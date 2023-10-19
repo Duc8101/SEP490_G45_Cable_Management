@@ -19,7 +19,6 @@ namespace API.Model.DAO
             if (filter != null && filter.Trim().Length != 0)
             {
                 query = query.Where(o => o.OtherMaterialsCategory.OtherMaterialsCategoryName.ToLower().Contains(filter.ToLower().Trim())
-                || o.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim())
                 || (o.Warehouse != null && o.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim())));
             }
             if(WareHouseKeeperID != null)
@@ -31,8 +30,8 @@ namespace API.Model.DAO
         public async Task<List<OtherMaterial>> getList(string? filter, Guid? WareHouseKeeperID, int page)
         {
             IQueryable<OtherMaterial> query = getQuery(filter, WareHouseKeeperID);
-            return await query.Skip(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE)
-                .OrderByDescending(o => o.UpdateAt).ToListAsync();
+            return await query.OrderByDescending(o => o.UpdateAt).Skip(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE)
+                .ToListAsync();
         }
 
         public async Task<int> getRowCount(string? filter, Guid? WareHouseKeeperID)
