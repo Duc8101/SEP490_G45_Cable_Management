@@ -120,7 +120,6 @@ namespace API.Services
                         StartPoint = item.StartPoint,
                         EndPoint = item.EndPoint,
                         Length = item.EndPoint - item.StartPoint,
-                       // RecoveryDestWarehouseId = item.WarehouseId,
                         CreatedAt = DateTime.Now,
                         UpdateAt = DateTime.Now,
                         IsDeleted = false,
@@ -143,7 +142,6 @@ namespace API.Services
                         CreatedAt = DateTime.Now,
                         UpdateAt = DateTime.Now,
                         IsDeleted = false,
-                        RecoveryDestWarehouseId = item.WarehouseId,
                     };
                     await daoRequestMaterial.CreateRequestOtherMaterial(request);
                 }
@@ -438,10 +436,10 @@ namespace API.Services
             }
             return new ResponseDTO<bool>(true, string.Empty);
         }
-        private async Task<ResponseDTO<bool>> ApproveRequestExport(Guid RequestID, Guid ApproverID, Request request)
+        private async Task<ResponseDTO<bool>> ApproveRequestExport(Guid ApproverID, Request request, string ApproverName)
         {
-            List<RequestCable> requestCables = await daoRequestCable.getList(RequestID);
-            List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(RequestID);
+            List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
+            List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(request.RequestId);
             // ------------------------------- check cable valid ------------------------------  
             ResponseDTO<bool> check = await isCableValid(requestCables);
             // if exist cable not valid
@@ -472,6 +470,7 @@ namespace API.Services
                     {
                         cable = item.Cable;
                     }
+                    // if cable valid 
                     if(cable != null)
                     {
                         // if start point, end point equal
@@ -501,12 +500,11 @@ namespace API.Services
                                     await daoRequestCable.DeleteRequestCable(item);
                                     RequestCable update = new RequestCable()
                                     {
-                                        RequestId = RequestID,
+                                        RequestId = request.RequestId,
                                         CableId = cut.CableId,
                                         StartPoint = item.StartPoint,
                                         EndPoint = item.EndPoint,
                                         Length = item.EndPoint - item.StartPoint,
-                                        // RecoveryDestWarehouseId = item.WarehouseId,
                                         CreatedAt = DateTime.Now,
                                         UpdateAt = DateTime.Now,
                                         IsDeleted = false,
@@ -554,7 +552,7 @@ namespace API.Services
                         UpdateAt = DateTime.Now,
                         IsDeleted = false,
                         WarehouseId = cableExported.WarehouseId,
-                        RequestId = RequestID,
+                        RequestId = request.RequestId,
                         IssueId = request.IssueId,
                     };
                     await daoHistory.CreateTransactionHistory(history);
@@ -586,7 +584,7 @@ namespace API.Services
                         UpdateAt = DateTime.Now,
                         IsDeleted = false,
                         WarehouseId = item.OtherMaterials.WarehouseId,
-                        RequestId = RequestID,
+                        RequestId = request.RequestId,
                         IssueId = request.IssueId,
                     };
                     await daoHistory.CreateTransactionHistory(history);
@@ -602,9 +600,12 @@ namespace API.Services
                     await daoTransactionMaterial.CreateTransactionMaterial(material);
                 }
             }
+            // ------------------------------- send email --------------------------------
+            string body = UserUtil.BodyEmailForApproveRequestExport(request, ApproverName, listCableExported, requestMaterials);
+            await UserUtil.sendEmail("Thông báo yêu cầu được phê duyệt", body, request.Creator.Email);
             return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
         }
-        public async Task<ResponseDTO<bool>> Approve(Guid RequestID, Guid ApproverID)
+        public async Task<ResponseDTO<bool>> Approve(Guid RequestID, Guid ApproverID, string ApproverName)
         {
             try
             {
@@ -619,7 +620,7 @@ namespace API.Services
                 }
                 if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT)
                 {
-                    return await ApproveRequestExport(RequestID, ApproverID, request);
+                    return await ApproveRequestExport(ApproverID, request, ApproverName);
                 }
                 return new ResponseDTO<bool>(false, string.Empty, (int) HttpStatusCode.Conflict);
             }catch(Exception ex)

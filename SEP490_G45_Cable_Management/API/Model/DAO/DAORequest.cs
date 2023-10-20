@@ -48,7 +48,7 @@ namespace API.Model.DAO
         }
         public async Task<Request?> getRequest(Guid RequestID)
         {
-            return await context.Requests.Include(r => r.RequestCategory).Include(r => r.Creator).SingleOrDefaultAsync(r => r.RequestId == RequestID && r.IsDeleted == false);
+            return await context.Requests.Include(r => r.RequestCategory).Include(r => r.Creator).Include(r => r.Issue).SingleOrDefaultAsync(r => r.RequestId == RequestID && r.IsDeleted == false);
         }
 
         public async Task UpdateRequest(Request request)

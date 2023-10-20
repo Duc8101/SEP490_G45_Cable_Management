@@ -60,11 +60,17 @@ namespace API.Controllers
             if (isAdmin())
             {
                 string? ApproverID = getUserID();
+                string? FirstName = getFirstName();
+                string? LastName = getLastName();
                 if (ApproverID == null)
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
                 }
-                return await service.Approve(RequestID, Guid.Parse(ApproverID));
+                if(FirstName == null || LastName == null)
+                {
+                    return new ResponseDTO<bool>(false, "Không tìm thấy tên của bạn. Vui lòng kiểm tra thông tin đăng nhập");
+                }
+                return await service.Approve(RequestID, Guid.Parse(ApproverID), LastName + " " + FirstName);
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }

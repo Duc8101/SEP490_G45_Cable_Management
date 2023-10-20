@@ -95,5 +95,41 @@ namespace API.Model
             body = body + "<p>Vui lòng kiểm tra chi tiết yêu cầu</p>\n";
             return body;
         }
+
+        public static string BodyEmailForApproveRequestExport(DataAccess.Entity.Request request, string ApproverName, List<Cable> listCableExported, List<RequestOtherMaterial> requestMaterials)
+        {
+            StringBuilder builder = new StringBuilder("<h1>Yêu cầu với tên \"" + request.RequestName + "\" đã được duyệt</h1>\n" +
+                            "<p>Loại yêu cầu: " + request.RequestCategory.RequestCategoryName + "</p>\n");
+            if(request.Issue != null)
+            {
+                builder.Append("<p>Mã sụ vụ: " + request.Issue.IssueCode + "</p>");
+            }
+            builder.Append("<p>Thông tin chi tiết của yêu cầu:</p>\n");
+            if(listCableExported.Count > 0)
+            {
+                foreach(Cable item in listCableExported)
+                {
+                    if (item.Warehouse != null)
+                    {
+                        builder.AppendLine("<p> - " + item.CableCategory.CableCategoryName + " xuất từ kho " + item.Warehouse.WarehouseName
+                       + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
+                    }    
+                }
+            }
+            if(requestMaterials.Count > 0)
+            {
+                foreach (RequestOtherMaterial item in requestMaterials)
+                {
+                    if (item.OtherMaterials.Warehouse != null)
+                    {
+                        builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " xuất từ trong kho " +
+                            item.OtherMaterials.Warehouse.WarehouseName + ", số lượng: " + item.Quantity + "</p>");
+                    }
+                }
+            }
+            builder.AppendLine("<p>Người duyệt</p>");
+            builder.AppendLine("<p>" + ApproverName + "</p>");
+            return builder.ToString();
+        }
     }
 }
