@@ -10,9 +10,9 @@ namespace API.Services
     public class CableCategoryService
     {
         private readonly DAOCableCategory daoCableCategory = new DAOCableCategory();
-        private async Task<List<CableCategoryListDTO>> getList(string? name, int page)
+        private async Task<List<CableCategoryListDTO>> getListPaged(string? name, int page)
         {
-            List<CableCategory> list = await daoCableCategory.getList(name, page);
+            List<CableCategory> list = await daoCableCategory.getListPaged(name, page);
             List<CableCategoryListDTO> result = new List<CableCategoryListDTO>();
             foreach(CableCategory cable in list)
             {
@@ -25,11 +25,11 @@ namespace API.Services
             }
             return result;
         }
-        public async Task<ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>> List(string? name, int page)
+        public async Task<ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>> ListPaged(string? name, int page)
         {
             try
             {
-                List<CableCategoryListDTO> list = await getList(name, page);
+                List<CableCategoryListDTO> list = await getListPaged(name, page);
                 int RowCount = await daoCableCategory.getRowCount(name);
                 PagedResultDTO<CableCategoryListDTO> result =  new PagedResultDTO<CableCategoryListDTO>(page, RowCount,PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE , list);
                 return new ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>(result, string.Empty);
@@ -40,7 +40,33 @@ namespace API.Services
             }
            
         }
-
+        private async Task<List<CableCategoryListDTO>> getListAll()
+        {
+            List<CableCategory> list = await daoCableCategory.getListAll();
+            List<CableCategoryListDTO> result = new List<CableCategoryListDTO>();
+            foreach (CableCategory cable in list)
+            {
+                CableCategoryListDTO DTO = new CableCategoryListDTO()
+                {
+                    CableCategoryId = cable.CableCategoryId,
+                    CableCategoryName = cable.CableCategoryName,
+                };
+                result.Add(DTO);
+            }
+            return result;
+        }
+        public async Task<ResponseDTO<List<CableCategoryListDTO>?>> ListAll()
+        {
+            try
+            {
+                List<CableCategoryListDTO> list = await getListAll();
+                return new ResponseDTO<List<CableCategoryListDTO>?>(list, string.Empty);
+            }
+            catch(Exception ex)
+            {
+                return new ResponseDTO<List<CableCategoryListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+            }
+        }
         public async Task<ResponseDTO<bool>> Create(CableCategoryCreateUpdateDTO DTO)
         {
              if(DTO.CableCategoryName.Trim().Length == 0)

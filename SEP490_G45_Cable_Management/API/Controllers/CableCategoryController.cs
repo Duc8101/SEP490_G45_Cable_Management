@@ -17,16 +17,28 @@ namespace API.Controllers
     public class CableCategoryController : BaseAPIController
     {
         private readonly CableCategoryService service = new CableCategoryService();
-        [HttpGet]
+        [HttpGet("Paged")]
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>> List(string? name, int page = 1)
         {
             // if admin or leader
             if (isAdmin() || isLeader())
             {
-                return await service.List(name, page);
+                return await service.ListPaged(name, page);
             }
             return new ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>(null, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
+        }
+
+        [HttpGet("All")]
+        [Authorize]
+        public async Task<ResponseDTO<List<CableCategoryListDTO>?>> List()
+        {
+            // if admin or leader
+            if (isAdmin() || isLeader())
+            {
+                return await service.ListAll();
+            }
+            return new ResponseDTO<List<CableCategoryListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPost]

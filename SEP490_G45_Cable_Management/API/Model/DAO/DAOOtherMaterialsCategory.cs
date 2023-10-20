@@ -21,16 +21,21 @@ namespace API.Model.DAO
             }
             return query;
         }
-        public async Task<List<OtherMaterialsCategory>> getList(string? name, int page)
+        public async Task<List<OtherMaterialsCategory>> getListPaged(string? name, int page)
         {
             IQueryable<OtherMaterialsCategory> query = getQuery(name);
             return await query.OrderByDescending(o => o.UpdateAt).Skip(PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE).ToListAsync();
         }
-
         public async Task<int> getRowCount(string? name)
         {
             IQueryable<OtherMaterialsCategory> query = getQuery(name);
             return await query.CountAsync();
+        }
+
+        public async Task<List<OtherMaterialsCategory>> getListAll()
+        {
+            IQueryable<OtherMaterialsCategory> query = getQuery(null);
+            return await query.OrderByDescending(o => o.UpdateAt).ToListAsync();
         }
 
         public async Task<bool> isExist(string OtherMaterialsCategoryName)

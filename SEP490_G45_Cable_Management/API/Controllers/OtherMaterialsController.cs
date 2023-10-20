@@ -14,61 +14,61 @@ namespace API.Controllers
     {
         private readonly OtherMaterialsService service = new OtherMaterialsService();
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, int page = 1)
         {
             // if admin
-            //if(isAdmin())
-            //{
+            if(isAdmin())
+            {
                 return await service.List(filter, null, page);
-            //}
+            }
             // if warehouse keeper
-/*            if(isWarehouseKeeper())
+            if (isWarehouseKeeper())
             {
                 string? WareHouseKeeperID = getUserID();
-                if(WareHouseKeeperID == null)
+                if (WareHouseKeeperID == null)
                 {
-                    return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(null, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int) HttpStatusCode.NotFound);
+                    return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(null, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
                 }
                 return await service.List(filter, Guid.Parse(WareHouseKeeperID), page);
             }
-            return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(null, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
-*/        }
+            return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+        }
 
         [HttpPost]
-        //[Authorize]
+        [Authorize]
         public async Task<ResponseDTO<bool>> Create(OtherMaterialsCreateUpdateDTO DTO)
         {
             // if admin, warehouse keeper
-            //if(isAdmin() || isWarehouseKeeper())
-            //{
+            if(isAdmin() || isWarehouseKeeper())
+            {
                 return await service.Create(DTO);
-           // }
-           // return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
+            }
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }
 
         [HttpPut("{OtherMaterialsID}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ResponseDTO<bool>> Update(int OtherMaterialsID, OtherMaterialsCreateUpdateDTO DTO)
         {
             // if admin, warehouse keeper
-            //if (isAdmin() || isWarehouseKeeper())
-            //{
+            if (isAdmin() || isWarehouseKeeper())
+            {
                 return await service.Update(OtherMaterialsID, DTO);
-           // }
-           // return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
+            }
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }
 
         [HttpDelete("{OtherMaterialsID}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ResponseDTO<bool>> Delete(int OtherMaterialsID)
         {
             // if admin, warehouse keeper
-            //if (isAdmin() || isWarehouseKeeper())
-            //{
+            if (isAdmin() || isWarehouseKeeper())
+            {
                 return await service.Delete(OtherMaterialsID);
-            //}
-            //return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
+            }
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }
     }
 }

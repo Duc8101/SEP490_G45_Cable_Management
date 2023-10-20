@@ -6,8 +6,10 @@ using DataAccess.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System.Net;
+using System.Xml.Linq;
 
 namespace API.Controllers
 {
@@ -17,16 +19,28 @@ namespace API.Controllers
     {
         private readonly SupplierService service = new SupplierService();
 
-        [HttpGet]
+        [HttpGet("Paged")]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<SupplierListDTO>?>> List(string? name, int page = 1 /* current page */)
+        public async Task<ResponseDTO<PagedResultDTO<SupplierListDTO>?>> List(string? name, int page = 1)
         {
             // if admin or warehouse or leader
             if (isAdmin() || isWarehouseKeeper() || isLeader())
             {
-                return await service.List(name, page);
+                return await service.ListPaged(name, page);
             }
             return new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+        }
+
+        [HttpGet("All")]
+        [Authorize]
+        public async Task<ResponseDTO<List<SupplierListDTO>?>> List()
+        {
+            // if admin or warehouse or leader
+            if (isAdmin() || isWarehouseKeeper() || isLeader())
+            {
+                return await service.ListAll();
+            }
+            return new ResponseDTO<List<SupplierListDTO>?>(null, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }
 
         [HttpPost]

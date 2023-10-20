@@ -20,16 +20,20 @@ namespace API.Model.DAO
             }
             return query;
         }
-        public async Task<List<CableCategory>> getList(string? name, int page)
+        public async Task<List<CableCategory>> getListPaged(string? name, int page)
         {
             IQueryable<CableCategory> query = getQuery(name);
             return await query.Skip(PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE).ToListAsync();
         }
-
         public async Task<int> getRowCount(string? name)
         {
             IQueryable<CableCategory> query = getQuery(name);
             return await query.CountAsync();
+        }
+        public async Task<List<CableCategory>> getListAll()
+        {
+            IQueryable<CableCategory> query = getQuery(null);
+            return await query.ToListAsync();
         }
 
         public async Task CreateCableCategory(CableCategory cable)

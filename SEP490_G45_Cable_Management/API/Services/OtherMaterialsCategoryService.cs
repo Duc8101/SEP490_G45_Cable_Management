@@ -4,16 +4,16 @@ using DataAccess.DTO.OtherMaterialsCategoryDTO;
 using DataAccess.Entity;
 using System.Net;
 using API.Model.DAO;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Xml.Linq;
 
 namespace API.Services
 {
     public class OtherMaterialsCategoryService
     {
         private readonly DAOOtherMaterialsCategory daoOtherMaterialsCategory = new DAOOtherMaterialsCategory();
-
-        private async Task<List<OtherMaterialsCategoryListDTO>> getList(string? name, int page)
+        private List<OtherMaterialsCategoryListDTO> getListDTO(List<OtherMaterialsCategory> list)
         {
-            List<OtherMaterialsCategory> list = await daoOtherMaterialsCategory.getList(name,page);
             List<OtherMaterialsCategoryListDTO> result = new List<OtherMaterialsCategoryListDTO>();
             foreach (OtherMaterialsCategory item in list)
             {
@@ -26,12 +26,17 @@ namespace API.Services
             }
             return result;
         }
-
-        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>> List(string? name, int page)
+        private async Task<List<OtherMaterialsCategoryListDTO>> getListPaged(string? name, int page)
+        {
+            List<OtherMaterialsCategory> list = await daoOtherMaterialsCategory.getListPaged(name,page);
+            List<OtherMaterialsCategoryListDTO> result = getListDTO(list);
+            return result;
+        }
+        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>> ListPaged(string? name, int page)
         {
             try
             {
-                List<OtherMaterialsCategoryListDTO> list = await getList(name, page);
+                List<OtherMaterialsCategoryListDTO> list = await getListPaged(name, page);
                 int RowCount = await daoOtherMaterialsCategory.getRowCount(name);
                 PagedResultDTO<OtherMaterialsCategoryListDTO> result = new PagedResultDTO<OtherMaterialsCategoryListDTO>(page, RowCount, PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE, list);
                 return new ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>(result, string.Empty);
@@ -41,7 +46,24 @@ namespace API.Services
                 return new ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
-
+        private async Task<List<OtherMaterialsCategoryListDTO>> getListAll()
+        {
+            List<OtherMaterialsCategory> list = await daoOtherMaterialsCategory.getListAll();
+            List<OtherMaterialsCategoryListDTO> result = getListDTO(list);
+            return result;
+        }
+        public async Task<ResponseDTO<List<OtherMaterialsCategoryListDTO>?>> ListAll()
+        {
+            try
+            {
+                List<OtherMaterialsCategoryListDTO> list = await getListAll();
+                return new ResponseDTO<List<OtherMaterialsCategoryListDTO>?>(list, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<List<OtherMaterialsCategoryListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+            }
+        }
         public async Task<ResponseDTO<bool>> Create(OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
             if(DTO.OtherMaterialsCategoryName.Trim().Length == 0)

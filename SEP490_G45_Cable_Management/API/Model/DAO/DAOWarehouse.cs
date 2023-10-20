@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace API.Model.DAO
 {
@@ -13,26 +14,29 @@ namespace API.Model.DAO
     {
         private IQueryable<Warehouse> getQuery(string? name)
         {
-            IQueryable<Warehouse> query = context.Warehouses.Where(w => w.IsDeleted == false);
+            IQueryable<Warehouse> query = context.Warehouses.Include(w => w.WarehouseKeeper).Where(w => w.IsDeleted == false);
             if (name != null && name.Trim().Length != 0)
             {
                 query = query.Where(w => w.WarehouseName != null && w.WarehouseName.ToLower().Contains(name.ToLower().Trim()));
             }
             return query;
         }
-        public async Task<List<Warehouse>> getList(string? name, int page)
+        public async Task<List<Warehouse>> getListPaged(string? name, int page)
         {
             IQueryable<Warehouse> query = getQuery(name);
             return await query.OrderByDescending(w => w.UpdateAt).Skip(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE * (page - 1))
                 .Take(PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE).ToListAsync();
         }
-
         public async Task<int> getRowCount(string? name)
         {
             IQueryable<Warehouse> query = getQuery(name);
             return await query.CountAsync();
         }
-
+        public async Task<List<Warehouse>> getListAll()
+        {
+            IQueryable<Warehouse> query = getQuery(null);
+            return await query.OrderByDescending(w => w.UpdateAt).ToListAsync();
+        }
         public async Task<bool> isExist(string name)
         {
             return await context.Warehouses.AnyAsync(w => w.WarehouseName == name.Trim());

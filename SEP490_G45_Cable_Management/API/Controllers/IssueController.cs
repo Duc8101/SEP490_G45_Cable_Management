@@ -4,6 +4,7 @@ using DataAccess.DTO.IssueDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using MimeKit.Encodings;
 using System.Net;
 
@@ -14,28 +15,40 @@ namespace API.Controllers
     public class IssueController : BaseAPIController
     {
         private readonly IssueService service = new IssueService();
-        [HttpGet("All")]
+        [HttpGet("Paged/All")]
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List(string? filter, int page = 1)
         {
             // if admin, leader, staff
             if(isAdmin() || isLeader() || isStaff())
             {
-                return await service.ListAll(filter, page);
+                return await service.ListPagedAll(filter, page);
             }
             return new ResponseDTO<PagedResultDTO<IssueListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }
 
-        [HttpGet("Doing")]
+        [HttpGet("Paged/Doing")]
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List(int page = 1)
         {
             // if admin, leader, staff
             if (isAdmin() || isLeader() || isStaff())
             {
-                return await service.ListDoing(page);
+                return await service.ListPagedDoing(page);
             }
             return new ResponseDTO<PagedResultDTO<IssueListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+        }
+
+        [HttpGet("Doing")]
+        [Authorize]
+        public async Task<ResponseDTO<List<IssueListDTO>?>> List()
+        {
+            // if admin, leader, staff
+            if (isAdmin() || isLeader() || isStaff())
+            {
+                return await service.ListDoing();
+            }
+            return new ResponseDTO<List<IssueListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPost]

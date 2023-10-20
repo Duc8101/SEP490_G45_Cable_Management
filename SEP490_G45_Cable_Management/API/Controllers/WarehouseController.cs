@@ -14,16 +14,28 @@ namespace API.Controllers
     {
         private readonly WarehouseService service = new WarehouseService();
 
-        [HttpGet]
-        //[Authorize]
+        [HttpGet("Paged")]
+        [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<WarehouseListDTO>?>> List(string? name , int page = 1)
         {
             // if admin, warehousekeeper, leader
-            //if(isAdmin() || isWarehouseKeeper() || isLeader())
-            //{
-                return await service.List(name, page);
-           // }
-          //  return new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            if(isAdmin() || isWarehouseKeeper() || isLeader())
+            {
+                return await service.ListPaged(name, page);
+            }
+            return new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+        }
+
+        [HttpGet("All")]
+        [Authorize]
+        public async Task<ResponseDTO<List<WarehouseListDTO>?>> List()
+        {
+            // if admin, warehousekeeper, leader
+            if (isAdmin() || isWarehouseKeeper() || isLeader())
+            {
+                return await service.ListAll();
+            }
+            return new ResponseDTO<List<WarehouseListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPost]

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace API.Model.DAO
 {
@@ -32,7 +33,7 @@ namespace API.Model.DAO
             return query;
         }
 
-        public async Task<List<Supplier>> getList(string? name, int page)
+        public async Task<List<Supplier>> getListPaged(string? name, int page)
         {
             IQueryable<Supplier> query = getQuery(name);
             return await query.Skip((page - 1) * PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).Take(PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).ToListAsync();
@@ -42,6 +43,12 @@ namespace API.Model.DAO
         {
             IQueryable<Supplier> query = getQuery(name);
             return await query.CountAsync();
+        }
+
+        public async Task<List<Supplier>> getListAll()
+        {
+            IQueryable<Supplier> query = getQuery(null);
+            return await query.ToListAsync();
         }
 
         public async Task<Supplier?> getSupplier(int SupplierID)

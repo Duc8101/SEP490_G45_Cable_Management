@@ -23,17 +23,18 @@ namespace API.Model.DAO
             }
             return query;
         }
-        public async Task<List<Issue>> getList(string? filter, int page)
+        public async Task<List<Issue>> getListPagedAll(string? filter, int page)
         {
             IQueryable<Issue> query = getQuery(filter);
             return await query.OrderByDescending(i => i.Status).ThenByDescending(i => i.UpdateAt).Skip(PageSizeConst.MAX_ISSUE_LIST_IN_PAGE * (page - 1))
                 .Take(PageSizeConst.MAX_ISSUE_LIST_IN_PAGE).ToListAsync();
         }
 
-        public async Task<List<Issue>> getList(int page)
+        public async Task<List<Issue>> getListPagedDoing(int page)
         {
             IQueryable<Issue> query = getQuery(null);
-            return await query.Where(i => i.Status == IssueConst.STATUS_DOING).Skip(PageSizeConst.MAX_ISSUE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_ISSUE_LIST_IN_PAGE).ToListAsync();
+            return await query.OrderByDescending(i => i.Status).ThenByDescending(i => i.UpdateAt).Where(i => i.Status == IssueConst.STATUS_DOING)
+                .Skip(PageSizeConst.MAX_ISSUE_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_ISSUE_LIST_IN_PAGE).ToListAsync();
         }
 
         public async Task<int> getRowCount(string? filter)
@@ -48,6 +49,12 @@ namespace API.Model.DAO
             return await query.Where(i => i.Status == IssueConst.STATUS_DOING).CountAsync();
         }
 
+        public async Task<List<Issue>> getListDoing()
+        {
+            IQueryable<Issue> query = getQuery(null);
+            return await query.OrderByDescending(i => i.Status).ThenByDescending(i => i.UpdateAt).Where(i => i.Status == IssueConst.STATUS_DOING)
+                .ToListAsync();
+        }
         public async Task CreateIssue(Issue issue)
         {
             await context.Issues.AddAsync(issue);

@@ -13,9 +13,9 @@ namespace API.Services
     public class SupplierService
     {
         private readonly DAOSupplier daoSupplier = new DAOSupplier();
-        private async Task<List<SupplierListDTO>> getList(string? name, int page)
+        private async Task<List<SupplierListDTO>> getListPaged(string? name, int page)
         {
-            List<Supplier> list = await daoSupplier.getList(name, page);
+            List<Supplier> list = await daoSupplier.getListPaged(name, page);
             List<SupplierListDTO> result = new List<SupplierListDTO>();
             foreach (Supplier supplier in list)
             {
@@ -30,11 +30,11 @@ namespace API.Services
             }
             return result;
         }
-        public async Task<ResponseDTO<PagedResultDTO<SupplierListDTO>?>> List(string? name, int page)
+        public async Task<ResponseDTO<PagedResultDTO<SupplierListDTO>?>> ListPaged(string? name, int page)
         {
             try
             {
-                List<SupplierListDTO> list = await getList(name, page);
+                List<SupplierListDTO> list = await getListPaged(name, page);
                 int RowCount = await daoSupplier.getRowCount(name);
                 PagedResultDTO<SupplierListDTO> result = new PagedResultDTO<SupplierListDTO>(page, RowCount, PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE, list);
                 return new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(result, string.Empty);
@@ -42,6 +42,35 @@ namespace API.Services
             catch(Exception ex)
             {
                 return new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }
+        }
+        private async Task<List<SupplierListDTO>> getListAll()
+        {
+            List<Supplier> list = await daoSupplier.getListAll();
+            List<SupplierListDTO> result = new List<SupplierListDTO>();
+            foreach (Supplier supplier in list)
+            {
+                SupplierListDTO DTO = new SupplierListDTO()
+                {
+                    SupplierId = supplier.SupplierId,
+                    SupplierName = supplier.SupplierName,
+                    Country = supplier.Country,
+                    SupplierDescription = supplier.SupplierDescription
+                };
+                result.Add(DTO);
+            }
+            return result;
+        }
+        public async Task<ResponseDTO<List<SupplierListDTO>?>> ListAll()
+        {
+            try
+            {
+                List<SupplierListDTO> list = await getListAll();
+                return new ResponseDTO<List<SupplierListDTO>?>(list, string.Empty);
+            }
+            catch(Exception ex)
+            {
+                return new ResponseDTO<List<SupplierListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
         public async Task<ResponseDTO<bool>> Create(SupplierCreateUpdateDTO DTO, string CreatorID)

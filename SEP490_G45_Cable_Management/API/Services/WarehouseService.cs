@@ -11,9 +11,9 @@ namespace API.Services
     public class WarehouseService
     {
         private readonly DAOWarehouse daoWarehouse = new DAOWarehouse();
-        private async Task<List<WarehouseListDTO>> getList(string? name, int page)
+        private async Task<List<WarehouseListDTO>> getListPaged(string? name, int page)
         {
-            List<Warehouse> list = await daoWarehouse.getList(name, page);
+            List<Warehouse> list = await daoWarehouse.getListPaged(name, page);
             List<WarehouseListDTO> result = new List<WarehouseListDTO>();
             foreach (Warehouse item in list)
             {
@@ -22,17 +22,18 @@ namespace API.Services
                     WarehouseId = item.WarehouseId,
                     WarehouseName = item.WarehouseName,
                     WarehouseKeeperId = item.WarehouseKeeperid,
+                    WareWarehouseKeeperName = item.WarehouseKeeper == null ? null : item.WarehouseKeeper.Lastname + " " + item.WarehouseKeeper.Firstname,
                     WarehouseAddress = item.WarehouseAddress
                 };
                 result.Add(DTO);
             }
             return result;
         }
-        public async Task<ResponseDTO<PagedResultDTO<WarehouseListDTO>?>> List(string? name, int page)
+        public async Task<ResponseDTO<PagedResultDTO<WarehouseListDTO>?>> ListPaged(string? name, int page)
         {
             try
             {
-                List<WarehouseListDTO> list = await getList(name, page);
+                List<WarehouseListDTO> list = await getListPaged(name, page);
                 int RowCount = await daoWarehouse.getRowCount(name);
                 PagedResultDTO<WarehouseListDTO> result = new PagedResultDTO<WarehouseListDTO>(page, RowCount, PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE, list);
                 return new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(result, string.Empty);
@@ -40,6 +41,36 @@ namespace API.Services
             catch (Exception ex)
             {
                 return new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }
+        }
+        private async Task<List<WarehouseListDTO>> getListAll()
+        {
+            List<Warehouse> list = await daoWarehouse.getListAll();
+            List<WarehouseListDTO> result = new List<WarehouseListDTO>();
+            foreach (Warehouse item in list)
+            {
+                WarehouseListDTO DTO = new WarehouseListDTO()
+                {
+                    WarehouseId = item.WarehouseId,
+                    WarehouseName = item.WarehouseName,
+                    WarehouseKeeperId = item.WarehouseKeeperid,
+                    WareWarehouseKeeperName = item.WarehouseKeeper == null ? null : item.WarehouseKeeper.Lastname + " " + item.WarehouseKeeper.Firstname,
+                    WarehouseAddress = item.WarehouseAddress
+                };
+                result.Add(DTO);
+            }
+            return result;
+        }
+        public async Task<ResponseDTO<List<WarehouseListDTO>?>> ListAll()
+        {
+            try
+            {
+                List<WarehouseListDTO> list = await getListAll();
+                return new ResponseDTO<List<WarehouseListDTO>?>(list, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<List<WarehouseListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
 
