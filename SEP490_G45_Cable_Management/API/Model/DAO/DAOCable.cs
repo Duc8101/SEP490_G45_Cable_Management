@@ -23,8 +23,8 @@ namespace API.Model.DAO
                 query = query.Where(c => c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim())
                 || c.Code.ToLower().Contains(filter.ToLower().Trim()) || c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()));
             }
-            // if not export and choose warehouse
-            if (isExportedToUse == false && WarehouseID != null)
+            // if choose warehouse
+            if (WarehouseID != null)
             {
                 query = query.Where(c => c.WarehouseId == WarehouseID);
             }
