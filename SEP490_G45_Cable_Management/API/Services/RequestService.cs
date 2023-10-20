@@ -616,7 +616,7 @@ namespace API.Services
                 }
                 if (!request.Status.Equals(RequestConst.STATUS_PENDING))
                 {
-                    return new ResponseDTO<bool>(false, "Yêu cầu đã được phê duyệt", (int) HttpStatusCode.Conflict);
+                    return new ResponseDTO<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị hủy", (int) HttpStatusCode.Conflict);
                 }
                 if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT)
                 {

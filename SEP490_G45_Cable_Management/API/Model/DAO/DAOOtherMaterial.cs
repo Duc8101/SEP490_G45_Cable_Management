@@ -78,8 +78,8 @@ namespace API.Model.DAO
 
         public async Task<List<OtherMaterial>> getList(int CategoryID)
         {
-            return await context.OtherMaterials.Include(o => o.OtherMaterialsCategory).Where(o => o.OtherMaterialsCategoryId == CategoryID).ToListAsync();
-
+            return await context.OtherMaterials.Include(o => o.OtherMaterialsCategory)
+                .Where(o => o.OtherMaterialsCategoryId == CategoryID).ToListAsync();
         }
 
         public async Task<bool> isExist(OtherMaterialsCreateUpdateDTO DTO)
