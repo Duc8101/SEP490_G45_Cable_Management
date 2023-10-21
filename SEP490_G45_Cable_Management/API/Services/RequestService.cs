@@ -85,13 +85,13 @@ namespace API.Services
             return new ResponseDTO<bool>(true, string.Empty);
         }
         // check material valid when create request export
-        private async Task<ResponseDTO<bool>> isMaterialValid(List<OtherMaterialsExportDTO> list)
+        private async Task<ResponseDTO<bool>> isMaterialValid(List<OtherMaterialsExportCancelInsideDTO> list)
         {
             if (list.Count == 0)
             {
                 return new ResponseDTO<bool>(true, string.Empty);
             }
-            foreach (OtherMaterialsExportDTO export in list)
+            foreach (OtherMaterialsExportCancelInsideDTO export in list)
             {
                 OtherMaterial? material = await daoOtherMaterial.getOtherMaterial(export.OtherMaterialsId);
                 // if not found
@@ -128,11 +128,11 @@ namespace API.Services
                 }
             }
         }
-        private async Task CreateRequestMaterial(List<OtherMaterialsExportDTO> list, Guid RequestID)
+        private async Task CreateRequestMaterial(List<OtherMaterialsExportCancelInsideDTO> list, Guid RequestID)
         {
             if (list.Count > 0)
             {
-                foreach(OtherMaterialsExportDTO item in list)
+                foreach(OtherMaterialsExportCancelInsideDTO item in list)
                 {
                     RequestOtherMaterial request = new RequestOtherMaterial()
                     {

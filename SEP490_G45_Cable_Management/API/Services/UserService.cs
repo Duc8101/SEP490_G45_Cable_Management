@@ -27,17 +27,15 @@ namespace API.Services
                 // if username or password incorrect
                 if (user == null)
                 {
-                    return new ResponseDTO<string?>(null, "Username or password wrong", (int) HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<string?>(null, "Username or password wrong", (int) HttpStatusCode.Conflict);
                 }
                 string AccessToken = getAccessToken(user);
                 return new ResponseDTO<string?>(AccessToken, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<string?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
-            }
-           
-        }
+                return new ResponseDTO<string?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }        }
 
         private string getAccessToken(User user)
         {

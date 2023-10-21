@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace DataAccess.DTO.CableDTO
 {
-    public class CableExportDTO
+    public class CableExportDTO : CableCancelInsideDTO
     {
-        public int WarehouseId { get; set; }
-        public Guid CableId { get; set; }
         public int StartPoint { get; set; }
         public int EndPoint { get; set; }
     }

@@ -27,11 +27,12 @@ namespace DataAccess.Entity
         public string NodeNumberSign { get; set; } = null!;
         public string? Note { get; set; }
         public int NumberOrder { get; set; }
-        public Guid? RouteId { get; set; }
+        //public Guid? RouteId { get; set; }
+        public Guid RouteId { get; set; }
         public string? Status { get; set; }
         public string? MaterialCategory { get; set; }
-
-        public virtual Route? Route { get; set; }
+        //public virtual Route? Route { get; set; }
+        public virtual Route Route { get; set; } = null!;
         public virtual ICollection<NodeCable> NodeCables { get; set; }
         public virtual ICollection<NodeMaterialCategory> NodeMaterialCategories { get; set; }
         public virtual ICollection<NodeMaterial> NodeMaterials { get; set; }
