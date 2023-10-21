@@ -614,6 +614,10 @@ namespace API.Services
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int) HttpStatusCode.NotFound);
                 }
+                if(request.RequestCategoryId != RequestCategoryConst.CATEGORY_DELIVER && request.Issue == null)
+                {
+                    return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int) HttpStatusCode.NotFound);
+                }
                 if (!request.Status.Equals(RequestConst.STATUS_PENDING))
                 {
                     return new ResponseDTO<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị hủy", (int) HttpStatusCode.Conflict);
@@ -637,16 +641,20 @@ namespace API.Services
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int) HttpStatusCode.NotFound);
                 }
+                if (request.RequestCategoryId != RequestCategoryConst.CATEGORY_DELIVER && request.Issue == null)
+                {
+                    return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
+                }
                 if (!request.Status.Equals(RequestConst.STATUS_PENDING))
                 {
-                    return new ResponseDTO<bool>(false, "Yêu cầu đã được phê duyệt", (int) HttpStatusCode.Conflict);
+                    return new ResponseDTO<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị hủy", (int) HttpStatusCode.Conflict);
                 }
                 // ------------------- update request ---------------
                 request.ApproverId = RejectorID;
                 request.Status = RequestConst.STATUS_REJECTED;
                 request.UpdateAt = DateTime.Now;
                 await daoRequest.UpdateRequest(request);
-                return new ResponseDTO<bool>(false, string.Empty, (int) HttpStatusCode.Conflict);
+                return new ResponseDTO<bool>(true, string.Empty);
             }catch(Exception ex)
             {
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
