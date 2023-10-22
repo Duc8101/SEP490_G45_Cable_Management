@@ -12,7 +12,7 @@ namespace API.Services
         private readonly DAONode daoNode = new DAONode();
         private async Task<List<NodeListDTO>> getList(Guid RouteID)
         {
-            List<Node> list = await daoNode.getList(RouteID);
+            List<Node> list = await daoNode.getListNotDeleted(RouteID);
             List<NodeListDTO> result = new List<NodeListDTO>();
             foreach (Node node in list)
             {

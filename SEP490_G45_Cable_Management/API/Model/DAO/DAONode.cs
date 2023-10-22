@@ -5,7 +5,7 @@ namespace API.Model.DAO
 {
     public class DAONode : BaseDAO
     {
-        public async Task<List<Node>> getList(Guid RouteID)
+        public async Task<List<Node>> getListNotDeleted(Guid RouteID)
         {
             return await context.Nodes.Include(n => n.NodeCables).ThenInclude(n => n.Cable).ThenInclude(n => n.CableCategory)
                 .Include(n => n.NodeMaterials).ThenInclude(n => n.OtherMaterials).ThenInclude(n => n.OtherMaterialsCategory)
