@@ -19,6 +19,5 @@ namespace DataAccess.DTO.NodeDTO
         public int NumberOrder { get; set; }
         public string? Note { get; set; }
 
-
     }
 }
