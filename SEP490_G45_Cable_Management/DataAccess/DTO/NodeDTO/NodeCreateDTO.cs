@@ -14,8 +14,7 @@ namespace DataAccess.DTO.NodeDTO
         public float Longitude { get; set; }
         public float Latitude { get; set; }
         public string? Status { get; set; }
-        //public Guid? RouteId { get; set; }
-        public Guid RouteId { get; set; }
+        public Guid? RouteId { get; set; }
         public int NumberOrder { get; set; }
         public string? Note { get; set; }
 

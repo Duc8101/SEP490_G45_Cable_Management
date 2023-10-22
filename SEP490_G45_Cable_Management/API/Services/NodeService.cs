@@ -46,5 +46,88 @@ namespace API.Services
                 return new ResponseDTO<List<NodeListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
+        private async Task UpdateNodeDeleted(Guid RouteID)
+        {
+            List<Node> listDeleted = await daoNode.getListDeleted(RouteID);
+            if (listDeleted.Count > 0)
+            {
+                foreach (Node node in listDeleted)
+                {
+                    node.RouteId = null;
+                    await daoNode.UpdateNode(node);
+                }
+            }
+        }
+        public async Task<ResponseDTO<bool>> Create(NodeCreateDTO DTO)
+        {
+            if (DTO.RouteId == null)
+            {
+                return new ResponseDTO<bool>(false, "Bạn chưa chọn tuyến", (int) HttpStatusCode.Conflict);
+            }
+            try
+            {
+                // update node deleted
+                await UpdateNodeDeleted(DTO.RouteId.Value);
+                // --------------------------- update list node order by ---------------------------
+                List<Node> list = await daoNode.getListNodeOrderByNumberOrder(DTO.RouteId.Value);
+                if (list.Count > 0)
+                {
+                    for(int i = 0 ; i < list.Count; i++)
+                    {
+                        // if number order not correct
+                        if (list[i].NumberOrder != (i + 1))
+                        {
+                            // if find point position
+                            if (DTO.NumberOrder - 1 == list[i].NumberOrder)
+                            {
+                                list[i].NumberOrder = i + 1;
+                                DTO.NumberOrder = list[i].NumberOrder + 1;
+                            }
+                            else
+                            {
+                                list[i].NumberOrder = i + 1;
+                            }
+                            await daoNode.UpdateNode(list[i]);
+                        }
+                    }
+                }
+                list = await daoNode.getListNodeOrderByNumberOrder(DTO.RouteId.Value);
+                if (list.Count > 0)
+                {
+                    foreach (Node item in list)
+                    {
+                        if(item.NumberOrder >= DTO.NumberOrder)
+                        {
+                            item.NumberOrder++;
+                            await daoNode.UpdateNode(item);
+                        }
+                    }
+                }
+                // --------------------------- create node ---------------------------
+                Node node = new Node()
+                {
+                    Id = Guid.NewGuid(),
+                    Longitude = DTO.Longitude,
+                    Latitude = DTO.Latitude,
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
+                    IsDeleted = false,
+                    Address = DTO.Address == null || DTO.Address.Trim().Length == 0 ? null : DTO.Address.Trim(),
+                    NodeCode = DTO.NodeCode.Trim(),
+                    NodeNumberSign = DTO.NodeNumberSign.Trim(),
+                    Note = DTO.Note == null || DTO.Note.Trim().Length == 0 ? null : DTO.Note.Trim(),
+                    NumberOrder = DTO.NumberOrder,
+                    RouteId = DTO.RouteId,
+                    Status = DTO.Status == null || DTO.Status.Trim().Length == 0 ? null : DTO.Status.Trim(),
+                };
+                await daoNode.CreateNode(node);
+                return new ResponseDTO<bool>(true , "Thêm thành công");
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }
+            
+        }
     }
 }

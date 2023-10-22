@@ -29,7 +29,7 @@ namespace API.Model.DAO
             {
                 query = query.Where(t => t.Cable.CableCategory.CableCategoryId == CableCategoryID);
             }
-            // if choose ware house
+            // if choose warehouse
             if (WarehouseID != null)
             {
                 query = query.Where(t => t.Transaction.WarehouseId == WarehouseID);
