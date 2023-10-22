@@ -27,7 +27,8 @@ namespace DataAccess.Entity
         public int? WarehouseId { get; set; }
         public int MaxQuantity { get; set; }
         public int MinQuantity { get; set; }
-        public string? Status { get; set; }
+        //public string? Status { get; set; }
+        public string Status { get; set; } = null!;
         public int OtherMaterialsCategoryId { get; set; }
 
         public virtual OtherMaterialsCategory OtherMaterialsCategory { get; set; } = null!;

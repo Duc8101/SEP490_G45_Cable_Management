@@ -62,7 +62,7 @@ namespace API.Services
                 return new ResponseDTO<bool>(false, "Đơn vị không được để trống", (int)HttpStatusCode.Conflict);
             }
 
-            if (DTO.Status == null || DTO.Status.Trim().Length == 0)
+            if (DTO.Status.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Trạng thái không được để trống", (int) HttpStatusCode.Conflict);
             }

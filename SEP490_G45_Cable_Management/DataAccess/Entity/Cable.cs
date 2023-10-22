@@ -22,7 +22,8 @@ namespace DataAccess.Entity
         public int? YearOfManufacture { get; set; }
         //public string? Code { get; set; }
         public string Code { get; set; } = null!;
-        public string? Status { get; set; }
+        //public string? Status { get; set; }
+        public string Status { get; set; } = null!;
         public Guid CreatorId { get; set; }
         public Guid? CableParentId { get; set; }
         public DateTime CreatedAt { get; set; }

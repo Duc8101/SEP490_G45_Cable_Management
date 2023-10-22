@@ -51,7 +51,7 @@ namespace API.Model.DAO
 
         public async Task<bool> isExist(CableCreateUpdateDTO DTO)
         {
-            return await context.Cables.AnyAsync(c => c.IsDeleted == false && c.Code == DTO.Code.Trim() && c.Status == (DTO.Status == null || DTO.Status.Length == 0 ? null : DTO.Status.Trim())
+            return await context.Cables.AnyAsync(c => c.IsDeleted == false && c.Code == DTO.Code.Trim() && c.Status == DTO.Status.Trim()
             && c.SupplierId == DTO.SupplierId && c.StartPoint == DTO.StartPoint && c.EndPoint == DTO.EndPoint 
             && c.YearOfManufacture == DTO.YearOfManufacture);
         }

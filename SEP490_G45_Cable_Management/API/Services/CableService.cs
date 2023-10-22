@@ -72,7 +72,7 @@ namespace API.Services
                     Length = DTO.EndPoint - DTO.StartPoint,
                     YearOfManufacture = DTO.YearOfManufacture,
                     Code = DTO.Code.Trim(),
-                    Status = DTO.Status == null || DTO.Status.Trim().Length == 0 ? null : DTO.Status.Trim(),
+                    Status = DTO.Status.Trim(),
                     CreatorId = CreatorID,
                     CreatedAt = DateTime.Now,
                     UpdateAt = DateTime.Now,
@@ -106,7 +106,7 @@ namespace API.Services
                 cable.Length = DTO.EndPoint - DTO.StartPoint;
                 cable.YearOfManufacture = DTO.YearOfManufacture;
                 cable.Code = DTO.Code.Trim();
-                cable.Status = DTO.Status == null || DTO.Status.Trim().Length == 0 ? null : DTO.Status.Trim();
+                cable.Status = DTO.Status.Trim();
                 cable.CableCategoryId = DTO.CableCategoryId;
                 cable.UpdateAt = DateTime.Now;
                 await daoCable.UpdateCable(cable);
