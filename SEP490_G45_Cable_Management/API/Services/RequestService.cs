@@ -626,7 +626,7 @@ namespace API.Services
                 {
                     return await ApproveRequestExport(ApproverID, request, ApproverName);
                 }
-                return new ResponseDTO<bool>(false, string.Empty, (int) HttpStatusCode.Conflict);
+                return new ResponseDTO<bool>(false, "Không hỗ trợ yêu cầu này", (int) HttpStatusCode.Conflict);
             }catch(Exception ex)
             {
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);

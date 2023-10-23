@@ -3,8 +3,10 @@ using DataAccess.DTO;
 using DataAccess.DTO.NodeDTO;
 using DataAccess.Entity;
 using MimeKit.Cryptography;
+using Org.BouncyCastle.Utilities.Net;
 using System.Collections.Generic;
 using System.Net;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace API.Services
 {
@@ -129,6 +131,48 @@ namespace API.Services
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
             
+        }
+        public async Task<ResponseDTO<bool>> Update(Guid NodeID, NodeUpdateDTO DTO)
+        {
+            try
+            {
+                Node? node = await daoNode.getNode(NodeID);
+                if (node == null)
+                {
+                    return new ResponseDTO<bool>(false, "Không tìm thấy điểm", (int) HttpStatusCode.NotFound);
+                }
+                node.Longitude = DTO.Longitude;
+                node.Latitude = DTO.Latitude;
+                node.UpdateAt = DateTime.Now;
+                node.Address = DTO.Address == null || DTO.Address.Trim().Length == 0 ? null : DTO.Address.Trim();
+                node.NodeCode = DTO.NodeCode.Trim();
+                node.NodeNumberSign = DTO.NodeNumberSign.Trim();
+                node.Note = DTO.Note == null || DTO.Note.Trim().Length == 0 ? null : DTO.Note.Trim();
+                node.Status = DTO.Status == null || DTO.Status.Trim().Length == 0 ? null : DTO.Status.Trim();
+                await daoNode.UpdateNode(node);
+                return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }
+        }
+        public async Task<ResponseDTO<bool>> Delete(Guid NodeID)
+        {
+            try
+            {
+                Node? node = await daoNode.getNode(NodeID);
+                if (node == null)
+                {
+                    return new ResponseDTO<bool>(false, "Không tìm thấy điểm", (int)HttpStatusCode.NotFound);
+                }
+                await daoNode.DeleteNode(node);
+                return new ResponseDTO<bool>(true, "Xóa thành công");
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+            }
         }
     }
 }

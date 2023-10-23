@@ -34,7 +34,31 @@ namespace API.Controllers
             {
                 return await service.Create(DTO);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+        }
+
+        [HttpPut("{NodeID}")]
+        [Authorize]
+        public async Task<ResponseDTO<bool>> Update(Guid NodeID, NodeUpdateDTO DTO)
+        {
+            // if admin or leader
+            if (isAdmin() || isLeader())
+            {
+                return await service.Update(NodeID, DTO);
+            }
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+        }
+
+        [HttpDelete("{NodeID}")]
+        [Authorize]
+        public async Task<ResponseDTO<bool>> Delete(Guid NodeID)
+        {
+            // if admin or leader
+            if (isAdmin() || isLeader())
+            {
+                return await service.Delete(NodeID);
+            }
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }
     }
 }
