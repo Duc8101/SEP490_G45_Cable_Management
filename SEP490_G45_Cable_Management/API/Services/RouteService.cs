@@ -33,7 +33,7 @@ namespace API.Services
 
         public async Task<ResponseDTO<bool>> Create(RouteCreateDTO DTO)
         {
-            if(DTO.RouteName.Trim().Length == 0)
+            if(DTO.RouteName == null || DTO.RouteName.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Tên tuyến không được để trống", (int) HttpStatusCode.Conflict);
             }
