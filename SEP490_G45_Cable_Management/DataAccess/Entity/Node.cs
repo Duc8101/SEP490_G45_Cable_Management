@@ -21,8 +21,8 @@ namespace DataAccess.Entity
         public DateTime UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
         public string? Address { get; set; }
-        //public string? NodeCode { get; set; }
-        //public string? NodeNumberSign { get; set; }
+        /*public string? NodeCode { get; set; }
+        public string? NodeNumberSign { get; set; }*/
         public string NodeCode { get; set; } = null!;
         public string NodeNumberSign { get; set; } = null!;
         public string? Note { get; set; }
@@ -30,8 +30,8 @@ namespace DataAccess.Entity
         public Guid? RouteId { get; set; }
         public string? Status { get; set; }
         public string? MaterialCategory { get; set; }
-        //public virtual Route? Route { get; set; }
-        public virtual Route Route { get; set; } = null!;
+
+        public virtual Route? Route { get; set; }
         public virtual ICollection<NodeCable> NodeCables { get; set; }
         public virtual ICollection<NodeMaterialCategory> NodeMaterialCategories { get; set; }
         public virtual ICollection<NodeMaterial> NodeMaterials { get; set; }

@@ -2,6 +2,7 @@
 using DataAccess.DTO;
 using DataAccess.DTO.NodeDTO;
 using DataAccess.Entity;
+using MimeKit.Cryptography;
 using System.Collections.Generic;
 using System.Net;
 
@@ -12,7 +13,7 @@ namespace API.Services
         private readonly DAONode daoNode = new DAONode();
         private async Task<List<NodeListDTO>> getList(Guid RouteID)
         {
-            List<Node> list = await daoNode.getList(RouteID);
+            List<Node> list = await daoNode.getListNotDeleted(RouteID);
             List<NodeListDTO> result = new List<NodeListDTO>();
             foreach (Node node in list)
             {
@@ -46,6 +47,18 @@ namespace API.Services
                 return new ResponseDTO<List<NodeListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
+        private async Task UpdateNodeDeleted(Guid RouteID)
+        {
+            List<Node> list = await daoNode.getListDeleted(RouteID);
+            if(list.Count > 0)
+            {
+                foreach(Node node in list)
+                {
+                    node.RouteId = null;
+                    await daoNode.UpdateNode(node);
+                }
+            }
+        }
         public async Task<ResponseDTO<bool>> Create(NodeCreateDTO DTO)
         {
             if (DTO.RouteId == null)
@@ -54,6 +67,8 @@ namespace API.Services
             }
             try
             {
+                // update bode deleted
+                await UpdateNodeDeleted(DTO.RouteId.Value);
                 // --------------------------- update list node order by ---------------------------
                 List<Node> list = await daoNode.getListNodeOrderByNumberOrder(DTO.RouteId.Value);
                 if (list.Count > 0)
