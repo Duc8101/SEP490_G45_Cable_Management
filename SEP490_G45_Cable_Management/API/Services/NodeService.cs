@@ -12,7 +12,7 @@ namespace API.Services
         private readonly DAONode daoNode = new DAONode();
         private async Task<List<NodeListDTO>> getList(Guid RouteID)
         {
-            List<Node> list = await daoNode.getListNotDeleted(RouteID);
+            List<Node> list = await daoNode.getList(RouteID);
             List<NodeListDTO> result = new List<NodeListDTO>();
             foreach (Node node in list)
             {
@@ -46,18 +46,6 @@ namespace API.Services
                 return new ResponseDTO<List<NodeListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
-        private async Task UpdateNodeDeleted(Guid RouteID)
-        {
-            List<Node> listDeleted = await daoNode.getListDeleted(RouteID);
-            if (listDeleted.Count > 0)
-            {
-                foreach (Node node in listDeleted)
-                {
-                    node.RouteId = null;
-                    await daoNode.UpdateNode(node);
-                }
-            }
-        }
         public async Task<ResponseDTO<bool>> Create(NodeCreateDTO DTO)
         {
             if (DTO.RouteId == null)
@@ -66,8 +54,6 @@ namespace API.Services
             }
             try
             {
-                // update node deleted
-                await UpdateNodeDeleted(DTO.RouteId.Value);
                 // --------------------------- update list node order by ---------------------------
                 List<Node> list = await daoNode.getListNodeOrderByNumberOrder(DTO.RouteId.Value);
                 if (list.Count > 0)

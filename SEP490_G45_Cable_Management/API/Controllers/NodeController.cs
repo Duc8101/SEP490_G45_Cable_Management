@@ -25,7 +25,7 @@ namespace API.Controllers
             return new ResponseDTO<List<NodeListDTO>?>(null , "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }
 
-       /* [HttpPost]
+        [HttpPost]
         [Authorize]
         public async Task<ResponseDTO<bool>> Create(NodeCreateDTO DTO)
         {
@@ -34,7 +34,7 @@ namespace API.Controllers
             {
                 return await service.Create(DTO);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
-        } */
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+        }
     }
 }
