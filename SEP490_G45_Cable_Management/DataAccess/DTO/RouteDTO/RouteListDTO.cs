@@ -8,6 +8,6 @@ namespace DataAccess.DTO.RouteDTO
 {
     public class RouteListDTO : RouteCreateDTO
     {
-        public Guid? RouteId { get; set; }
+        public Guid RouteId { get; set; }
     }
 }

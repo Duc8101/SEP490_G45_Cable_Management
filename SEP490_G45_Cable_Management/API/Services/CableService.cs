@@ -67,6 +67,7 @@ namespace API.Services
                 {
                     CableId = Guid.NewGuid(),
                     WarehouseId = DTO.WarehouseId,
+                    SupplierId = DTO.SupplierId,
                     StartPoint = DTO.StartPoint,
                     EndPoint = DTO.EndPoint,
                     Length = DTO.EndPoint - DTO.StartPoint,
@@ -101,6 +102,7 @@ namespace API.Services
                     return new ResponseDTO<bool>(false, "Không tìm thấy cáp", (int) HttpStatusCode.NotFound);
                 }
                 cable.WarehouseId = DTO.WarehouseId;
+                cable.SupplierId = DTO.SupplierId;
                 cable.StartPoint = DTO.StartPoint;
                 cable.EndPoint = DTO.EndPoint;
                 cable.Length = DTO.EndPoint - DTO.StartPoint;
