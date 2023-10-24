@@ -19,7 +19,7 @@ namespace API.Model.DAO
             if (filter != null && filter.Trim().Length != 0)
             {
                 query = query.Where(t => (t.Warehouse != null && t.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim()))
-                || (t.TransactionCategoryName != null && t.TransactionCategoryName.Contains(filter.ToLower().Trim())));
+                || t.TransactionCategoryName.Contains(filter.ToLower().Trim()));
             }
             if (WareHouseID != null)
             {
@@ -48,6 +48,12 @@ namespace API.Model.DAO
         public async Task CreateTransactionHistory(TransactionHistory history)
         {
             await context.TransactionHistories.AddAsync(history);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task UpdateTransactionHistory(TransactionHistory history)
+        {
+             context.TransactionHistories.Update(history);
             await context.SaveChangesAsync();
         }
     }

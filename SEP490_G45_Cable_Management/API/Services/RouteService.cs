@@ -2,17 +2,19 @@
 using DataAccess.DTO.RouteDTO;
 using System.Net;
 using API.Model.DAO;
+using System.Xml.Linq;
+using DataAccess.Const;
 
 namespace API.Services
 {
     public class RouteService
     {
         private readonly DAORoute daoRoute = new DAORoute();
-        public async Task<ResponseDTO<List<RouteListDTO>?>> List(string? name)
+        public async Task<ResponseDTO<List<RouteListDTO>?>> ListAll(string? name)
         {
             try
             {
-                List<DataAccess.Entity.Route> list = await daoRoute.getList(name);
+                List<DataAccess.Entity.Route> list = await daoRoute.getListAll(name);
                 List<RouteListDTO> result = new List<RouteListDTO>();
                 foreach (DataAccess.Entity.Route route in list)
                 {
@@ -28,6 +30,31 @@ namespace API.Services
             catch (Exception ex)
             {
                 return new ResponseDTO<List<RouteListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }
+        }
+        
+        public async Task<ResponseDTO<PagedResultDTO<RouteListDTO>?>> ListPaged(int page)
+        {
+            try
+            {
+                List<DataAccess.Entity.Route> list = await daoRoute.getListPaged(page);
+                List<RouteListDTO> DTOs = new List<RouteListDTO>();
+                foreach (DataAccess.Entity.Route route in list)
+                {
+                    RouteListDTO DTO = new RouteListDTO()
+                    {
+                        RouteId = route.RouteId,
+                        RouteName = route.RouteName,
+                    };
+                    DTOs.Add(DTO);
+                }
+                int RowCount = await daoRoute.getRowCount();
+                PagedResultDTO<RouteListDTO> result = new PagedResultDTO<RouteListDTO>(page, RowCount,PageSizeConst.MAX_ROUTE_LIST_IN_PAGE,DTOs);
+                return new ResponseDTO<PagedResultDTO<RouteListDTO>?>(result, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<PagedResultDTO<RouteListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
 

@@ -1,6 +1,8 @@
 ﻿using API.Services;
 using DataAccess.DTO;
+using DataAccess.DTO.CableDTO;
 using DataAccess.DTO.RequestDTO;
+using DataAccess.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,10 +38,10 @@ namespace API.Controllers
         }
 
         [HttpPost("Export")]
-        [Authorize]
+        //[Authorize]
         public async Task<ResponseDTO<bool>> Create(RequestCreateExportDTO DTO)
         {
-            // if warehouse keeper or staff
+            /*// if warehouse keeper or staff
             if (isWarehouseKeeper() || isStaff())
             {
                 string? CreatorID = getUserID();
@@ -49,14 +51,15 @@ namespace API.Controllers
                 }
                 return await service.CreateRequestExport(DTO, Guid.Parse(CreatorID));
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);*/
+            return await service.CreateRequestExport(DTO, Guid.Parse("CAB3961E-5AE6-4F12-A1A6-72103DB8D159"));
         }
 
         [HttpPut("{RequestID}")]
-        [Authorize]
+       // [Authorize]
         public async Task<ResponseDTO<bool>> Approve(Guid RequestID)
         {
-            // if admin
+            /*// if admin
             if (isAdmin())
             {
                 string? ApproverID = getUserID();
@@ -72,7 +75,8 @@ namespace API.Controllers
                 }
                 return await service.Approve(RequestID, Guid.Parse(ApproverID), LastName + " " + FirstName);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);*/
+            return await service.Approve(RequestID, Guid.Parse("BD2884E7-F136-4C16-8C16-F088EED5B7D0"), "Phạm Minh Hiếu");
         }
 
         [HttpPut("{RequestID}")]
@@ -90,6 +94,12 @@ namespace API.Controllers
                 return await service.Reject(RequestID, Guid.Parse(RejectorID));
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+        }
+
+        [HttpPut("{RequestID}")]
+        public async Task<ResponseDTO<List<CableListDTO>>> Test(Guid RequestID)
+        {
+            return await service.Test(RequestID);
         }
     }
 }

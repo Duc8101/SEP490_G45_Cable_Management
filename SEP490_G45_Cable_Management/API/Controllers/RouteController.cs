@@ -14,16 +14,28 @@ namespace API.Controllers
     {
         private readonly RouteService service = new RouteService();
 
-        [HttpGet]
+        [HttpGet("All")]
         [Authorize]
         public async Task<ResponseDTO<List<RouteListDTO>?>> List(string? name)
         {
             // if admin, leader
             if (isAdmin() || isLeader())
             {
-                return await service.List(name);
+                return await service.ListAll(name);
             }
             return new ResponseDTO<List<RouteListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+        }
+
+        [HttpGet("Paged")]
+        [Authorize]
+        public async Task<ResponseDTO<PagedResultDTO<RouteListDTO>?>> List(int page = 1)
+        {
+            // if admin, leader
+            if (isAdmin() || isLeader())
+            {
+                return await service.ListPaged(page);
+            }
+            return new ResponseDTO<PagedResultDTO<RouteListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPost]

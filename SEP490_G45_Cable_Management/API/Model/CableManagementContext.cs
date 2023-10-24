@@ -17,6 +17,7 @@ namespace API.Model
             : base(options)
         {
         }
+
         public virtual DbSet<Cable> Cables { get; set; } = null!;
         public virtual DbSet<CableCategory> CableCategories { get; set; } = null!;
         public virtual DbSet<Issue> Issues { get; set; } = null!;
@@ -566,4 +567,5 @@ namespace API.Model
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
+
 }
