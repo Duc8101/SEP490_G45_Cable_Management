@@ -116,7 +116,7 @@ namespace API.Model.DAO
 
         public async Task<Cable?> getCable(Guid CableID, int StartPoint, int EndPoint)
         {
-            return await context.Cables.Where(c => c.CableParentId == CableID && c.StartPoint <= StartPoint && c.EndPoint >= EndPoint).FirstOrDefaultAsync();
+            return await context.Cables.Where(c => c.CableParentId == CableID && c.StartPoint <= StartPoint && c.EndPoint >= EndPoint && c.IsDeleted == false).FirstOrDefaultAsync();
         }
 
     }

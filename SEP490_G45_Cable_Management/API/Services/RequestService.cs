@@ -234,7 +234,7 @@ namespace API.Services
                     YearOfManufacture = cable.YearOfManufacture,
                     Code = cable.Code,
                     Status = cable.Status,
-                    WarehouseId = cable.WarehouseId,
+                    WarehouseId = null,
                     StartPoint = itemStartPoint,
                     EndPoint = itemEndPoint,
                     Length = itemEndPoint - itemStartPoint,
@@ -301,7 +301,7 @@ namespace API.Services
                     YearOfManufacture = cable.YearOfManufacture,
                     Code = cable.Code,
                     Status = cable.Status,
-                    WarehouseId = cable.WarehouseId,
+                    WarehouseId = null,
                     StartPoint = itemStartPoint,
                     EndPoint = itemEndPoint,
                     Length = itemEndPoint - itemStartPoint,
@@ -347,7 +347,7 @@ namespace API.Services
                     YearOfManufacture = cable.YearOfManufacture,
                     Code = cable.Code,
                     Status = cable.Status,
-                    WarehouseId = cable.WarehouseId,
+                    WarehouseId = null,
                     StartPoint = itemStartPoint,
                     EndPoint = itemEndPoint,
                     Length = itemEndPoint - itemStartPoint,
@@ -459,11 +459,12 @@ namespace API.Services
             }
             // ------------------------------- request cable ------------------------------
             List<Cable> listCableExported = new List<Cable>();
+            List<int?> listWareHouseID = new List<int?>();
             if(requestCables.Count > 0)
             {
                 foreach(RequestCable item in requestCables)
                 {
-                    Cable? cable = item.Cable;
+                    Cable? cable;
                     if (item.Cable.IsDeleted)
                     {
                         cable = await daoCable.getCable(item.CableId, item.StartPoint, item.EndPoint);
@@ -477,12 +478,16 @@ namespace API.Services
                     {
                         if(item.StartPoint == cable.StartPoint && item.EndPoint == cable.EndPoint)
                         {
-                            listCableExported.Add(cable);
-                            int? WareHouseID = null;
-                            cable.IsExportedToUse = true;
-                            cable.UpdateAt = DateTime.Now;
-                            cable.WarehouseId = WareHouseID;
-                            await daoCable.UpdateCable(cable);
+                            Cable? update = await daoCable.getCable(cable.CableId);
+                            if(update != null)
+                            {
+                                update.IsExportedToUse = true;
+                                update.WarehouseId = null;
+                                update.UpdateAt = DateTime.Now;
+                                await daoCable.UpdateCable(update);
+                            }
+                            listCableExported.Add(item.Cable);
+                            listWareHouseID.Add(cable.WarehouseId);
                         }
                         else
                         {
@@ -493,11 +498,10 @@ namespace API.Services
                                 if(cut.IsExportedToUse)
                                 {
                                     listCableExported.Add(cut);
-                                    int? WareHouseID = null;
-                                    cut.WarehouseId = WareHouseID;
+                                    listWareHouseID.Add(cable.WarehouseId);
                                     await daoCable.CreateCable(cut);
                                     // update request cable
-                                    await daoRequestCable.DeleteRequestCable(item);
+                                    await daoRequestCable.RemoveRequestCable(item);
                                     RequestCable create = new RequestCable()
                                     {
                                         RequestId = item.RequestId,
@@ -540,7 +544,7 @@ namespace API.Services
             // ------------------------------- add transaction cable --------------------------------
             if (listCableExported.Count > 0)
             {
-                foreach (Cable cableExported in listCableExported)
+                for (int i = 0; i < listCableExported.Count; i++)
                 {
                     TransactionHistory history = new TransactionHistory()
                     {
@@ -550,7 +554,7 @@ namespace API.Services
                         CreatedAt = DateTime.Now,
                         UpdateAt = DateTime.Now,
                         IsDeleted = false,
-                        WarehouseId = cableExported.WarehouseId,
+                        WarehouseId = listWareHouseID[i],
                         RequestId = request.RequestId,
                         IssueId = request.IssueId,
                     };
@@ -558,10 +562,10 @@ namespace API.Services
                     TransactionCable transactionCable = new TransactionCable()
                     {
                         TransactionId = history.TransactionId,
-                        CableId = cableExported.CableId,
-                        StartPoint = cableExported.StartPoint,
-                        EndPoint = cableExported.EndPoint,
-                        Length = cableExported.Length,
+                        CableId = listCableExported[i].CableId,
+                        StartPoint = listCableExported[i].StartPoint,
+                        EndPoint = listCableExported[i].EndPoint,
+                        Length = listCableExported[i].Length,
                         CreatedAt = DateTime.Now,
                         UpdateAt = DateTime.Now,
                         IsDeleted = false
@@ -657,60 +661,6 @@ namespace API.Services
             {
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
-        }
-
-        public async Task<ResponseDTO<List<CableListDTO>>> Test(Guid RequestID)
-        {
-            List<RequestCable> requestCables = await daoRequestCable.getList(RequestID);
-            List<Cable> listCableExported = new List<Cable>();
-            foreach (RequestCable item in requestCables)
-            {
-                Cable? cable;
-                // if cable deleted
-                if (item.Cable.IsDeleted)
-                {
-                    cable = await daoCable.getCable(item.CableId, item.StartPoint, item.EndPoint);
-                }
-                else
-                {
-                    cable = item.Cable;
-                }
-                // if cable valid 
-                if (cable != null)
-                {
-                    // if start point, end point equal
-                    if (cable.StartPoint == item.StartPoint && cable.EndPoint == item.EndPoint)
-                    {
-                        listCableExported.Add(cable);
-                    }
-                    else
-                    {
-                        // ------------------------------ cut cable -----------------------------------
-                        List<Cable> cableCuts = getListCableCut(item.StartPoint, item.EndPoint, cable);
-                        foreach (Cable cut in cableCuts)
-                        {
-                            // if cable cut exported to use
-                            if (cut.IsExportedToUse)
-                            {
-                                listCableExported.Add(cut);
-                            }
-                        }
-                    }
-                }
-            }
-            List<CableListDTO> result = new List<CableListDTO>();
-            foreach (Cable item in listCableExported)
-            {
-                item.WarehouseId = null;
-                await daoCable.UpdateCable(item);
-                CableListDTO DTO = new CableListDTO()
-                {
-                    CableId = item.CableId,
-                    WarehouseId = item.WarehouseId,
-                };
-                result.Add(DTO);
-            }
-            return new ResponseDTO<List<CableListDTO>>(result, string.Empty);
         }
 
     }

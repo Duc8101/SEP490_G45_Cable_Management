@@ -52,7 +52,7 @@ namespace API.Controllers
                 return await service.CreateRequestExport(DTO, Guid.Parse(CreatorID));
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);*/
-            return await service.CreateRequestExport(DTO, Guid.Parse("CAB3961E-5AE6-4F12-A1A6-72103DB8D159"));
+            return await service.CreateRequestExport(DTO, Guid.Parse("6539CABD-B56A-4B9A-B996-18FD8629C973"));
         }
 
         [HttpPut("{RequestID}")]
@@ -76,7 +76,7 @@ namespace API.Controllers
                 return await service.Approve(RequestID, Guid.Parse(ApproverID), LastName + " " + FirstName);
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);*/
-            return await service.Approve(RequestID, Guid.Parse("BD2884E7-F136-4C16-8C16-F088EED5B7D0"), "Phạm Minh Hiếu");
+            return await service.Approve(RequestID, Guid.Parse("74E63E4D-C2B0-4553-B632-7E236E58254E"), "Phạm Minh Hiếu");
         }
 
         [HttpPut("{RequestID}")]
@@ -94,12 +94,6 @@ namespace API.Controllers
                 return await service.Reject(RequestID, Guid.Parse(RejectorID));
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
-        }
-
-        [HttpPut("{RequestID}")]
-        public async Task<ResponseDTO<List<CableListDTO>>> Test(Guid RequestID)
-        {
-            return await service.Test(RequestID);
         }
     }
 }

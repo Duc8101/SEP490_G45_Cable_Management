@@ -21,14 +21,7 @@ namespace API.Model.DAO
             return await context.RequestCables.Include(r => r.Cable).ThenInclude(r => r.CableCategory).Include(r => r.Cable)
                 .ThenInclude(r => r.Warehouse).Where(r => r.RequestId == RequestID).ToListAsync();
         }
-
-        public async Task UpdateRequestCable(RequestCable request)
-        {
-            context.RequestCables.Update(request);
-            await context.SaveChangesAsync();
-        }
-
-        public async Task DeleteRequestCable(RequestCable request)
+        public async Task RemoveRequestCable(RequestCable request)
         {
             context.RequestCables.Remove(request);
             await context.SaveChangesAsync();
