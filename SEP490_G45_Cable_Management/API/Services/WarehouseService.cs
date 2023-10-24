@@ -22,7 +22,7 @@ namespace API.Services
                     WarehouseId = item.WarehouseId,
                     WarehouseName = item.WarehouseName,
                     WarehouseKeeperId = item.WarehouseKeeperid,
-                    WareWarehouseKeeperName = item.WarehouseKeeper == null ? null : item.WarehouseKeeper.Lastname + " " + item.WarehouseKeeper.Firstname,
+                    WareWarehouseKeeperName = item.WarehouseKeeper == null ? "" : item.WarehouseKeeper.Lastname + " " + item.WarehouseKeeper.Firstname,
                     WarehouseAddress = item.WarehouseAddress
                 };
                 result.Add(DTO);

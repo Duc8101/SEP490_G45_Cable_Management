@@ -34,7 +34,7 @@ namespace API.Services
                     RequestName = item.RequestName,
                     Content = item.Content,
                     CreatorName = item.Creator.Lastname + " " + item.Creator.Firstname,
-                    ApproverName = item.Approver == null ? null : item.Approver.Lastname + " " + item.Approver.Firstname,
+                    ApproverName = item.Approver == null ? "" : item.Approver.Lastname + " " + item.Approver.Firstname,
                     Status = item.Status,
                     RequestCategoryName = item.RequestCategory.RequestCategoryName
                 };

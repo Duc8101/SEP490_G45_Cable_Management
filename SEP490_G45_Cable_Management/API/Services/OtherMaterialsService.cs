@@ -12,7 +12,7 @@ namespace API.Services
         private readonly DAOOtherMaterial daoOtherMaterials = new DAOOtherMaterial();
         private async Task<List<OtherMaterialsListDTO>> getList(string? filter, Guid? WareHouseKeeperID, int page)
         {
-            List<OtherMaterial> list = await daoOtherMaterials.getList(filter, WareHouseKeeperID, page);
+            List<OtherMaterial> list = await daoOtherMaterials.getListAll(filter, WareHouseKeeperID, page);
             List<OtherMaterialsListDTO> result = new List<OtherMaterialsListDTO>();
             foreach (OtherMaterial item in list)
             {
@@ -24,7 +24,7 @@ namespace API.Services
                     Code = item.Code,
                     WarehouseId = item.WarehouseId,
                     //SupplierName = item.Supplier.SupplierName,
-                    WarehouseName = item.Warehouse == null ? null : item.Warehouse.WarehouseName,
+                    WarehouseName = item.Warehouse == null ? "" : item.Warehouse.WarehouseName,
                     OtherMaterialsCategoryId = item.OtherMaterialsCategoryId,
                     OtherMaterialsCategoryName = item.OtherMaterialsCategory.OtherMaterialsCategoryName,
                     Status = item.Status,

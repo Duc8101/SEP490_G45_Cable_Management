@@ -24,7 +24,7 @@ namespace API.Services
                     SupplierId = supplier.SupplierId,
                     SupplierName = supplier.SupplierName,
                     Country = supplier.Country,
-                    SupplierDescription = supplier.SupplierDescription
+                    SupplierDescription = supplier.SupplierDescription == null ? "" : supplier.SupplierDescription,
                 };
                 result.Add(DTO);
             }
@@ -55,7 +55,7 @@ namespace API.Services
                     SupplierId = supplier.SupplierId,
                     SupplierName = supplier.SupplierName,
                     Country = supplier.Country,
-                    SupplierDescription = supplier.SupplierDescription
+                    SupplierDescription = supplier.SupplierDescription == null ? "" : supplier.SupplierDescription,
                 };
                 result.Add(DTO);
             }
@@ -105,7 +105,6 @@ namespace API.Services
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
-
         public async Task<ResponseDTO<bool>> Update(int SupplierID, SupplierCreateUpdateDTO DTO)
         {
             try

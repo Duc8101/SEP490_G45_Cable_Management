@@ -27,7 +27,7 @@ namespace API.Model.DAO
             }
             return query;
         }
-        public async Task<List<OtherMaterial>> getList(string? filter, Guid? WareHouseKeeperID, int page)
+        public async Task<List<OtherMaterial>> getListAll(string? filter, Guid? WareHouseKeeperID, int page)
         {
             IQueryable<OtherMaterial> query = getQuery(filter, WareHouseKeeperID);
             return await query.OrderByDescending(o => o.UpdateAt).Skip(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE)
@@ -76,7 +76,7 @@ namespace API.Model.DAO
             return await context.OtherMaterials.SingleOrDefaultAsync(o => o.OtherMaterialsId == ID && o.IsDeleted == false);
         }
 
-        public async Task<List<OtherMaterial>> getList(int CategoryID)
+        public async Task<List<OtherMaterial>> getListAll(int CategoryID)
         {
             return await context.OtherMaterials.Include(o => o.OtherMaterialsCategory)
                 .Where(o => o.OtherMaterialsCategoryId == CategoryID).ToListAsync();

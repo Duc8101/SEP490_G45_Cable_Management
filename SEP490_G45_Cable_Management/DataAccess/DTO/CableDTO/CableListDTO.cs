@@ -19,7 +19,7 @@ namespace DataAccess.DTO.CableDTO
         public int Length { get; set; }
         public int? YearOfManufacture { get; set; }
         public string? Code { get; set; }
-        public string? Status { get; set; } = null!;
+        public string Status { get; set; } = null!;
         public int CableCategoryId { get; set; }
         public string CableCategoryName { get; set; } = null!;
         public bool IsExportedToUse { get; set; }

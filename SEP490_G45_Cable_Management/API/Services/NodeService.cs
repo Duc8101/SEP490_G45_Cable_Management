@@ -27,7 +27,7 @@ namespace API.Services
                     Address = node.Address,
                     Longitude = node.Longitude,
                     Latitude = node.Latitude,
-                    Status = node.Status,
+                    Status = node.Status == null ? "" : node.Status, 
                     RouteId = node.RouteId,
                     NodeCables = (List<NodeCable>) node.NodeCables,
                     NodeMaterials = (List<NodeMaterial>) node.NodeMaterials,

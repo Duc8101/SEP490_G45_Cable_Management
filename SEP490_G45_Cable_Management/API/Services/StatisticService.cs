@@ -20,7 +20,7 @@ namespace API.Services
                 // if choose category
                 if (MaterialCategoryID != null)
                 {
-                    List<OtherMaterial> list = await daoOtherMaterial.getList(MaterialCategoryID.Value);
+                    List<OtherMaterial> list = await daoOtherMaterial.getListAll(MaterialCategoryID.Value);
                     // if not found
                     if (list.Count == 0)
                     {
