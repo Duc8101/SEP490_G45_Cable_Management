@@ -12,7 +12,7 @@ namespace API.Model.DAO
 {
     public class DAOOtherMaterial : BaseDAO
     {
-        private IQueryable<OtherMaterial> getQuery(string? filter, Guid? WareHouseKeeperID)
+        private IQueryable<OtherMaterial> getQuery(string? filter,int? WareHouseID, Guid? WareHouseKeeperID)
         {
             IQueryable<OtherMaterial> query = context.OtherMaterials.Include(o => o.OtherMaterialsCategory).Include(o => o.Supplier).Include(o => o.Warehouse)
                 .Where(o => o.IsDeleted == false);
@@ -21,28 +21,34 @@ namespace API.Model.DAO
                 query = query.Where(o => o.OtherMaterialsCategory.OtherMaterialsCategoryName.ToLower().Contains(filter.ToLower().Trim())
                 || (o.Warehouse != null && o.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim())));
             }
+            // if login as warehousekeeper
             if(WareHouseKeeperID != null)
             {
                 query = query.Where(o => o.Warehouse != null && o.Warehouse.WarehouseKeeperid == WareHouseKeeperID);
             }
+            // if choose warehouse
+            if(WareHouseID != null)
+            {
+                query = query.Where(o => o.WarehouseId == WareHouseID);
+            }
             return query;
         }
-        public async Task<List<OtherMaterial>> getListAll(string? filter, Guid? WareHouseKeeperID, int page)
+        public async Task<List<OtherMaterial>> getListAll(string? filter, int? WareHouseID, Guid? WareHouseKeeperID, int page)
         {
-            IQueryable<OtherMaterial> query = getQuery(filter, WareHouseKeeperID);
+            IQueryable<OtherMaterial> query = getQuery(filter, WareHouseID, WareHouseKeeperID);
             return await query.OrderByDescending(o => o.UpdateAt).Skip(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE)
                 .ToListAsync();
         }
 
-        public async Task<int> getRowCount(string? filter, Guid? WareHouseKeeperID)
+        public async Task<int> getRowCount(string? filter, int? WareHouseID, Guid? WareHouseKeeperID)
         {
-            IQueryable<OtherMaterial> query = getQuery(filter, WareHouseKeeperID);
+            IQueryable<OtherMaterial> query = getQuery(filter, WareHouseID, WareHouseKeeperID);
             return await query.CountAsync();
         }
 
-        public async Task<int> getSum(string? filter, Guid? WareHouseKeeperID)
+        public async Task<int> getSum(string? filter, int? WareHouseID, Guid? WareHouseKeeperID)
         {
-            IQueryable<OtherMaterial> query = getQuery(filter, WareHouseKeeperID);
+            IQueryable<OtherMaterial> query = getQuery(filter, WareHouseID, WareHouseKeeperID);
             List<OtherMaterial> list = await query.ToListAsync();
             int sum = 0;
             foreach (OtherMaterial material in list)

@@ -10,9 +10,9 @@ namespace API.Services
     public class OtherMaterialsService
     {
         private readonly DAOOtherMaterial daoOtherMaterials = new DAOOtherMaterial();
-        private async Task<List<OtherMaterialsListDTO>> getList(string? filter, Guid? WareHouseKeeperID, int page)
+        private async Task<List<OtherMaterialsListDTO>> getList(string? filter, int? WareHouseID, Guid? WareHouseKeeperID, int page)
         {
-            List<OtherMaterial> list = await daoOtherMaterials.getListAll(filter, WareHouseKeeperID, page);
+            List<OtherMaterial> list = await daoOtherMaterials.getListAll(filter, WareHouseID, WareHouseKeeperID, page);
             List<OtherMaterialsListDTO> result = new List<OtherMaterialsListDTO>();
             foreach (OtherMaterial item in list)
             {
@@ -23,7 +23,6 @@ namespace API.Services
                     Quantity = item.Quantity,
                     Code = item.Code,
                     WarehouseId = item.WarehouseId,
-                    //SupplierName = item.Supplier.SupplierName,
                     WarehouseName = item.Warehouse == null ? "" : item.Warehouse.WarehouseName,
                     OtherMaterialsCategoryId = item.OtherMaterialsCategoryId,
                     OtherMaterialsCategoryName = item.OtherMaterialsCategory.OtherMaterialsCategoryName,
@@ -34,13 +33,13 @@ namespace API.Services
             return result;
         }
 
-        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, Guid? WareHouseKeeperID, int page)
+        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, int? WareHouseID, Guid? WareHouseKeeperID, int page)
         {
             try
             {
-                List<OtherMaterialsListDTO> list = await getList(filter, WareHouseKeeperID, page);
-                int RowCount = await daoOtherMaterials.getRowCount(filter, WareHouseKeeperID);
-                int sum = await daoOtherMaterials.getSum(filter, WareHouseKeeperID);
+                List<OtherMaterialsListDTO> list = await getList(filter, WareHouseID, WareHouseKeeperID, page);
+                int RowCount = await daoOtherMaterials.getRowCount(filter, WareHouseID, WareHouseKeeperID);
+                int sum = await daoOtherMaterials.getSum(filter, WareHouseID, WareHouseKeeperID);
                 PagedResultDTO<OtherMaterialsListDTO> result = new PagedResultDTO<OtherMaterialsListDTO>(page, RowCount, PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE, list, sum);
                 return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(result, string.Empty);
             }
