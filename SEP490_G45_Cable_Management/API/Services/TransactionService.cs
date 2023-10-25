@@ -30,9 +30,9 @@ namespace API.Services
                     Description = history.Description,
                     CreatedAt = history.CreatedAt,
                     WarehouseId = history.WarehouseId,
-                    IssueCode = history.Issue == null ? "" : history.Issue.IssueCode,
-                    FromWarehouseName = history.FromWarehouse == null ? "" : history.FromWarehouse.WarehouseName,
-                    ToWarehouseName = history.ToWarehouse == null ? "" : history.ToWarehouse.WarehouseName,
+                    IssueCode = history.Issue == null ? null : history.Issue.IssueCode,
+                    FromWarehouseName = history.FromWarehouse == null ? null : history.FromWarehouse.WarehouseName,
+                    ToWarehouseName = history.ToWarehouse == null ? null : history.ToWarehouse.WarehouseName,
                     CreatedDate = history.CreatedDate,
                 };
                 result.Add(DTO);

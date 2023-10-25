@@ -20,7 +20,7 @@ namespace API.Services
                 {
                     CableId = item.CableId,
                     WarehouseId = item.WarehouseId,
-                    WarehouseName = item.Warehouse == null ? string.Empty : item.Warehouse.WarehouseName,
+                    WarehouseName = item.Warehouse == null ? null : item.Warehouse.WarehouseName,
                     SupplierId = item.SupplierId,
                     SupplierName = item.Supplier.SupplierName,
                     StartPoint = item.StartPoint,

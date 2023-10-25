@@ -24,7 +24,7 @@ namespace API.Services
                     SupplierId = supplier.SupplierId,
                     SupplierName = supplier.SupplierName,
                     Country = supplier.Country,
-                    SupplierDescription = supplier.SupplierDescription == null ? "" : supplier.SupplierDescription,
+                    SupplierDescription = supplier.SupplierDescription == null ? null : supplier.SupplierDescription,
                 };
                 result.Add(DTO);
             }
@@ -55,7 +55,7 @@ namespace API.Services
                     SupplierId = supplier.SupplierId,
                     SupplierName = supplier.SupplierName,
                     Country = supplier.Country,
-                    SupplierDescription = supplier.SupplierDescription == null ? "" : supplier.SupplierDescription,
+                    SupplierDescription = supplier.SupplierDescription == null ? null : supplier.SupplierDescription,
                 };
                 result.Add(DTO);
             }

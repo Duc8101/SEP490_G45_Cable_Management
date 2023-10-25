@@ -22,7 +22,7 @@ namespace API.Services
                     IssueId = issue.IssueId,
                     IssueName = issue.IssueName,
                     IssueCode = issue.IssueCode,
-                    Description = issue.Description == null ? "" : issue.Description,
+                    Description = issue.Description == null ? null : issue.Description,
                     CreatedDate = issue.CreatedDate,
                     CableRoutingName = issue.CableRoutingName,
                     Group = issue.Group,

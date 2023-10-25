@@ -23,7 +23,7 @@ namespace API.Services
                     Quantity = item.Quantity,
                     Code = item.Code,
                     WarehouseId = item.WarehouseId,
-                    WarehouseName = item.Warehouse == null ? "" : item.Warehouse.WarehouseName,
+                    WarehouseName = item.Warehouse == null ? null : item.Warehouse.WarehouseName,
                     OtherMaterialsCategoryId = item.OtherMaterialsCategoryId,
                     OtherMaterialsCategoryName = item.OtherMaterialsCategory.OtherMaterialsCategoryName,
                     Status = item.Status,

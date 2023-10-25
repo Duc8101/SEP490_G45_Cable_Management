@@ -22,7 +22,7 @@ namespace API.Services
                     WarehouseId = item.WarehouseId,
                     WarehouseName = item.WarehouseName,
                     WarehouseKeeperId = item.WarehouseKeeperid,
-                    WareWarehouseKeeperName = item.WarehouseKeeper == null ? "" : item.WarehouseKeeper.Lastname + " " + item.WarehouseKeeper.Firstname,
+                    WareWarehouseKeeperName = item.WarehouseKeeper == null ? null : item.WarehouseKeeper.Lastname + " " + item.WarehouseKeeper.Firstname,
                     WarehouseAddress = item.WarehouseAddress
                 };
                 result.Add(DTO);
@@ -82,10 +82,10 @@ namespace API.Services
             }
             try
             {
-                /*// if warehouse already exist
+               /* // if warehouse already exist
                 if (await daoWarehouse.isExist(DTO.WarehouseName.Trim()))
                 {
-                    return new ResponseDTO<bool>(false, "Kho đã tồn tại", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseDTO<bool>(false, "Kho đã tồn tại", (int) HttpStatusCode.Conflict);
                 }*/
                 Warehouse ware = new Warehouse()
                 {
