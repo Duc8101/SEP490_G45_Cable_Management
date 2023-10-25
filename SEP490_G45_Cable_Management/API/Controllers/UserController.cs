@@ -1,5 +1,4 @@
-﻿using API.Services;
-using DataAccess.DTO.UserDTO;
+﻿using DataAccess.DTO.UserDTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
@@ -11,6 +10,7 @@ using DataAccess.DTO;
 using Microsoft.AspNetCore.Authorization;
 using DataAccess.Entity;
 using System.Net;
+using API.Services.Service;
 
 namespace API.Controllers
 {
@@ -21,7 +21,7 @@ namespace API.Controllers
         private readonly UserService service = new UserService();
 
         [HttpPost]
-        public async Task<ResponseDTO<string?>> Login(LoginDTO DTO)
+        public async Task<ResponseDTO<TokenDTO?>> Login(LoginDTO DTO)
         {
             return await service.Login(DTO);
         }

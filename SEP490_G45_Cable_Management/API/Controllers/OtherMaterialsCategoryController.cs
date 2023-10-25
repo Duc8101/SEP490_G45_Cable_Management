@@ -3,8 +3,8 @@ using DataAccess.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using API.Services;
 using System.Net;
+using API.Services.Service;
 
 namespace API.Controllers
 {

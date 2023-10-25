@@ -1,4 +1,4 @@
-﻿using API.Services;
+﻿using API.Services.Service;
 using DataAccess.DTO;
 using DataAccess.DTO.IssueDTO;
 using Microsoft.AspNetCore.Authorization;
@@ -61,7 +61,7 @@ namespace API.Controllers
                 string? CreatorID = getUserID();
                 if(CreatorID == null)
                 {
-                    throw new ApplicationException();
+                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int) HttpStatusCode.NotFound);
                 }
                 return await service.Create(DTO, Guid.Parse(CreatorID));
             }

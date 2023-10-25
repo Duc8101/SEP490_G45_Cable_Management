@@ -16,7 +16,7 @@ namespace API.Model.DAO
     {
         public async Task<User?> getUser(LoginDTO DTO)
         {
-            User? user = await context.Users.SingleOrDefaultAsync(u => u.Username == DTO.UserName && u.IsDeleted == false);
+            User? user = await context.Users.Include(u => u.Role).SingleOrDefaultAsync(u => u.Username == DTO.UserName && u.IsDeleted == false);
             // if username or password invalid
             if (user == null || string.Compare(user.Password, UserUtil.HashPassword(DTO.Password), false) != 0)
             {

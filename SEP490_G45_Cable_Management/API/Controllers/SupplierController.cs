@@ -1,4 +1,4 @@
-﻿using API.Services;
+﻿using API.Services.Service;
 using DataAccess.DTO;
 using DataAccess.DTO.SupplierDTO;
 using DataAccess.DTO.UserDTO;
@@ -57,7 +57,7 @@ namespace API.Controllers
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra lại thông tin đăng nhập", (int) HttpStatusCode.NotFound);
                 }
-                return await service.Create(DTO, CreatorID);             
+                return await service.Create(DTO, Guid.Parse(CreatorID));             
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }
