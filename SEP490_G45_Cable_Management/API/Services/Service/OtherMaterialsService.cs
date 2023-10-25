@@ -33,7 +33,6 @@ namespace API.Services.Service
             }
             return result;
         }
-
         public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, int? WareHouseID, Guid? WareHouseKeeperID, int page)
         {
             try
@@ -49,7 +48,6 @@ namespace API.Services.Service
                 return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-
         public async Task<ResponseDTO<bool>> Create(OtherMaterialsCreateUpdateDTO DTO)
         {
             if (DTO.Code.Trim().Length == 0)
@@ -106,7 +104,6 @@ namespace API.Services.Service
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-
         public async Task<ResponseDTO<bool>> Update(int OtherMaterialsID, OtherMaterialsCreateUpdateDTO DTO)
         {
             try
@@ -128,7 +125,7 @@ namespace API.Services.Service
                     return new ResponseDTO<bool>(false, "Đơn vị không được để trống", (int)HttpStatusCode.Conflict);
                 }
 
-                if (DTO.Status == null || DTO.Status.Trim().Length == 0)
+                if (DTO.Status.Trim().Length == 0)
                 {
                     return new ResponseDTO<bool>(false, "Trạng thái không được để trống", (int)HttpStatusCode.Conflict);
                 }
@@ -138,14 +135,13 @@ namespace API.Services.Service
                     return new ResponseDTO<bool>(false, "Kho không được để trống", (int)HttpStatusCode.Conflict);
                 }
                 // if exist
-                if (await daoOtherMaterials.isExist(DTO))
+                if (await daoOtherMaterials.isExist(OtherMaterialsID, DTO))
                 {
                     return new ResponseDTO<bool>(false, "Vật liệu đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
                 material.Unit = DTO.Unit.Trim();
                 material.Quantity = DTO.Quantity;
                 material.Code = DTO.Code.Trim();
-                /*material.SupplierId = DTO.SupplierId;*/
                 material.WarehouseId = DTO.WarehouseId;
                 material.Status = DTO.Status.Trim();
                 material.OtherMaterialsCategoryId = DTO.OtherMaterialsCategoryId;
@@ -158,7 +154,6 @@ namespace API.Services.Service
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-
         public async Task<ResponseDTO<bool>> Delete(int OtherMaterialsID)
         {
             try
