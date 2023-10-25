@@ -38,10 +38,10 @@ namespace API.Controllers
         }
 
         [HttpPost("Export")]
-        //[Authorize]
+        [Authorize]
         public async Task<ResponseDTO<bool>> Create(RequestCreateExportDTO DTO)
         {
-            /*// if warehouse keeper or staff
+            // if warehouse keeper or staff
             if (isWarehouseKeeper() || isStaff())
             {
                 string? CreatorID = getUserID();
@@ -51,15 +51,14 @@ namespace API.Controllers
                 }
                 return await service.CreateRequestExport(DTO, Guid.Parse(CreatorID));
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);*/
-            return await service.CreateRequestExport(DTO, Guid.Parse("6539CABD-B56A-4B9A-B996-18FD8629C973"));
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPut("{RequestID}")]
-       // [Authorize]
+        [Authorize]
         public async Task<ResponseDTO<bool>> Approve(Guid RequestID)
         {
-            /*// if admin
+            // if admin
             if (isAdmin())
             {
                 string? ApproverID = getUserID();
@@ -69,14 +68,13 @@ namespace API.Controllers
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
                 }
-                if(FirstName == null || LastName == null)
+                if (FirstName == null || LastName == null)
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy tên của bạn. Vui lòng kiểm tra thông tin đăng nhập");
                 }
                 return await service.Approve(RequestID, Guid.Parse(ApproverID), LastName + " " + FirstName);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);*/
-            return await service.Approve(RequestID, Guid.Parse("74E63E4D-C2B0-4553-B632-7E236E58254E"), "Phạm Minh Hiếu");
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPut("{RequestID}")]
