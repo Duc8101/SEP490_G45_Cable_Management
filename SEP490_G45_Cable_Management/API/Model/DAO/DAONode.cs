@@ -8,12 +8,8 @@ namespace API.Model.DAO
     {
         public async Task<List<Node>> getListNotDeleted(Guid RouteID)
         {
-            return await context.Nodes.Include(n => n.NodeCables).ThenInclude(n => n.Cable).ThenInclude(n => n.CableCategory)
-                .Include(n => n.NodeMaterials).ThenInclude(n => n.OtherMaterials).ThenInclude(n => n.OtherMaterialsCategory)
-                .Include(n => n.NodeMaterialCategories.Where(n => n.IsDeleted == false)).ThenInclude(n => n.OtherMaterialCategory)
-                .Where(n => n.IsDeleted == false && n.RouteId == RouteID).OrderByDescending(n => n.UpdateAt).ToListAsync();
+            return await context.Nodes.Where(n => n.IsDeleted == false && n.RouteId == RouteID).OrderByDescending(n => n.UpdateAt).ToListAsync();
         }
-
         public async Task<List<Node>> getListDeleted(Guid RouteID)
         {
             return await context.Nodes.Where(n => n.IsDeleted == true && n.RouteId == RouteID).ToListAsync();

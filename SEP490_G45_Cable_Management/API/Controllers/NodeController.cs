@@ -38,6 +38,18 @@ namespace API.Controllers
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }
 
+        [HttpGet("{NodeID}")]
+        [Authorize]
+        public async Task<ResponseDTO<NodeListDTO?>> Detail([Required] Guid NodeID)
+        {
+            // if admin or leader
+            if (isAdmin() || isLeader())
+            {
+                return await service.Detail(NodeID);
+            }
+            return new ResponseDTO<NodeListDTO?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+        }
+
         [HttpPut("{NodeID}")]
         [Authorize]
         public async Task<ResponseDTO<bool>> Update([Required] Guid NodeID, [Required] NodeUpdateDTO DTO)

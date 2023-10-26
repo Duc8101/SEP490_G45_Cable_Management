@@ -14,12 +14,14 @@ namespace API.Services.Service
     public class NodeService : INodeService
     {
         private readonly DAONode daoNode = new DAONode();
+        private readonly DAONodeMaterialCategory daoCategory = new DAONodeMaterialCategory();
         private async Task<List<NodeListDTO>> getList(Guid RouteID)
         {
             List<Node> list = await daoNode.getListNotDeleted(RouteID);
             List<NodeListDTO> result = new List<NodeListDTO>();
             foreach (Node node in list)
             {
+                List<NodeMaterialCategory> NodeMaterialCategories = await daoCategory.getList(node.Id);
                 NodeListDTO DTO = new NodeListDTO()
                 {
                     Id = node.Id,
@@ -28,11 +30,11 @@ namespace API.Services.Service
                     Address = node.Address,
                     Longitude = node.Longitude,
                     Latitude = node.Latitude,
-                    Status = node.Status == null ? null : node.Status,
+                    Status = node.Status,
                     RouteId = node.RouteId,
-                    NodeCables = (List<NodeCable>)node.NodeCables,
-                    NodeMaterials = (List<NodeMaterial>)node.NodeMaterials,
-                    NodeMaterialCategories = (List<NodeMaterialCategory>)node.NodeMaterialCategories
+                    //NodeCables = (List<NodeCable>)node.NodeCables,
+                    //NodeMaterials = (List<NodeMaterial>)node.NodeMaterials,
+                    NodeMaterialCategories = NodeMaterialCategories
                 };
                 result.Add(DTO);
             }
@@ -133,6 +135,38 @@ namespace API.Services.Service
             }
 
         }
+        public async Task<ResponseDTO<NodeListDTO?>> Detail(Guid NodeID)
+        {
+            try
+            {
+                Node? node = await daoNode.getNode(NodeID);
+                // if not found
+                if(node == null)
+                {
+                    return new ResponseDTO<NodeListDTO?>(null, "Không tìm thấy điểm", (int) HttpStatusCode.NotFound);
+                }
+                List<NodeMaterialCategory> NodeMaterialCategories = await daoCategory.getList(node.Id);
+                NodeListDTO DTO = new NodeListDTO()
+                {
+                    Id = node.Id,
+                    NodeCode = node.NodeCode,
+                    NodeNumberSign = node.NodeNumberSign,
+                    Address = node.Address,
+                    Longitude = node.Longitude,
+                    Latitude = node.Latitude,
+                    Status = node.Status,
+                    RouteId = node.RouteId,
+                    //NodeCables = (List<NodeCable>)node.NodeCables,
+                    //NodeMaterials = (List<NodeMaterial>)node.NodeMaterials,
+                    NodeMaterialCategories = NodeMaterialCategories
+                };
+                return new ResponseDTO<NodeListDTO?>(DTO, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<NodeListDTO?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+            }
+        }
         public async Task<ResponseDTO<bool>> Update(Guid NodeID, NodeUpdateDTO DTO)
         {
             try
@@ -175,5 +209,6 @@ namespace API.Services.Service
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
+        
     }
 }
