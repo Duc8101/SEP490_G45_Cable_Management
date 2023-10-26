@@ -55,6 +55,25 @@ namespace API.Controllers
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
+        [HttpPost("Recovery")]
+        //[Authorize]
+        public async Task<ResponseDTO<bool>> Create([Required] RequestCreateRecoveryDTO DTO)
+        {
+            /*            // if warehouse keeper or staff
+                        if (isWarehouseKeeper() || isStaff())
+                        {
+                            string? CreatorID = getUserID();
+                            if (CreatorID == null)
+                            {
+                                return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
+                            }
+                            return await service.CreateRequestRecovery(DTO, Guid.Parse(CreatorID));
+                        }
+                        return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            */
+            return await service.CreateRequestRecovery(DTO, Guid.Parse("C9DFBC52-22A7-4245-8B06-28C837AA7F54"));
+        }
+
         [HttpPut("{RequestID}")]
         [Authorize]
         public async Task<ResponseDTO<bool>> Approve([Required] Guid RequestID)

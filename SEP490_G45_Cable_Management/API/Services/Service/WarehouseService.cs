@@ -74,7 +74,7 @@ namespace API.Services.Service
                 return new ResponseDTO<List<WarehouseListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> Create(WarehouseCreateUpdateDTO DTO, Guid CreatorID)
+        public ResponseDTO<bool> Create(WarehouseCreateUpdateDTO DTO, Guid CreatorID)
         {
             if (DTO.WarehouseName.Trim().Length == 0)
             {
@@ -98,7 +98,7 @@ namespace API.Services.Service
                     CreatedDate = DateTime.Now,
                     IsDeleted = false,
                 };
-                await daoWarehouse.CreateWarehouse(ware);
+                daoWarehouse.CreateWarehouse(ware);
                 return new ResponseDTO<bool>(true, "Tạo thành công");
             }
             catch (Exception ex)
@@ -129,7 +129,7 @@ namespace API.Services.Service
                 ware.WarehouseKeeperid = DTO.WarehouseKeeperId;
                 ware.WarehouseAddress = DTO.WarehouseAddress == null || DTO.WarehouseAddress.Trim().Length == 0 ? null : DTO.WarehouseAddress.Trim();
                 ware.UpdateAt = DateTime.Now;
-                await daoWarehouse.UpdateWarehouse(ware);
+                daoWarehouse.UpdateWarehouse(ware);
                 return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)
@@ -147,7 +147,7 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy kho", (int)HttpStatusCode.NotFound);
                 }
-                await daoWarehouse.DeleteWarehouse(ware);
+                daoWarehouse.DeleteWarehouse(ware);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
             }
             catch (Exception ex)

@@ -54,13 +54,16 @@ namespace API.Services.Service
                 return new ResponseDTO<PagedResultDTO<CableListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-
-        public async Task<ResponseDTO<bool>> Create(CableCreateUpdateDTO DTO, Guid CreatorID)
+        public ResponseDTO<bool> Create(CableCreateUpdateDTO DTO, Guid CreatorID)
         {
+            if(DTO.StartPoint < 0 || DTO.EndPoint < 0 || DTO.StartPoint >= DTO.EndPoint)
+            {
+                return new ResponseDTO<bool>(false, "Chỉ số đầu hoặc chỉ số cuối không hợp lệ", (int)HttpStatusCode.Conflict);
+            }
             try
             {
                 // if cable exist
-                if (await daoCable.isExist(DTO))
+                if (daoCable.isExist(DTO))
                 {
                     return new ResponseDTO<bool>(false, "Cáp đã tồn tại trong hệ thống", (int)HttpStatusCode.Conflict);
                 }
@@ -83,7 +86,7 @@ namespace API.Services.Service
                     CableCategoryId = DTO.CableCategoryId,
                     IsInRequest = false,
                 };
-                await daoCable.CreateCable(cable);
+                daoCable.CreateCable(cable);
                 return new ResponseDTO<bool>(true, "Thêm thành công");
             }
             catch (Exception ex)
@@ -91,7 +94,6 @@ namespace API.Services.Service
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-
         public async Task<ResponseDTO<bool>> Update(Guid CableID, CableCreateUpdateDTO DTO)
         {
             try
@@ -101,6 +103,15 @@ namespace API.Services.Service
                 if (cable == null)
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy cáp", (int)HttpStatusCode.NotFound);
+                }
+                if (DTO.StartPoint < 0 || DTO.EndPoint < 0 || DTO.StartPoint >= DTO.EndPoint)
+                {
+                    return new ResponseDTO<bool>(false, "Chỉ số đầu hoặc chỉ số cuối không hợp lệ", (int) HttpStatusCode.Conflict);
+                }
+                // if cable exist
+                if (daoCable.isExist(CableID, DTO))
+                {
+                    return new ResponseDTO<bool>(false, "Cáp đã tồn tại trong hệ thống", (int) HttpStatusCode.Conflict);
                 }
                 cable.WarehouseId = DTO.WarehouseId;
                 cable.SupplierId = DTO.SupplierId;
@@ -112,15 +123,14 @@ namespace API.Services.Service
                 cable.Status = DTO.Status.Trim();
                 cable.CableCategoryId = DTO.CableCategoryId;
                 cable.UpdateAt = DateTime.Now;
-                await daoCable.UpdateCable(cable);
+                daoCable.UpdateCable(cable);
                 return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
-
         public async Task<ResponseDTO<bool>> Delete(Guid CableID)
         {
             try
@@ -131,7 +141,7 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy cáp", (int)HttpStatusCode.NotFound);
                 }
-                await daoCable.DeleteCable(cable);
+                daoCable.DeleteCable(cable);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
             }
             catch (Exception ex)

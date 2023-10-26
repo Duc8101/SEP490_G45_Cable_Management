@@ -70,6 +70,11 @@ namespace API.Services.Service
                 return new ResponseDTO<bool>(false, "Kho không được để trống", (int)HttpStatusCode.Conflict);
             }
 
+            if(DTO.Quantity < 0)
+            {
+                return new ResponseDTO<bool>(false, "Số lượng không hợp lệ", (int)HttpStatusCode.Conflict);
+            }
+
             try
             {
                 OtherMaterial? material = await daoOtherMaterials.getOtherMaterial(DTO);
@@ -89,13 +94,13 @@ namespace API.Services.Service
                         Status = DTO.Status.Trim(),
                         OtherMaterialsCategoryId = DTO.OtherMaterialsCategoryId
                     };
-                    await daoOtherMaterials.CreateMaterial(material);
+                    daoOtherMaterials.CreateMaterial(material);
                 }
                 else
                 {
                     material.Quantity = material.Quantity + DTO.Quantity;
                     material.UpdateAt = DateTime.Now;
-                    await daoOtherMaterials.UpdateMaterial(material);
+                    daoOtherMaterials.UpdateMaterial(material);
                 }
                 return new ResponseDTO<bool>(true, "Tạo thành công");
             }
@@ -134,6 +139,11 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Kho không được để trống", (int)HttpStatusCode.Conflict);
                 }
+
+                if (DTO.Quantity < 0)
+                {
+                    return new ResponseDTO<bool>(false, "Số lượng không hợp lệ", (int)HttpStatusCode.Conflict);
+                }
                 // if exist
                 if (await daoOtherMaterials.isExist(OtherMaterialsID, DTO))
                 {
@@ -146,7 +156,7 @@ namespace API.Services.Service
                 material.Status = DTO.Status.Trim();
                 material.OtherMaterialsCategoryId = DTO.OtherMaterialsCategoryId;
                 material.UpdateAt = DateTime.Now;
-                await daoOtherMaterials.UpdateMaterial(material);
+                daoOtherMaterials.UpdateMaterial(material);
                 return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)
@@ -164,7 +174,7 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy vật liệu", (int)HttpStatusCode.NotFound);
                 }
-                await daoOtherMaterials.DeleteMaterial(material);
+                daoOtherMaterials.DeleteMaterial(material);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
             }
             catch (Exception ex)

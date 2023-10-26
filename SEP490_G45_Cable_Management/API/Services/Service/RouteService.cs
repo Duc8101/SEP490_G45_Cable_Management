@@ -59,7 +59,7 @@ namespace API.Services.Service
             }
         }
 
-        public async Task<ResponseDTO<bool>> Create(RouteCreateDTO DTO)
+        public ResponseDTO<bool> Create(RouteCreateDTO DTO)
         {
             if (DTO.RouteName == null || DTO.RouteName.Trim().Length == 0)
             {
@@ -68,7 +68,7 @@ namespace API.Services.Service
             try
             {
                 // if exist
-                if (await daoRoute.isExist(DTO.RouteName.Trim()))
+                if (daoRoute.isExist(DTO.RouteName.Trim()))
                 {
                     return new ResponseDTO<bool>(false, "Tên tuyến đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
@@ -80,7 +80,7 @@ namespace API.Services.Service
                     UpdateAt = DateTime.Now,
                     IsDeleted = false
                 };
-                await daoRoute.CreateRoute(route);
+                daoRoute.CreateRoute(route);
                 return new ResponseDTO<bool>(true, "Tạo thành công");
             }
             catch (Exception ex)
@@ -99,7 +99,7 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy tên tuyến", (int)HttpStatusCode.NotFound);
                 }
-                await daoRoute.DeleteRoute(route);
+                daoRoute.DeleteRoute(route);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
             }
             catch (Exception ex)

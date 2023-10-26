@@ -65,16 +65,16 @@ namespace API.Model.DAO
             && o.Status == (DTO.Status == null || DTO.Status.Trim().Length == 0 ? null : DTO.Status.Trim()) && o.WarehouseId == DTO.WarehouseId).FirstOrDefaultAsync();
         }
 
-        public async Task CreateMaterial(OtherMaterial material)
+        public void CreateMaterial(OtherMaterial material)
         {
-            await context.OtherMaterials.AddAsync(material);
-            await context.SaveChangesAsync();
+            context.OtherMaterials.Add(material);
+            context.SaveChanges();
         }
 
-        public async Task UpdateMaterial(OtherMaterial material)
+        public void UpdateMaterial(OtherMaterial material)
         {
             context.OtherMaterials.Update(material);
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
 
         public async Task<OtherMaterial?> getOtherMaterial(int ID)
@@ -102,10 +102,10 @@ namespace API.Model.DAO
             && o.WarehouseId == DTO.WarehouseId && o.OtherMaterialsId != OtherMaterialsID);
         }
 
-        public async Task DeleteMaterial(OtherMaterial material)
+        public void DeleteMaterial(OtherMaterial material)
         {
             material.IsDeleted = true;
-            await UpdateMaterial(material);
+            UpdateMaterial(material);
         }
 
         public async Task<List<OtherMaterialsCategory>> getListCategory(int? WarehouseID)
@@ -140,6 +140,10 @@ namespace API.Model.DAO
                 sum = sum + item.Quantity;
             }
             return sum;
+        }
+        public async Task<OtherMaterial?> getOtherMaterialCreate()
+        {
+            return await context.OtherMaterials.OrderByDescending(o => o.OtherMaterialsId).FirstOrDefaultAsync();
         }
     }
 }

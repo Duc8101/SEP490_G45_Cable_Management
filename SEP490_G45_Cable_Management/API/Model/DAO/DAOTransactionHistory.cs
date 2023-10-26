@@ -45,16 +45,16 @@ namespace API.Model.DAO
                 .Include(w => w.ToWarehouse).SingleOrDefaultAsync(t => t.TransactionId == TransactionID);
         }
 
-        public async Task CreateTransactionHistory(TransactionHistory history)
+        public void CreateTransactionHistory(TransactionHistory history)
         {
-            await context.TransactionHistories.AddAsync(history);
-            await context.SaveChangesAsync();
+            context.TransactionHistories.Add(history);
+            context.SaveChanges();
         }
 
-        public async Task UpdateTransactionHistory(TransactionHistory history)
+        public void UpdateTransactionHistory(TransactionHistory history)
         {
              context.TransactionHistories.Update(history);
-            await context.SaveChangesAsync();
+             context.SaveChanges();
         }
     }
 }

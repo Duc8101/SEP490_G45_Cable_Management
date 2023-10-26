@@ -39,26 +39,26 @@ namespace API.Model.DAO
             return await query.CountAsync();
         }
 
-        public async Task<bool> isExist(string name)
+        public bool isExist(string name)
         {
-            return await context.Routes.AnyAsync(r => r.RouteName == name.Trim() && r.IsDeleted == false);
+            return context.Routes.Any(r => r.RouteName == name.Trim() && r.IsDeleted == false);
         }
 
-        public async Task CreateRoute(DataAccess.Entity.Route route)
+        public void CreateRoute(DataAccess.Entity.Route route)
         {
-            await context.Routes.AddAsync(route);
-            await context.SaveChangesAsync();
+            context.Routes.Add(route);
+            context.SaveChanges();
         }
         public async Task<DataAccess.Entity.Route?> getRoute(Guid RouteID)
         {
             return await context.Routes.SingleOrDefaultAsync(r => r.RouteId == RouteID && r.IsDeleted == false);
         }
 
-        public async Task DeleteRoute(DataAccess.Entity.Route route)
+        public void DeleteRoute(DataAccess.Entity.Route route)
         {
             route.IsDeleted = true;
             context.Routes.Update(route);
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
     }
 }

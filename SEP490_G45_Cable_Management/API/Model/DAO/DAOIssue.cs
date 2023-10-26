@@ -55,26 +55,25 @@ namespace API.Model.DAO
             return await query.OrderByDescending(i => i.Status).ThenByDescending(i => i.UpdateAt).Where(i => i.Status == IssueConst.STATUS_DOING)
                 .ToListAsync();
         }
-        public async Task CreateIssue(Issue issue)
+        public void CreateIssue(Issue issue)
         {
-            await context.Issues.AddAsync(issue);
-            await context.SaveChangesAsync();
+            context.Issues.Add(issue);
+            context.SaveChanges();
         }
 
         public async Task<Issue?> getIssue(Guid IssueID)
         {
             return await context.Issues.SingleOrDefaultAsync(i => i.IssueId == IssueID && i.IsDeleted == false);
         }
-        public async Task UpdateIssue(Issue issue)
+        public void UpdateIssue(Issue issue)
         {
             context.Issues.Update(issue);
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
-
-        public async Task DeleteIssue(Issue issue)
+        public void DeleteIssue(Issue issue)
         {
             issue.IsDeleted = true;
-            await UpdateIssue(issue);
+            UpdateIssue(issue);
         }
     }
 }

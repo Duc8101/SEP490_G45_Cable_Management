@@ -7,7 +7,7 @@ namespace API.Services.IService
     {
         Task<ResponseDTO<PagedResultDTO<WarehouseListDTO>?>> ListPaged(string? name, int page);
         Task<ResponseDTO<List<WarehouseListDTO>?>> ListAll();
-        Task<ResponseDTO<bool>> Create(WarehouseCreateUpdateDTO DTO, Guid CreatorID);
+        ResponseDTO<bool> Create(WarehouseCreateUpdateDTO DTO, Guid CreatorID);
         Task<ResponseDTO<bool>> Update(int WarehouseID, WarehouseCreateUpdateDTO DTO);
         Task<ResponseDTO<bool>> Delete(int WarehouseID);
     }

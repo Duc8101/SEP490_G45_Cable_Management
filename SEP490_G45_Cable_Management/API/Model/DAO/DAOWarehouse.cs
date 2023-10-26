@@ -37,15 +37,15 @@ namespace API.Model.DAO
             IQueryable<Warehouse> query = getQuery(null);
             return await query.OrderByDescending(w => w.UpdateAt).ToListAsync();
         }
-        public async Task<bool> isExist(string name)
+        public bool isExist(string name)
         {
-            return await context.Warehouses.AnyAsync(w => w.WarehouseName == name.Trim());
+            return context.Warehouses.Any(w => w.WarehouseName == name.Trim());
         }
 
-        public async Task CreateWarehouse(Warehouse ware)
+        public void CreateWarehouse(Warehouse ware)
         {
-            await context.Warehouses.AddAsync(ware);
-            await context.SaveChangesAsync();
+            context.Warehouses.Add(ware);
+            context.SaveChanges();
         }
 
         public async Task<Warehouse?> getWarehouse(int ID)
@@ -53,21 +53,21 @@ namespace API.Model.DAO
             return await context.Warehouses.SingleOrDefaultAsync(w => w.WarehouseId == ID && w.IsDeleted == false);
         }
 
-        public async Task<bool> isExist(int ID, string name)
+        public bool isExist(int ID, string name)
         {
-            return await context.Warehouses.AnyAsync(w => w.WarehouseName == name.Trim() && w.WarehouseId != ID);
+            return context.Warehouses.Any(w => w.WarehouseName == name.Trim() && w.WarehouseId != ID);
         }
 
-        public async Task UpdateWarehouse(Warehouse ware)
+        public void UpdateWarehouse(Warehouse ware)
         {
             context.Warehouses.Update(ware);
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
 
-        public async Task DeleteWarehouse(Warehouse ware)
+        public void DeleteWarehouse(Warehouse ware)
         {
             ware.IsDeleted = true;
-            await context.SaveChangesAsync();
+            UpdateWarehouse(ware);
         }
 
     }

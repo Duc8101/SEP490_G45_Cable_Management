@@ -7,7 +7,7 @@ namespace API.Services.IService
     {
         Task<ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>> ListPaged(string? name, int page);
         Task<ResponseDTO<List<CableCategoryListDTO>?>> ListAll();
-        Task<ResponseDTO<bool>> Create(CableCategoryCreateUpdateDTO DTO);
+        ResponseDTO<bool> Create(CableCategoryCreateUpdateDTO DTO);
         Task<ResponseDTO<bool>> Update(int CableCategoryID, CableCategoryCreateUpdateDTO DTO);
     }
 }

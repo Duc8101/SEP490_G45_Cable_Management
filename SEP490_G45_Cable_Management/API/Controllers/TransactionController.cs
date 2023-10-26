@@ -28,7 +28,6 @@ namespace API.Controllers
 
         [HttpGet("{TransactionID}")]
         [Authorize]
-
         public async Task<ResponseDTO<TransactionDetailDTO?>> Detail([Required] Guid TransactionID)
         {
             // if admin

@@ -41,22 +41,21 @@ namespace API.Model.DAO
             return await query.CountAsync();
         }
 
-        public async Task CreateRequest(Request request)
+        public void CreateRequest(Request request)
         {
-            await context.Requests.AddAsync(request);
-            await context.SaveChangesAsync();
+            context.Requests.Add(request);
+            context.SaveChanges();
         }
         public async Task<Request?> getRequest(Guid RequestID)
         {
             return await context.Requests.Include(r => r.RequestCategory).Include(r => r.Creator).Include(r => r.Issue).SingleOrDefaultAsync(r => r.RequestId == RequestID && r.IsDeleted == false);
         }
 
-        public async Task UpdateRequest(Request request)
+        public void UpdateRequest(Request request)
         {
             context.Requests.Update(request);
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
-
 
     }
 }

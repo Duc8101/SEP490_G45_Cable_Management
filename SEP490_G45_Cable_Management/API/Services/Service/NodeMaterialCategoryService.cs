@@ -30,14 +30,14 @@ namespace API.Services.Service
                             UpdateAt = DateTime.Now,
                             IsDeleted = false
                         };
-                        await daoMaterial.CreateNodeMaterialCategory(material);
+                        daoMaterial.CreateNodeMaterialCategory(material);
                     }
                     else
                     {
                         material.IsDeleted = false;
                         material.Quantity = item.Quantity;
                         material.UpdateAt = DateTime.Now;
-                        await daoMaterial.UpdateNodeMaterialCategory(material);
+                        daoMaterial.UpdateNodeMaterialCategory(material);
                     }
                 }
                 return new ResponseDTO<bool>(true, "Update thành công");

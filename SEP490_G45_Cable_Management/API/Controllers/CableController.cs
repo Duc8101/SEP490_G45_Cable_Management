@@ -29,7 +29,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Create([Required] CableCreateUpdateDTO DTO)
+        public ResponseDTO<bool> Create([Required] CableCreateUpdateDTO DTO)
         {
             /// if admin, warehouse keeper
             if (isAdmin() || isWarehouseKeeper())
@@ -39,7 +39,7 @@ namespace API.Controllers
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int) HttpStatusCode.NotFound);
                 }
-                return await service.Create(DTO,Guid.Parse(CreatorID));
+                return service.Create(DTO,Guid.Parse(CreatorID));
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }

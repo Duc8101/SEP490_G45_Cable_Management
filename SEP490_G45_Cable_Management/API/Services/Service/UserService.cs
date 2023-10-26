@@ -87,7 +87,7 @@ namespace API.Services.Service
             try
             {
                 // if user exist
-                if (await daoUser.isExist(DTO.UserName, DTO.Email))
+                if (daoUser.isExist(DTO.UserName, DTO.Email))
                 {
                     return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int)HttpStatusCode.Conflict);
                 }
@@ -113,7 +113,7 @@ namespace API.Services.Service
                     UpdateAt = DateTime.Now,
                     IsDeleted = false
                 };
-                await daoUser.CreateUser(user);
+                daoUser.CreateUser(user);
                 return new ResponseDTO<bool>(true, "Tạo thành công");
             }
             catch (Exception ex)
@@ -140,7 +140,7 @@ namespace API.Services.Service
                 await UserUtil.sendEmail("Welcome to Cable Management System", body, DTO.Email);
                 // update user
                 user.Password = hashPw;
-                await daoUser.UpdateUser(user);
+                daoUser.UpdateUser(user);
                 return new ResponseDTO<bool>(true, "Đã đổi mật khẩu thành công. Vui lòng kiểm tra email của bạn");
             }
             catch (Exception ex)
@@ -169,7 +169,7 @@ namespace API.Services.Service
                     return new ResponseDTO<bool>(false, "Mật khẩu xác nhận không trùng khớp với mật khẩu mới", (int)HttpStatusCode.Conflict);
                 }
                 user.Password = UserUtil.HashPassword(DTO.NewPassword);
-                await daoUser.UpdateUser(user);
+                daoUser.UpdateUser(user);
                 return new ResponseDTO<bool>(true, "Đổi mật khẩu thành công");
             }
             catch (Exception ex)
@@ -222,7 +222,7 @@ namespace API.Services.Service
                     return new ResponseDTO<bool>(false, "Không tìm thấy người dùng", (int)HttpStatusCode.NotFound);
                 }
                 // if username or email exist
-                if (await daoUser.isExist(UserID, DTO.UserName, DTO.Email))
+                if (daoUser.isExist(UserID, DTO.UserName, DTO.Email))
                 {
                     return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int)HttpStatusCode.Conflict);
                 }
@@ -241,7 +241,7 @@ namespace API.Services.Service
                 user.Phone = DTO.Phone;
                 user.RoleId = DTO.RoleId;
                 user.UpdateAt = DateTime.Now;
-                await daoUser.UpdateUser(user);
+                daoUser.UpdateUser(user);
                 return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)
@@ -264,7 +264,7 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Bạn không thể xóa tài khoản của mình", (int)HttpStatusCode.NotAcceptable);
                 }
-                await daoUser.DeleteUser(user);
+                daoUser.DeleteUser(user);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
             }
             catch (Exception ex)

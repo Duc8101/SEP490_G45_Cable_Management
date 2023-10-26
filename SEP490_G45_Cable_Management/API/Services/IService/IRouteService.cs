@@ -7,7 +7,7 @@ namespace API.Services.IService
     {
         Task<ResponseDTO<List<RouteListDTO>?>> ListAll(string? name);
         Task<ResponseDTO<PagedResultDTO<RouteListDTO>?>> ListPaged(int page);
-        Task<ResponseDTO<bool>> Create(RouteCreateDTO DTO);
+        ResponseDTO<bool> Create(RouteCreateDTO DTO);
         Task<ResponseDTO<bool>> Delete(Guid RouteID);
     }
 }

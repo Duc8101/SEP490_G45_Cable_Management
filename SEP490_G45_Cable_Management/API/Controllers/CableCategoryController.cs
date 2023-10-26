@@ -44,12 +44,12 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Create([Required] CableCategoryCreateUpdateDTO DTO)
+        public ResponseDTO<bool> Create([Required] CableCategoryCreateUpdateDTO DTO)
         {
             // if admin or leader
             if (isAdmin() || isLeader())
             {
-                return await service.Create(DTO);
+                return service.Create(DTO);
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }

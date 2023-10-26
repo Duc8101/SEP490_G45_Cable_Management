@@ -25,21 +25,21 @@ namespace API.Model.DAO
             return user;
         }
 
-        public async Task CreateUser(User user)
+        public void CreateUser(User user)
         {
-            await context.Users.AddAsync(user);
-            await context.SaveChangesAsync();
+            context.Users.Add(user);
+            context.SaveChanges();
         }
 
-        public async Task<bool> isExist(string username, string email)
+        public bool isExist(string username, string email)
         {
-            return await context.Users.AnyAsync(u => u.Username == username || u.Email == email);
+            return context.Users.Any(u => u.Username == username || u.Email == email);
         }
 
-        public async Task UpdateUser(User user)
+        public void UpdateUser(User user)
         {
             context.Users.Update(user);
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
 
         public async Task<User?> getUser(string email)
@@ -76,14 +76,14 @@ namespace API.Model.DAO
             return await context.Users.SingleOrDefaultAsync(u => u.UserId == UserID && u.IsDeleted == false);
         }
 
-        public async Task<bool> isExist(Guid UserID, string username, string email)
+        public bool isExist(Guid UserID, string username, string email)
         {
-            return await context.Users.AnyAsync(u => (u.Username == username || u.Email == email) && u.UserId != UserID);
+            return context.Users.Any(u => (u.Username == username || u.Email == email) && u.UserId != UserID);
         }
-        public async Task DeleteUser(User user)
+        public void DeleteUser(User user)
         {
             user.IsDeleted = true;
-            await UpdateUser(user);
+            UpdateUser(user);
         }
         public async Task<List<string>> getEmailAdmins()
         {

@@ -74,7 +74,7 @@ namespace API.Services.Service
                 return new ResponseDTO<List<SupplierListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> Create(SupplierCreateUpdateDTO DTO, Guid CreatorID)
+        public ResponseDTO<bool> Create(SupplierCreateUpdateDTO DTO, Guid CreatorID)
         {
             if (DTO.SupplierName.Trim().Length == 0)
             {
@@ -83,7 +83,7 @@ namespace API.Services.Service
             try
             {
                 // if supplier already exist
-                if (await daoSupplier.isExist(DTO.SupplierName.Trim()))
+                if (daoSupplier.isExist(DTO.SupplierName.Trim()))
                 {
                     return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
@@ -98,7 +98,7 @@ namespace API.Services.Service
                     CreatorId = CreatorID
                 };
                 // create supplier
-                await daoSupplier.CreateSupplier(supplier);
+                daoSupplier.CreateSupplier(supplier);
                 return new ResponseDTO<bool>(true, "Thêm thành công");
             }
             catch (Exception ex)
@@ -122,7 +122,7 @@ namespace API.Services.Service
                 }
 
                 // if supplier already exist
-                if (await daoSupplier.isExist(SupplierID, DTO.SupplierName))
+                if (daoSupplier.isExist(SupplierID, DTO.SupplierName))
                 {
                     return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
@@ -131,7 +131,7 @@ namespace API.Services.Service
                 supplier.SupplierDescription = DTO.SupplierDescription == null || DTO.SupplierDescription.Trim().Length == 0 ? null : DTO.SupplierDescription.Trim();
                 supplier.UpdateAt = DateTime.Now;
                 // update supplier
-                await daoSupplier.UpdateSupplier(supplier);
+                daoSupplier.UpdateSupplier(supplier);
                 return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)
@@ -150,7 +150,7 @@ namespace API.Services.Service
                     return new ResponseDTO<bool>(false, "Không tìm thấy nhà cung cấp", (int)HttpStatusCode.NotFound);
                 }
                 // delete supplier
-                await daoSupplier.DeleteSupplier(supplier);
+                daoSupplier.DeleteSupplier(supplier);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
             }
             catch (Exception ex)
