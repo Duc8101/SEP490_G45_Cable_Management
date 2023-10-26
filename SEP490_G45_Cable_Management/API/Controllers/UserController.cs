@@ -21,14 +21,14 @@ namespace API.Controllers
         private readonly UserService service = new UserService();
 
         [HttpPost]
-        public async Task<ResponseDTO<TokenDTO?>> Login(LoginDTO DTO)
+        public async Task<ResponseDTO<TokenDTO?>> Login([Required] LoginDTO DTO)
         {
             return await service.Login(DTO);
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> List(string? filter, int page = 1)
+        public async Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> List(string? filter, [Required] int page = 1)
         {
             // if admin
             if (isAdmin())
@@ -40,7 +40,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Create(UserCreateDTO DTO)
+        public async Task<ResponseDTO<bool>> Create([Required] UserCreateDTO DTO)
         {
             // if admin
             if (isAdmin())
@@ -52,7 +52,7 @@ namespace API.Controllers
 
         [HttpPut("{UserID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Update(Guid UserID, UserUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Update([Required] Guid UserID, [Required] UserUpdateDTO DTO)
         {
             // if admin
             if (isAdmin())
@@ -64,7 +64,7 @@ namespace API.Controllers
 
         [HttpDelete("{UserID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Delete(Guid UserID)
+        public async Task<ResponseDTO<bool>> Delete([Required] Guid UserID)
         {
             // if admin
             if (isAdmin())
@@ -81,14 +81,14 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ResponseDTO<bool>> ForgotPassword(ForgotPasswordDTO DTO)
+        public async Task<ResponseDTO<bool>> ForgotPassword([Required] ForgotPasswordDTO DTO)
         {
             return await service.ForgotPassword(DTO);
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<ResponseDTO<bool>> ChangePassword(ChangePasswordDTO DTO)
+        public async Task<ResponseDTO<bool>> ChangePassword([Required] ChangePasswordDTO DTO)
         {
             // if not login 
             if (isGuest())

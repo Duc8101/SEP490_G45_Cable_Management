@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MimeKit.Encodings;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace API.Controllers
@@ -17,7 +18,7 @@ namespace API.Controllers
         private readonly IssueService service = new IssueService();
         [HttpGet("Paged/All")]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List(string? filter, int page = 1)
+        public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List(string? filter, [Required] int page = 1)
         {
             // if admin, leader, staff
             if(isAdmin() || isLeader() || isStaff())
@@ -29,7 +30,7 @@ namespace API.Controllers
 
         [HttpGet("Paged/Doing")]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List(int page = 1)
+        public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List([Required] int page = 1)
         {
             // if admin, leader, staff
             if (isAdmin() || isLeader() || isStaff())
@@ -70,7 +71,7 @@ namespace API.Controllers
 
         [HttpPut("{IssueID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Update(Guid IssueID, IssueUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Update([Required] Guid IssueID, [Required] IssueUpdateDTO DTO)
         {
             // if admin, leader, staff
             if (isAdmin() || isLeader() || isStaff())
@@ -82,7 +83,7 @@ namespace API.Controllers
 
         [HttpDelete("{IssueID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Delete(Guid IssueID)
+        public async Task<ResponseDTO<bool>> Delete([Required] Guid IssueID)
         {
             // if admin, leader, staff
             if (isAdmin() || isLeader() || isStaff())

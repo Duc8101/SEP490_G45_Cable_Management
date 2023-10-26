@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Xml.Linq;
 
@@ -21,7 +22,7 @@ namespace API.Controllers
 
         [HttpGet("Paged")]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<SupplierListDTO>?>> List(string? name, int page = 1)
+        public async Task<ResponseDTO<PagedResultDTO<SupplierListDTO>?>> List(string? name, [Required] int page = 1)
         {
             // if admin or warehouse or leader
             if (isAdmin() || isWarehouseKeeper() || isLeader())
@@ -45,7 +46,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Create(SupplierCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Create([Required] SupplierCreateUpdateDTO DTO)
         { 
             // if admin
             if (isAdmin())
@@ -64,7 +65,7 @@ namespace API.Controllers
 
         [HttpPut("{SupplierID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Update(int SupplierID, SupplierCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Update([Required] int SupplierID, [Required] SupplierCreateUpdateDTO DTO)
         {
             // if admin
             if (isAdmin())
@@ -76,7 +77,7 @@ namespace API.Controllers
 
         [HttpDelete("{SupplierID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Delete(int SupplierID)
+        public async Task<ResponseDTO<bool>> Delete([Required] int SupplierID)
         {
             // if admin
             if (isAdmin())

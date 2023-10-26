@@ -10,7 +10,7 @@ namespace DataAccess.DTO.TransactionDTO
     {
 
         public Guid TransactionId { get; set; }
-        public string? TransactionCategoryName { get; set; }
+        public string TransactionCategoryName { get; set; } = null!;
         public string? Description { get; set; }
         public DateTime? CreatedDate { get; set; }
         public int? WarehouseId { get; set; }

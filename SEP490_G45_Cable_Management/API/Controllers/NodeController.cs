@@ -4,6 +4,7 @@ using DataAccess.DTO.NodeDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace API.Controllers
@@ -15,7 +16,7 @@ namespace API.Controllers
         private readonly NodeService service = new NodeService();
         [HttpGet]
         [Authorize]
-        public async Task<ResponseDTO<List<NodeListDTO>?>> List(Guid RouteID)
+        public async Task<ResponseDTO<List<NodeListDTO>?>> List([Required] Guid RouteID)
         {
             // if admin or leader
             if(isAdmin() || isLeader())
@@ -27,7 +28,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Create(NodeCreateDTO DTO)
+        public async Task<ResponseDTO<bool>> Create([Required] NodeCreateDTO DTO)
         {
             // if admin or leader
             if (isAdmin() || isLeader())
@@ -39,7 +40,7 @@ namespace API.Controllers
 
         [HttpPut("{NodeID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Update(Guid NodeID, NodeUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Update([Required] Guid NodeID, [Required] NodeUpdateDTO DTO)
         {
             // if admin or leader
             if (isAdmin() || isLeader())
@@ -51,7 +52,7 @@ namespace API.Controllers
 
         [HttpDelete("{NodeID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Delete(Guid NodeID)
+        public async Task<ResponseDTO<bool>> Delete([Required] Guid NodeID)
         {
             // if admin or leader
             if (isAdmin() || isLeader())

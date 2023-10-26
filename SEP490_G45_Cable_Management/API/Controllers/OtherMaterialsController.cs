@@ -4,6 +4,7 @@ using DataAccess.DTO.OtherMaterialsDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace API.Controllers
@@ -15,7 +16,7 @@ namespace API.Controllers
         private readonly OtherMaterialsService service = new OtherMaterialsService();
         [HttpGet]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, int? WareHouseID, int page = 1)
+        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, int? WareHouseID, [Required] int page = 1)
         {
             // if admin
             if(isAdmin())
@@ -37,7 +38,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Create(OtherMaterialsCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Create([Required] OtherMaterialsCreateUpdateDTO DTO)
         {
             // if admin, warehouse keeper
             if(isAdmin() || isWarehouseKeeper())
@@ -49,7 +50,7 @@ namespace API.Controllers
 
         [HttpPut("{OtherMaterialsID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Update(int OtherMaterialsID, OtherMaterialsCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Update([Required] int OtherMaterialsID, [Required] OtherMaterialsCreateUpdateDTO DTO)
         {
             // if admin, warehouse keeper
             if (isAdmin() || isWarehouseKeeper())
@@ -61,7 +62,7 @@ namespace API.Controllers
 
         [HttpDelete("{OtherMaterialsID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Delete(int OtherMaterialsID)
+        public async Task<ResponseDTO<bool>> Delete([Required] int OtherMaterialsID)
         {
             // if admin, warehouse keeper
             if (isAdmin() || isWarehouseKeeper())

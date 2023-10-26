@@ -4,6 +4,7 @@ using DataAccess.DTO.RouteDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace API.Controllers
@@ -28,7 +29,7 @@ namespace API.Controllers
 
         [HttpGet("Paged")]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<RouteListDTO>?>> List(int page = 1)
+        public async Task<ResponseDTO<PagedResultDTO<RouteListDTO>?>> List([Required] int page = 1)
         {
             // if admin, leader
             if (isAdmin() || isLeader())
@@ -40,7 +41,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Create(RouteCreateDTO DTO)
+        public async Task<ResponseDTO<bool>> Create([Required] RouteCreateDTO DTO)
         {
             // if admin, leader
             if (isAdmin() || isLeader())
@@ -52,7 +53,7 @@ namespace API.Controllers
 
         [HttpDelete("{RouteID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Delete(Guid RouteID)
+        public async Task<ResponseDTO<bool>> Delete([Required] Guid RouteID)
         {
             // if admin, leader
             if (isAdmin() || isLeader())

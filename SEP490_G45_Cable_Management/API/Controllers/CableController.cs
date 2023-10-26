@@ -4,6 +4,7 @@ using DataAccess.DTO.CableDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace API.Controllers
@@ -16,7 +17,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<CableListDTO>?>> List(string? filter, int? WarehouseID, bool isExportedToUse, int page = 1)
+        public async Task<ResponseDTO<PagedResultDTO<CableListDTO>?>> List(string? filter, int? WarehouseID, [Required] bool isExportedToUse, [Required] int page = 1)
         {
             // if admin, warehouse keeper
             if(isAdmin() || isWarehouseKeeper())
@@ -28,7 +29,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Create(CableCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Create([Required] CableCreateUpdateDTO DTO)
         {
             /// if admin, warehouse keeper
             if (isAdmin() || isWarehouseKeeper())
@@ -45,7 +46,7 @@ namespace API.Controllers
 
         [HttpPut("{CableID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Update(Guid CableID, CableCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Update([Required] Guid CableID, [Required] CableCreateUpdateDTO DTO)
         {
             // if admin, warehouse keeper
             if (isAdmin() || isWarehouseKeeper())
@@ -57,7 +58,7 @@ namespace API.Controllers
 
         [HttpDelete("{CableID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Delete(Guid CableID)
+        public async Task<ResponseDTO<bool>> Delete([Required] Guid CableID)
         {
             // if admin, warehouse keeper
             if (isAdmin() || isWarehouseKeeper())

@@ -91,14 +91,14 @@ namespace API.Model.DAO
         public async Task<bool> isExist(OtherMaterialsCreateUpdateDTO DTO)
         {
             return await context.OtherMaterials.AnyAsync(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == DTO.OtherMaterialsCategoryId
-            && o.Unit == DTO.Unit.Trim() && o.Code == DTO.Code.Trim() /*&& o.SupplierId == DTO.SupplierId*/ && o.Status == DTO.Status.Trim()
+            && o.Unit == DTO.Unit.Trim() && o.Code == DTO.Code.Trim() && o.Status == DTO.Status.Trim()
             && o.WarehouseId == DTO.WarehouseId);
         }
 
         public async Task<bool> isExist(int OtherMaterialsID, OtherMaterialsCreateUpdateDTO DTO)
         {
             return await context.OtherMaterials.AnyAsync(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == DTO.OtherMaterialsCategoryId
-            && o.Unit == DTO.Unit.Trim() && o.Code == DTO.Code.Trim() /*&& o.SupplierId == DTO.SupplierId*/ && o.Status == DTO.Status.Trim()
+            && o.Unit == DTO.Unit.Trim() && o.Code == DTO.Code.Trim() && o.Status == DTO.Status.Trim()
             && o.WarehouseId == DTO.WarehouseId && o.OtherMaterialsId != OtherMaterialsID);
         }
 

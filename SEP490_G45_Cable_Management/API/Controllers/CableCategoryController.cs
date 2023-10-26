@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Xml.Linq;
 
@@ -19,7 +20,7 @@ namespace API.Controllers
         private readonly CableCategoryService service = new CableCategoryService();
         [HttpGet("Paged")]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>> List(string? name, int page = 1)
+        public async Task<ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>> List(string? name, [Required] int page = 1)
         {
             // if admin or leader
             if (isAdmin() || isLeader())
@@ -43,7 +44,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Create(CableCategoryCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Create([Required] CableCategoryCreateUpdateDTO DTO)
         {
             // if admin or leader
             if (isAdmin() || isLeader())
@@ -55,7 +56,7 @@ namespace API.Controllers
 
         [HttpPut("{CableCategoryID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Update(int CableCategoryID, CableCategoryCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Update([Required] int CableCategoryID, [Required] CableCategoryCreateUpdateDTO DTO)
         {
             // if admin or leader
             if (isAdmin() || isLeader())

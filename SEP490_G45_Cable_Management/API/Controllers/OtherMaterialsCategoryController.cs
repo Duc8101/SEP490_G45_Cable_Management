@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using API.Services.Service;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.Controllers
 {
@@ -15,7 +16,7 @@ namespace API.Controllers
         private readonly OtherMaterialsCategoryService service = new OtherMaterialsCategoryService();
         [HttpGet("Paged")]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>> List(string? name, int page = 1)
+        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>> List(string? name, [Required] int page = 1)
         {
             // if admin or leader
             if (isAdmin() || isLeader())
@@ -39,7 +40,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Create(OtherMaterialsCategoryCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Create([Required] OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
             // if admin or leader
             if (isAdmin() || isLeader())
@@ -51,7 +52,7 @@ namespace API.Controllers
 
         [HttpPut("{OtherMaterialsCategoryID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Update(int OtherMaterialsCategoryID,OtherMaterialsCategoryCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Update([Required] int OtherMaterialsCategoryID, [Required] OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
             // if admin or leader
             if (isAdmin() || isLeader())

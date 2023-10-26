@@ -6,6 +6,7 @@ using DataAccess.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace API.Controllers
@@ -17,7 +18,7 @@ namespace API.Controllers
         private readonly RequestService service = new RequestService();
         [HttpGet]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<RequestListDTO>?>> List(string? name , string? status, int page = 1)
+        public async Task<ResponseDTO<PagedResultDTO<RequestListDTO>?>> List(string? name , string? status, [Required] int page = 1)
         {
             // if admin, leader
             if (isAdmin() || isLeader())
@@ -39,7 +40,7 @@ namespace API.Controllers
 
         [HttpPost("Export")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Create(RequestCreateExportDTO DTO)
+        public async Task<ResponseDTO<bool>> Create([Required] RequestCreateExportDTO DTO)
         {
             // if warehouse keeper or staff
             if (isWarehouseKeeper() || isStaff())
@@ -56,7 +57,7 @@ namespace API.Controllers
 
         [HttpPut("{RequestID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Approve(Guid RequestID)
+        public async Task<ResponseDTO<bool>> Approve([Required] Guid RequestID)
         {
             // if admin
             if (isAdmin())
@@ -79,7 +80,7 @@ namespace API.Controllers
 
         [HttpPut("{RequestID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Reject(Guid RequestID)
+        public async Task<ResponseDTO<bool>> Reject([Required] Guid RequestID)
         {
             // if admin
             if (isAdmin())

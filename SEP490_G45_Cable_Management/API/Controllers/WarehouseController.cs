@@ -4,6 +4,7 @@ using DataAccess.DTO.WarehouseDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace API.Controllers
@@ -16,7 +17,7 @@ namespace API.Controllers
 
         [HttpGet("Paged")]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<WarehouseListDTO>?>> List(string? name , int page = 1)
+        public async Task<ResponseDTO<PagedResultDTO<WarehouseListDTO>?>> List(string? name , [Required] int page = 1)
         {
             // if admin, warehousekeeper, leader
             if(isAdmin() || isWarehouseKeeper() || isLeader())
@@ -40,7 +41,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Create(WarehouseCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Create([Required] WarehouseCreateUpdateDTO DTO)
         {
             // if admin
             if (isAdmin())
@@ -57,7 +58,7 @@ namespace API.Controllers
 
         [HttpPut("{WarehouseID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Update(int WarehouseID, WarehouseCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Update([Required] int WarehouseID, [Required] WarehouseCreateUpdateDTO DTO)
         {
             // if admin
             if (isAdmin())
@@ -69,7 +70,7 @@ namespace API.Controllers
 
         [HttpDelete("{WarehouseID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Delete(int WarehouseID)
+        public async Task<ResponseDTO<bool>> Delete([Required] int WarehouseID)
         {
             // if admin
             if (isAdmin())

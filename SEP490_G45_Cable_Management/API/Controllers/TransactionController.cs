@@ -4,6 +4,7 @@ using DataAccess.DTO.TransactionDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace API.Controllers
@@ -15,7 +16,7 @@ namespace API.Controllers
         private readonly TransactionService service = new TransactionService();
         [HttpGet]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>> List(string? filter, int? WareHouseID, int page = 1)
+        public async Task<ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>> List(string? filter, int? WareHouseID, [Required] int page = 1)
         {
             // if admin
             if (isAdmin())
@@ -28,7 +29,7 @@ namespace API.Controllers
         [HttpGet("{TransactionID}")]
         [Authorize]
 
-        public async Task<ResponseDTO<TransactionDetailDTO?>> Detail(Guid TransactionID)
+        public async Task<ResponseDTO<TransactionDetailDTO?>> Detail([Required] Guid TransactionID)
         {
             // if admin
             if (isAdmin())
