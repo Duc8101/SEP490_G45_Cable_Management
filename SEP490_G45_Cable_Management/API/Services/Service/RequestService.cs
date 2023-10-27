@@ -446,6 +446,18 @@ namespace API.Services.Service
             }
             return new ResponseDTO<bool>(true, string.Empty);
         }
+        private void UpdateRequest(DataAccess.Entity.Request request, Guid ID, string status)
+        {
+            request.ApproverId = ID;
+            request.Status = status;
+            request.UpdateAt = DateTime.Now;
+            daoRequest.UpdateRequest(request);
+        }
+        private async Task sendEmailToCreator(DataAccess.Entity.Request request, string ApproverName)
+        {
+            string body = await UserUtil.BodyEmailForApproveRequest(request, ApproverName);
+            await UserUtil.sendEmail("Thông báo yêu cầu được phê duyệt", body, request.Creator.Email);
+        }
         private async Task<ResponseDTO<bool>> ApproveRequestExport(Guid ApproverID, DataAccess.Entity.Request request, string ApproverName)
         {
             List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
@@ -554,10 +566,7 @@ namespace API.Services.Service
                 }
             }
             // ------------------------------- update request approved --------------------------------
-            request.ApproverId = ApproverID;
-            request.Status = RequestConst.STATUS_APPROVED;
-            request.UpdateAt = DateTime.Now;
-            daoRequest.UpdateRequest(request);
+            UpdateRequest(request, ApproverID, RequestConst.STATUS_APPROVED);
             // ------------------------------- add transaction cable --------------------------------
             if (listCableExported.Count > 0)
             {
@@ -620,8 +629,8 @@ namespace API.Services.Service
                     daoTransactionMaterial.CreateTransactionMaterial(material);
                 }
             }
-            string body = await UserUtil.BodyEmailForApproveRequestExport(request, ApproverName);
-            await UserUtil.sendEmail("Thông báo yêu cầu được phê duyệt", body, request.Creator.Email);
+            // ------------------------------- send email --------------------------------
+            await sendEmailToCreator(request, ApproverName);
             return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
         }
         // check cable valid when create request recovery
@@ -951,10 +960,7 @@ namespace API.Services.Service
                 }
             }
             // ------------------------------- update request approved --------------------------------
-            request.ApproverId = ApproverID;
-            request.Status = RequestConst.STATUS_APPROVED;
-            request.UpdateAt = DateTime.Now;
-            daoRequest.UpdateRequest(request);
+            UpdateRequest(request, ApproverID, RequestConst.STATUS_APPROVED);
             // ------------------------------- create transaction cable ------------------------------
             if (listCableRecovery.Count > 0)
             {
@@ -1016,8 +1022,7 @@ namespace API.Services.Service
                 }
             }
             // ------------------------------- send email ------------------------------
-            string body = await UserUtil.BodyEmailForApproveRequestRecovery(request, ApproverName);
-            await UserUtil.sendEmail("Thông báo yêu cầu được phê duyệt", body, request.Creator.Email);
+            await sendEmailToCreator(request, ApproverName);
             return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
         }
         public async Task<ResponseDTO<bool>> Approve(Guid RequestID, Guid ApproverID, string ApproverName)
@@ -1057,19 +1062,12 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
                 }
-                if (request.RequestCategoryId != RequestCategoryConst.CATEGORY_DELIVER && request.Issue == null)
-                {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
-                }
                 if (!request.Status.Equals(RequestConst.STATUS_PENDING))
                 {
                     return new ResponseDTO<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị hủy", (int)HttpStatusCode.Conflict);
                 }
                 // ------------------- update request ---------------
-                request.ApproverId = RejectorID;
-                request.Status = RequestConst.STATUS_REJECTED;
-                request.UpdateAt = DateTime.Now;
-                daoRequest.UpdateRequest(request);
+                UpdateRequest(request, RejectorID, RequestConst.STATUS_REJECTED);
                 return new ResponseDTO<bool>(true, string.Empty);
             }
             catch (Exception ex)

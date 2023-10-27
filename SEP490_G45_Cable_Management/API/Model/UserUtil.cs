@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using DataAccess.Entity;
 using Org.BouncyCastle.Asn1.Ocsp;
 using API.Model.DAO;
+using DataAccess.Const;
 
 namespace API.Model
 {
@@ -91,7 +92,7 @@ namespace API.Model
             body = body + "<p>Vui lòng kiểm tra chi tiết yêu cầu</p>\n";
             return body;
         }
-        public static async Task<string> BodyEmailForApproveRequestExport(DataAccess.Entity.Request request, string ApproverName)
+        public static async Task<string> BodyEmailForApproveRequest(DataAccess.Entity.Request request, string ApproverName)
         {
             DAORequestCable daoRequestCable = new DAORequestCable();
             DAORequestOtherMaterial daoRequestMaterial = new DAORequestOtherMaterial();
@@ -110,9 +111,17 @@ namespace API.Model
                 {
                     if (item.Cable.Warehouse != null)
                     {
-                        builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " xuất từ kho " + item.Cable.Warehouse.WarehouseName
-                       + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
-                    }    
+                        if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT)
+                        {
+                            builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " xuất từ kho " + item.Cable.Warehouse.WarehouseName
+                                + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
+                        }else if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_RECOVERY)
+                        {
+                            builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " được thu hồi về kho " + item.Cable.Warehouse.WarehouseName
+                                + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
+                        }
+                    }       
+                      
                 }
             }
             if(requestMaterials.Count > 0)
@@ -121,48 +130,15 @@ namespace API.Model
                 {
                     if (item.OtherMaterials.Warehouse != null)
                     {
-                        builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " xuất từ trong kho " +
-                            item.OtherMaterials.Warehouse.WarehouseName + ", số lượng: " + item.Quantity + "</p>");
-                    }
-                }
-            }
-            builder.AppendLine("<p>Người duyệt</p>");
-            builder.AppendLine("<p>" + ApproverName + "</p>");
-            return builder.ToString();
-        }
-        public static async Task<string> BodyEmailForApproveRequestRecovery(DataAccess.Entity.Request request, string ApproverName)
-        {
-            DAORequestCable daoRequestCable = new DAORequestCable();
-            DAORequestOtherMaterial daoRequestMaterial = new DAORequestOtherMaterial();
-            List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
-            List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(request.RequestId);
-            StringBuilder builder = new StringBuilder("<h1>Yêu cầu với tên \"" + request.RequestName + "\" đã được duyệt</h1>\n" +
-                             "<p>Loại yêu cầu: " + request.RequestCategory.RequestCategoryName + "</p>\n");
-            if (request.Issue != null)
-            {
-                builder.Append("<p>Mã sụ vụ: " + request.Issue.IssueCode + "</p>");
-            }
-            builder.Append("<p>Thông tin chi tiết của yêu cầu:</p>\n");
-            if (requestCables.Count > 0)
-            {
-                foreach (RequestCable item in requestCables)
-                {
-                    if(item.Cable.Warehouse != null)
-                    {
-                        builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " được thu hồi về kho " + item.Cable.Warehouse.WarehouseName
-                       + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
-                    }
-                   
-                }
-            }
-            if (requestMaterials.Count > 0)
-            {
-                foreach (RequestOtherMaterial item in request.RequestOtherMaterials)
-                {
-                    if(item.OtherMaterials.Warehouse != null)
-                    {
-                        builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " được thu hồi về kho " +
-                       item.OtherMaterials.Warehouse.WarehouseName + ", số lượng: " + item.Quantity.ToString() + "</p>");
+                        if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT)
+                        {
+                            builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " xuất từ trong kho " +
+                                item.OtherMaterials.Warehouse.WarehouseName + ", số lượng: " + item.Quantity + "</p>");
+                        }else if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_RECOVERY)
+                        {
+                            builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " được thu hồi về kho " +
+                                item.OtherMaterials.Warehouse.WarehouseName + ", số lượng: " + item.Quantity + "</p>");
+                        }
                     }
                 }
             }
