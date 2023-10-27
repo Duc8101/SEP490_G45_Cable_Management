@@ -21,7 +21,8 @@ namespace API.Model.DAO
         }
         public async Task<List<NodeMaterialCategory>> getList(Guid NodeID)
         {
-            return await context.NodeMaterialCategories.Where(n => n.NodeId == NodeID).ToListAsync();
+            return await context.NodeMaterialCategories.Include(n => n.OtherMaterialCategory).OrderByDescending(n => n.UpdateAt)
+                .Where(n => n.NodeId == NodeID).ToListAsync();
         }
     }
 }

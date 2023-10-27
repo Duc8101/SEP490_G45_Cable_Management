@@ -2,6 +2,7 @@
 using API.Services.IService;
 using DataAccess.DTO;
 using DataAccess.DTO.NodeDTO;
+using DataAccess.DTO.NodeMaterialCategoryDTO;
 using DataAccess.Entity;
 using MimeKit.Cryptography;
 using Org.BouncyCastle.Utilities.Net;
@@ -15,13 +16,28 @@ namespace API.Services.Service
     {
         private readonly DAONode daoNode = new DAONode();
         private readonly DAONodeMaterialCategory daoCategory = new DAONodeMaterialCategory();
-        private async Task<List<NodeListDTO>> getList(Guid RouteID)
+        private async Task<List<NodeMaterialCategoryListDTO>> getListCategory(Guid NodeID)
+        {
+            List<NodeMaterialCategory> NodeMaterialCategories = await daoCategory.getList(NodeID);
+            List<NodeMaterialCategoryListDTO> list = new List<NodeMaterialCategoryListDTO>();
+            foreach (NodeMaterialCategory item in NodeMaterialCategories)
+            {
+                NodeMaterialCategoryListDTO categoryDTO = new NodeMaterialCategoryListDTO()
+                {
+                    OtherMaterialsCategoryName = item.OtherMaterialCategory.OtherMaterialsCategoryName,
+                    Quantity = item.Quantity,
+                };
+                list.Add(categoryDTO);
+            }
+            return list;
+        }
+        private async Task<List<NodeListDTO>> getListNode(Guid RouteID)
         {
             List<Node> list = await daoNode.getListNotDeleted(RouteID);
             List<NodeListDTO> result = new List<NodeListDTO>();
             foreach (Node node in list)
             {
-                List<NodeMaterialCategory> NodeMaterialCategories = await daoCategory.getList(node.Id);
+                List<NodeMaterialCategoryListDTO> categories = await getListCategory(node.Id);
                 NodeListDTO DTO = new NodeListDTO()
                 {
                     Id = node.Id,
@@ -32,9 +48,10 @@ namespace API.Services.Service
                     Latitude = node.Latitude,
                     Status = node.Status,
                     RouteId = node.RouteId,
+                    Note = node.Note,
                     //NodeCables = (List<NodeCable>)node.NodeCables,
                     //NodeMaterials = (List<NodeMaterial>)node.NodeMaterials,
-                    NodeMaterialCategories = NodeMaterialCategories
+                    NodeMaterialCategoryListDTOs = categories
                 };
                 result.Add(DTO);
             }
@@ -44,7 +61,7 @@ namespace API.Services.Service
         {
             try
             {
-                List<NodeListDTO> list = await getList(RouteID);
+                List<NodeListDTO> list = await getListNode(RouteID);
                 return new ResponseDTO<List<NodeListDTO>?>(list, string.Empty);
             }
             catch (Exception ex)
@@ -145,8 +162,8 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<NodeListDTO?>(null, "Không tìm thấy điểm", (int) HttpStatusCode.NotFound);
                 }
-                List<NodeMaterialCategory> NodeMaterialCategories = await daoCategory.getList(node.Id);
-                NodeListDTO DTO = new NodeListDTO()
+                List<NodeMaterialCategoryListDTO> list = await getListCategory(NodeID);
+                NodeListDTO nodeDTO = new NodeListDTO()
                 {
                     Id = node.Id,
                     NodeCode = node.NodeCode,
@@ -156,11 +173,12 @@ namespace API.Services.Service
                     Latitude = node.Latitude,
                     Status = node.Status,
                     RouteId = node.RouteId,
+                    Note = node.Note,
                     //NodeCables = (List<NodeCable>)node.NodeCables,
                     //NodeMaterials = (List<NodeMaterial>)node.NodeMaterials,
-                    NodeMaterialCategories = NodeMaterialCategories
+                    NodeMaterialCategoryListDTOs = list
                 };
-                return new ResponseDTO<NodeListDTO?>(DTO, string.Empty);
+                return new ResponseDTO<NodeListDTO?>(nodeDTO, string.Empty);
             }
             catch (Exception ex)
             {

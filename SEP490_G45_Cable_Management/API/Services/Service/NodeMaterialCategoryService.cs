@@ -14,7 +14,7 @@ namespace API.Services.Service
         {
             try
             {
-                foreach(NodeMaterialCategoryDTO item in DTO.NodeMaterialCategoryDTOs)
+                foreach(MaterialCategoryDTO item in DTO.MaterialCategoryDTOs)
                 {
                     NodeMaterialCategory? material = await daoMaterial.getMaterial(item.OtherMaterialsCategoryId);
                     // if material category not exist

@@ -10,10 +10,10 @@ namespace DataAccess.DTO.NodeMaterialCategoryDTO
     {
         public NodeMaterialCategoryCreateDTO()
         {
-            NodeMaterialCategoryDTOs = new List<NodeMaterialCategoryDTO>();
+            MaterialCategoryDTOs = new List<MaterialCategoryDTO>();
         }
         public Guid NodeId { get; set; }
 
-        public List<NodeMaterialCategoryDTO> NodeMaterialCategoryDTOs { get; set; }
+        public List<MaterialCategoryDTO> MaterialCategoryDTOs { get; set; }
     }
 }
