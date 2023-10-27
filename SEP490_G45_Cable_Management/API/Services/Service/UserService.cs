@@ -177,7 +177,7 @@ namespace API.Services.Service
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        private async Task<List<UserListDTO>> getList(string? filter, int page)
+        private async Task<List<UserListDTO>> getListPaged(string? filter, int page)
         {
             List<User> list = await daoUser.getList(filter, page);
             List<UserListDTO> result = new List<UserListDTO>();
@@ -197,11 +197,11 @@ namespace API.Services.Service
             }
             return result;
         }
-        public async Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> List(string? filter, int page)
+        public async Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> ListPaged(string? filter, int page)
         {
             try
             {
-                List<UserListDTO> list = await getList(filter, page);
+                List<UserListDTO> list = await getListPaged(filter, page);
                 int RowCount = await daoUser.getRowCount(filter);
                 PagedResultDTO<UserListDTO> result = new PagedResultDTO<UserListDTO>(page, RowCount, PageSizeConst.MAX_USER_LIST_IN_PAGE, list);
                 return new ResponseDTO<PagedResultDTO<UserListDTO>?>(result, string.Empty);
@@ -272,6 +272,32 @@ namespace API.Services.Service
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-
+        public async Task<ResponseDTO<List<UserListDTO>?>> ListWarehouseKeeper()
+        {
+            try
+            {
+                List<User> list = await daoUser.getList();
+                List<UserListDTO> result = new List<UserListDTO>();
+                foreach (User user in list)
+                {
+                    UserListDTO DTO = new UserListDTO()
+                    {
+                        UserId = user.UserId,
+                        UserName = user.Username,
+                        FirstName = user.Firstname,
+                        LastName = user.Lastname,
+                        Email = user.Email,
+                        Phone = user.Phone,
+                        RoleName = user.Role.Rolename
+                    };
+                    result.Add(DTO);
+                }
+                return new ResponseDTO<List<UserListDTO>?>(result, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<List<UserListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+            }
+        }
     }
 }

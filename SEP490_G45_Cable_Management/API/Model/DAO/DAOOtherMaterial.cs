@@ -33,11 +33,16 @@ namespace API.Model.DAO
             }
             return query;
         }
-        public async Task<List<OtherMaterial>> getListAll(string? filter, int? WareHouseID, Guid? WareHouseKeeperID, int page)
+        public async Task<List<OtherMaterial>> getListPaged(string? filter, int? WareHouseID, Guid? WareHouseKeeperID, int page)
         {
             IQueryable<OtherMaterial> query = getQuery(filter, WareHouseID, WareHouseKeeperID);
             return await query.OrderByDescending(o => o.UpdateAt).Skip(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE)
                 .ToListAsync();
+        }
+        public async Task<List<OtherMaterial>> getListAll(int? WareHouseID)
+        {
+            IQueryable<OtherMaterial> query = getQuery(null, WareHouseID, null);
+            return await query.OrderByDescending(o => o.UpdateAt).ToListAsync();
         }
 
         public async Task<int> getRowCount(string? filter, int? WareHouseID, Guid? WareHouseKeeperID)

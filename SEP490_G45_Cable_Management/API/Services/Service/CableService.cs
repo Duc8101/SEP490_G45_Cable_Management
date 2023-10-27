@@ -11,9 +11,8 @@ namespace API.Services.Service
     public class CableService : ICableService
     {
         private readonly DAOCable daoCable = new DAOCable();
-        private async Task<List<CableListDTO>> getList(string? filter, int? WarehouseID, bool isExportedToUse, int page)
+        private List<CableListDTO> getListDTO(List<Cable> list)
         {
-            List<Cable> list = await daoCable.getList(filter, WarehouseID, isExportedToUse, page);
             List<CableListDTO> result = new List<CableListDTO>();
             foreach (Cable item in list)
             {
@@ -39,11 +38,17 @@ namespace API.Services.Service
             }
             return result;
         }
-        public async Task<ResponseDTO<PagedResultDTO<CableListDTO>?>> List(string? filter, int? WarehouseID, bool isExportedToUse, int page)
+        private async Task<List<CableListDTO>> getListPaged(string? filter, int? WarehouseID, bool isExportedToUse, int page)
+        {
+            List<Cable> list = await daoCable.getListPaged(filter, WarehouseID, isExportedToUse, page);
+            List<CableListDTO> result = getListDTO(list);
+            return result;
+        }
+        public async Task<ResponseDTO<PagedResultDTO<CableListDTO>?>> ListPaged(string? filter, int? WarehouseID, bool isExportedToUse, int page)
         {
             try
             {
-                List<CableListDTO> list = await getList(filter, WarehouseID, isExportedToUse, page);
+                List<CableListDTO> list = await getListPaged(filter, WarehouseID, isExportedToUse, page);
                 int RowCount = await daoCable.getRowCount(filter, WarehouseID, isExportedToUse);
                 int sum = await daoCable.getSum(filter, WarehouseID, isExportedToUse);
                 PagedResultDTO<CableListDTO> result = new PagedResultDTO<CableListDTO>(page, RowCount, PageSizeConst.MAX_CABLE_LIST_IN_PAGE, list, sum);
@@ -147,6 +152,19 @@ namespace API.Services.Service
             catch (Exception ex)
             {
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+            }
+        }
+        public async Task<ResponseDTO<List<CableListDTO>?>> ListAll(int? WarehouseID)
+        {
+            try
+            {
+                List<Cable> list = await daoCable.getListAll(WarehouseID);
+                List<CableListDTO> result = getListDTO(list);
+                return new ResponseDTO<List<CableListDTO>?>(result, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<List<CableListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
     }

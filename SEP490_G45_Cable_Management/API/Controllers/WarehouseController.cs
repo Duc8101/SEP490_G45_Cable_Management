@@ -31,8 +31,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<List<WarehouseListDTO>?>> List()
         {
-            // if admin, warehousekeeper, leader
-            if (isAdmin() || isWarehouseKeeper() || isLeader())
+            // if warehousekeeper, staff
+            if (isWarehouseKeeper() || isStaff())
             {
                 return await service.ListAll();
             }

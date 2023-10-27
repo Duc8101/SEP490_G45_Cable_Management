@@ -9,8 +9,9 @@ namespace API.Services.IService
         Task<ResponseDTO<bool>> Create(UserCreateDTO DTO);
         Task<ResponseDTO<bool>> ForgotPassword(ForgotPasswordDTO DTO);
         Task<ResponseDTO<bool>> ChangePassword(ChangePasswordDTO DTO, string email);
-        Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> List(string? filter, int page);
+        Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> ListPaged(string? filter, int page);
         Task<ResponseDTO<bool>> Update(Guid UserID, UserUpdateDTO DTO);
         Task<ResponseDTO<bool>> Delete(Guid UserID, Guid UserLoginID);
+        Task<ResponseDTO<List<UserListDTO>?>> ListWarehouseKeeper();
     }
 }

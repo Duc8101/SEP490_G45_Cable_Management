@@ -12,13 +12,13 @@ namespace DataAccess.DTO.RequestDTO
     {
         public RequestCreateDeliverDTO()
         {
-            CableExportDTOs = new List<CableExportDTO>();
-            OtherMaterialsExportDTOs = new List<OtherMaterialsExportCancelInsideDTO>();
+            CableExportDeliverDTOs = new List<CableExportDeliverDTO>();
+            OtherMaterialsExportCancelInsideDTOs = new List<OtherMaterialsExportCancelInsideDTO>();
         }
         public int DeliverWareHouseID { get; set; }
-        public List<CableExportDTO> CableExportDTOs { get; set; }
+        public List<CableExportDeliverDTO> CableExportDeliverDTOs { get; set; }
 
-        public List<OtherMaterialsExportCancelInsideDTO> OtherMaterialsExportDTOs { get; set; }
+        public List<OtherMaterialsExportCancelInsideDTO> OtherMaterialsExportCancelInsideDTOs { get; set; }
 
     }
 }

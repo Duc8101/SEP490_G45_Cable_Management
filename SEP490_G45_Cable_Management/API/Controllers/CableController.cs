@@ -15,16 +15,28 @@ namespace API.Controllers
     {
         private readonly CableService service = new CableService();
 
-        [HttpGet]
+        [HttpGet("Paged")]
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<CableListDTO>?>> List(string? filter, int? WarehouseID, [Required] bool isExportedToUse, [Required] int page = 1)
         {
             // if admin, warehouse keeper
             if(isAdmin() || isWarehouseKeeper())
             {
-                return await service.List(filter, WarehouseID, isExportedToUse, page);
+                return await service.ListPaged(filter, WarehouseID, isExportedToUse, page);
             }
             return new ResponseDTO<PagedResultDTO<CableListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+        }
+
+        [HttpGet("All")]
+        [Authorize]
+        public async Task<ResponseDTO<List<CableListDTO>?>> List(int? WarehouseID)
+        {
+            // if admin, warehouse keeper
+            if (isWarehouseKeeper() || isStaff())
+            {
+                return await service.ListAll(WarehouseID);
+            }
+            return new ResponseDTO<List<CableListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPost]

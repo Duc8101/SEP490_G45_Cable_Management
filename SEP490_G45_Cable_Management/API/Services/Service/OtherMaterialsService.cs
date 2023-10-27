@@ -11,9 +11,8 @@ namespace API.Services.Service
     public class OtherMaterialsService : IOtherMaterialsService
     {
         private readonly DAOOtherMaterial daoOtherMaterials = new DAOOtherMaterial();
-        private async Task<List<OtherMaterialsListDTO>> getList(string? filter, int? WareHouseID, Guid? WareHouseKeeperID, int page)
+        private List<OtherMaterialsListDTO> getListDTO(List<OtherMaterial> list)
         {
-            List<OtherMaterial> list = await daoOtherMaterials.getListAll(filter, WareHouseID, WareHouseKeeperID, page);
             List<OtherMaterialsListDTO> result = new List<OtherMaterialsListDTO>();
             foreach (OtherMaterial item in list)
             {
@@ -33,11 +32,17 @@ namespace API.Services.Service
             }
             return result;
         }
-        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, int? WareHouseID, Guid? WareHouseKeeperID, int page)
+        private async Task<List<OtherMaterialsListDTO>> getListPaged(string? filter, int? WareHouseID, Guid? WareHouseKeeperID, int page)
+        {
+            List<OtherMaterial> list = await daoOtherMaterials.getListPaged(filter, WareHouseID, WareHouseKeeperID, page);
+            List<OtherMaterialsListDTO> result = getListDTO(list);
+            return result;
+        }
+        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> ListPaged(string? filter, int? WareHouseID, Guid? WareHouseKeeperID, int page)
         {
             try
             {
-                List<OtherMaterialsListDTO> list = await getList(filter, WareHouseID, WareHouseKeeperID, page);
+                List<OtherMaterialsListDTO> list = await getListPaged(filter, WareHouseID, WareHouseKeeperID, page);
                 int RowCount = await daoOtherMaterials.getRowCount(filter, WareHouseID, WareHouseKeeperID);
                 int sum = await daoOtherMaterials.getSum(filter, WareHouseID, WareHouseKeeperID);
                 PagedResultDTO<OtherMaterialsListDTO> result = new PagedResultDTO<OtherMaterialsListDTO>(page, RowCount, PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE, list, sum);
@@ -180,6 +185,19 @@ namespace API.Services.Service
             catch (Exception ex)
             {
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+            }
+        }
+        public async Task<ResponseDTO<List<OtherMaterialsListDTO>?>> ListAll(int? WareHouseID)
+        {
+            try
+            {
+                List<OtherMaterial> list = await daoOtherMaterials.getListAll(WareHouseID);
+                List<OtherMaterialsListDTO> result = getListDTO(list);
+                return new ResponseDTO<List<OtherMaterialsListDTO>?>(result, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<List<OtherMaterialsListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
     }

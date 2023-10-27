@@ -26,16 +26,27 @@ namespace API.Controllers
             return await service.Login(DTO);
         }
 
-        [HttpGet]
+        [HttpGet("Paged")]
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> List(string? filter, [Required] int page = 1)
         {
             // if admin
             if (isAdmin())
             {
-                return await service.List(filter, page);
+                return await service.ListPaged(filter, page);
             }
             return new ResponseDTO<PagedResultDTO<UserListDTO>?>(null, "Bạn không có quyền truy cập" , (int) HttpStatusCode.Forbidden);
+        }
+
+        [HttpGet("WarehouseKeeper")]
+        [Authorize]
+        public async Task<ResponseDTO<List<UserListDTO>?>> List()
+        {
+            if (isAdmin())
+            {
+                return await service.ListWarehouseKeeper();
+            }
+            return new ResponseDTO<List<UserListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPost]

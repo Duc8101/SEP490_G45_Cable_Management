@@ -30,11 +30,17 @@ namespace API.Model.DAO
             }
             return query;
         }
-        public async Task<List<Cable>> getList(string? filter, int? WarehouseID, bool isExportedToUse, int page)
+        public async Task<List<Cable>> getListPaged(string? filter, int? WarehouseID, bool isExportedToUse, int page)
         {
             IQueryable<Cable> query = getQuery(filter, WarehouseID, isExportedToUse);
             return await query.OrderByDescending(c => c.UpdateAt).Skip(PageSizeConst.MAX_CABLE_LIST_IN_PAGE * (page - 1))
                 .Take(PageSizeConst.MAX_CABLE_LIST_IN_PAGE).ToListAsync();
+        }
+
+        public async Task<List<Cable>> getListAll(int? WarehouseID)
+        {
+            IQueryable<Cable> query = getQuery(null, WarehouseID, false);
+            return await query.OrderByDescending(c => c.UpdateAt).ToListAsync();
         }
 
         public async Task<int> getRowCount(string? filter, int? WarehouseID, bool isExportedToUse)

@@ -87,7 +87,12 @@ namespace API.Model.DAO
         }
         public async Task<List<string>> getEmailAdmins()
         {
-            return await context.Users.Where(u => u.RoleId == RoleConst.INT_ROLE_ADMIN).Select(u => u.Email).ToListAsync();
+            return await context.Users.Where(u => u.RoleId == RoleConst.INT_ROLE_ADMIN && u.IsDeleted == false).Select(u => u.Email).ToListAsync();
+        }
+        public async Task<List<User>> getList()
+        {
+            IQueryable<User> query = getQuery(null);
+            return await query.OrderByDescending(u => u.UpdateAt).Where(u => u.RoleId == RoleConst.INT_ROLE_WAREHOUSE_KEEPER).ToListAsync();
         }
 
     }

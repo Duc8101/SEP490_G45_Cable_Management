@@ -63,13 +63,13 @@ namespace API.Services.Service
             }
         }
         // check cable valid when create request export
-        private async Task<ResponseDTO<bool>> isCableValidCreateExport(List<CableExportDTO> list)
+        private async Task<ResponseDTO<bool>> isCableValidCreateExport(List<CableExportDeliverDTO> list)
         {
             if (list.Count == 0)
             {
                 return new ResponseDTO<bool>(true, string.Empty);
             }
-            foreach (CableExportDTO export in list)
+            foreach (CableExportDeliverDTO export in list)
             {
                 Cable? cable = await daoCable.getCable(export.CableId);
                 // if exist cable not found
@@ -114,11 +114,11 @@ namespace API.Services.Service
             return new ResponseDTO<bool>(true, string.Empty);
         }
         // create request cable when create request export
-        private void CreateRequestCable(List<CableExportDTO> list, Guid RequestID)
+        private void CreateRequestCable(List<CableExportDeliverDTO> list, Guid RequestID)
         {
             if (list.Count > 0)
             {
-                foreach (CableExportDTO item in list)
+                foreach (CableExportDeliverDTO item in list)
                 {
                     RequestCable request = new RequestCable()
                     {

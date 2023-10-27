@@ -14,14 +14,14 @@ namespace API.Controllers
     public class OtherMaterialsController : BaseAPIController
     {
         private readonly OtherMaterialsService service = new OtherMaterialsService();
-        [HttpGet]
+        [HttpGet("Paged")]
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, int? WareHouseID, [Required] int page = 1)
         {
             // if admin
             if(isAdmin())
             {
-                return await service.List(filter, WareHouseID, null, page);
+                return await service.ListPaged(filter, WareHouseID, null, page);
             }
             // if warehouse keeper
             if (isWarehouseKeeper())
@@ -31,9 +31,21 @@ namespace API.Controllers
                 {
                     return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(null, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
                 }
-                return await service.List(filter, WareHouseID, Guid.Parse(WareHouseKeeperID), page);
+                return await service.ListPaged(filter, WareHouseID, Guid.Parse(WareHouseKeeperID), page);
             }
             return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+        }
+
+        [HttpGet("All")]
+        [Authorize]
+        public async Task<ResponseDTO<List<OtherMaterialsListDTO>?>> List(int? WareHouseID)
+        {
+            // if warehouse keeper or staff
+            if (isWarehouseKeeper() || isStaff())
+            {
+                return await service.ListAll(WareHouseID);
+            }
+            return new ResponseDTO<List<OtherMaterialsListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPost]
