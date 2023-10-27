@@ -30,7 +30,7 @@ namespace API.Model.DAO
         public async Task<List<TransactionHistory>> getList(string? filter, int? WareHouseID, int page)
         {
             IQueryable<TransactionHistory> query = getQuery(filter, WareHouseID);
-            query = query.OrderByDescending(t => t.CreatedAt).Skip(PageSizeConst.MAX_TRANSACTION_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_TRANSACTION_LIST_IN_PAGE);
+            query = query.OrderByDescending(t => t.UpdateAt).Skip(PageSizeConst.MAX_TRANSACTION_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_TRANSACTION_LIST_IN_PAGE);
             return await query.ToListAsync();
         }
 

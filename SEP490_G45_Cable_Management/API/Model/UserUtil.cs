@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using DataAccess.Entity;
 using Org.BouncyCastle.Asn1.Ocsp;
+using API.Model.DAO;
 
 namespace API.Model
 {
@@ -29,7 +30,6 @@ namespace API.Model
             }
             return result;
         }
-
         public static string RandomPassword()
         {
             Random random = new Random();
@@ -44,14 +44,12 @@ namespace API.Model
             }
             return result;
         }
-
         public static string BodyEmailForRegister(string password)
         {
             string body = "<h1>Mật khẩu cho tài khoản mới</h1>\n" +
                             "<p>Mật khẩu của bạn là: " + password + "</p>\n";
             return body;
         }
-
         public static Task sendEmail(string subject, string body, string to)
         {
             // get information of mail address
@@ -75,7 +73,6 @@ namespace API.Model
             smtp.Disconnect(true);
             return Task.CompletedTask;
         }
-
         public static string BodyEmailForForgetPassword(string password)
         {
             string body = "<h1>Mật khẩu mới</h1>\n" +
@@ -83,7 +80,6 @@ namespace API.Model
                             "<p>Không nên chia sẻ mật khẩu của bạn với người khác.</p>";
             return body;
         }
-
         public static string BodyEmailForAdminReceiveRequest(string RequestName, string RequestCategoryName, Issue? issue)
         {
             string body = "<h1>Yêu cầu với tên \"" + RequestName + "\"</h1>\n" +
@@ -95,9 +91,12 @@ namespace API.Model
             body = body + "<p>Vui lòng kiểm tra chi tiết yêu cầu</p>\n";
             return body;
         }
-
-        public static string BodyEmailForApproveRequestExport(DataAccess.Entity.Request request, string ApproverName, List<Cable> listCableExported, List<RequestOtherMaterial> requestMaterials)
+        public static async Task<string> BodyEmailForApproveRequestExport(DataAccess.Entity.Request request, string ApproverName)
         {
+            DAORequestCable daoRequestCable = new DAORequestCable();
+            DAORequestOtherMaterial daoRequestMaterial = new DAORequestOtherMaterial();
+            List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
+            List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(request.RequestId);
             StringBuilder builder = new StringBuilder("<h1>Yêu cầu với tên \"" + request.RequestName + "\" đã được duyệt</h1>\n" +
                             "<p>Loại yêu cầu: " + request.RequestCategory.RequestCategoryName + "</p>\n");
             if(request.Issue != null)
@@ -105,13 +104,13 @@ namespace API.Model
                 builder.Append("<p>Mã sụ vụ: " + request.Issue.IssueCode + "</p>");
             }
             builder.Append("<p>Thông tin chi tiết của yêu cầu:</p>\n");
-            if(listCableExported.Count > 0)
+            if(requestCables.Count > 0)
             {
-                foreach(Cable item in listCableExported)
+                foreach(RequestCable item in requestCables)
                 {
-                    if (item.Warehouse != null)
+                    if (item.Cable.Warehouse != null)
                     {
-                        builder.AppendLine("<p> - " + item.CableCategory.CableCategoryName + " xuất từ kho " + item.Warehouse.WarehouseName
+                        builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " xuất từ kho " + item.Cable.Warehouse.WarehouseName
                        + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
                     }    
                 }
@@ -124,6 +123,46 @@ namespace API.Model
                     {
                         builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " xuất từ trong kho " +
                             item.OtherMaterials.Warehouse.WarehouseName + ", số lượng: " + item.Quantity + "</p>");
+                    }
+                }
+            }
+            builder.AppendLine("<p>Người duyệt</p>");
+            builder.AppendLine("<p>" + ApproverName + "</p>");
+            return builder.ToString();
+        }
+        public static async Task<string> BodyEmailForApproveRequestRecovery(DataAccess.Entity.Request request, string ApproverName)
+        {
+            DAORequestCable daoRequestCable = new DAORequestCable();
+            DAORequestOtherMaterial daoRequestMaterial = new DAORequestOtherMaterial();
+            List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
+            List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(request.RequestId);
+            StringBuilder builder = new StringBuilder("<h1>Yêu cầu với tên \"" + request.RequestName + "\" đã được duyệt</h1>\n" +
+                             "<p>Loại yêu cầu: " + request.RequestCategory.RequestCategoryName + "</p>\n");
+            if (request.Issue != null)
+            {
+                builder.Append("<p>Mã sụ vụ: " + request.Issue.IssueCode + "</p>");
+            }
+            builder.Append("<p>Thông tin chi tiết của yêu cầu:</p>\n");
+            if (requestCables.Count > 0)
+            {
+                foreach (RequestCable item in requestCables)
+                {
+                    if(item.Cable.Warehouse != null)
+                    {
+                        builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " được thu hồi về kho " + item.Cable.Warehouse.WarehouseName
+                       + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
+                    }
+                   
+                }
+            }
+            if (requestMaterials.Count > 0)
+            {
+                foreach (RequestOtherMaterial item in request.RequestOtherMaterials)
+                {
+                    if(item.OtherMaterials.Warehouse != null)
+                    {
+                        builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " được thu hồi về kho " +
+                       item.OtherMaterials.Warehouse.WarehouseName + ", số lượng: " + item.Quantity.ToString() + "</p>");
                     }
                 }
             }

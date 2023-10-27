@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using API.Services.IService;
 using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 
 namespace API.Services.Service
 {
@@ -62,7 +63,7 @@ namespace API.Services.Service
             }
         }
         // check cable valid when create request export
-        private async Task<ResponseDTO<bool>> isCableValid(List<CableExportDTO> list)
+        private async Task<ResponseDTO<bool>> isCableValidCreateExport(List<CableExportDTO> list)
         {
             if (list.Count == 0)
             {
@@ -90,7 +91,7 @@ namespace API.Services.Service
             return new ResponseDTO<bool>(true, string.Empty);
         }
         // check material valid when create request export
-        private async Task<ResponseDTO<bool>> isMaterialValid(List<OtherMaterialsExportCancelInsideDTO> list)
+        private async Task<ResponseDTO<bool>> isMaterialValidCreateExport(List<OtherMaterialsExportCancelInsideDTO> list)
         {
             if (list.Count == 0)
             {
@@ -188,13 +189,13 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int)HttpStatusCode.NotAcceptable);
                 }
-                ResponseDTO<bool> response = await isCableValid(DTO.CableExportDTOs);
+                ResponseDTO<bool> response = await isCableValidCreateExport(DTO.CableExportDTOs);
                 // if cable invalid
                 if (response.Success == false)
                 {
                     return response;
                 }
-                response = await isMaterialValid(DTO.OtherMaterialsExportDTOs);
+                response = await isMaterialValidCreateExport(DTO.OtherMaterialsExportDTOs);
                 // if material invalid
                 if (response.Success == false)
                 {
@@ -395,7 +396,7 @@ namespace API.Services.Service
             return list;
         }
         // check cable valid when approve request export
-        private async Task<ResponseDTO<bool>> isCableValid(List<RequestCable> list)
+        private async Task<ResponseDTO<bool>> isCableValidApproveExport(List<RequestCable> list)
         {
             if (list.Count == 0)
             {
@@ -429,7 +430,7 @@ namespace API.Services.Service
             return new ResponseDTO<bool>(true, string.Empty);
         }
         // check material valid when approve request export
-        private ResponseDTO<bool> isMaterialValid(List<RequestOtherMaterial> list)
+        private ResponseDTO<bool> isMaterialValidApproveExport(List<RequestOtherMaterial> list)
         {
             if (list.Count == 0)
             {
@@ -450,14 +451,14 @@ namespace API.Services.Service
             List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
             List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(request.RequestId);
             // ------------------------------- check cable valid ------------------------------  
-            ResponseDTO<bool> check = await isCableValid(requestCables);
+            ResponseDTO<bool> check = await isCableValidApproveExport(requestCables);
             // if exist cable not valid
             if (check.Success == false)
             {
                 return check;
             }
             // ------------------------------- check material valid ------------------------------
-            check = isMaterialValid(requestMaterials);
+            check = isMaterialValidApproveExport(requestMaterials);
             // if exist material not valid
             if (check.Success == false)
             {
@@ -492,7 +493,7 @@ namespace API.Services.Service
                                 update.UpdateAt = DateTime.Now;
                                 daoCable.UpdateCable(update);
                             }
-                            listCableExported.Add(item.Cable);
+                            listCableExported.Add(cable);
                             listWareHouseID.Add(cable.WarehouseId);
                         }
                         else
@@ -527,7 +528,12 @@ namespace API.Services.Service
                                 }
                             }
                             // delete cable parent
-                             daoCable.DeleteCable(cable);
+                            Cable? cableParent = await daoCable.getCable(cable.CableId);
+                            if(cableParent != null)
+                            {
+                               daoCable.DeleteCable(cableParent);
+                            }
+                             
                         }
                     }
                 }
@@ -537,9 +543,14 @@ namespace API.Services.Service
             {
                 foreach (RequestOtherMaterial item in requestMaterials)
                 {
-                    // update material quantity
-                    item.OtherMaterials.Quantity = item.OtherMaterials.Quantity - item.Quantity;
-                    daoOtherMaterial.UpdateMaterial(item.OtherMaterials);
+                    OtherMaterial? material = await daoOtherMaterial.getOtherMaterial(item.OtherMaterialsId);
+                    if(material != null)
+                    {
+                        // update material quantity
+                        material.Quantity = material.Quantity - item.Quantity;
+                        material.UpdateAt = DateTime.Now;
+                        daoOtherMaterial.UpdateMaterial(material);
+                    }
                 }
             }
             // ------------------------------- update request approved --------------------------------
@@ -609,12 +620,12 @@ namespace API.Services.Service
                     daoTransactionMaterial.CreateTransactionMaterial(material);
                 }
             }
-            string body = UserUtil.BodyEmailForApproveRequestExport(request, ApproverName, listCableExported, requestMaterials);
+            string body = await UserUtil.BodyEmailForApproveRequestExport(request, ApproverName);
             await UserUtil.sendEmail("Thông báo yêu cầu được phê duyệt", body, request.Creator.Email);
             return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
         }
         // check cable valid when create request recovery
-        private ResponseDTO<bool> isCableValid(List<CableCreateUpdateDTO> list)
+        private ResponseDTO<bool> isCableValidCreateRecovery(List<CableCreateUpdateDTO> list)
         {
             if(list.Count == 0)
             {
@@ -630,7 +641,7 @@ namespace API.Services.Service
             return new ResponseDTO<bool>(true, string.Empty);
         }
         // check material valid when create request recovery
-        private ResponseDTO<bool> isMaterialValid(List<OtherMaterialsRecoveryDTO> list)
+        private ResponseDTO<bool> isMaterialValidCreateRecovery(List<OtherMaterialsRecoveryDTO> list)
         {
             if (list.Count == 0)
             {
@@ -800,13 +811,13 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int)HttpStatusCode.NotAcceptable);
                 }
-                ResponseDTO<bool> check = isCableValid(DTO.CableCreateUpdateDTOs);
+                ResponseDTO<bool> check = isCableValidCreateRecovery(DTO.CableCreateUpdateDTOs);
                 // if exist cable invalid
                 if(check.Success == false)
                 {
                     return check;
                 }
-                check = isMaterialValid(DTO.OtherMaterialsRecoveryDTOs);
+                check = isMaterialValidCreateRecovery(DTO.OtherMaterialsRecoveryDTOs);
                 // if exist material invalid
                 if (check.Success == false)
                 {
@@ -845,6 +856,170 @@ namespace API.Services.Service
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
+        // check cable valid when approve request recovery
+        private async Task<ResponseDTO<bool>> isCableValidApproveRecovery(List<RequestCable> list)
+        {
+            if(list.Count == 0)
+            {
+                return new ResponseDTO<bool>(true, string.Empty);
+            }
+            foreach(RequestCable request in list)
+            {
+                Cable? cable = await daoCable.getCable(request.CableId);
+                if(cable == null)
+                {
+                    return new ResponseDTO<bool>(false, request.Cable.CableCategory.CableCategoryName + " với ID: " + request.CableId
+                                + " không tồn tại " , (int) HttpStatusCode.NotFound);
+                }
+            }
+            return new ResponseDTO<bool>(true, string.Empty);
+        }
+        // check material valid when approve request recovery
+        private async Task<ResponseDTO<bool>> isMaterialValidApproveRecovery(List<RequestOtherMaterial> list)
+        {
+            if(list.Count == 0)
+            {
+                return new ResponseDTO<bool>(true, string.Empty);
+            }
+            foreach(RequestOtherMaterial request in list)
+            {
+                OtherMaterial? material = await daoOtherMaterial.getOtherMaterial(request.OtherMaterialsId);
+                if(material == null)
+                {
+                    return new ResponseDTO<bool>(false, request.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " với ID: " + request.OtherMaterialsId
+                                + " không tồn tại ", (int)HttpStatusCode.NotFound);
+                }
+            }
+            return new ResponseDTO<bool>(true, string.Empty);
+        }
+        private async Task<ResponseDTO<bool>> ApproveRequestRecovery(Guid ApproverID, DataAccess.Entity.Request request, string ApproverName)
+        {
+            List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
+            List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(request.RequestId);
+            // ------------------------------- check cable valid ------------------------------  
+            ResponseDTO<bool> check = await isCableValidApproveRecovery(requestCables);
+            // if exist cable not valid
+            if (check.Success == false)
+            {
+                return check;
+            }
+            // ------------------------------- check material valid ------------------------------
+            check = await isMaterialValidApproveRecovery(requestMaterials);
+            // if exist material not valid
+            if (check.Success == false)
+            {
+                return check;
+            }
+            // ------------------------------- request cable ------------------------------
+            List<Cable> listCableRecovery = new List<Cable>();
+            List<int?> listWareHouseCable = new List<int?>();
+            if(requestCables.Count > 0)
+            {
+                foreach(RequestCable item in  requestCables)
+                {
+                    Cable? cable = await daoCable.getCable(item.CableId);
+                    if(cable != null)
+                    {
+                        listCableRecovery.Add(cable);
+                        listWareHouseCable.Add(item.RecoveryDestWarehouseId);
+                        // update cable
+                        cable.IsInRequest = false;
+                        cable.UpdateAt = DateTime.Now;
+                        daoCable.UpdateCable(cable);
+                    }
+                }
+            }
+            // ------------------------------- request material ------------------------------
+            List<OtherMaterial> listMaterialRecovery = new List<OtherMaterial>();
+            List<int?> listWareHouseMaterial = new List<int?>();
+            List<int> listQuantity = new List<int>();
+            if(requestMaterials.Count > 0)
+            {
+                foreach(RequestOtherMaterial item in requestMaterials)
+                {
+                    OtherMaterial? material = await daoOtherMaterial.getOtherMaterial(item.OtherMaterialsId);
+                    if(material != null)
+                    {
+                        listMaterialRecovery.Add(material);
+                        listWareHouseMaterial.Add(item.RecoveryDestWarehouseId);
+                        listQuantity.Add(item.Quantity);
+                        // update material
+                        material.Quantity = material.Quantity + item.Quantity;
+                        material.UpdateAt = DateTime.Now;
+                        daoOtherMaterial.UpdateMaterial(material);
+                    }
+                }
+            }
+            // ------------------------------- update request approved --------------------------------
+            request.ApproverId = ApproverID;
+            request.Status = RequestConst.STATUS_APPROVED;
+            request.UpdateAt = DateTime.Now;
+            daoRequest.UpdateRequest(request);
+            // ------------------------------- create transaction cable ------------------------------
+            if (listCableRecovery.Count > 0)
+            {
+                for(int i = 0; i < listCableRecovery.Count; i ++)
+                {
+                    TransactionHistory history = new TransactionHistory()
+                    {
+                        TransactionId = Guid.NewGuid(),
+                        TransactionCategoryName = TransactionCategoryConst.CATEGORY_IMPORT,
+                        CreatedAt = DateTime.Now,
+                        UpdateAt = DateTime.Now,
+                        IsDeleted = false,
+                        WarehouseId = listWareHouseCable[i],
+                        RequestId = request.RequestId,
+                        IssueId = request.IssueId,
+                    };
+                    daoHistory.CreateTransactionHistory(history);
+                    TransactionCable transaction = new TransactionCable()
+                    {
+                        TransactionId = history.TransactionId,
+                        CableId = listCableRecovery[i].CableId,
+                        StartPoint = listCableRecovery[i].StartPoint,
+                        EndPoint = listCableRecovery[i].EndPoint,
+                        Length = listCableRecovery[i].EndPoint - listCableRecovery[i].StartPoint,
+                        CreatedAt = DateTime.Now,
+                        UpdateAt = DateTime.Now,
+                        IsDeleted = false
+                    };
+                    daoTransactionCable.CreateTransactionCable(transaction);
+                }
+            }
+            // ------------------------------- create transaction material ------------------------------
+            if(listMaterialRecovery.Count > 0)
+            {
+                for(int i = 0; i < listMaterialRecovery.Count; i ++)
+                {
+                    TransactionHistory history = new TransactionHistory()
+                    {
+                        TransactionId = Guid.NewGuid(),
+                        TransactionCategoryName = TransactionCategoryConst.CATEGORY_IMPORT,
+                        CreatedAt = DateTime.Now,
+                        UpdateAt = DateTime.Now,
+                        IsDeleted = false,
+                        WarehouseId = listWareHouseMaterial[i],
+                        RequestId = request.RequestId,
+                        IssueId = request.IssueId,
+                    };
+                    daoHistory.CreateTransactionHistory(history);
+                    TransactionOtherMaterial transaction = new TransactionOtherMaterial()
+                    {
+                        TransactionId = history.TransactionId,
+                        OtherMaterialsId = listMaterialRecovery[i].OtherMaterialsId,
+                        Quantity = listQuantity[i],
+                        CreatedAt = DateTime.Now,
+                        UpdateAt = DateTime.Now,
+                        IsDeleted = false
+                    };
+                    daoTransactionMaterial.CreateTransactionMaterial(transaction);
+                }
+            }
+            // ------------------------------- send email ------------------------------
+            string body = await UserUtil.BodyEmailForApproveRequestRecovery(request, ApproverName);
+            await UserUtil.sendEmail("Thông báo yêu cầu được phê duyệt", body, request.Creator.Email);
+            return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
+        }
         public async Task<ResponseDTO<bool>> Approve(Guid RequestID, Guid ApproverID, string ApproverName)
         {
             try
@@ -854,10 +1029,6 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
                 }
-                if (request.RequestCategoryId != RequestCategoryConst.CATEGORY_DELIVER && request.Issue == null)
-                {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
-                }
                 if (!request.Status.Equals(RequestConst.STATUS_PENDING))
                 {
                     return new ResponseDTO<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị hủy", (int)HttpStatusCode.Conflict);
@@ -866,7 +1037,11 @@ namespace API.Services.Service
                 {
                     return await ApproveRequestExport(ApproverID, request, ApproverName);
                 }
-                return new ResponseDTO<bool>(false, "Không hỗ trợ yêu cầu này", (int)HttpStatusCode.Conflict);
+                if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_RECOVERY)
+                {
+                    return await ApproveRequestRecovery(ApproverID, request, ApproverName);
+                }
+                return new ResponseDTO<bool>(false, "Không hỗ trợ yêu cầu " + request.RequestCategory.RequestCategoryName, (int)HttpStatusCode.Conflict);
             }
             catch (Exception ex)
             {

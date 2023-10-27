@@ -64,7 +64,7 @@ namespace API.Model.DAO
 
         public async Task<Cable?> getCable(Guid CableID)
         {
-            return await context.Cables.SingleOrDefaultAsync(c => c.IsDeleted == false && c.CableId == CableID);
+            return await context.Cables.Include(c => c.CableCategory).SingleOrDefaultAsync(c => c.IsDeleted == false && c.CableId == CableID);
         }
 
         public bool isExist(Guid CableID, CableCreateUpdateDTO DTO)
