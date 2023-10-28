@@ -135,7 +135,6 @@ namespace API.Services.Service
             daoRequest.CreateRequest(request);
             return request.RequestId;
         }
-
         // create request cable when create request export, deliver
         private void CreateRequestCableExportDeliver(List<CableExportDeliverDTO> list, Guid RequestID)
         {
@@ -1428,6 +1427,58 @@ namespace API.Services.Service
             await sendEmailToCreator(request, ApproverName);
             return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
         }
-
+        public async Task<ResponseDTO<List<CableListDTO>?>> SuggestionCable(SuggestionCableDTO suggestion)
+        {
+            try
+            {
+                List<Cable> list = await daoCable.getListAll();
+                // if choose warehouse
+                if(suggestion.WarehouseIds.Count > 0)
+                {
+                    list = list.Where(c => c.WarehouseId != null && suggestion.WarehouseIds.Contains(c.WarehouseId.Value)).ToList();
+                }
+                // if choose category
+                if(suggestion.CableCategoryIds.Count > 0)
+                {
+                    list = list.Where(c => suggestion.CableCategoryIds.Contains(c.CableCategoryId)).ToList();
+                }
+                list = list.OrderByDescending(c => c.Length).ToList();
+                List<CableListDTO> result = new List<CableListDTO>();
+                int total = 0; // total length
+                foreach (Cable item in list)
+                {
+                    // if total equal or greater than length request
+                    if(total >= suggestion.Length)
+                    {
+                        break;
+                    }
+                    CableListDTO DTO = new CableListDTO()
+                    {
+                        CableId = item.CableId,
+                        WarehouseId = item.WarehouseId,
+                        WarehouseName = item.Warehouse == null ? null : item.Warehouse.WarehouseName,
+                        SupplierId = item.SupplierId,
+                        SupplierName = item.Supplier.SupplierName,
+                        StartPoint = item.StartPoint,
+                        EndPoint = item.EndPoint,
+                        Length = item.Length,
+                        YearOfManufacture = item.YearOfManufacture,
+                        Code = item.Code,
+                        Status = item.Status,
+                        IsExportedToUse = item.IsExportedToUse,
+                        IsInRequest = item.IsInRequest,
+                        CableCategoryId = item.CableCategoryId,
+                        CableCategoryName = item.CableCategory.CableCategoryName
+                    };
+                    result.Add(DTO);
+                    total = total + item.Length;
+                }
+                return new ResponseDTO<List<CableListDTO>?>(result, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<List<CableListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+            }
+        }
     }
 }

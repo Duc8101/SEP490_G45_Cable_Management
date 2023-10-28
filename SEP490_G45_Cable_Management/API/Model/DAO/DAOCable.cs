@@ -91,22 +91,9 @@ namespace API.Model.DAO
             cable.IsDeleted = true;
             UpdateCable(cable);
         }
-
         public async Task<List<Cable>> getList(int CableCategoryID)
         {
-            return await context.Cables.Include(c => c.CableCategory).Where(c => c.CableCategoryId == CableCategoryID).ToListAsync();
-        }
-
-        private async Task<List<Cable>> getList(int CableCategoryID, int? WareHouseID)
-        {
-            IQueryable<Cable> query = context.Cables.Where(c => c.CableCategoryId == CableCategoryID
-            && c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == false);
-            // if choose warehouse
-            if (WareHouseID != null)
-            {
-                query = query.Where(c => c.WarehouseId == WareHouseID);
-            }
-            return await query.ToListAsync();
+            return await context.Cables.Include(c => c.CableCategory).Where(c => c.CableCategoryId == CableCategoryID && c.IsInRequest == false).ToListAsync();
         }
 
         public async Task<List<CableCategory>> getListCategory(int? WarehouseID)
@@ -118,7 +105,8 @@ namespace API.Model.DAO
 
         public async Task<int> getSum(int CategoryID, int? WarehouseID)
         {
-            List<Cable> list = await getList(CategoryID, WarehouseID);
+            IQueryable<Cable> query = getQuery(null, WarehouseID, false).Where(c => c.CableCategoryId == CategoryID);
+            List <Cable> list = await query.ToListAsync();
             int sum = 0;
             foreach (Cable cable in list)
             {
@@ -130,6 +118,12 @@ namespace API.Model.DAO
         public async Task<Cable?> getCable(Guid CableID, int StartPoint, int EndPoint)
         {
             return await context.Cables.Where(c => c.CableParentId == CableID && c.StartPoint <= StartPoint && c.EndPoint >= EndPoint && c.IsDeleted == false).FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Cable>> getListAll()
+        {
+            IQueryable<Cable> query = getQuery(null, null, false);
+            return await query.ToListAsync();
         }
 
     }
