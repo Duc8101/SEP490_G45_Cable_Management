@@ -150,5 +150,9 @@ namespace API.Model.DAO
         {
             return await context.OtherMaterials.OrderByDescending(o => o.OtherMaterialsId).FirstOrDefaultAsync();
         }
+        public async Task<OtherMaterial?> getOtherMaterial(int? WareHouseID, string code, string status, string unit)
+        {
+            return await context.OtherMaterials.Where(o => o.WarehouseId == WareHouseID && o.Code == code && o.Status == status && o.Unit == unit && o.IsDeleted == false).FirstOrDefaultAsync();
+        }
     }
 }

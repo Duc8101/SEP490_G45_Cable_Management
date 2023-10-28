@@ -13,12 +13,12 @@ namespace DataAccess.DTO.RequestDTO
         public RequestCreateCancelInsideDTO()
         {
             CableCancelInsideDTOS = new List<CableCancelInsideDTO>();
-            OtherMaterialsCancelInsideDTOs = new List<OtherMaterialsExportCancelInsideDTO>();
+            OtherMaterialsCancelInsideDTOs = new List<OtherMaterialsExportDeliverCancelInsideDTO>();
         }
         public Guid IssueId { get; set; }
 
         public List<CableCancelInsideDTO> CableCancelInsideDTOS { get; set; }
-        public List<OtherMaterialsExportCancelInsideDTO> OtherMaterialsCancelInsideDTOs { get; set; }
+        public List<OtherMaterialsExportDeliverCancelInsideDTO> OtherMaterialsCancelInsideDTOs { get; set; }
 
     }
 }

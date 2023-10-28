@@ -42,7 +42,7 @@ namespace API.Controllers
         //[Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] RequestCreateExportDTO DTO)
         {
-            return await service.CreateRequestExport(DTO, Guid.Parse("5D85A00E-2F1B-4A0C-93C1-C2FB265BE669"));
+            return await service.CreateRequestExport(DTO, Guid.Parse("BB9452D8-D693-4FD3-BA51-BA7646C92812"));
 /*            // if warehouse keeper or staff
             if (isWarehouseKeeper() || isStaff())
             {
@@ -72,14 +72,32 @@ namespace API.Controllers
                         }
                         return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
             */
-            return await service.CreateRequestRecovery(DTO, Guid.Parse("45511F3F-9BF3-46DF-84A9-50415B182BF9"));
+            return await service.CreateRequestRecovery(DTO, Guid.Parse("BB9452D8-D693-4FD3-BA51-BA7646C92812"));
+        }
+
+        [HttpPost("Deliver")]
+        //[Authorize]
+        public async Task<ResponseDTO<bool>> Create([Required] RequestCreateDeliverDTO DTO)
+        {
+            return await service.CreateRequestDeliver(DTO, Guid.Parse("BB9452D8-D693-4FD3-BA51-BA7646C92812"));
+            /*            if (isWarehouseKeeper() || isStaff())
+                        {
+                            string? CreatorID = getUserID();
+                            if (CreatorID == null)
+                            {
+                                return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
+                            }
+                            return await service.CreateRequestDeliver(DTO,Guid.Parse(CreatorID));
+                        }
+                        return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            */
         }
 
         [HttpPut("{RequestID}")]
         //[Authorize]
         public async Task<ResponseDTO<bool>> Approve([Required] Guid RequestID)
         {
-            return await service.Approve(RequestID, Guid.Parse("EBBF10D0-1047-4B41-956D-81323BF9E464"), "Phạm Minh Hiếu");
+            return await service.Approve(RequestID, Guid.Parse("82FEADC1-79A0-4B52-B513-E79EA9B78F36"), "Phạm Minh Hiếu");
             /*            // if admin
                         if (isAdmin())
                         {
