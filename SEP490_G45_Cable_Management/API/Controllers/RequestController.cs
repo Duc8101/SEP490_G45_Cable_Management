@@ -42,7 +42,7 @@ namespace API.Controllers
         //[Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] RequestCreateExportDTO DTO)
         {
-            return await service.CreateRequestExport(DTO, Guid.Parse("BB9452D8-D693-4FD3-BA51-BA7646C92812"));
+            return await service.CreateRequestExport(DTO, Guid.Parse("8CA167ED-BCB7-45EB-94F8-02188B0C3CC5"));
 /*            // if warehouse keeper or staff
             if (isWarehouseKeeper() || isStaff())
             {
@@ -72,14 +72,14 @@ namespace API.Controllers
                         }
                         return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
             */
-            return await service.CreateRequestRecovery(DTO, Guid.Parse("BB9452D8-D693-4FD3-BA51-BA7646C92812"));
+            return await service.CreateRequestRecovery(DTO, Guid.Parse("8CA167ED-BCB7-45EB-94F8-02188B0C3CC5"));
         }
 
         [HttpPost("Deliver")]
         //[Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] RequestCreateDeliverDTO DTO)
         {
-            return await service.CreateRequestDeliver(DTO, Guid.Parse("BB9452D8-D693-4FD3-BA51-BA7646C92812"));
+            return await service.CreateRequestDeliver(DTO, Guid.Parse("8CA167ED-BCB7-45EB-94F8-02188B0C3CC5"));
             /*            if (isWarehouseKeeper() || isStaff())
                         {
                             string? CreatorID = getUserID();
@@ -97,7 +97,7 @@ namespace API.Controllers
         //[Authorize]
         public async Task<ResponseDTO<bool>> Approve([Required] Guid RequestID)
         {
-            return await service.Approve(RequestID, Guid.Parse("82FEADC1-79A0-4B52-B513-E79EA9B78F36"), "Phạm Minh Hiếu");
+            return await service.Approve(RequestID, Guid.Parse("B86006A3-75D7-4AAB-A923-F26349644DDF"), "Phạm Minh Hiếu");
             /*            // if admin
                         if (isAdmin())
                         {

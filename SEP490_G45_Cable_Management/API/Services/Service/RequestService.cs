@@ -510,10 +510,25 @@ namespace API.Services.Service
                             Cable? update = await daoCable.getCable(cable.CableId);
                             if (update != null)
                             {
+                                // update cable
                                 update.IsExportedToUse = true;
                                 update.WarehouseId = null;
                                 update.UpdateAt = DateTime.Now;
                                 daoCable.UpdateCable(update);
+                                // update request cable
+                                daoRequestCable.RemoveRequestCable(item);
+                                RequestCable create = new RequestCable()
+                                {
+                                    RequestId = item.RequestId,
+                                    CableId = update.CableId,
+                                    StartPoint = update.StartPoint,
+                                    EndPoint = update.EndPoint,
+                                    Length = update.Length,
+                                    CreatedAt = update.CreatedAt,
+                                    UpdateAt = DateTime.Now,
+                                    IsDeleted = false
+                                };
+                                daoRequestCable.CreateRequestCable(create);
                             }
                             listCableExported.Add(cable);
                             listWareHouseID.Add(cable.WarehouseId);
