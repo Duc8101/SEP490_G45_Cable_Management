@@ -104,6 +104,10 @@ namespace API.Model
             {
                 builder.Append("<p>Mã sụ vụ: " + request.Issue.IssueCode + "</p>");
             }
+            if(request.DeliverWarehouse != null)
+            {
+                builder.Append("<p> Vật liệu được chuyển đến kho " + request.DeliverWarehouse.WarehouseName + "</p>");
+            }
             builder.Append("<p>Thông tin chi tiết của yêu cầu:</p>\n");
             if(requestCables.Count > 0)
             {
@@ -111,7 +115,7 @@ namespace API.Model
                 {
                     if (item.Cable.Warehouse != null)
                     {
-                        if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT)
+                        if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT || request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER)
                         {
                             builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " xuất từ kho " + item.Cable.Warehouse.WarehouseName
                                 + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
@@ -130,7 +134,7 @@ namespace API.Model
                 {
                     if (item.OtherMaterials.Warehouse != null)
                     {
-                        if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT)
+                        if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT || request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER)
                         {
                             builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " xuất từ trong kho " +
                                 item.OtherMaterials.Warehouse.WarehouseName + ", số lượng: " + item.Quantity + "</p>");
