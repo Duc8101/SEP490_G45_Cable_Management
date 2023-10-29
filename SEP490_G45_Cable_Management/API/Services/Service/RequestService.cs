@@ -542,17 +542,28 @@ namespace API.Services.Service
                                     || (request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER && cut.WarehouseId == request.DeliverWarehouseId)
                                     || (request.RequestCategoryId == RequestCategoryConst.CATEGORY_CANCEL_INSIDE && cut.IsDeleted))
                                 {          
-                                    // if not request exported
-                                    if (cut.WarehouseId.HasValue && request.RequestCategoryId != RequestCategoryConst.CATEGORY_EXPORT)
-                                    {
-                                        listCableWarehouseID.Add(cut.WarehouseId.Value);
-                                        listCableExportedDeliverCancelInside.Add(cut);
-                                    }
-                                    else 
+                                    // if request exported
+                                    if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT)
                                     {
                                         if (cable.WarehouseId.HasValue)
                                         {
                                             listCableWarehouseID.Add(cable.WarehouseId.Value);
+                                            listCableExportedDeliverCancelInside.Add(cut);
+                                        }
+                                    }
+                                    else if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER)
+                                    {
+                                        if (request.DeliverWarehouseId.HasValue)
+                                        {
+                                            listCableWarehouseID.Add(request.DeliverWarehouseId.Value);
+                                            listCableExportedDeliverCancelInside.Add(cut);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (cut.WarehouseId.HasValue)
+                                        {
+                                            listCableWarehouseID.Add(cut.WarehouseId.Value);
                                             listCableExportedDeliverCancelInside.Add(cut);
                                         }
                                     }
