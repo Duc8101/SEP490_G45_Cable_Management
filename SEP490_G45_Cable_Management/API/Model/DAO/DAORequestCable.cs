@@ -19,7 +19,8 @@ namespace API.Model.DAO
         public async Task<List<RequestCable>> getList(Guid RequestID)
         {
             return await context.RequestCables.Include(r => r.Cable).ThenInclude(r => r.CableCategory).Include(r => r.Cable)
-                .ThenInclude(r => r.Warehouse).Where(r => r.RequestId == RequestID).ToListAsync();
+                .ThenInclude(r => r.Warehouse).Include(r => r.RecoveryDestWarehouse).Where(r => r.RequestId == RequestID)
+                .ToListAsync();
         }
         public void RemoveRequestCable(RequestCable request)
         {

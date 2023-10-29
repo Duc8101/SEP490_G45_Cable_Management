@@ -14,7 +14,7 @@ namespace API.Model.DAO
         public async Task<List<RequestOtherMaterial>> getList(Guid RequestID)
         {
             return await context.RequestOtherMaterials.Include(r => r.OtherMaterials).ThenInclude(r => r.OtherMaterialsCategory)
-                .Include(r => r.OtherMaterials).ThenInclude(r => r.Warehouse).Where(r => r.RequestId == RequestID).ToListAsync();
+                .Include(r => r.OtherMaterials).ThenInclude(r => r.Warehouse).Include(r => r.RecoveryDestWarehouse).Where(r => r.RequestId == RequestID).ToListAsync();
         }
 
         public void RemoveRequestMaterial(RequestOtherMaterial request)

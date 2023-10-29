@@ -852,7 +852,7 @@ namespace API.Services.Service
                 }
                 if (!request.Status.Equals(RequestConst.STATUS_PENDING))
                 {
-                    return new ResponseDTO<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị hủy", (int)HttpStatusCode.Conflict);
+                    return new ResponseDTO<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
                 }
                 if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT)
                 {
@@ -892,7 +892,7 @@ namespace API.Services.Service
                 }
                 if (!request.Status.Equals(RequestConst.STATUS_PENDING))
                 {
-                    return new ResponseDTO<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị hủy", (int)HttpStatusCode.Conflict);
+                    return new ResponseDTO<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
                 }
                 // ------------------- update request ---------------
                 UpdateRequest(request, RejectorID, RequestConst.STATUS_REJECTED);
@@ -1759,6 +1759,80 @@ namespace API.Services.Service
              // ------------------------------- send email --------------------------------
              await sendEmailToCreator(request, ApproverName);
              return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
+        }
+        public async Task<ResponseDTO<bool>> Delete(Guid RequestID)
+        {
+            try
+            {
+                DataAccess.Entity.Request? request = await daoRequest.getRequest(RequestID);
+                if (request == null || !request.Status.Equals(RequestConst.STATUS_PENDING))
+                {
+                    return new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
+                }
+                daoRequest.DeleteRequest(request);
+                return new ResponseDTO<bool>(true, "Xóa thành công");
+            }
+            catch(Exception ex)
+            {
+                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+            }
+        }
+        public async Task<ResponseDTO<RequestDetailDTO?>> Detail(Guid RequestID)
+        {
+            try
+            {
+                DataAccess.Entity.Request? request = await daoRequest.getRequest(RequestID);
+                if (request == null)
+                {
+                    return new ResponseDTO<RequestDetailDTO?>(null, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
+                }
+                List<RequestCable> requestCables = await daoRequestCable.getList(RequestID);
+                List<RequestCableDTO> RequestCableDTOs = new List<RequestCableDTO>();
+                foreach(RequestCable item in requestCables)
+                {
+                    RequestCableDTO DTO = new RequestCableDTO()
+                    {
+                        CableCategoryName = item.Cable.CableCategory.CableCategoryName,
+                        StartPoint = item.StartPoint,
+                        EndPoint = item.EndPoint,
+                        Length = item.Length,
+                        RecoveryDestWarehouseName = item.RecoveryDestWarehouse == null ? null : item.RecoveryDestWarehouse.WarehouseName
+                    };
+                    RequestCableDTOs.Add(DTO);
+                }
+                List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(RequestID);
+                List<RequestOtherMaterialsDTO> RequestOtherMaterialsDTOs = new List<RequestOtherMaterialsDTO>();
+                foreach(RequestOtherMaterial item in requestMaterials)
+                {
+                    RequestOtherMaterialsDTO DTO = new RequestOtherMaterialsDTO()
+                    {
+                        OtherMaterialsCategoryName = item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName,
+                        Quantity = item.Quantity,
+                        RecoveryDestWarehouseName = item.RecoveryDestWarehouse == null ? null : item.RecoveryDestWarehouse.WarehouseName
+                    };
+                    RequestOtherMaterialsDTOs.Add(DTO);
+                }
+                RequestDetailDTO detail = new RequestDetailDTO()
+                {
+                    RequestId = request.RequestId,
+                    RequestName = request.RequestName,
+                    Content = request.Content,
+                    CreatorName = request.Creator.Lastname + " " + request.Creator.Firstname,
+                    ApproverName = request.Approver == null ? null : request.Approver.Lastname + " " + request.Approver.Firstname,
+                    Status = request.Status,
+                    RequestCategoryName = request.RequestCategory.RequestCategoryName,
+                    IssueName = request.Issue == null ? null : request.Issue.IssueName,
+                    CableRoutingName = request.Issue == null ? null : request.Issue.CableRoutingName,
+                    DeliverWareHouseName = request.DeliverWarehouse == null ? null : request.DeliverWarehouse.WarehouseName,
+                    RequestCableDTOs = RequestCableDTOs,
+                    RequestOtherMaterialsDTOs = RequestOtherMaterialsDTOs
+                };
+                return new ResponseDTO<RequestDetailDTO?>(detail, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<RequestDetailDTO?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+            }
         }
     }
 }

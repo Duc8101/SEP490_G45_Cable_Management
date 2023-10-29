@@ -34,13 +34,11 @@ namespace API.Model.DAO
             return await query.OrderByDescending(r => r.Status).ThenByDescending(r => r.UpdateAt).Skip(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE * (page - 1))
                 .Take(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE).ToListAsync();
         }
-
         public async Task<int> getRowCount(string? name, string? status, Guid? CreatorID)
         {
             IQueryable<Request> query = getQuery(name, status, CreatorID);
             return await query.CountAsync();
         }
-
         public void CreateRequest(Request request)
         {
             context.Requests.Add(request);
@@ -55,6 +53,11 @@ namespace API.Model.DAO
         {
             context.Requests.Update(request);
             context.SaveChanges();
+        }
+        public void DeleteRequest(Request request)
+        {
+            request.IsDeleted = true;
+            UpdateRequest(request);
         }
 
     }
