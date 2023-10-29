@@ -36,12 +36,12 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<List<SupplierListDTO>?>> List()
         {
-            // if admin or warehouse or leader
-            if (isAdmin() || isWarehouseKeeper() || isLeader())
+            // if guest
+            if (isGuest())
             {
-                return await service.ListAll();
+                return new ResponseDTO<List<SupplierListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);               
             }
-            return new ResponseDTO<List<SupplierListDTO>?>(null, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
+            return await service.ListAll();
         }
 
         [HttpPost]

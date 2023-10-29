@@ -8,12 +8,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
-using API.Model;
 using API.Model.DAO;
 using System.Linq.Expressions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using API.Services.IService;
+using API.Model.Util;
 
 namespace API.Services.Service
 {

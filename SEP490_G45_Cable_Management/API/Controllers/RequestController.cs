@@ -146,5 +146,39 @@ namespace API.Controllers
             //}
             //return new ResponseDTO<List<CableListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
+
+        [HttpPost("Cancel-Inside")]
+        //[Authorize]
+        public async Task<ResponseDTO<bool>> Create([Required] RequestCreateCancelInsideDTO DTO)
+        {
+            // if warehousekeeper or staff
+            //if (isWarehouseKeeper() || isStaff())
+            //{
+            /*string? CreatorID = getUserID();
+            if (CreatorID == null)
+            {
+                return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
+            }*/
+            return await service.CreateCancelInside(DTO, Guid.Parse("8CA167ED-BCB7-45EB-94F8-02188B0C3CC5"));
+            //}
+            //return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden)
+        }
+
+        [HttpPost("Cancel-Outside")]
+        //[Authorize]
+        public async Task<ResponseDTO<bool>> Create([Required] RequestCreateCancelOutsideDTO DTO)
+        {
+            // if warehousekeeper or staff
+            //if (isWarehouseKeeper() || isStaff())
+            //{
+            /*string? CreatorID = getUserID();
+            if (CreatorID == null)
+            {
+                return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
+            }*/
+            return await service.CreateCancelOutside(DTO, Guid.Parse("8CA167ED-BCB7-45EB-94F8-02188B0C3CC5"));
+            //}
+            //return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden)
+        }
     }
 }

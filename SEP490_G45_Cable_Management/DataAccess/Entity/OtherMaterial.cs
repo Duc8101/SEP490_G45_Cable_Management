@@ -17,8 +17,7 @@ namespace DataAccess.Entity
         public string Unit { get; set; } = null!;
         //public int? Quantity { get; set; }
         public int Quantity { get; set; }
-        //public string? Code { get; set; }
-        public string Code { get; set; } = null!;
+        public string? Code { get; set; }
         //public int? SupplierId { get; set; }
         public int SupplierId { get; set; }
         public DateTime CreatedAt { get; set; }

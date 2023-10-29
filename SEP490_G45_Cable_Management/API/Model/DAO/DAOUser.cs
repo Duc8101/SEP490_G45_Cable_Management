@@ -1,4 +1,5 @@
-﻿using DataAccess;
+﻿using API.Model.Util;
+using DataAccess;
 using DataAccess.Const;
 using DataAccess.DTO.UserDTO;
 using DataAccess.Entity;

@@ -55,7 +55,7 @@ namespace API.Services.Service
         }
         public async Task<ResponseDTO<bool>> Create(OtherMaterialsCreateUpdateDTO DTO)
         {
-            if (DTO.Code.Trim().Length == 0)
+            if (DTO.Code == null || DTO.Code.Trim().Length == 0)
             {
                 return new ResponseDTO<bool>(false, "Mã hàng không được để trống", (int)HttpStatusCode.Conflict);
             }
@@ -125,7 +125,7 @@ namespace API.Services.Service
                     return new ResponseDTO<bool>(false, "Không tìm thấy vật liệu", (int)HttpStatusCode.NotFound);
                 }
 
-                if (DTO.Code.Trim().Length == 0)
+                if (DTO.Code == null || DTO.Code.Trim().Length == 0)
                 {
                     return new ResponseDTO<bool>(false, "Mã hàng không được để trống", (int)HttpStatusCode.Conflict);
                 }
