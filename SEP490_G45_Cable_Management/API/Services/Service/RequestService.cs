@@ -309,12 +309,111 @@ namespace API.Services.Service
             string body = await UserUtil.BodyEmailForApproveRequest(request, ApproverName);
             await UserUtil.sendEmail("Thông báo yêu cầu được phê duyệt", body, request.Creator.Email);
         }
-        private async Task<ResponseDTO<bool>> ApproveRequestExport(Guid ApproverID, DataAccess.Entity.Request request, string ApproverName)
+        private void CreateTransaction(DataAccess.Entity.Request request, List<int> listCableWarehouseID, List<Cable> listCable, List<int> listMaterialWarehouseID, List<int> listMaterialID, List<int> listQuantity, bool? action)
+        {
+            string CategoryName;
+            int? FromWarehouseID = null;
+            int? ToWarehouseID = null;
+            if(action == null)
+            {
+                CategoryName = TransactionCategoryConst.CATEGORY_CANCEL;
+            }
+            else
+            {
+                CategoryName = action == true ? TransactionCategoryConst.CATEGORY_IMPORT : TransactionCategoryConst.CATEGORY_EXPORT;
+            }
+            // if transaction export and request deliver
+            if(action == false && request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER)
+            {
+                ToWarehouseID = request.DeliverWarehouseId;
+                // if transaction import and request deliver
+            }else if(action == true && request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER)
+            {
+                FromWarehouseID = request.DeliverWarehouseId;
+            }
+            // ------------------------------- create transaction history -----------------------------
+            // list contain all warehouse of cable and material
+            List<int> listAllWarehouse = new List<int>();
+            if (listCableWarehouseID.Count > 0)
+            {
+                listAllWarehouse.AddRange(listCableWarehouseID);
+            }
+            if (listMaterialWarehouseID.Count > 0)
+            {
+                foreach (int WarehouseID in listMaterialWarehouseID)
+                {
+                    // if list all warehouse not contain material warehouse
+                    if (!listAllWarehouse.Contains(WarehouseID))
+                    {
+                        listAllWarehouse.Add(WarehouseID);
+                    }
+                }
+            }
+            // list key-value to store trasaction id and warehouse id
+            Dictionary<int, Guid> dic = new Dictionary<int, Guid>();
+            foreach (int WarehouseID in listAllWarehouse)
+            {
+                TransactionHistory history = new TransactionHistory()
+                {
+                    TransactionId = Guid.NewGuid(),
+                    TransactionCategoryName = CategoryName,
+                    CreatedDate = DateTime.Now,
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
+                    IsDeleted = false,
+                    WarehouseId = WarehouseID,
+                    RequestId = request.RequestId,
+                    IssueId = request.IssueId,
+                    FromWarehouseId = FromWarehouseID,
+                    ToWarehouseId = ToWarehouseID
+                };
+                daoHistory.CreateTransactionHistory(history);
+                dic[WarehouseID] = history.TransactionId;
+            }
+            // ------------------------------- create transaction cable --------------------------------
+            if (listCableWarehouseID.Count > 0)
+            {
+                for (int i = 0; i < listCableWarehouseID.Count; i++)
+                {
+                    TransactionCable transactionCable = new TransactionCable()
+                    {
+                        TransactionId = dic[listCableWarehouseID[i]],
+                        CableId = listCable[i].CableId,
+                        StartPoint = listCable[i].StartPoint,
+                        EndPoint = listCable[i].EndPoint,
+                        Length = listCable[i].Length,
+                        CreatedAt = DateTime.Now,
+                        UpdateAt = DateTime.Now,
+                        IsDeleted = false
+                    };
+                    daoTransactionCable.CreateTransactionCable(transactionCable);
+                }
+            }
+            // ------------------------------- create transaction material --------------------------------
+            if (listMaterialWarehouseID.Count > 0)
+            {
+                for (int i = 0; i < listMaterialWarehouseID.Count; i++)
+                {
+                    TransactionOtherMaterial material = new TransactionOtherMaterial()
+                    {
+                        TransactionId = dic[listMaterialWarehouseID[i]],
+                        OtherMaterialsId = listMaterialID[i],
+                        Quantity = listQuantity[i],
+                        CreatedAt = DateTime.Now,
+                        UpdateAt = DateTime.Now,
+                        IsDeleted = false,
+                    };
+                    daoTransactionMaterial.CreateTransactionMaterial(material);
+                }
+            }
+
+        }
+        private async Task<ResponseDTO<bool>> ApproveRequestExportDeliverCancelInside(Guid ApproverID, DataAccess.Entity.Request request, string ApproverName)
         {
             List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
             List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(request.RequestId);
             // ------------------------------- check cable valid ------------------------------  
-            ResponseDTO<bool> check = await isCableValidApproveExportDeliverCancelInside(requestCables,true);// true : xuat kho , false:huy
+            ResponseDTO<bool> check = await isCableValidApproveExportDeliverCancelInside(requestCables, true);// true : xuat kho , false:huy
             // if exist cable not valid
             if (check.Success == false)
             {
@@ -327,9 +426,46 @@ namespace API.Services.Service
             {
                 return check;
             }
+            // ------------------------------- create transaction if request deliver --------------
+            // list cable
+            List<Cable> listCableExportedDeliverCancelInside = new List<Cable>();
+            List<int> listCableWarehouseID = new List<int>();
+            // list material
+            List<int> listMaterialWarehouseID = new List<int>();
+            List<int> listMaterialIDExportedDeliverCancelInside = new List<int>();
+            List<int> listQuantity = new List<int>(); 
+            if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER)
+            {
+                if(requestCables.Count > 0)
+                {
+                    foreach (RequestCable item in requestCables)
+                    {
+                        if (item.Cable.WarehouseId.HasValue)
+                        {
+                            listCableExportedDeliverCancelInside.Add(item.Cable);
+                            listCableWarehouseID.Add(item.Cable.WarehouseId.Value);
+                        }
+                    }
+                }
+                if(requestMaterials.Count > 0)
+                {
+                    foreach(RequestOtherMaterial item in requestMaterials)
+                    {
+                        if (item.OtherMaterials.WarehouseId.HasValue)
+                        {
+                            listMaterialIDExportedDeliverCancelInside.Add(item.OtherMaterialsId);
+                            listMaterialWarehouseID.Add(item.OtherMaterials.WarehouseId.Value);
+                            listQuantity.Add(item.Quantity);
+                        }
+                    }
+                }
+                // create transaction
+                CreateTransaction(request, listCableWarehouseID,listCableExportedDeliverCancelInside,listMaterialWarehouseID,
+                    listMaterialIDExportedDeliverCancelInside,listQuantity,false);
+            }
             // ------------------------------- request cable ------------------------------
-            List<Cable> listCableExported = new List<Cable>();
-            List<int?> listWareHouseID = new List<int?>();
+            listCableExportedDeliverCancelInside = new List<Cable>();
+            listCableWarehouseID = new List<int>();
             if (requestCables.Count > 0)
             {
                 foreach (RequestCable item in requestCables)
@@ -351,25 +487,75 @@ namespace API.Services.Service
                             Cable? update = await daoCable.getCable(cable.CableId);
                             if (update != null)
                             {
-                                // update cable
-                                update.IsExportedToUse = true;
-                                update.WarehouseId = null;
+                                // if exported
+                                if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT)
+                                {
+                                    if (update.WarehouseId.HasValue)
+                                    {
+                                        listCableWarehouseID.Add(update.WarehouseId.Value);
+                                        listCableExportedDeliverCancelInside.Add(update);
+                                    }              
+                                    // update cable
+                                    update.IsExportedToUse = true;
+                                    update.WarehouseId = null;
+                                    // if deliver
+                                }else if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER)
+                                {
+                                    if (request.DeliverWarehouseId.HasValue)
+                                    {
+                                        listCableWarehouseID.Add(request.DeliverWarehouseId.Value);
+                                        listCableExportedDeliverCancelInside.Add(update);
+                                    }
+                                    update.WarehouseId = request.DeliverWarehouseId;
+                                    // if cancel inside
+                                }else if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_CANCEL_INSIDE)
+                                {
+                                    if (update.WarehouseId.HasValue)
+                                    {
+                                        listCableWarehouseID.Add(update.WarehouseId.Value);
+                                        listCableExportedDeliverCancelInside.Add(update);
+                                    }
+                                    update.IsDeleted = true;
+                                }
                                 update.UpdateAt = DateTime.Now;
                                 daoCable.UpdateCable(update);
-                            }
-                            listCableExported.Add(cable);
-                            listWareHouseID.Add(cable.WarehouseId);
+                            }                     
                         }
                         else
                         {
-                            List<Cable> listCut = CableUtil.getListCableCut(item.StartPoint, item.EndPoint, cable,null);
+                            List<Cable> listCut = new List<Cable>();
+                            // if request export and deliver
+                            if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT || request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER)
+                            {
+                                // get list cable cut request export and deliver
+                                listCut = CableUtil.getListCableCut(item.StartPoint, item.EndPoint, cable, request.DeliverWarehouseId);
+                            }// if request cancel inside
+                            else if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_CANCEL_INSIDE)
+                            {
+                                // get list cable cut request cancel inside
+                                listCut = CableUtil.getListCableCut(item.StartPoint, item.EndPoint, cable);
+                            }
                             foreach (Cable cut in listCut)
                             {
-                                // if exported
-                                if (cut.IsExportedToUse)
-                                {
-                                    listCableExported.Add(cut);
-                                    listWareHouseID.Add(cable.WarehouseId);
+                                // if cable cut request
+                                if ((request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT && cut.IsExportedToUse) 
+                                    || (request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER && cut.WarehouseId == request.DeliverWarehouseId)
+                                    || (request.RequestCategoryId == RequestCategoryConst.CATEGORY_CANCEL_INSIDE && cut.IsDeleted))
+                                {          
+                                    // if not request exported
+                                    if (cut.WarehouseId.HasValue && request.RequestCategoryId != RequestCategoryConst.CATEGORY_EXPORT)
+                                    {
+                                        listCableWarehouseID.Add(cut.WarehouseId.Value);
+                                        listCableExportedDeliverCancelInside.Add(cut);
+                                    }
+                                    else 
+                                    {
+                                        if (cable.WarehouseId.HasValue)
+                                        {
+                                            listCableWarehouseID.Add(cable.WarehouseId.Value);
+                                            listCableExportedDeliverCancelInside.Add(cut);
+                                        }
+                                    }
                                     daoCable.CreateCable(cut);
                                     // update request cable
                                     daoRequestCable.RemoveRequestCable(item);
@@ -403,6 +589,9 @@ namespace API.Services.Service
                 }
             }
             // ------------------------------- request material ------------------------------
+            listMaterialWarehouseID = new List<int>();
+            listMaterialIDExportedDeliverCancelInside = new List<int>();
+            listQuantity = new List<int>();
             if (requestMaterials.Count > 0)
             {
                 foreach (RequestOtherMaterial item in requestMaterials)
@@ -411,77 +600,97 @@ namespace API.Services.Service
                     // if material valid
                     if(material != null && material.Quantity >= item.Quantity)
                     {
+                        if (material.WarehouseId.HasValue)
+                        {
+                            // if not request deliver
+                            if(request.RequestCategoryId != RequestCategoryConst.CATEGORY_DELIVER)
+                            {
+                                listMaterialWarehouseID.Add(material.WarehouseId.Value);
+                                listMaterialIDExportedDeliverCancelInside.Add(material.OtherMaterialsId);
+                                listQuantity.Add(item.Quantity);
+                            }  
+                        }
                         // update material quantity
                         material.Quantity = material.Quantity - item.Quantity;
                         material.UpdateAt = DateTime.Now;
                         daoOtherMaterial.UpdateMaterial(material);
+                        // if request deliver
+                        if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER)
+                        {
+                            OtherMaterial? exist = await daoOtherMaterial.getOtherMaterial(request.DeliverWarehouseId, material.Code, material.Status, material.Unit);
+                            // if material not exist in deliver warehouse
+                            if (exist == null)
+                            {
+                                exist = new OtherMaterial()
+                                {
+                                    OtherMaterialsCategoryId = material.OtherMaterialsCategoryId,
+                                    Code = material.Code,
+                                    Unit = material.Unit,
+                                    Quantity = item.Quantity,
+                                    WarehouseId = request.DeliverWarehouseId,
+                                    Status = material.Status,
+                                    SupplierId = material.SupplierId
+                                };
+                                // create material
+                                daoOtherMaterial.CreateMaterial(exist);
+                                // get material create
+                                OtherMaterial? create = await daoOtherMaterial.getOtherMaterialCreate();
+                                if (create != null)
+                                {
+                                    if (request.DeliverWarehouseId.HasValue)
+                                    {
+                                        listMaterialIDExportedDeliverCancelInside.Add(create.OtherMaterialsId);
+                                        listQuantity.Add(item.Quantity);
+                                        listMaterialWarehouseID.Add(request.DeliverWarehouseId.Value);
+                                    }
+                                    // update request material
+                                    daoRequestMaterial.RemoveRequestMaterial(item);
+                                    RequestOtherMaterial requestMaterial = new RequestOtherMaterial()
+                                    {
+                                        RequestId = item.RequestId,
+                                        OtherMaterialsId = create.OtherMaterialsId,
+                                        Quantity = item.Quantity,
+                                        CreatedAt = item.CreatedAt,
+                                        UpdateAt = item.UpdateAt,
+                                        IsDeleted = false
+                                    };
+                                    daoRequestMaterial.CreateRequestOtherMaterial(requestMaterial);
+                                }
+                            }
+                            else
+                            {
+                                if (request.DeliverWarehouseId.HasValue)
+                                {
+                                    listMaterialIDExportedDeliverCancelInside.Add(exist.OtherMaterialsId);
+                                    listQuantity.Add(item.Quantity);
+                                    listMaterialWarehouseID.Add(request.DeliverWarehouseId.Value);
+                                }     
+                                // update material
+                                exist.Quantity = exist.Quantity + item.Quantity;
+                                exist.UpdateAt = DateTime.Now;
+                                daoOtherMaterial.UpdateMaterial(exist);
+                            }
+                        }
                     }
                 }
             }
             // ------------------------------- update request approved --------------------------------
             UpdateRequest(request, ApproverID, RequestConst.STATUS_APPROVED);
-            // ------------------------------- add transaction cable --------------------------------
-            if (listCableExported.Count > 0)
+            // ------------------------------- create transaction --------------------------------
+            bool? action;
+            // if request deliver
+            if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER)
             {
-                for (int i = 0; i < listCableExported.Count; i++)
-                {
-                    TransactionHistory history = new TransactionHistory()
-                    {
-                        TransactionId = Guid.NewGuid(),
-                        TransactionCategoryName = TransactionCategoryConst.CATEGORY_EXPORT,
-                        CreatedDate = DateTime.Now,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                        WarehouseId = listWareHouseID[i],
-                        RequestId = request.RequestId,
-                        IssueId = request.IssueId,
-                    };
-                    daoHistory.CreateTransactionHistory(history);
-                    TransactionCable transactionCable = new TransactionCable()
-                    {
-                        TransactionId = history.TransactionId,
-                        CableId = listCableExported[i].CableId,
-                        StartPoint = listCableExported[i].StartPoint,
-                        EndPoint = listCableExported[i].EndPoint,
-                        Length = listCableExported[i].Length,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false
-                    };
-                    daoTransactionCable.CreateTransactionCable(transactionCable);
-                }
-            }
-            // ------------------------------- add transaction material --------------------------------
-            if (requestMaterials.Count > 0)
+                action = true;// import
+            }else if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT)
             {
-                foreach (RequestOtherMaterial item in requestMaterials)
-                {
-                    TransactionHistory history = new TransactionHistory()
-                    {
-                        TransactionId = Guid.NewGuid(),
-                        TransactionCategoryName = TransactionCategoryConst.CATEGORY_EXPORT,
-                        CreatedDate = DateTime.Now,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                        WarehouseId = item.OtherMaterials.WarehouseId,
-                        RequestId = request.RequestId,
-                        IssueId = request.IssueId,
-                    };
-                    daoHistory.CreateTransactionHistory(history);
-                    TransactionOtherMaterial material = new TransactionOtherMaterial()
-                    {
-                        TransactionId = history.TransactionId,
-                        OtherMaterialsId = item.OtherMaterialsId,
-                        Quantity = item.Quantity,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                    };
-                    daoTransactionMaterial.CreateTransactionMaterial(material);
-                }
+                action = false; // export
             }
+            else
+            {
+                action = null; // cancel
+            }
+            CreateTransaction(request, listCableWarehouseID, listCableExportedDeliverCancelInside, listMaterialWarehouseID, listMaterialIDExportedDeliverCancelInside,listQuantity, action);
             // ------------------------------- send email --------------------------------
             await sendEmailToCreator(request, ApproverName);
             return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
@@ -735,16 +944,19 @@ namespace API.Services.Service
             }
             // ------------------------------- request cable ------------------------------
             List<Cable> listCableRecovery = new List<Cable>();
-            List<int?> listWareHouseCable = new List<int?>();
-            if(requestCables.Count > 0)
+            List<int> listCableWarehouseID = new List<int>();
+            if (requestCables.Count > 0)
             {
                 foreach(RequestCable item in  requestCables)
                 {
                     Cable? cable = await daoCable.getCable(item.CableId);
                     if(cable != null)
                     {
-                        listCableRecovery.Add(cable);
-                        listWareHouseCable.Add(item.RecoveryDestWarehouseId);
+                        if (item.RecoveryDestWarehouseId.HasValue)
+                        {
+                            listCableRecovery.Add(cable);
+                            listCableWarehouseID.Add(item.RecoveryDestWarehouseId.Value);
+                        } 
                         // update cable
                         cable.IsInRequest = false;
                         cable.UpdateAt = DateTime.Now;
@@ -753,8 +965,8 @@ namespace API.Services.Service
                 }
             }
             // ------------------------------- request material ------------------------------
-            List<OtherMaterial> listMaterialRecovery = new List<OtherMaterial>();
-            List<int?> listWareHouseMaterial = new List<int?>();
+            List<int> listMaterialWarehouseID = new List<int>();
+            List<int> listMaterialIDRecovery= new List<int>();
             List<int> listQuantity = new List<int>();
             if(requestMaterials.Count > 0)
             {
@@ -763,9 +975,12 @@ namespace API.Services.Service
                     OtherMaterial? material = await daoOtherMaterial.getOtherMaterial(item.OtherMaterialsId);
                     if(material != null)
                     {
-                        listMaterialRecovery.Add(material);
-                        listWareHouseMaterial.Add(item.RecoveryDestWarehouseId);
-                        listQuantity.Add(item.Quantity);
+                        if (item.RecoveryDestWarehouseId.HasValue)
+                        {
+                            listMaterialIDRecovery.Add(material.OtherMaterialsId);
+                            listMaterialIDRecovery.Add(item.RecoveryDestWarehouseId.Value);
+                            listQuantity.Add(item.Quantity);
+                        }
                         // update material
                         material.Quantity = material.Quantity + item.Quantity;
                         material.UpdateAt = DateTime.Now;
@@ -775,68 +990,8 @@ namespace API.Services.Service
             }
             // ------------------------------- update request approved --------------------------------
             UpdateRequest(request, ApproverID, RequestConst.STATUS_APPROVED);
-            // ------------------------------- create transaction cable ------------------------------
-            if (listCableRecovery.Count > 0)
-            {
-                for(int i = 0; i < listCableRecovery.Count; i ++)
-                {
-                    TransactionHistory history = new TransactionHistory()
-                    {
-                        TransactionId = Guid.NewGuid(),
-                        TransactionCategoryName = TransactionCategoryConst.CATEGORY_IMPORT,
-                        CreatedDate = DateTime.Now,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                        WarehouseId = listWareHouseCable[i],
-                        RequestId = request.RequestId,
-                        IssueId = request.IssueId,
-                    };
-                    daoHistory.CreateTransactionHistory(history);
-                    TransactionCable transaction = new TransactionCable()
-                    {
-                        TransactionId = history.TransactionId,
-                        CableId = listCableRecovery[i].CableId,
-                        StartPoint = listCableRecovery[i].StartPoint,
-                        EndPoint = listCableRecovery[i].EndPoint,
-                        Length = listCableRecovery[i].EndPoint - listCableRecovery[i].StartPoint,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false
-                    };
-                    daoTransactionCable.CreateTransactionCable(transaction);
-                }
-            }
-            // ------------------------------- create transaction material ------------------------------
-            if(listMaterialRecovery.Count > 0)
-            {
-                for(int i = 0; i < listMaterialRecovery.Count; i ++)
-                {
-                    TransactionHistory history = new TransactionHistory()
-                    {
-                        TransactionId = Guid.NewGuid(),
-                        TransactionCategoryName = TransactionCategoryConst.CATEGORY_IMPORT,
-                        CreatedDate = DateTime.Now,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                        WarehouseId = listWareHouseMaterial[i],
-                        RequestId = request.RequestId,
-                        IssueId = request.IssueId,
-                    };
-                    daoHistory.CreateTransactionHistory(history);
-                    TransactionOtherMaterial transaction = new TransactionOtherMaterial()
-                    {
-                        TransactionId = history.TransactionId,
-                        OtherMaterialsId = listMaterialRecovery[i].OtherMaterialsId,
-                        Quantity = listQuantity[i],
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false
-                    };
-                    daoTransactionMaterial.CreateTransactionMaterial(transaction);
-                }
-            }
+            // ------------------------------- create transaction ------------------------------
+            CreateTransaction(request,listCableWarehouseID,listCableRecovery,listMaterialWarehouseID, listMaterialIDRecovery, listQuantity,true);
             // ------------------------------- send email ------------------------------
             await sendEmailToCreator(request, ApproverName);
             return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
@@ -854,21 +1009,13 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
                 }
-                if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT)
+                if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT || request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER || request.RequestCategoryId == RequestCategoryConst.CATEGORY_CANCEL_INSIDE)
                 {
-                    return await ApproveRequestExport(ApproverID, request, ApproverName);
+                    return await ApproveRequestExportDeliverCancelInside(ApproverID, request, ApproverName);
                 }
                 if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_RECOVERY)
                 {
                     return await ApproveRequestRecovery(ApproverID, request, ApproverName);
-                }
-                if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER)
-                {
-                    return await ApproveRequestDeliver(ApproverID, request, ApproverName);
-                }
-                if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_CANCEL_INSIDE)
-                {
-                    return await ApproveRequestCancelInside(ApproverID, request, ApproverName);
                 }
                 if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_CANCEL_OUTSIDE)
                 {
@@ -946,290 +1093,6 @@ namespace API.Services.Service
             {
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
-        }
-        private async Task<ResponseDTO<bool>> ApproveRequestDeliver(Guid ApproverID, DataAccess.Entity.Request request, string ApproverName)
-        {
-            List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
-            List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(request.RequestId);
-            // ------------------------------- check cable valid ------------------------------  
-            ResponseDTO<bool> check = await isCableValidApproveExportDeliverCancelInside(requestCables, true);// true : xuat, false: huy
-            // if exist cable not valid
-            if (check.Success == false)
-            {
-                return check;
-            }
-            // ------------------------------- check material valid ------------------------------
-            check = await isMaterialValidApproveExportDeliverCancelInside(requestMaterials);
-            // if exist material not valid
-            if (check.Success == false)
-            {
-                return check;
-            }
-            // --------------------------- create transaction cable ------------------------------------------
-            if (requestCables.Count > 0)
-            {
-                foreach(RequestCable item in requestCables)
-                {
-                    TransactionHistory history = new TransactionHistory()
-                    {
-                        TransactionId = Guid.NewGuid(),
-                        TransactionCategoryName = TransactionCategoryConst.CATEGORY_EXPORT,
-                        CreatedDate = DateTime.Now,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                        RequestId = request.RequestId,
-                        WarehouseId = item.Cable.WarehouseId,
-                        ToWarehouseId = request.DeliverWarehouseId
-                    };
-                    daoHistory.CreateTransactionHistory(history);
-                    TransactionCable transaction = new TransactionCable()
-                    {
-                        TransactionId = history.TransactionId,
-                        CableId = item.Cable.CableId,
-                        StartPoint = item.Cable.StartPoint,
-                        EndPoint = item.Cable.EndPoint,
-                        Length = item.Cable.Length,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                    };
-                    daoTransactionCable.CreateTransactionCable(transaction);
-                }
-            }
-            // --------------------------- create transaction material -----------------------------------------
-            if(requestMaterials.Count > 0)
-            {
-                foreach(RequestOtherMaterial item in requestMaterials)
-                {
-                    TransactionHistory history = new TransactionHistory()
-                    {
-                        TransactionId = Guid.NewGuid(),
-                        TransactionCategoryName = TransactionCategoryConst.CATEGORY_EXPORT,
-                        CreatedDate = DateTime.Now,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                        RequestId = request.RequestId,
-                        WarehouseId = item.OtherMaterials.WarehouseId,
-                        ToWarehouseId = request.DeliverWarehouseId
-                    };
-                    daoHistory.CreateTransactionHistory(history);
-                    TransactionOtherMaterial transaction = new TransactionOtherMaterial()
-                    {
-                        TransactionId = history.TransactionId,
-                        OtherMaterialsId = item.OtherMaterialsId,
-                        Quantity = item.Quantity,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                    };
-                    daoTransactionMaterial.CreateTransactionMaterial(transaction);
-                }
-            }
-            // --------------------------- get list cable deliver and update cable ----------------------------------------------
-            List<Cable> listCableDeliver = new List<Cable>();
-            if (requestCables.Count > 0)
-            {
-                foreach (RequestCable item in requestCables)
-                {
-                    Cable? cable;
-                    if (item.Cable.IsDeleted)
-                    {
-                        cable = await daoCable.getCable(item.CableId, item.StartPoint, item.EndPoint);
-                    }
-                    else
-                    {
-                        cable = item.Cable;
-                    }
-                    // if cable valid
-                    if (cable != null && cable.IsExportedToUse == false && item.StartPoint >= cable.StartPoint && item.EndPoint <= cable.EndPoint)
-                    {
-                        if (item.StartPoint == cable.StartPoint && item.EndPoint == cable.EndPoint)
-                        {
-                            Cable? update = await daoCable.getCable(cable.CableId);
-                            if (update != null)
-                            {
-                                update.WarehouseId = request.DeliverWarehouseId;
-                                update.UpdateAt = DateTime.Now;
-                                daoCable.UpdateCable(update);
-                            }
-                            listCableDeliver.Add(cable);
-                        }
-                        else
-                        {
-                            List<Cable> listCut = CableUtil.getListCableCut(item.StartPoint, item.EndPoint, cable, request.DeliverWarehouseId);
-                            foreach (Cable cut in listCut)
-                            {
-                                // if cable deliver
-                                if (cut.WarehouseId == request.DeliverWarehouseId)
-                                {
-                                    listCableDeliver.Add(cut);
-                                    daoCable.CreateCable(cut);
-                                    // update request cable
-                                    daoRequestCable.RemoveRequestCable(item);
-                                    RequestCable create = new RequestCable()
-                                    {
-                                        RequestId = item.RequestId,
-                                        CableId = cut.CableId,
-                                        StartPoint = cut.StartPoint,
-                                        EndPoint = cut.EndPoint,
-                                        Length = cut.Length,
-                                        CreatedAt = cut.CreatedAt,
-                                        UpdateAt = DateTime.Now,
-                                        IsDeleted = false
-                                    };
-                                    daoRequestCable.CreateRequestCable(create);
-                                }
-                                else
-                                {
-                                    daoCable.CreateCable(cut);
-                                }
-                            }
-                            // delete cable parent
-                            Cable? cableParent = await daoCable.getCable(cable.CableId);
-                            if (cableParent != null)
-                            {
-                                daoCable.DeleteCable(cableParent);
-                            }
-
-                        }
-                    }
-                }
-            }
-            // ------------------------------- update quantity and create or update material in deliver warehouse ------------------------------
-            List<int> listMaterialID = new List<int>();
-            List<int> listQuantity = new List<int>();
-            List<int?> listWarehouseID = new List<int?>();
-            if (requestMaterials.Count > 0)
-            {
-                foreach (RequestOtherMaterial item in requestMaterials)
-                {
-                    OtherMaterial? material = await daoOtherMaterial.getOtherMaterial(item.OtherMaterialsId);
-                    // if material valid
-                    if (material != null && material.Quantity >= item.Quantity)
-                    {
-                        // update material quantity
-                        material.Quantity = material.Quantity - item.Quantity;
-                        material.UpdateAt = DateTime.Now;
-                        daoOtherMaterial.UpdateMaterial(material);
-                        OtherMaterial? exist = await daoOtherMaterial.getOtherMaterial(request.DeliverWarehouseId, material.Code, material.Status, material.Unit);
-                        // if material not exist in deliver warehouse
-                        if(exist == null)
-                        {
-                            exist = new OtherMaterial()
-                            {
-                                OtherMaterialsCategoryId = material.OtherMaterialsCategoryId,
-                                Code = material.Code,
-                                Unit = material.Unit,
-                                Quantity = item.Quantity,
-                                WarehouseId = request.DeliverWarehouseId,
-                                Status = material.Status,
-                                SupplierId = material.SupplierId
-                            };
-                            // create material
-                            daoOtherMaterial.CreateMaterial(exist);
-                            // get material create
-                            OtherMaterial? create = await daoOtherMaterial.getOtherMaterialCreate();
-                            if(create != null)
-                            {
-                                listMaterialID.Add(create.OtherMaterialsId);
-                                listQuantity.Add(item.Quantity);
-                                listWarehouseID.Add(request.DeliverWarehouseId);
-                                // update request material
-                                daoRequestMaterial.RemoveRequestMaterial(item);
-                                RequestOtherMaterial requestMaterial = new RequestOtherMaterial()
-                                {
-                                    RequestId = item.RequestId,
-                                    OtherMaterialsId = create.OtherMaterialsId,
-                                    Quantity = item.Quantity,
-                                    CreatedAt = item.CreatedAt,
-                                    UpdateAt = item.UpdateAt,
-                                    IsDeleted = false
-                                };
-                                daoRequestMaterial.CreateRequestOtherMaterial(requestMaterial);
-                            }
-                        }
-                        else
-                        {
-                            listMaterialID.Add(item.OtherMaterialsId);
-                            listQuantity.Add(item.Quantity);
-                            listWarehouseID.Add(material.WarehouseId);
-                            // update material
-                            exist.Quantity = exist.Quantity + item.Quantity;
-                            exist.UpdateAt = DateTime.Now;
-                            daoOtherMaterial.UpdateMaterial(exist);
-                        }
-                    }
-                }
-            }
-            // ------------------------------- update request approved --------------------------------
-            UpdateRequest(request, ApproverID, RequestConst.STATUS_APPROVED);          
-            // --------------------------- create transaction cable ------------------------------------------
-            if (listCableDeliver.Count > 0)
-            {
-                foreach (Cable item in listCableDeliver)
-                {
-                    TransactionHistory history = new TransactionHistory()
-                    {
-                        TransactionId = Guid.NewGuid(),
-                        TransactionCategoryName = TransactionCategoryConst.CATEGORY_IMPORT,
-                        CreatedDate = DateTime.Now,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                        RequestId = request.RequestId,
-                        WarehouseId = request.DeliverWarehouseId,
-                        FromWarehouseId = request.DeliverWarehouseId
-                    };
-                    daoHistory.CreateTransactionHistory(history);
-                    TransactionCable transaction = new TransactionCable()
-                    {
-                        TransactionId = history.TransactionId,
-                        CableId = item.CableId,
-                        StartPoint = item.StartPoint,
-                        EndPoint = item.EndPoint,
-                        Length = item.Length,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                    };
-                    daoTransactionCable.CreateTransactionCable(transaction);
-                }
-            }
-            // --------------------------- create transaction material -----------------------------------------
-            if (listMaterialID.Count > 0)
-            {
-                for (int i = 0; i < listMaterialID.Count; i++)
-                {
-                    TransactionHistory history = new TransactionHistory()
-                    {
-                        TransactionId = Guid.NewGuid(),
-                        TransactionCategoryName = TransactionCategoryConst.CATEGORY_IMPORT,
-                        CreatedDate = DateTime.Now,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                        RequestId = request.RequestId,
-                        WarehouseId = listWarehouseID[i],
-                        FromWarehouseId = listWarehouseID[i]
-                    };
-                    daoHistory.CreateTransactionHistory(history);
-                    TransactionOtherMaterial transaction = new TransactionOtherMaterial()
-                    {
-                        TransactionId = history.TransactionId,
-                        OtherMaterialsId = listMaterialID[i],
-                        Quantity = listQuantity[i],
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                    };
-                    daoTransactionMaterial.CreateTransactionMaterial(transaction);
-                }
-            }
-            // ------------------------------- send email ------------------------------
-            await sendEmailToCreator(request, ApproverName);
-            return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
         }
         public async Task<ResponseDTO<List<CableListDTO>?>> SuggestionCable(SuggestionCableDTO suggestion)
         {
@@ -1397,181 +1260,6 @@ namespace API.Services.Service
             {
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
-        }
-        private async Task<ResponseDTO<bool>> ApproveRequestCancelInside(Guid ApproverID, DataAccess.Entity.Request request, string ApproverName)
-        {
-            List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
-            List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(request.RequestId);
-            // ------------------------------- check cable valid ------------------------------  
-            ResponseDTO<bool> check = await isCableValidApproveExportDeliverCancelInside(requestCables, false);// true : xuat kho , false:huy
-            // if exist cable not valid
-            if (check.Success == false)
-            {
-                return check;
-            }
-            // ------------------------------- check material valid ------------------------------
-            check = await isMaterialValidApproveExportDeliverCancelInside(requestMaterials);
-            // if exist material not valid
-            if (check.Success == false)
-            {
-                return check;
-            }
-            // ------------------------------- request cable ------------------------------
-            List<Cable> listCableCancel = new List<Cable>();
-            List<int?> listWareHouseID = new List<int?>();
-            if (requestCables.Count > 0)
-            {
-                foreach (RequestCable item in requestCables)
-                {
-                    Cable? cable;
-                    if (item.Cable.IsDeleted)
-                    {
-                        cable = await daoCable.getCable(item.CableId, item.StartPoint, item.EndPoint);
-                    }
-                    else
-                    {
-                        cable = item.Cable;
-                    }
-                    // if cable valid
-                    if (cable != null && cable.IsExportedToUse == false && item.StartPoint >= cable.StartPoint && item.EndPoint <= cable.EndPoint && cable.StartPoint >= 0 && cable.EndPoint >= 0)
-                    {
-                        if (item.StartPoint == cable.StartPoint && item.EndPoint == cable.EndPoint)
-                        {
-                            Cable? update = await daoCable.getCable(cable.CableId);
-                            if (update != null)
-                            {
-                                // update cable
-                                update.IsDeleted = true;
-                                update.UpdateAt = DateTime.Now;
-                                daoCable.UpdateCable(update);
-                            }
-                            listCableCancel.Add(cable);
-                            listWareHouseID.Add(cable.WarehouseId);
-                        }
-                        else
-                        {
-                            List<Cable> listCut = CableUtil.getListCableCut(item.StartPoint, item.EndPoint, cable);
-                            foreach (Cable cut in listCut)
-                            {
-                                // if deleted
-                                if (cut.IsDeleted)
-                                {
-                                    listCableCancel.Add(cut);
-                                    listWareHouseID.Add(cable.WarehouseId);
-                                    daoCable.CreateCable(cut);
-                                    // update request cable
-                                    daoRequestCable.RemoveRequestCable(item);
-                                    RequestCable create = new RequestCable()
-                                    {
-                                        RequestId = item.RequestId,
-                                        CableId = cut.CableId,
-                                        StartPoint = cut.StartPoint,
-                                        EndPoint = cut.EndPoint,
-                                        Length = cut.Length,
-                                        CreatedAt = cut.CreatedAt,
-                                        UpdateAt = DateTime.Now,
-                                        IsDeleted = false
-                                    };
-                                    daoRequestCable.CreateRequestCable(create);
-                                }
-                                else
-                                {
-                                    daoCable.CreateCable(cut);
-                                }
-                            }
-                            // delete cable parent
-                            Cable? cableParent = await daoCable.getCable(cable.CableId);
-                            if (cableParent != null)
-                            {
-                                daoCable.DeleteCable(cableParent);
-                            }
-                        }
-                    }
-                }
-            }
-            // ------------------------------- request material ------------------------------
-            if (requestMaterials.Count > 0)
-            {
-                foreach (RequestOtherMaterial item in requestMaterials)
-                {
-                    OtherMaterial? material = await daoOtherMaterial.getOtherMaterial(item.OtherMaterialsId);
-                    // if material valid
-                    if (material != null && material.Quantity >= item.Quantity)
-                    {
-                        // update material quantity
-                        material.Quantity = material.Quantity - item.Quantity;
-                        material.UpdateAt = DateTime.Now;
-                        daoOtherMaterial.UpdateMaterial(material);
-                    }
-                }
-            }
-            // ------------------------------- update request approved --------------------------------
-            UpdateRequest(request, ApproverID, RequestConst.STATUS_APPROVED);
-            // ------------------------------- add transaction cable --------------------------------
-            if (listCableCancel.Count > 0)
-            {
-                for (int i = 0; i < listCableCancel.Count; i++)
-                {
-                    TransactionHistory history = new TransactionHistory()
-                    {
-                        TransactionId = Guid.NewGuid(),
-                        TransactionCategoryName = TransactionCategoryConst.CATEGORY_CANCEL,
-                        CreatedDate = DateTime.Now,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                        WarehouseId = listWareHouseID[i],
-                        RequestId = request.RequestId,
-                        IssueId = request.IssueId,
-                    };
-                    daoHistory.CreateTransactionHistory(history);
-                    TransactionCable transactionCable = new TransactionCable()
-                    {
-                        TransactionId = history.TransactionId,
-                        CableId = listCableCancel[i].CableId,
-                        StartPoint = listCableCancel[i].StartPoint,
-                        EndPoint = listCableCancel[i].EndPoint,
-                        Length = listCableCancel[i].Length,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false
-                    };
-                    daoTransactionCable.CreateTransactionCable(transactionCable);
-                }
-            }
-            // ------------------------------- add transaction material --------------------------------
-            if (requestMaterials.Count > 0)
-            {
-                foreach (RequestOtherMaterial item in requestMaterials)
-                {
-                    TransactionHistory history = new TransactionHistory()
-                    {
-                        TransactionId = Guid.NewGuid(),
-                        TransactionCategoryName = TransactionCategoryConst.CATEGORY_CANCEL,
-                        CreatedDate = DateTime.Now,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                        WarehouseId = item.OtherMaterials.WarehouseId,
-                        RequestId = request.RequestId,
-                        IssueId = request.IssueId,
-                    };
-                    daoHistory.CreateTransactionHistory(history);
-                    TransactionOtherMaterial material = new TransactionOtherMaterial()
-                    {
-                        TransactionId = history.TransactionId,
-                        OtherMaterialsId = item.OtherMaterialsId,
-                        Quantity = item.Quantity,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                    };
-                    daoTransactionMaterial.CreateTransactionMaterial(material);
-                }
-            }
-            // ------------------------------- send email --------------------------------
-            await sendEmailToCreator(request, ApproverName);
-            return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
         }
         // create cable while creating request cancel outside
         private List<Cable> CreateCable(List<CableCancelOutsideDTO> list, Guid CreatorID)
