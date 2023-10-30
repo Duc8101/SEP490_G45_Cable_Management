@@ -32,16 +32,14 @@ namespace API.Model.DAO
             return await query.OrderByDescending(r => r.CreatedAt).Skip(PageSizeConst.MAX_ROUTE_LIST_IN_PAGE * (page - 1))
                 .ToListAsync();
         }
-
         public async Task<int> getRowCount()
         {
             IQueryable<DataAccess.Entity.Route> query = getQuery(null);
             return await query.CountAsync();
         }
-
-        public bool isExist(string name)
+        public async Task<bool> isExist(string name)
         {
-            return context.Routes.Any(r => r.RouteName == name.Trim() && r.IsDeleted == false);
+            return await context.Routes.AnyAsync(r => r.RouteName == name.Trim() && r.IsDeleted == false);
         }
 
         public void CreateRoute(DataAccess.Entity.Route route)

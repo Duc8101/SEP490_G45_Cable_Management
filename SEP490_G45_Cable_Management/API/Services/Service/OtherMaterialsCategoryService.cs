@@ -65,7 +65,7 @@ namespace API.Services.Service
                 return new ResponseDTO<List<OtherMaterialsCategoryListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public ResponseDTO<bool> Create(OtherMaterialsCategoryCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Create(OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
             if (DTO.OtherMaterialsCategoryName.Trim().Length == 0)
             {
@@ -74,7 +74,7 @@ namespace API.Services.Service
             try
             {
                 // if name exist
-                if (daoOtherMaterialsCategory.isExist(DTO.OtherMaterialsCategoryName.Trim()))
+                if (await daoOtherMaterialsCategory.isExist(DTO.OtherMaterialsCategoryName.Trim()))
                 {
                     return new ResponseDTO<bool>(false, "Loại vật liệu này đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
@@ -85,7 +85,7 @@ namespace API.Services.Service
                     UpdateAt = DateTime.Now,
                     IsDeleted = false
                 };
-                daoOtherMaterialsCategory.CreateOtherMaterialsCategory(category);
+                await daoOtherMaterialsCategory.CreateOtherMaterialsCategory(category);
                 return new ResponseDTO<bool>(true, "Tạo thành công");
             }
             catch (Exception ex)
@@ -93,7 +93,6 @@ namespace API.Services.Service
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-
         public async Task<ResponseDTO<bool>> Update(int OtherMaterialsCategoryID, OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
             try
@@ -110,13 +109,13 @@ namespace API.Services.Service
                     return new ResponseDTO<bool>(false, "Tên vật liệu không được để trống", (int)HttpStatusCode.NotAcceptable);
                 }
                 // if already exist
-                if (daoOtherMaterialsCategory.isExist(OtherMaterialsCategoryID, DTO.OtherMaterialsCategoryName.Trim()))
+                if (await daoOtherMaterialsCategory.isExist(OtherMaterialsCategoryID, DTO.OtherMaterialsCategoryName.Trim()))
                 {
                     return new ResponseDTO<bool>(false, "Loại vật liệu này đã tồn tại", (int)HttpStatusCode.NotFound);
                 }
                 category.OtherMaterialsCategoryName = DTO.OtherMaterialsCategoryName.Trim();
                 category.UpdateAt = DateTime.Now;
-                daoOtherMaterialsCategory.UpdateOtherMaterialsCategory(category);
+                await daoOtherMaterialsCategory.UpdateOtherMaterialsCategory(category);
                 return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)

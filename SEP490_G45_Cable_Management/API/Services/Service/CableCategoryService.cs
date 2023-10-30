@@ -68,7 +68,7 @@ namespace API.Services.Service
                 return new ResponseDTO<List<CableCategoryListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public ResponseDTO<bool> Create(CableCategoryCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Create(CableCategoryCreateUpdateDTO DTO)
         {
             if (DTO.CableCategoryName.Trim().Length == 0)
             {
@@ -77,7 +77,7 @@ namespace API.Services.Service
             try
             {
                 // if category already exist
-                if (daoCableCategory.isExist(DTO.CableCategoryName.Trim()))
+                if (await daoCableCategory.isExist(DTO.CableCategoryName.Trim()))
                 {
                     return new ResponseDTO<bool>(false, "Loại cáp này đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
@@ -88,7 +88,7 @@ namespace API.Services.Service
                     UpdateAt = DateTime.Now,
                     IsDeleted = false,
                 };
-                daoCableCategory.CreateCableCategory(cable);
+                await daoCableCategory.CreateCableCategory(cable);
                 return new ResponseDTO<bool>(true, "Tạo thành công");
             }
             catch (Exception ex)
@@ -111,13 +111,13 @@ namespace API.Services.Service
                     return new ResponseDTO<bool>(false, "Tên cáp không được để trống", (int)HttpStatusCode.Conflict);
                 }
                 // if cable already exist
-                if (daoCableCategory.isExist(CableCategoryID, DTO.CableCategoryName.Trim()))
+                if (await daoCableCategory.isExist(CableCategoryID, DTO.CableCategoryName.Trim()))
                 {
                     return new ResponseDTO<bool>(false, "Loại cáp này đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
                 cable.CableCategoryName = DTO.CableCategoryName.Trim();
                 cable.UpdateAt = DateTime.Now;
-                daoCableCategory.UpdateCableCategory(cable);
+                await daoCableCategory.UpdateCableCategory(cable);
                 return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)

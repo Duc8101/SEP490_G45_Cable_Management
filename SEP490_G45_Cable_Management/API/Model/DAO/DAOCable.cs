@@ -55,17 +55,17 @@ namespace API.Model.DAO
             return await query.SumAsync(c => c.Length);
         }
 
-        public bool isExist(CableCreateUpdateDTO DTO)
+        public async Task<bool> isExist(CableCreateUpdateDTO DTO)
         {
-            return context.Cables.Any(c => c.IsDeleted == false && c.Code == DTO.Code.Trim() && c.Status == DTO.Status.Trim()
+            return await context.Cables.AnyAsync(c => c.IsDeleted == false && c.Code == DTO.Code.Trim() && c.Status == DTO.Status.Trim()
             && c.SupplierId == DTO.SupplierId && c.StartPoint == DTO.StartPoint && c.EndPoint == DTO.EndPoint
             && c.YearOfManufacture == DTO.YearOfManufacture);
         }
 
-        public void CreateCable(Cable cable)
+        public async Task CreateCable(Cable cable)
         {
-            context.Cables.Add(cable);
-            context.SaveChanges();
+           await context.Cables.AddAsync(cable);
+           await context.SaveChangesAsync();
         }
 
         public async Task<Cable?> getCable(Guid CableID)
@@ -73,23 +73,23 @@ namespace API.Model.DAO
             return await context.Cables.Include(c => c.CableCategory).SingleOrDefaultAsync(c => c.IsDeleted == false && c.CableId == CableID);
         }
 
-        public bool isExist(Guid CableID, CableCreateUpdateDTO DTO)
+        public async Task<bool> isExist(Guid CableID, CableCreateUpdateDTO DTO)
         {
-            return context.Cables.Any(c => c.IsDeleted == false && c.Code == DTO.Code.Trim() && c.Status == DTO.Status.Trim()
+            return await context.Cables.AnyAsync(c => c.IsDeleted == false && c.Code == DTO.Code.Trim() && c.Status == DTO.Status.Trim()
             && c.SupplierId == DTO.SupplierId && c.StartPoint == DTO.StartPoint && c.EndPoint == DTO.EndPoint
             && c.YearOfManufacture == DTO.YearOfManufacture && c.CableId != CableID);
         }
 
-        public void UpdateCable(Cable cable)
+        public async Task UpdateCable(Cable cable)
         {
             context.Cables.Update(cable);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void DeleteCable(Cable cable)
+        public async Task DeleteCable(Cable cable)
         {
             cable.IsDeleted = true;
-            UpdateCable(cable);
+            await UpdateCable(cable);
         }
         public async Task<List<Cable>> getList(int CableCategoryID)
         {

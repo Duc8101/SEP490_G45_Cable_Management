@@ -41,12 +41,12 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public ResponseDTO<bool> Create([Required] RouteCreateDTO DTO)
+        public async Task<ResponseDTO<bool>> Create([Required] RouteCreateDTO DTO)
         {
             // if admin, leader
             if (isAdmin() || isLeader())
             {
-                return service.Create(DTO);
+                return await service.Create(DTO);
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }

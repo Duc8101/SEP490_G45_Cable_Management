@@ -9,15 +9,15 @@ namespace API.Model.DAO
         {
             return await context.NodeMaterialCategories.Where(n => n.OtherMaterialCategoryId == MaterialCategoryID).FirstOrDefaultAsync();
         }
-        public void CreateNodeMaterialCategory(NodeMaterialCategory material)
+        public async Task CreateNodeMaterialCategory(NodeMaterialCategory material)
         {
-            context.NodeMaterialCategories.Add(material);
-            context.SaveChanges();
+            await context.NodeMaterialCategories.AddAsync(material);
+            await context.SaveChangesAsync();
         }
-        public void UpdateNodeMaterialCategory(NodeMaterialCategory material)
+        public async Task UpdateNodeMaterialCategory(NodeMaterialCategory material)
         {
             context.NodeMaterialCategories.Update(material);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
         public async Task<List<NodeMaterialCategory>> getList(Guid NodeID)
         {

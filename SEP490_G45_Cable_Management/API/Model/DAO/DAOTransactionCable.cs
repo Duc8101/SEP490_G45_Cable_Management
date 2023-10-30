@@ -50,10 +50,10 @@ namespace API.Model.DAO
             return sumIncrease - sumDecrease;
         }
 
-        public void CreateTransactionCable(TransactionCable transaction)
+        public async Task CreateTransactionCable(TransactionCable transaction)
         {
-            context.TransactionCables.Add(transaction);
-            context.SaveChanges();
+            await context.TransactionCables.AddAsync(transaction);
+            await context.SaveChangesAsync();
         }
     }
 }

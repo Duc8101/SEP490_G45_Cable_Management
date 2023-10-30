@@ -33,7 +33,6 @@ namespace API.Model.DAO
             query = query.OrderByDescending(t => t.CreatedAt).Skip(PageSizeConst.MAX_TRANSACTION_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_TRANSACTION_LIST_IN_PAGE);
             return await query.ToListAsync();
         }
-
         public async Task<int> getRowCount(string? filter, int? WareHouseID)
         {
             IQueryable<TransactionHistory> query = getQuery(filter, WareHouseID);
@@ -44,17 +43,10 @@ namespace API.Model.DAO
             return await context.TransactionHistories.Include(w => w.Issue).Include(w => w.FromWarehouse)
                 .Include(w => w.ToWarehouse).SingleOrDefaultAsync(t => t.TransactionId == TransactionID);
         }
-
-        public void CreateTransactionHistory(TransactionHistory history)
+        public async Task CreateTransactionHistory(TransactionHistory history)
         {
-            context.TransactionHistories.Add(history);
-            context.SaveChanges();
-        }
-
-        public void UpdateTransactionHistory(TransactionHistory history)
-        {
-             context.TransactionHistories.Update(history);
-             context.SaveChanges();
+            await context.TransactionHistories.AddAsync(history);
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -74,7 +74,7 @@ namespace API.Services.Service
                 return new ResponseDTO<List<WarehouseListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public ResponseDTO<bool> Create(WarehouseCreateUpdateDTO DTO, Guid CreatorID)
+        public async Task<ResponseDTO<bool>> Create(WarehouseCreateUpdateDTO DTO, Guid CreatorID)
         {
             if (DTO.WarehouseName.Trim().Length == 0)
             {
@@ -82,11 +82,6 @@ namespace API.Services.Service
             }
             try
             {
-                /* // if warehouse already exist
-                 if (await daoWarehouse.isExist(DTO.WarehouseName.Trim()))
-                 {
-                     return new ResponseDTO<bool>(false, "Kho đã tồn tại", (int) HttpStatusCode.Conflict);
-                 }*/
                 Warehouse ware = new Warehouse()
                 {
                     WarehouseName = DTO.WarehouseName.Trim(),
@@ -98,7 +93,7 @@ namespace API.Services.Service
                     CreatedDate = DateTime.Now,
                     IsDeleted = false,
                 };
-                daoWarehouse.CreateWarehouse(ware);
+                await daoWarehouse.CreateWarehouse(ware);
                 return new ResponseDTO<bool>(true, "Tạo thành công");
             }
             catch (Exception ex)
@@ -120,16 +115,11 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Tên kho không được để trống", (int)HttpStatusCode.Conflict);
                 }
-                /*// if ware exist
-                if (await daoWarehouse.isExist(WarehouseID, DTO.WarehouseName.Trim()))
-                {
-                    return new ResponseDTO<bool>(false, "Kho đã tồn tại", (int) HttpStatusCode.NotAcceptable);
-                }*/
                 ware.WarehouseName = DTO.WarehouseName.Trim();
                 ware.WarehouseKeeperid = DTO.WarehouseKeeperId;
                 ware.WarehouseAddress = DTO.WarehouseAddress == null || DTO.WarehouseAddress.Trim().Length == 0 ? null : DTO.WarehouseAddress.Trim();
                 ware.UpdateAt = DateTime.Now;
-                daoWarehouse.UpdateWarehouse(ware);
+                await daoWarehouse.UpdateWarehouse(ware);
                 return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)
@@ -147,7 +137,7 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy kho", (int)HttpStatusCode.NotFound);
                 }
-                daoWarehouse.DeleteWarehouse(ware);
+                await daoWarehouse.DeleteWarehouse(ware);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
             }
             catch (Exception ex)

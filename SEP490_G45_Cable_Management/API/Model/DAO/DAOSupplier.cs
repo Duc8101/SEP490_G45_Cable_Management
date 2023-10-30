@@ -12,17 +12,15 @@ namespace API.Model.DAO
 {
     public class DAOSupplier : BaseDAO
     {
-        public void CreateSupplier(Supplier supplier)
+        public async Task CreateSupplier(Supplier supplier)
         {
-            context.Suppliers.Add(supplier);
-            context.SaveChanges();
+            await context.Suppliers.AddAsync(supplier);
+            await context.SaveChangesAsync();
         }
-
-        public bool isExist(string SupplierName)
+        public async Task<bool> isExist(string SupplierName)
         {
-            return context.Suppliers.Any(s => s.SupplierName == SupplierName.Trim() && s.IsDeleted == false);
+            return await context.Suppliers.AnyAsync(s => s.SupplierName == SupplierName.Trim() && s.IsDeleted == false);
         }
-
         private IQueryable<Supplier> getQuery(string? name)
         {
             IQueryable<Supplier> query = context.Suppliers.Where(s => s.IsDeleted == false);
@@ -32,45 +30,38 @@ namespace API.Model.DAO
             }
             return query;
         }
-
         public async Task<List<Supplier>> getListPaged(string? name, int page)
         {
             IQueryable<Supplier> query = getQuery(name);
             return await query.Skip((page - 1) * PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).Take(PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).ToListAsync();
         }
-
         public async Task<int> getRowCount(string? name)
         {
             IQueryable<Supplier> query = getQuery(name);
             return await query.CountAsync();
         }
-
         public async Task<List<Supplier>> getListAll()
         {
             IQueryable<Supplier> query = getQuery(null);
             return await query.ToListAsync();
         }
-
         public async Task<Supplier?> getSupplier(int SupplierID)
         {
             return await context.Suppliers.SingleOrDefaultAsync(s => s.SupplierId == SupplierID && s.IsDeleted == false);
         }
-
-        public bool isExist(int SupplierID, string SupplierName)
+        public async Task<bool> isExist(int SupplierID, string SupplierName)
         {
-            return context.Suppliers.Any(s => s.SupplierName == SupplierName.Trim() && s.SupplierId != SupplierID && s.IsDeleted == false);
+            return await context.Suppliers.AnyAsync(s => s.SupplierName == SupplierName.Trim() && s.SupplierId != SupplierID && s.IsDeleted == false);
         }
-
-        public void UpdateSupplier(Supplier supplier)
+        public async Task UpdateSupplier(Supplier supplier)
         {
             context.Suppliers.Update(supplier);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
-
-        public void DeleteSupplier(Supplier supplier)
+        public async Task DeleteSupplier(Supplier supplier)
         {
             supplier.IsDeleted = true;
-            UpdateSupplier(supplier);
+            await UpdateSupplier(supplier);
         }
     }
 }

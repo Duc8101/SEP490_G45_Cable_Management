@@ -14,10 +14,10 @@ namespace API.Model.DAO
         {
             return await context.Nodes.Where(n => n.IsDeleted == true && n.RouteId == RouteID).ToListAsync();
         }
-        public void UpdateNode(Node node)
+        public async Task UpdateNode(Node node)
         {
             context.Nodes.Update(node);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
         public async Task<List<Node>> getListNodeOrderByNumberOrder(Guid RouteID)
         {
@@ -33,10 +33,10 @@ namespace API.Model.DAO
         {
             return await context.Nodes.SingleOrDefaultAsync(n => n.Id == NodeID && n.IsDeleted == false);
         }
-        public void DeleteNode(Node node)
+        public async Task DeleteNode(Node node)
         {
             node.IsDeleted = true;
-            UpdateNode(node);
+            await UpdateNode(node);
         }
 
     }

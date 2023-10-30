@@ -1,7 +1,6 @@
 ﻿using API.Services.Service;
 using DataAccess.DTO;
 using DataAccess.DTO.SupplierDTO;
-using DataAccess.DTO.UserDTO;
 using DataAccess.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -46,7 +45,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public ResponseDTO<bool> Create([Required] SupplierCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Create([Required] SupplierCreateUpdateDTO DTO)
         { 
             // if admin
             if (isAdmin())
@@ -58,7 +57,7 @@ namespace API.Controllers
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra lại thông tin đăng nhập", (int) HttpStatusCode.NotFound);
                 }
-                return service.Create(DTO, Guid.Parse(CreatorID));             
+                return await service.Create(DTO, Guid.Parse(CreatorID));             
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
         }

@@ -77,7 +77,7 @@ namespace API.Services.Service
                 foreach (Node node in list)
                 {
                     node.RouteId = null;
-                    daoNode.UpdateNode(node);
+                    await daoNode.UpdateNode(node);
                 }
             }
         }
@@ -89,7 +89,7 @@ namespace API.Services.Service
             }
             try
             {
-                // update bode deleted
+                // update node deleted
                 await UpdateNodeDeleted(DTO.RouteId.Value);
                 // --------------------------- update list node order by ---------------------------
                 List<Node> list = await daoNode.getListNodeOrderByNumberOrder(DTO.RouteId.Value);
@@ -110,7 +110,7 @@ namespace API.Services.Service
                             {
                                 list[i].NumberOrder = i + 1;
                             }
-                            daoNode.UpdateNode(list[i]);
+                            await daoNode.UpdateNode(list[i]);
                         }
                     }
                 }
@@ -122,7 +122,7 @@ namespace API.Services.Service
                         if (item.NumberOrder >= DTO.NumberOrder)
                         {
                             item.NumberOrder++;
-                            daoNode.UpdateNode(item);
+                            await daoNode.UpdateNode(item);
                         }
                     }
                 }
@@ -202,7 +202,7 @@ namespace API.Services.Service
                 node.NodeNumberSign = DTO.NodeNumberSign.Trim();
                 node.Note = DTO.Note == null || DTO.Note.Trim().Length == 0 ? null : DTO.Note.Trim();
                 node.Status = DTO.Status == null || DTO.Status.Trim().Length == 0 ? null : DTO.Status.Trim();
-                daoNode.UpdateNode(node);
+                await daoNode.UpdateNode(node);
                 return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)
@@ -219,7 +219,7 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy điểm", (int)HttpStatusCode.NotFound);
                 }
-                daoNode.DeleteNode(node);
+                await daoNode.DeleteNode(node);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
             }
             catch (Exception ex)

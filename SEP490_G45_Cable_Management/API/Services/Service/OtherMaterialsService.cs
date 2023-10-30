@@ -99,13 +99,13 @@ namespace API.Services.Service
                         Status = DTO.Status.Trim(),
                         OtherMaterialsCategoryId = DTO.OtherMaterialsCategoryId
                     };
-                    daoOtherMaterials.CreateMaterial(material);
+                    await daoOtherMaterials.CreateMaterial(material);
                 }
                 else
                 {
                     material.Quantity = material.Quantity + DTO.Quantity;
                     material.UpdateAt = DateTime.Now;
-                    daoOtherMaterials.UpdateMaterial(material);
+                    await daoOtherMaterials.UpdateMaterial(material);
                 }
                 return new ResponseDTO<bool>(true, "Tạo thành công");
             }
@@ -161,7 +161,7 @@ namespace API.Services.Service
                 material.Status = DTO.Status.Trim();
                 material.OtherMaterialsCategoryId = DTO.OtherMaterialsCategoryId;
                 material.UpdateAt = DateTime.Now;
-                daoOtherMaterials.UpdateMaterial(material);
+                await daoOtherMaterials.UpdateMaterial(material);
                 return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)
@@ -179,7 +179,7 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy vật liệu", (int)HttpStatusCode.NotFound);
                 }
-                daoOtherMaterials.DeleteMaterial(material);
+                await daoOtherMaterials.DeleteMaterial(material);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
             }
             catch (Exception ex)

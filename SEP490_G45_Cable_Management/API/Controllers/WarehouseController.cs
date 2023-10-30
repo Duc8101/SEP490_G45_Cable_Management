@@ -41,7 +41,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public ResponseDTO<bool> Create([Required] WarehouseCreateUpdateDTO DTO)
+        public async Task<ResponseDTO<bool>> Create([Required] WarehouseCreateUpdateDTO DTO)
         {
             // if admin
             if (isAdmin())
@@ -51,7 +51,7 @@ namespace API.Controllers
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int) HttpStatusCode.NotFound);
                 }
-                return service.Create(DTO, Guid.Parse(CreatorID));
+                return await service.Create(DTO, Guid.Parse(CreatorID));
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
         }

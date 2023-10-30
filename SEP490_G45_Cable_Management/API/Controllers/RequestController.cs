@@ -70,6 +70,7 @@ namespace API.Controllers
                 return await service.CreateRequestRecovery(DTO, Guid.Parse(CreatorID));
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+
         }
 
         [HttpPost("Deliver")]
@@ -109,7 +110,7 @@ namespace API.Controllers
                 return await service.Approve(RequestID, Guid.Parse(ApproverID), LastName + " " + FirstName);
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);*/
-            return await service.Approve(RequestID, Guid.Parse("0C2A4877-DF3E-4102-86AF-D7A31E6780A8"), "Phạm Minh Hiếu");
+            return await service.Approve(RequestID, Guid.Parse("E0C39A8C-EE6B-45A4-8CA9-C37EB211A143"), "Phạm Minh Hiếu");
         }
 
         [HttpPut("{RequestID}")]
@@ -141,11 +142,12 @@ namespace API.Controllers
             return new ResponseDTO<List<CableListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
-        [HttpPost("Cancel-Inside")]
-        [Authorize]
+        [HttpPost("Cancel-Inside-Warehouse")]
+        //[Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] RequestCreateCancelInsideDTO DTO)
         {
-            // if warehousekeeper or staff
+            return await service.CreateCancelInside(DTO, Guid.Parse("78B44914-BB23-427F-8F47-6A204BFFFC77"));
+/*            // if warehousekeeper or staff
             if (isWarehouseKeeper() || isStaff())
             {
                 string? CreatorID = getUserID();
@@ -156,9 +158,9 @@ namespace API.Controllers
                 return await service.CreateCancelInside(DTO,Guid.Parse(CreatorID));
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
-        }
+*/        }
 
-        [HttpPost("Cancel-Outside")]
+        [HttpPost("Cancel-Outside-Warehouse")]
         [Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] RequestCreateCancelOutsideDTO DTO)
         {
@@ -188,15 +190,15 @@ namespace API.Controllers
         }
 
         [HttpGet("{RequestID}")]
-        [Authorize]
+        //[Authorize]
         public async Task<ResponseDTO<RequestDetailDTO?>> Detail([Required] Guid RequestID)
         {
             // if admin, warehousekeeper, staff
-            if(isAdmin() || isWarehouseKeeper() || isStaff())
-            {
+            //if(isAdmin() || isWarehouseKeeper() || isStaff())
+            //{
                 return await service.Detail(RequestID);
-            }
-            return new ResponseDTO<RequestDetailDTO?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            //}
+            //return new ResponseDTO<RequestDetailDTO?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
     }
 }

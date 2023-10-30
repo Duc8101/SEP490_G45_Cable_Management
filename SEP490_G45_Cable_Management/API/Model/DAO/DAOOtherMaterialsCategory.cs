@@ -31,38 +31,32 @@ namespace API.Model.DAO
             IQueryable<OtherMaterialsCategory> query = getQuery(name);
             return await query.CountAsync();
         }
-
         public async Task<List<OtherMaterialsCategory>> getListAll()
         {
             IQueryable<OtherMaterialsCategory> query = getQuery(null);
             return await query.OrderByDescending(o => o.UpdateAt).ToListAsync();
         }
-
-        public bool isExist(string OtherMaterialsCategoryName)
+        public async Task<bool> isExist(string OtherMaterialsCategoryName)
         {
-            return context.OtherMaterialsCategories.Any(o => o.OtherMaterialsCategoryName == OtherMaterialsCategoryName.Trim());
+            return await context.OtherMaterialsCategories.AnyAsync(o => o.OtherMaterialsCategoryName == OtherMaterialsCategoryName.Trim());
         }
-
-        public void CreateOtherMaterialsCategory(OtherMaterialsCategory category)
+        public async Task CreateOtherMaterialsCategory(OtherMaterialsCategory category)
         {
-            context.OtherMaterialsCategories.Add(category);
-            context.SaveChanges();
+            await context.OtherMaterialsCategories.AddAsync(category);
+            await context.SaveChangesAsync();
         }
-
         public async Task<OtherMaterialsCategory?> getOtherMaterialsCategory(int OtherMaterialsCategoryID)
         {
             return await context.OtherMaterialsCategories.SingleOrDefaultAsync(o => o.OtherMaterialsCategoryId == OtherMaterialsCategoryID);
         }
-
-        public bool isExist(int OtherMaterialsCategoryID, string OtherMaterialsCategoryName)
+        public async Task<bool> isExist(int OtherMaterialsCategoryID, string OtherMaterialsCategoryName)
         {
-            return context.OtherMaterialsCategories.Any(o => o.OtherMaterialsCategoryName == OtherMaterialsCategoryName.Trim() && o.OtherMaterialsCategoryId != OtherMaterialsCategoryID);
+            return await context.OtherMaterialsCategories.AnyAsync(o => o.OtherMaterialsCategoryName == OtherMaterialsCategoryName.Trim() && o.OtherMaterialsCategoryId != OtherMaterialsCategoryID);
         }
-
-        public void UpdateOtherMaterialsCategory(OtherMaterialsCategory category)
+        public async Task UpdateOtherMaterialsCategory(OtherMaterialsCategory category)
         {
             context.OtherMaterialsCategories.Update(category);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }

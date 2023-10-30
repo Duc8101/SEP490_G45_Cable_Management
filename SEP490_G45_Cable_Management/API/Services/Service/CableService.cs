@@ -59,7 +59,7 @@ namespace API.Services.Service
                 return new ResponseDTO<PagedResultDTO<CableListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public ResponseDTO<bool> Create(CableCreateUpdateDTO DTO, Guid CreatorID)
+        public async Task<ResponseDTO<bool>> Create(CableCreateUpdateDTO DTO, Guid CreatorID)
         {
             if(DTO.StartPoint < 0 || DTO.EndPoint < 0 || DTO.StartPoint >= DTO.EndPoint)
             {
@@ -68,7 +68,7 @@ namespace API.Services.Service
             try
             {
                 // if cable exist
-                if (daoCable.isExist(DTO))
+                if (await daoCable.isExist(DTO))
                 {
                     return new ResponseDTO<bool>(false, "Cáp đã tồn tại trong hệ thống", (int)HttpStatusCode.Conflict);
                 }
@@ -91,7 +91,7 @@ namespace API.Services.Service
                     CableCategoryId = DTO.CableCategoryId,
                     IsInRequest = false,
                 };
-                daoCable.CreateCable(cable);
+                await daoCable.CreateCable(cable);
                 return new ResponseDTO<bool>(true, "Thêm thành công");
             }
             catch (Exception ex)
@@ -114,7 +114,7 @@ namespace API.Services.Service
                     return new ResponseDTO<bool>(false, "Chỉ số đầu hoặc chỉ số cuối không hợp lệ", (int) HttpStatusCode.Conflict);
                 }
                 // if cable exist
-                if (daoCable.isExist(CableID, DTO))
+                if (await daoCable.isExist(CableID, DTO))
                 {
                     return new ResponseDTO<bool>(false, "Cáp đã tồn tại trong hệ thống", (int) HttpStatusCode.Conflict);
                 }
@@ -128,7 +128,7 @@ namespace API.Services.Service
                 cable.Status = DTO.Status.Trim();
                 cable.CableCategoryId = DTO.CableCategoryId;
                 cable.UpdateAt = DateTime.Now;
-                daoCable.UpdateCable(cable);
+                await daoCable.UpdateCable(cable);
                 return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)
@@ -146,7 +146,7 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy cáp", (int)HttpStatusCode.NotFound);
                 }
-                daoCable.DeleteCable(cable);
+                await daoCable.DeleteCable(cable);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
             }
             catch (Exception ex)

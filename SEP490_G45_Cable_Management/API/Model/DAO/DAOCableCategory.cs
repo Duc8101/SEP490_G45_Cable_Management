@@ -35,27 +35,27 @@ namespace API.Model.DAO
             IQueryable<CableCategory> query = getQuery(null);
             return await query.ToListAsync();
         }
-        public void CreateCableCategory(CableCategory cable)
+        public async Task CreateCableCategory(CableCategory cable)
         {
-            context.CableCategories.Add(cable);
-            context.SaveChanges();
+            await context.CableCategories.AddAsync(cable);
+            await context.SaveChangesAsync();
         }
-        public bool isExist(string name)
+        public async Task<bool> isExist(string name)
         {
-            return context.CableCategories.Any(c => c.CableCategoryName == name.Trim());
+            return await context.CableCategories.AnyAsync(c => c.CableCategoryName == name.Trim());
         }
         public async Task<CableCategory?> getCableCategory(int ID)
         {
             return await context.CableCategories.SingleOrDefaultAsync(c => c.CableCategoryId == ID);
         }
-        public bool isExist(int ID, string name)
+        public async Task<bool> isExist(int ID, string name)
         {
-            return context.CableCategories.Any(c => c.CableCategoryName == name.Trim() && c.CableCategoryId != ID);
+            return await context.CableCategories.AnyAsync(c => c.CableCategoryName == name.Trim() && c.CableCategoryId != ID);
         }
-        public void UpdateCableCategory(CableCategory cable)
+        public async Task UpdateCableCategory(CableCategory cable)
         {
             context.CableCategories.Update(cable);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }

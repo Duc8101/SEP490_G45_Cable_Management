@@ -59,7 +59,7 @@ namespace API.Services.Service
             }
         }
 
-        public ResponseDTO<bool> Create(RouteCreateDTO DTO)
+        public async Task<ResponseDTO<bool>> Create(RouteCreateDTO DTO)
         {
             if (DTO.RouteName == null || DTO.RouteName.Trim().Length == 0)
             {
@@ -68,7 +68,7 @@ namespace API.Services.Service
             try
             {
                 // if exist
-                if (daoRoute.isExist(DTO.RouteName.Trim()))
+                if (await daoRoute.isExist(DTO.RouteName.Trim()))
                 {
                     return new ResponseDTO<bool>(false, "Tên tuyến đã tồn tại", (int)HttpStatusCode.Conflict);
                 }

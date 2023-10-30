@@ -44,13 +44,11 @@ namespace API.Model.DAO
             IQueryable<OtherMaterial> query = getQuery(null, WareHouseID, null);
             return await query.OrderByDescending(o => o.UpdateAt).ToListAsync();
         }
-
         public async Task<int> getRowCount(string? filter, int? WareHouseID, Guid? WareHouseKeeperID)
         {
             IQueryable<OtherMaterial> query = getQuery(filter, WareHouseID, WareHouseKeeperID);
             return await query.CountAsync();
         }
-
         public async Task<int> getSum(string? filter, int? WareHouseID, Guid? WareHouseKeeperID)
         {
             IQueryable<OtherMaterial> query = getQuery(filter, WareHouseID, WareHouseKeeperID);
@@ -62,57 +60,44 @@ namespace API.Model.DAO
             }
             return sum;
         }
-
         public async Task<OtherMaterial?> getOtherMaterial(OtherMaterialsCreateUpdateDTO DTO)
         {
             return await context.OtherMaterials.Where(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == DTO.OtherMaterialsCategoryId
             && o.Unit == DTO.Unit.Trim() && DTO.Code != null && o.Code == DTO.Code.Trim() /*&& o.SupplierId == DTO.SupplierId*/
             && o.Status == DTO.Status.Trim() && o.WarehouseId == DTO.WarehouseId).FirstOrDefaultAsync();
         }
-
-        public void CreateMaterial(OtherMaterial material)
+        public async Task<int> CreateMaterial(OtherMaterial material)
         {
-            context.OtherMaterials.Add(material);
-            context.SaveChanges();
+            await context.OtherMaterials.AddAsync(material);
+            await context.SaveChangesAsync();
+            int MaterialID = await context.OtherMaterials.MaxAsync(m => m.OtherMaterialsId);
+            return MaterialID;
         }
-
-        public void UpdateMaterial(OtherMaterial material)
+        public async Task UpdateMaterial(OtherMaterial material)
         {
             context.OtherMaterials.Update(material);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
-
         public async Task<OtherMaterial?> getOtherMaterial(int ID)
         {
             return await context.OtherMaterials.SingleOrDefaultAsync(o => o.OtherMaterialsId == ID && o.IsDeleted == false);
         }
-
         public async Task<List<OtherMaterial>> getListAll(int CategoryID)
         {
             return await context.OtherMaterials.Include(o => o.OtherMaterialsCategory)
                 .Where(o => o.OtherMaterialsCategoryId == CategoryID).ToListAsync();
         }
-
-        public async Task<bool> isExist(OtherMaterialsCreateUpdateDTO DTO)
-        {
-            return await context.OtherMaterials.AnyAsync(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == DTO.OtherMaterialsCategoryId
-            && o.Unit == DTO.Unit.Trim() && DTO.Code != null && o.Code == DTO.Code.Trim() && o.Status == DTO.Status.Trim()
-            && o.WarehouseId == DTO.WarehouseId);
-        }
-
         public async Task<bool> isExist(int OtherMaterialsID, OtherMaterialsCreateUpdateDTO DTO)
         {
             return await context.OtherMaterials.AnyAsync(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == DTO.OtherMaterialsCategoryId
             && o.Unit == DTO.Unit.Trim() && DTO.Code !=null && o.Code == DTO.Code.Trim() && o.Status == DTO.Status.Trim()
             && o.WarehouseId == DTO.WarehouseId && o.OtherMaterialsId != OtherMaterialsID);
         }
-
-        public void DeleteMaterial(OtherMaterial material)
+        public async Task DeleteMaterial(OtherMaterial material)
         {
             material.IsDeleted = true;
-            UpdateMaterial(material);
+            await UpdateMaterial(material);
         }
-
         public async Task<List<OtherMaterialsCategory>> getListCategory(int? WarehouseID)
         {
             IQueryable<OtherMaterial> query = context.OtherMaterials.Include(o => o.OtherMaterialsCategory).Where(o => o.IsDeleted == false);
@@ -124,7 +109,6 @@ namespace API.Model.DAO
             List<OtherMaterialsCategory> result = await query.Select(o => o.OtherMaterialsCategory).Distinct().ToListAsync();
             return result;
         }
-
         private async Task<List<OtherMaterial>> getList(int CategoryID, int? WarehouseID)
         {
             IQueryable<OtherMaterial> query = context.OtherMaterials.Where(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == CategoryID);
@@ -135,7 +119,6 @@ namespace API.Model.DAO
             }
             return await query.ToListAsync();
         }
-
         public async Task<int> getSum(int CategoryID, int? WarehouseID)
         {
             List<OtherMaterial> list = await getList(CategoryID, WarehouseID);
@@ -145,10 +128,6 @@ namespace API.Model.DAO
                 sum = sum + item.Quantity;
             }
             return sum;
-        }
-        public async Task<OtherMaterial?> getOtherMaterialCreate()
-        {
-            return await context.OtherMaterials.OrderByDescending(o => o.OtherMaterialsId).FirstOrDefaultAsync();
         }
         public async Task<OtherMaterial?> getOtherMaterial(int? WareHouseID, string? code, string status, string unit)
         {

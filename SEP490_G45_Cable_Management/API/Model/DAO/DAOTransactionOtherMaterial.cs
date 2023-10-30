@@ -49,10 +49,10 @@ namespace API.Model.DAO
             return sumIncrease - sumDecrease;
         }
 
-        public void CreateTransactionMaterial(TransactionOtherMaterial material)
+        public async Task CreateTransactionMaterial(TransactionOtherMaterial material)
         {
-            context.TransactionOtherMaterials.Add(material);
-            context.SaveChanges();
+            await context.TransactionOtherMaterials.AddAsync(material);
+            await context.SaveChangesAsync();
         }
     }
 }

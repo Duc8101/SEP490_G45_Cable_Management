@@ -37,37 +37,24 @@ namespace API.Model.DAO
             IQueryable<Warehouse> query = getQuery(null);
             return await query.OrderByDescending(w => w.UpdateAt).ToListAsync();
         }
-        public bool isExist(string name)
+        public async Task CreateWarehouse(Warehouse ware)
         {
-            return context.Warehouses.Any(w => w.WarehouseName == name.Trim());
+            await context.Warehouses.AddAsync(ware);
+            await context.SaveChangesAsync();
         }
-
-        public void CreateWarehouse(Warehouse ware)
-        {
-            context.Warehouses.Add(ware);
-            context.SaveChanges();
-        }
-
         public async Task<Warehouse?> getWarehouse(int ID)
         {
             return await context.Warehouses.SingleOrDefaultAsync(w => w.WarehouseId == ID && w.IsDeleted == false);
         }
-
-        public bool isExist(int ID, string name)
-        {
-            return context.Warehouses.Any(w => w.WarehouseName == name.Trim() && w.WarehouseId != ID);
-        }
-
-        public void UpdateWarehouse(Warehouse ware)
+        public async Task UpdateWarehouse(Warehouse ware)
         {
             context.Warehouses.Update(ware);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
-
-        public void DeleteWarehouse(Warehouse ware)
+        public async Task DeleteWarehouse(Warehouse ware)
         {
             ware.IsDeleted = true;
-            UpdateWarehouse(ware);
+            await UpdateWarehouse(ware);
         }
 
     }

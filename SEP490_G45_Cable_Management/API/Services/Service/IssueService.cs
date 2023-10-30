@@ -91,7 +91,7 @@ namespace API.Services.Service
                 return new ResponseDTO<List<IssueListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public ResponseDTO<bool> Create(IssueCreateDTO DTO, Guid CreatorID)
+        public async Task<ResponseDTO<bool>> Create(IssueCreateDTO DTO, Guid CreatorID)
         {
             if (DTO.IssueName.Trim().Length == 0)
             {
@@ -120,7 +120,7 @@ namespace API.Services.Service
             };
             try
             {
-                daoIssue.CreateIssue(issue);
+                await daoIssue.CreateIssue(issue);
                 return new ResponseDTO<bool>(true, "Tạo thành công");
             }
             catch (Exception ex)
@@ -154,7 +154,7 @@ namespace API.Services.Service
                 issue.Group = DTO.Group == null || DTO.Group.Trim().Length == 0 ? null : DTO.Group.Trim();
                 issue.Status = DTO.Status;
                 issue.UpdateAt = DateTime.Now;
-                daoIssue.UpdateIssue(issue);
+                await daoIssue.UpdateIssue(issue);
                 return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)
@@ -172,7 +172,7 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
                 }
-                daoIssue.DeleteIssue(issue);
+                await daoIssue.DeleteIssue(issue);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
             }
             catch (Exception ex)
