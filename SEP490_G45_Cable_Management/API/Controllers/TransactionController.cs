@@ -1,6 +1,7 @@
 ﻿using API.Services.Service;
 using DataAccess.DTO;
 using DataAccess.DTO.TransactionDTO;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -90,10 +90,10 @@ namespace API.Controllers
         }
 
         [HttpPut("{RequestID}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ResponseDTO<bool>> Approve([Required] Guid RequestID)
         {
-            /*// if admin
+            // if admin
             if (isAdmin())
             {
                 string? ApproverID = getUserID();
@@ -109,8 +109,7 @@ namespace API.Controllers
                 }
                 return await service.Approve(RequestID, Guid.Parse(ApproverID), LastName + " " + FirstName);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);*/
-            return await service.Approve(RequestID, Guid.Parse("B793EAD2-3FAE-4597-BCFF-FDC65E41F340"), "Phạm Minh Hiếu");
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPut("{RequestID}")]
