@@ -1517,7 +1517,7 @@ namespace API.Services.Service
                     RequestCategoryName = request.RequestCategory.RequestCategoryName,
                     IssueName = request.Issue == null ? null : request.Issue.IssueName,
                     CableRoutingName = request.Issue == null ? null : request.Issue.CableRoutingName,
-                    DeliverWareHouseName = request.DeliverWarehouse == null ? null : request.DeliverWarehouse.WarehouseName,
+                    DeliverWarehouseName = request.DeliverWarehouse == null ? null : request.DeliverWarehouse.WarehouseName,
                     RequestCableDTOs = RequestCableDTOs,
                     RequestOtherMaterialsDTOs = RequestOtherMaterialsDTOs
                 };

@@ -15,7 +15,7 @@ namespace DataAccess.DTO.RequestDTO
         }
         public string? IssueName { get; set; }
         public string? CableRoutingName { get; set; }
-        public string? DeliverWareHouseName { get; set; }
+        public string? DeliverWarehouseName { get; set; }
         public List<RequestCableDTO> RequestCableDTOs { get; set; }
         public List<RequestOtherMaterialsDTO> RequestOtherMaterialsDTOs { get; set; }
 
