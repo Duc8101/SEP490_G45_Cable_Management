@@ -41,22 +41,20 @@ namespace API.Model.DAO
         {
             return await context.Routes.AnyAsync(r => r.RouteName == name.Trim() && r.IsDeleted == false);
         }
-
-        public void CreateRoute(DataAccess.Entity.Route route)
+        public async Task CreateRoute(DataAccess.Entity.Route route)
         {
-            context.Routes.Add(route);
-            context.SaveChanges();
+            await context.Routes.AddAsync(route);
+            await context.SaveChangesAsync();
         }
         public async Task<DataAccess.Entity.Route?> getRoute(Guid RouteID)
         {
             return await context.Routes.SingleOrDefaultAsync(r => r.RouteId == RouteID && r.IsDeleted == false);
         }
-
-        public void DeleteRoute(DataAccess.Entity.Route route)
+        public async Task DeleteRoute(DataAccess.Entity.Route route)
         {
             route.IsDeleted = true;
             context.Routes.Update(route);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }

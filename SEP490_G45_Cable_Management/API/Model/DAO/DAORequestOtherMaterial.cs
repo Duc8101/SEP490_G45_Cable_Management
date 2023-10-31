@@ -5,10 +5,10 @@ namespace API.Model.DAO
 {
     public class DAORequestOtherMaterial : BaseDAO
     {
-        public void CreateRequestOtherMaterial(RequestOtherMaterial request)
+        public async Task CreateRequestOtherMaterial(RequestOtherMaterial request)
         {
-            context.RequestOtherMaterials.Add(request);
-            context.SaveChanges();
+            await context.RequestOtherMaterials.AddAsync(request);
+            await context.SaveChangesAsync();
         }
 
         public async Task<List<RequestOtherMaterial>> getList(Guid RequestID)
@@ -17,10 +17,10 @@ namespace API.Model.DAO
                 .Include(r => r.OtherMaterials).ThenInclude(r => r.Warehouse).Include(r => r.RecoveryDestWarehouse).Where(r => r.RequestId == RequestID).ToListAsync();
         }
 
-        public void RemoveRequestMaterial(RequestOtherMaterial request)
+        public async Task RemoveRequestMaterial(RequestOtherMaterial request)
         {
             context.RequestOtherMaterials.Remove(request);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }

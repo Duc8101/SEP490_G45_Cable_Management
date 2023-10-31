@@ -118,7 +118,7 @@ namespace API.Services.Service
             return new ResponseDTO<bool>(true, string.Empty);
         }
         // add request to db
-        private Guid CreateRequest(string RequestName, string? content, Guid? IssueID, Guid CreatorID, int RequestCategoryID, int? DeliverWarehouseID)
+        private async Task<Guid> CreateRequest(string RequestName, string? content, Guid? IssueID, Guid CreatorID, int RequestCategoryID, int? DeliverWarehouseID)
         {
             DataAccess.Entity.Request request = new DataAccess.Entity.Request()
             {
@@ -134,11 +134,11 @@ namespace API.Services.Service
                 Status = RequestConst.STATUS_PENDING,
                 DeliverWarehouseId = DeliverWarehouseID
             };
-            daoRequest.CreateRequest(request);
+            await daoRequest.CreateRequest(request);
             return request.RequestId;
         }
         // create request cable when create request export, deliver
-        private void CreateRequestCableExportDeliver(List<CableExportDeliverDTO> list, Guid RequestID)
+        private async Task CreateRequestCableExportDeliver(List<CableExportDeliverDTO> list, Guid RequestID)
         {
             if (list.Count > 0)
             {
@@ -156,12 +156,12 @@ namespace API.Services.Service
                         UpdateAt = DateTime.Now,
                         IsDeleted = false,
                     };
-                    daoRequestCable.CreateRequestCable(request);
+                    await daoRequestCable.CreateRequestCable(request);
                 }
             }
         }
         // create request material when create request export, deliver
-        private void CreateRequestMaterialExportDeliver(List<OtherMaterialsExportDeliverCancelInsideDTO> list, Guid RequestID)
+        private async Task CreateRequestMaterialExportDeliver(List<OtherMaterialsExportDeliverCancelInsideDTO> list, Guid RequestID)
         {
             if (list.Count > 0)
             {
@@ -177,7 +177,7 @@ namespace API.Services.Service
                         UpdateAt = DateTime.Now,
                         IsDeleted = false,
                     };
-                    daoRequestMaterial.CreateRequestOtherMaterial(request);
+                    await daoRequestMaterial.CreateRequestOtherMaterial(request);
                 }
             }
         }
@@ -228,9 +228,9 @@ namespace API.Services.Service
                     return response;
                 }
                 //----------------------------- create request --------------------------------
-                Guid RequestID = CreateRequest(DTO.RequestName.Trim(), DTO.Content, DTO.IssueId, CreatorID, DTO.RequestCategoryId, null);
-                CreateRequestCableExportDeliver(DTO.CableExportDTOs, RequestID);
-                CreateRequestMaterialExportDeliver(DTO.OtherMaterialsExportDTOs, RequestID);
+                Guid RequestID = await CreateRequest(DTO.RequestName.Trim(), DTO.Content, DTO.IssueId, CreatorID, DTO.RequestCategoryId, null);
+                await CreateRequestCableExportDeliver(DTO.CableExportDTOs, RequestID);
+                await CreateRequestMaterialExportDeliver(DTO.OtherMaterialsExportDTOs, RequestID);
                 // ----------------------------- send email to admin ---------------------------
                 await sendEmailToAdmin(DTO.RequestName.Trim(), "Xuất kho", issue);
                 return new ResponseDTO<bool>(true, "Tạo yêu cầu thành công");
@@ -298,12 +298,12 @@ namespace API.Services.Service
             }
             return new ResponseDTO<bool>(true, string.Empty);
         }
-        private void UpdateRequest(DataAccess.Entity.Request request, Guid ID, string status)
+        private async Task UpdateRequest(DataAccess.Entity.Request request, Guid ID, string status)
         {
             request.ApproverId = ID;
             request.Status = status;
             request.UpdateAt = DateTime.Now;
-            daoRequest.UpdateRequest(request);
+            await daoRequest.UpdateRequest(request);
         }
         // send email to creator after approve request
         private async Task sendEmailToCreator(DataAccess.Entity.Request request, string ApproverName)
@@ -578,7 +578,7 @@ namespace API.Services.Service
                                     }
                                     await daoCable.CreateCable(cut);
                                     // update request cable
-                                    daoRequestCable.RemoveRequestCable(item);
+                                    await daoRequestCable.RemoveRequestCable(item);
                                     RequestCable create = new RequestCable()
                                     {
                                         RequestId = item.RequestId,
@@ -591,7 +591,7 @@ namespace API.Services.Service
                                         UpdateAt = DateTime.Now,
                                         IsDeleted = false
                                     };
-                                    daoRequestCable.CreateRequestCable(create);
+                                    await daoRequestCable.CreateRequestCable(create);
                                 }
                                 else
                                 {
@@ -661,7 +661,7 @@ namespace API.Services.Service
                                     listMaterialWarehouseID.Add(request.DeliverWarehouseId.Value);
                                 }
                                 // update request material
-                                daoRequestMaterial.RemoveRequestMaterial(item);
+                                await daoRequestMaterial.RemoveRequestMaterial(item);
                                 RequestOtherMaterial requestMaterial = new RequestOtherMaterial()
                                 {
                                     RequestId = item.RequestId,
@@ -671,7 +671,7 @@ namespace API.Services.Service
                                     UpdateAt = item.UpdateAt,
                                     IsDeleted = false
                                 };
-                                daoRequestMaterial.CreateRequestOtherMaterial(requestMaterial);
+                                await daoRequestMaterial.CreateRequestOtherMaterial(requestMaterial);
                             }
                             else
                             {
@@ -691,7 +691,7 @@ namespace API.Services.Service
                 }
             }
             // ------------------------------- update request approved --------------------------------
-            UpdateRequest(request, ApproverID, RequestConst.STATUS_APPROVED);
+            await UpdateRequest(request, ApproverID, RequestConst.STATUS_APPROVED);
             // ------------------------------- create transaction --------------------------------
             bool? action;
             // if request deliver
@@ -797,7 +797,7 @@ namespace API.Services.Service
             return result;
         }
         // create request cable when create request recovery
-        private void CreateRequestCableRecovery(List<Cable> list, Guid RequestID)
+        private async Task CreateRequestCableRecovery(List<Cable> list, Guid RequestID)
         {
             if(list.Count > 0)
             {
@@ -816,12 +816,12 @@ namespace API.Services.Service
                         RecoveryDestWarehouseId = cable.WarehouseId,
                         Status = cable.Status,
                     };
-                    daoRequestCable.CreateRequestCable(request);
+                    await daoRequestCable.CreateRequestCable(request);
                 }
             }
         }
         // create request material when create request recovery
-        private void CreateRequestMaterialRecovery(Dictionary<string, object> dic, Guid RequestID)
+        private async Task CreateRequestMaterialRecovery(Dictionary<string, object> dic, Guid RequestID)
         {
             if(dic.Count > 0)
             {
@@ -842,7 +842,7 @@ namespace API.Services.Service
                         RecoveryDestWarehouseId = listWareHouse[i],
                         Status = listStatus[i]
                     };
-                    daoRequestMaterial.CreateRequestOtherMaterial(request);
+                    await daoRequestMaterial.CreateRequestOtherMaterial(request);
                 }
             }
         }
@@ -875,11 +875,11 @@ namespace API.Services.Service
                 // result to store list warehouse, list material id, list quantity, list status
                 Dictionary<string, object> dic  = await CreateMaterial(DTO.OtherMaterialsRecoveryDTOs);
                 // ------------------------------ create request ----------------------
-                Guid RequestID = CreateRequest(DTO.RequestName.Trim(), DTO.Content, DTO.IssueId, CreatorID, DTO.RequestCategoryId, null);
+                Guid RequestID = await CreateRequest(DTO.RequestName.Trim(), DTO.Content, DTO.IssueId, CreatorID, DTO.RequestCategoryId, null);
                 // create request cable
-                CreateRequestCableRecovery(listCable, RequestID);
+                await CreateRequestCableRecovery(listCable, RequestID);
                 // create request material
-                CreateRequestMaterialRecovery(dic, RequestID);
+                await CreateRequestMaterialRecovery(dic, RequestID);
                 // ----------------------------- send email to admin ---------------------------
                 await sendEmailToAdmin(DTO.RequestName.Trim(), "Thu hồi", issue);
                 return new ResponseDTO<bool>(true, "Tạo yêu cầu thành công");
@@ -1000,7 +1000,7 @@ namespace API.Services.Service
                 }
             }
             // ------------------------------- update request approved --------------------------------
-            UpdateRequest(request, ApproverID, RequestConst.STATUS_APPROVED);
+            await UpdateRequest(request, ApproverID, RequestConst.STATUS_APPROVED);
             // ------------------------------- create transaction ------------------------------
             await CreateTransaction(request, listCableWarehouseID, listCableRecovery, listMaterialWarehouseID, listMaterialIDRecovery, listQuantity, true);
             // ------------------------------- send email ------------------------------
@@ -1053,7 +1053,7 @@ namespace API.Services.Service
                     return new ResponseDTO<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
                 }
                 // ------------------- update request ---------------
-                UpdateRequest(request, RejectorID, RequestConst.STATUS_REJECTED);
+                await UpdateRequest(request, RejectorID, RequestConst.STATUS_REJECTED);
                 return new ResponseDTO<bool>(true, string.Empty);
             }
             catch (Exception ex)
@@ -1091,11 +1091,11 @@ namespace API.Services.Service
                     return response;
                 }
                 //----------------------------- create request --------------------------------
-                Guid RequestID = CreateRequest(DTO.RequestName.Trim(), DTO.Content, null, CreatorID, DTO.RequestCategoryId, DTO.DeliverWareHouseID);
+                Guid RequestID = await CreateRequest(DTO.RequestName.Trim(), DTO.Content, null, CreatorID, DTO.RequestCategoryId, DTO.DeliverWareHouseID);
                 //----------------------------- create request cable --------------------------------
-                CreateRequestCableExportDeliver(DTO.CableDeliverDTOs, RequestID);
+                await CreateRequestCableExportDeliver(DTO.CableDeliverDTOs, RequestID);
                 //----------------------------- create request material --------------------------------
-                CreateRequestMaterialExportDeliver(DTO.OtherMaterialsDeliverDTOs, RequestID);
+                await CreateRequestMaterialExportDeliver(DTO.OtherMaterialsDeliverDTOs, RequestID);
                 // ----------------------------- send email to admin ---------------------------
                 await sendEmailToAdmin(DTO.RequestName.Trim(), "Thu hồi", null);
                 return new ResponseDTO<bool>(true, "Tạo yêu cầu thành công");
@@ -1219,7 +1219,7 @@ namespace API.Services.Service
                     return check;
                 }
                 //----------------------------- create request --------------------------------
-                Guid RequestID = CreateRequest(DTO.RequestName.Trim(), DTO.Content, DTO.IssueId, CreatorID, DTO.RequestCategoryId, null);
+                Guid RequestID = await CreateRequest(DTO.RequestName.Trim(), DTO.Content, DTO.IssueId, CreatorID, DTO.RequestCategoryId, null);
                 //----------------------------- create request cable --------------------------------
                 if(DTO.CableCancelInsideDTOs.Count > 0)
                 {
@@ -1241,7 +1241,7 @@ namespace API.Services.Service
                                 IsDeleted = false,
                                 RecoveryDestWarehouseId = item.WarehouseId
                             };
-                            daoRequestCable.CreateRequestCable(requestCable);
+                            await daoRequestCable.CreateRequestCable(requestCable);
                         }
                                   
                     }
@@ -1261,7 +1261,7 @@ namespace API.Services.Service
                             IsDeleted = false,
                             RecoveryDestWarehouseId = item.WarehouseId
                         };
-                        daoRequestMaterial.CreateRequestOtherMaterial(requestMaterial);
+                        await daoRequestMaterial.CreateRequestOtherMaterial(requestMaterial);
                     }
                 }
                 await sendEmailToAdmin(DTO.RequestName.Trim(), "Hủy trong kho", issue);
@@ -1363,7 +1363,7 @@ namespace API.Services.Service
                 // data store material id, quantity
                 Dictionary<int, int> dic = await CreateMaterial(DTO.OtherMaterialsCancelOutsideDTOs);
                 // --------------------------- create request ------------------------------------
-                Guid RequestID = CreateRequest(DTO.RequestName.Trim(), DTO.Content,DTO.IssueId, CreatorID, DTO.RequestCategoryId, null);
+                Guid RequestID = await CreateRequest(DTO.RequestName.Trim(), DTO.Content, DTO.IssueId, CreatorID, DTO.RequestCategoryId, null);
                 // --------------------------- create request cable ------------------------------------
                 if(listCable.Count > 0)
                 {
@@ -1380,7 +1380,7 @@ namespace API.Services.Service
                             UpdateAt = DateTime.Now,
                             IsDeleted = false
                         };
-                        daoRequestCable.CreateRequestCable(requestCable);
+                        await daoRequestCable.CreateRequestCable(requestCable);
                     }
                 }
                 // --------------------------- create request material ------------------------------------
@@ -1397,7 +1397,7 @@ namespace API.Services.Service
                             UpdateAt = DateTime.Now,
                             IsDeleted = false
                         };
-                        daoRequestMaterial.CreateRequestOtherMaterial(requestMaterial);
+                        await daoRequestMaterial.CreateRequestOtherMaterial(requestMaterial);
                     }
                 }
                 await sendEmailToAdmin(DTO.RequestName.Trim(), "Hủy ngoài kho", issue);
@@ -1449,7 +1449,7 @@ namespace API.Services.Service
                 }
              }
              // -------------------------------update request approved --------------------------------
-             UpdateRequest(request, ApproverID, RequestConst.STATUS_APPROVED);
+             await UpdateRequest(request, ApproverID, RequestConst.STATUS_APPROVED);
              // ------------------------------- send email --------------------------------
              await sendEmailToCreator(request, ApproverName);
              return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
@@ -1463,7 +1463,7 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
                 }
-                daoRequest.DeleteRequest(request);
+                await daoRequest.DeleteRequest(request);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
             }
             catch(Exception ex)

@@ -10,22 +10,21 @@ namespace API.Model.DAO
 {
     public class DAORequestCable : BaseDAO
     {
-        public void CreateRequestCable(RequestCable request)
+        public async Task CreateRequestCable(RequestCable request)
         {
             context.RequestCables.Add(request);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
-
         public async Task<List<RequestCable>> getList(Guid RequestID)
         {
             return await context.RequestCables.Include(r => r.Cable).ThenInclude(r => r.CableCategory).Include(r => r.Cable)
                 .ThenInclude(r => r.Warehouse).Include(r => r.RecoveryDestWarehouse).Where(r => r.RequestId == RequestID)
                 .ToListAsync();
         }
-        public void RemoveRequestCable(RequestCable request)
+        public async Task RemoveRequestCable(RequestCable request)
         {
             context.RequestCables.Remove(request);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }

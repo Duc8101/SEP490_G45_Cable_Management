@@ -31,7 +31,7 @@ namespace API.Model.DAO
         public async Task<List<Request>> getList(string? name, string? status, Guid? CreatorID, int page)
         {
             IQueryable<Request> query = getQuery(name, status, CreatorID);
-            return await query.OrderByDescending(r => r.Status).ThenByDescending(r => r.UpdateAt).Skip(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE * (page - 1))
+            return await query.OrderByDescending(r => r.Status == RequestConst.STATUS_PENDING).ThenByDescending(r => r.UpdateAt).Skip(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE * (page - 1))
                 .Take(PageSizeConst.MAX_REQUEST_LIST_IN_PAGE).ToListAsync();
         }
         public async Task<int> getRowCount(string? name, string? status, Guid? CreatorID)
@@ -39,25 +39,25 @@ namespace API.Model.DAO
             IQueryable<Request> query = getQuery(name, status, CreatorID);
             return await query.CountAsync();
         }
-        public void CreateRequest(Request request)
+        public async Task CreateRequest(Request request)
         {
-            context.Requests.Add(request);
-            context.SaveChanges();
+            await context.Requests.AddAsync(request);
+            await context.SaveChangesAsync();
         }
         public async Task<Request?> getRequest(Guid RequestID)
         {
             return await context.Requests.Include(r => r.RequestCategory).Include(r => r.Creator).Include(r => r.Issue).Include(r => r.DeliverWarehouse)
                 .Include(r => r.Approver).SingleOrDefaultAsync(r => r.RequestId == RequestID && r.IsDeleted == false);
         }
-        public void UpdateRequest(Request request)
+        public async Task UpdateRequest(Request request)
         {
             context.Requests.Update(request);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
-        public void DeleteRequest(Request request)
+        public async Task DeleteRequest(Request request)
         {
             request.IsDeleted = true;
-            UpdateRequest(request);
+            await UpdateRequest(request);
         }
 
     }

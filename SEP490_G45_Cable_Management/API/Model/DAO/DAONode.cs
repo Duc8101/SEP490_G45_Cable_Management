@@ -24,10 +24,10 @@ namespace API.Model.DAO
             return await context.Nodes.Where(n => n.IsDeleted == false && n.RouteId == RouteID).OrderBy(n => n.NumberOrder)
                 .ToListAsync();
         }
-        public void CreateNode(Node node)
+        public async Task CreateNode(Node node)
         {
-            context.Nodes.Add(node);
-            context.SaveChanges();
+            await context.Nodes.AddAsync(node);
+            await context.SaveChangesAsync();
         }
         public async Task<Node?> getNode(Guid NodeID)
         {
