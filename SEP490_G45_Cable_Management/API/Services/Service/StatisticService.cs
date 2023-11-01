@@ -13,6 +13,8 @@ namespace API.Services.Service
         private readonly DAOOtherMaterial daoOtherMaterial = new DAOOtherMaterial();
         private readonly DAOTransactionCable daoTransactionCable = new DAOTransactionCable();
         private readonly DAOCable daoCable = new DAOCable();
+        private readonly DAORoute daoRoute = new DAORoute();
+        private readonly DAONodeMaterialCategory daoNodeCategory = new DAONodeMaterialCategory();
         public async Task<ResponseDTO<MaterialFluctuationPerYear?>> MaterialFluctuationPerYear(int? MaterialCategoryID, int? WarehouseID, int? year)
         {
             MaterialFluctuationPerYear data = new MaterialFluctuationPerYear();
@@ -113,16 +115,16 @@ namespace API.Services.Service
                 return new ResponseDTO<List<CableCategoryStatistic>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<List<OtherMaterialCateogoryStatistic>?>> MaterialCategory(int? WarehouseID)
+        public async Task<ResponseDTO<List<OtherMaterialCategoryStatistic>?>> MaterialCategory(int? WarehouseID)
         {
             try
             {
                 List<OtherMaterialsCategory> list = await daoOtherMaterial.getListCategory(WarehouseID);
-                List<OtherMaterialCateogoryStatistic> result = new List<OtherMaterialCateogoryStatistic>();
+                List<OtherMaterialCategoryStatistic> result = new List<OtherMaterialCategoryStatistic>();
                 foreach (OtherMaterialsCategory material in list)
                 {
                     int sum = await daoOtherMaterial.getSum(material.OtherMaterialsCategoryId, WarehouseID);
-                    OtherMaterialCateogoryStatistic statistic = new OtherMaterialCateogoryStatistic()
+                    OtherMaterialCategoryStatistic statistic = new OtherMaterialCategoryStatistic()
                     {
                         CategoryId = material.OtherMaterialsCategoryId,
                         CategoryName = material.OtherMaterialsCategoryName,
@@ -130,11 +132,40 @@ namespace API.Services.Service
                     };
                     result.Add(statistic);
                 }
-                return new ResponseDTO<List<OtherMaterialCateogoryStatistic>?>(result, string.Empty);
+                return new ResponseDTO<List<OtherMaterialCategoryStatistic>?>(result, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<List<OtherMaterialCateogoryStatistic>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseDTO<List<OtherMaterialCategoryStatistic>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+            }
+        }
+        public async Task<ResponseDTO<List<RouteStatistic>?>> Route(Guid RouteID)
+        {
+            try
+            {
+                DataAccess.Entity.Route? route = await daoRoute.getRoute(RouteID);
+                if(route == null)
+                {
+                    return new ResponseDTO<List<RouteStatistic>?>(null, "Không tìm thấy tuyến", (int)HttpStatusCode.NotFound);
+                }
+                List<RouteStatistic> result = new List<RouteStatistic>();
+                List<OtherMaterialsCategory> listCategory = await daoNodeCategory.getListOtherMaterialCategory(RouteID);
+                foreach(OtherMaterialsCategory item in listCategory)
+                {
+                    int sum = await daoNodeCategory.getSumQuantity(RouteID, item.OtherMaterialsCategoryId);
+                    RouteStatistic statistic = new RouteStatistic()
+                    {
+                        OtherMaterialsCategoryId = item.OtherMaterialsCategoryId,
+                        OtherMaterialsCategoryName = item.OtherMaterialsCategoryName,
+                        Quantity = sum
+                    };
+                    result.Add(statistic);
+                }
+                return new ResponseDTO<List<RouteStatistic>?>(result, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<List<RouteStatistic>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
     }

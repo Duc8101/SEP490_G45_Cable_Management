@@ -8,6 +8,7 @@ namespace API.Services.IService
         Task<ResponseDTO<MaterialFluctuationPerYear?>> MaterialFluctuationPerYear(int? MaterialCategoryID, int? WarehouseID, int? year);
         Task<ResponseDTO<CableFluctuationPerYear?>> CableFluctuationPerYear(int? CableCategoryID, int? WarehouseID, int? year);
         Task<ResponseDTO<List<CableCategoryStatistic>?>> CableCategory(int? WarehouseID);
-        Task<ResponseDTO<List<OtherMaterialCateogoryStatistic>?>> MaterialCategory(int? WarehouseID);
+        Task<ResponseDTO<List<OtherMaterialCategoryStatistic>?>> MaterialCategory(int? WarehouseID);
+        Task<ResponseDTO<List<RouteStatistic>?>> Route(Guid RouteID);
     }
 }

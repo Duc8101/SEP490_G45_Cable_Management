@@ -5,6 +5,7 @@ using DataAccess.DTO.UserDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace API.Controllers
@@ -52,14 +53,26 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<ResponseDTO<List<OtherMaterialCateogoryStatistic>?>> MaterialCategory(int? WarehouseID)
+        public async Task<ResponseDTO<List<OtherMaterialCategoryStatistic>?>> MaterialCategory(int? WarehouseID)
         {
             // if admin or leader
             if(isAdmin() || isLeader())
             {
                 return await service.MaterialCategory(WarehouseID);
             }
-            return new ResponseDTO<List<OtherMaterialCateogoryStatistic>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            return new ResponseDTO<List<OtherMaterialCategoryStatistic>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ResponseDTO<List<RouteStatistic>?>> Route([Required] Guid RouteID)
+        {
+            // if admin or leader
+            if (isAdmin() || isLeader())
+            {
+                return await service.Route(RouteID);
+            }
+            return new ResponseDTO<List<RouteStatistic>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
     }
 }
