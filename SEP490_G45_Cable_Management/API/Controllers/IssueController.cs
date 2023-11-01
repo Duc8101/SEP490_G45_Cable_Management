@@ -44,12 +44,7 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<List<IssueListDTO>?>> List()
         {
-            // if admin, leader, staff
-            if (isAdmin() || isLeader() || isStaff())
-            {
-                return await service.ListDoing();
-            }
-            return new ResponseDTO<List<IssueListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            return await service.ListDoing();
         }
 
         [HttpPost]

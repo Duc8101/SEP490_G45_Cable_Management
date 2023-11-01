@@ -46,12 +46,6 @@ namespace API.Controllers
             return claim == null ? null : claim.Value;
         }
 
-        protected bool isGuest()
-        {
-            string? role = getRole();
-            return role == null;
-        }
-
         protected string? getEmail()
         {
             Claim? claim = getClaim(ClaimTypes.Email);

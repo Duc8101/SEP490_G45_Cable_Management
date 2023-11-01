@@ -101,11 +101,6 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> ChangePassword([Required] ChangePasswordDTO DTO)
         {
-            // if not login 
-            if (isGuest())
-            {
-                return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
-            }
             string? email = getEmail();
             // if not found email
             if(email == null)

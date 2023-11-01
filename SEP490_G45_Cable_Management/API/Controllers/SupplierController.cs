@@ -35,11 +35,6 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<List<SupplierListDTO>?>> List()
         {
-            // if guest
-            if (isGuest())
-            {
-                return new ResponseDTO<List<SupplierListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);               
-            }
             return await service.ListAll();
         }
 

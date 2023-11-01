@@ -30,12 +30,7 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<List<OtherMaterialsCategoryListDTO>?>> List()
         {
-            // if admin or leader
-            if (isAdmin() || isLeader())
-            {
-                return await service.ListAll();
-            }
-            return new ResponseDTO<List<OtherMaterialsCategoryListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            return await service.ListAll();    
         }
 
         [HttpPost]

@@ -31,12 +31,7 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<List<WarehouseListDTO>?>> List()
         {
-            // if warehousekeeper, staff
-            if (isWarehouseKeeper() || isStaff())
-            {
-                return await service.ListAll();
-            }
-            return new ResponseDTO<List<WarehouseListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            return await service.ListAll();
         }
 
         [HttpPost]
