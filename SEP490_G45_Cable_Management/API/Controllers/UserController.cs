@@ -30,8 +30,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> List(string? filter, [Required] int page = 1)
         {
-            // if admin
-            if (isAdmin())
+            // if admin or leader
+            if (isAdmin() || isLeader())
             {
                 return await service.ListPaged(filter, page);
             }
