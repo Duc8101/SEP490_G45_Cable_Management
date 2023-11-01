@@ -17,7 +17,7 @@ namespace API.Controllers
 
         [HttpGet("Paged")]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<CableListDTO>?>> List(string? filter, int? WarehouseID, [Required] bool isExportedToUse, [Required] int page = 1)
+        public async Task<ResponseDTO<PagedResultDTO<CableListDTO>?>> List(string? filter, int? WarehouseID, [Required] bool isExportedToUse = false, [Required] int page = 1)
         {
             // if admin, warehouse keeper
             if(isAdmin() || isWarehouseKeeper())
