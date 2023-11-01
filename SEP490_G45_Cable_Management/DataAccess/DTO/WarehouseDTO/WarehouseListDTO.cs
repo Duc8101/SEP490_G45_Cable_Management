@@ -10,6 +10,6 @@ namespace DataAccess.DTO.WarehouseDTO
     {
         public int WarehouseId { get; set; }
 
-        public string? WareWarehouseKeeperName { get; set; }
+        public string? WarehouseKeeperName { get; set; }
     }
 }

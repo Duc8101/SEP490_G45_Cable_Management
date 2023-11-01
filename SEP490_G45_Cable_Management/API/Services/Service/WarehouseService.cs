@@ -23,7 +23,7 @@ namespace API.Services.Service
                     WarehouseId = item.WarehouseId,
                     WarehouseName = item.WarehouseName,
                     WarehouseKeeperId = item.WarehouseKeeperid,
-                    WareWarehouseKeeperName = item.WarehouseKeeper == null ? null : item.WarehouseKeeper.Lastname + " " + item.WarehouseKeeper.Firstname,
+                    WarehouseKeeperName = item.WarehouseKeeper == null ? null : item.WarehouseKeeper.Lastname + " " + item.WarehouseKeeper.Firstname,
                     WarehouseAddress = item.WarehouseAddress
                 };
                 result.Add(DTO);
@@ -55,7 +55,7 @@ namespace API.Services.Service
                     WarehouseId = item.WarehouseId,
                     WarehouseName = item.WarehouseName,
                     WarehouseKeeperId = item.WarehouseKeeperid,
-                    WareWarehouseKeeperName = item.WarehouseKeeper == null ? null : item.WarehouseKeeper.Lastname + " " + item.WarehouseKeeper.Firstname,
+                    WarehouseKeeperName = item.WarehouseKeeper == null ? null : item.WarehouseKeeper.Lastname + " " + item.WarehouseKeeper.Firstname,
                     WarehouseAddress = item.WarehouseAddress
                 };
                 result.Add(DTO);
