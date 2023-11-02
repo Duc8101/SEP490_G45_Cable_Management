@@ -451,7 +451,14 @@ namespace API.Services.Service
                     {
                         if (item.Cable.WarehouseId.HasValue)
                         {
-                            listCableExportedDeliverCancelInside.Add(item.Cable);
+                            Cable cable = new Cable()
+                            {
+                                CableId = item.CableId,
+                                StartPoint = item.StartPoint,
+                                EndPoint = item.EndPoint,
+                                Length = item.Length,
+                            };
+                            listCableExportedDeliverCancelInside.Add(cable);
                             listCableWarehouseID.Add(item.Cable.WarehouseId.Value);
                         }
                     }
