@@ -67,7 +67,7 @@ namespace API.Model.DAO
         }
         public async Task UpdateIssue(Issue issue)
         {
-            await context.Issues.AddAsync(issue);
+            context.Issues.Update(issue);
             await context.SaveChangesAsync();
         }
         public async Task DeleteIssue(Issue issue)
