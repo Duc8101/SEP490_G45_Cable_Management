@@ -142,11 +142,10 @@ namespace API.Controllers
         }
 
         [HttpPost("Cancel-Inside-Warehouse")]
-        //[Authorize]
+        [Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] RequestCreateCancelInsideDTO DTO)
         {
-            return await service.CreateCancelInside(DTO, Guid.Parse("78B44914-BB23-427F-8F47-6A204BFFFC77"));
-/*            // if warehousekeeper or staff
+            // if warehousekeeper or staff
             if (isWarehouseKeeper() || isStaff())
             {
                 string? CreatorID = getUserID();
@@ -154,10 +153,10 @@ namespace API.Controllers
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
                 }
-                return await service.CreateCancelInside(DTO,Guid.Parse(CreatorID));
+                return await service.CreateCancelInside(DTO, Guid.Parse(CreatorID));
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
-*/        }
+        }
 
         [HttpPost("Cancel-Outside-Warehouse")]
         [Authorize]
@@ -189,15 +188,15 @@ namespace API.Controllers
         }
 
         [HttpGet("{RequestID}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ResponseDTO<RequestDetailDTO?>> Detail([Required] Guid RequestID)
         {
             // if admin, warehousekeeper, staff
-            //if(isAdmin() || isWarehouseKeeper() || isStaff())
-            //{
+            if(isAdmin() || isWarehouseKeeper() || isStaff())
+            {
                 return await service.Detail(RequestID);
-            //}
-            //return new ResponseDTO<RequestDetailDTO?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            }
+            return new ResponseDTO<RequestDetailDTO?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
     }
 }
