@@ -34,7 +34,7 @@ namespace API.Services.Service
         private readonly DAOWarehouse daoWarehouse = new DAOWarehouse();
         private async Task<List<RequestListDTO>> getList(string? name, string? status, Guid? CreatorID, int page)
         {
-            List<DataAccess.Entity.Request> list = await daoRequest.getList(name, status, CreatorID, page);
+            List<DataAccess.Entity.Request> list = await daoRequest.getListAll(name, status, CreatorID, page);
             List<RequestListDTO> result = new List<RequestListDTO>();
             foreach (DataAccess.Entity.Request item in list)
             {
@@ -1488,10 +1488,10 @@ namespace API.Services.Service
                     return new ResponseDTO<RequestDetailDTO?>(null, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
                 }
                 List<RequestCable> requestCables = await daoRequestCable.getList(RequestID);
-                List<RequestCableDTO> RequestCableDTOs = new List<RequestCableDTO>();
+                List<RequestCableListDTO> RequestCableDTOs = new List<RequestCableListDTO>();
                 foreach(RequestCable item in requestCables)
                 {
-                    RequestCableDTO DTO = new RequestCableDTO()
+                    RequestCableListDTO DTO = new RequestCableListDTO()
                     {
                         CableCategoryName = item.Cable.CableCategory.CableCategoryName,
                         StartPoint = item.StartPoint,
@@ -1502,10 +1502,10 @@ namespace API.Services.Service
                     RequestCableDTOs.Add(DTO);
                 }
                 List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(RequestID);
-                List<RequestOtherMaterialsDTO> RequestOtherMaterialsDTOs = new List<RequestOtherMaterialsDTO>();
+                List<RequestOtherMaterialsListDTO> RequestOtherMaterialsDTOs = new List<RequestOtherMaterialsListDTO>();
                 foreach(RequestOtherMaterial item in requestMaterials)
                 {
-                    RequestOtherMaterialsDTO DTO = new RequestOtherMaterialsDTO()
+                    RequestOtherMaterialsListDTO DTO = new RequestOtherMaterialsListDTO()
                     {
                         OtherMaterialsCategoryName = item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName,
                         Quantity = item.Quantity,

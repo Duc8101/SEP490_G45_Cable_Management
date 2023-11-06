@@ -11,5 +11,6 @@ namespace API.Services.IService
         Task<ResponseDTO<bool>> Create(IssueCreateDTO DTO, Guid CreatorID);
         Task<ResponseDTO<bool>> Update(Guid IssueID, IssueUpdateDTO DTO);
         Task<ResponseDTO<bool>> Delete(Guid IssueID);
+        Task<ResponseDTO<List<IssueDetailDTO>?>> Detail(Guid IssueID);
     }
 }

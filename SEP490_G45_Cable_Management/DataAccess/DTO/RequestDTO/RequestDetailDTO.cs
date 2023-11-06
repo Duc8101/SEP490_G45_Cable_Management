@@ -10,14 +10,14 @@ namespace DataAccess.DTO.RequestDTO
     {
         public RequestDetailDTO()
         {
-            RequestCableDTOs = new List<RequestCableDTO>();
-            RequestOtherMaterialsDTOs = new List<RequestOtherMaterialsDTO>();
+            RequestCableDTOs = new List<RequestCableListDTO>();
+            RequestOtherMaterialsDTOs = new List<RequestOtherMaterialsListDTO>();
         }
         public string? IssueName { get; set; }
         public string? CableRoutingName { get; set; }
         public string? DeliverWarehouseName { get; set; }
-        public List<RequestCableDTO> RequestCableDTOs { get; set; }
-        public List<RequestOtherMaterialsDTO> RequestOtherMaterialsDTOs { get; set; }
+        public List<RequestCableListDTO> RequestCableDTOs { get; set; }
+        public List<RequestOtherMaterialsListDTO> RequestOtherMaterialsDTOs { get; set; }
 
     }
 }

@@ -7,12 +7,17 @@ using System.Text.RegularExpressions;
 using API.Model.DAO;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using API.Services.IService;
+using DataAccess.DTO.RequestDTO;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace API.Services.Service
 {
     public class IssueService : IIssueService
     {
         private readonly DAOIssue daoIssue = new DAOIssue();
+        private readonly DAORequest daoRequest = new DAORequest();
+        private readonly DAORequestCable daoRequestCable = new DAORequestCable();
+        private readonly DAORequestOtherMaterial daoRequestMaterial = new DAORequestOtherMaterial();
         private List<IssueListDTO> getListDTO(List<Issue> list)
         {
             List<IssueListDTO> result = new List<IssueListDTO>();
@@ -182,6 +187,62 @@ namespace API.Services.Service
             catch (Exception ex)
             {
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+            }
+        }
+        public async Task<ResponseDTO<List<IssueDetailDTO>?>> Detail(Guid IssueID)
+        {
+            try
+            {
+                Issue? issue = await daoIssue.getIssue(IssueID);
+                // if not found
+                if (issue == null)
+                {
+                    return new ResponseDTO<List<IssueDetailDTO>?>(null, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
+                }
+                List<DataAccess.Entity.Request> requests = await daoRequest.getListByIssue(IssueID);
+                List<IssueDetailDTO> details = new List<IssueDetailDTO>();
+                foreach(DataAccess.Entity.Request request in requests)
+                {
+                    List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
+                    List<RequestCableByIssueDTO> requestCableDTOs = new List<RequestCableByIssueDTO>();
+                    foreach (RequestCable item in requestCables)
+                    {
+                        RequestCableByIssueDTO DTO = new RequestCableByIssueDTO()
+                        {
+                            CableCategoryName = item.Cable.CableCategory.CableCategoryName,
+                            StartPoint = item.StartPoint,
+                            EndPoint = item.EndPoint,
+                            Length = item.Length,
+                        };
+                        requestCableDTOs.Add(DTO);
+                    }
+                    List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(request.RequestId);
+                    List<RequestOtherMaterialsByIssueDTO> requestOtherMaterialsDTOs = new List<RequestOtherMaterialsByIssueDTO>();
+                    foreach (RequestOtherMaterial item in requestMaterials)
+                    {
+                        RequestOtherMaterialsByIssueDTO DTO = new RequestOtherMaterialsByIssueDTO()
+                        {
+                            OtherMaterialsCategoryName = item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName,
+                            Quantity = item.Quantity,
+                        };
+                        requestOtherMaterialsDTOs.Add(DTO);
+                    }
+                    IssueDetailDTO detail = new IssueDetailDTO()
+                    {
+                        RequestName = request.RequestName,
+                        ApproverName = request.Approver == null ? null : request.Approver.Lastname + " " + request.Approver.Firstname,
+                        CableRoutingName = issue.CableRoutingName,
+                        Group = issue.Group,
+                        RequestCableDTOs = requestCableDTOs,
+                        RequestOtherMaterialsDTOs = requestOtherMaterialsDTOs
+                    };
+                    details.Add(detail);
+                }
+                return new ResponseDTO<List<IssueDetailDTO>?>(details, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<List<IssueDetailDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
     }

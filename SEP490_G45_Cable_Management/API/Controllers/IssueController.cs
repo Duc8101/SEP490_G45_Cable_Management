@@ -87,5 +87,17 @@ namespace API.Controllers
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
+
+        [HttpGet("{IssueID}")]
+        [Authorize]
+        public async Task<ResponseDTO<List<IssueDetailDTO>?>> Detail([Required] Guid IssueID)
+        {
+            // if admin, leader, staff
+            if (isAdmin() || isLeader() || isStaff())
+            {
+                return await service.Detail(IssueID);
+            }
+            return new ResponseDTO<List<IssueDetailDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+        }
     }
 }
