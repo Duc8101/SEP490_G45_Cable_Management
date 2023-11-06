@@ -146,6 +146,10 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Mã sự vụ không được để trống", (int)HttpStatusCode.Conflict);
                 }
+                if(issue.Status == IssueConst.STATUS_DONE)
+                {
+                    return new ResponseDTO<bool>(false, "Sự vụ đã được xử lý", (int)HttpStatusCode.Conflict);
+                }
                 issue.IssueName = DTO.IssueName.Trim();
                 issue.IssueCode = DTO.IssueCode.Trim();
                 issue.Description = DTO.Description == null || DTO.Description.Trim().Length == 0 ? null : DTO.Description.Trim();
