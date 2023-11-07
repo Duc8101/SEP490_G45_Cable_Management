@@ -33,7 +33,8 @@ namespace API.Model.DAO
         public async Task<List<Supplier>> getListPaged(string? name, int page)
         {
             IQueryable<Supplier> query = getQuery(name);
-            return await query.Skip((page - 1) * PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).Take(PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).ToListAsync();
+            return await query.OrderByDescending(u => u.UpdateAt).Skip((page - 1) * PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE)
+                .Take(PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE).ToListAsync();
         }
         public async Task<int> getRowCount(string? name)
         {
@@ -43,7 +44,7 @@ namespace API.Model.DAO
         public async Task<List<Supplier>> getListAll()
         {
             IQueryable<Supplier> query = getQuery(null);
-            return await query.ToListAsync();
+            return await query.OrderByDescending(c => c.UpdateAt).ToListAsync();
         }
         public async Task<Supplier?> getSupplier(int SupplierID)
         {
