@@ -32,9 +32,9 @@ namespace API.Services.Service
         private readonly DAOTransactionHistory daoHistory = new DAOTransactionHistory();
         private readonly DAOUser daoUser = new DAOUser();
         private readonly DAOWarehouse daoWarehouse = new DAOWarehouse();
-        private async Task<List<RequestListDTO>> getList(string? name, string? status, Guid? CreatorID, int page)
+        private async Task<List<RequestListDTO>> getList(string? name, int? RequestCategoryID, string? status, Guid? CreatorID, int page)
         {
-            List<DataAccess.Entity.Request> list = await daoRequest.getListAll(name, status, CreatorID, page);
+            List<DataAccess.Entity.Request> list = await daoRequest.getListAll(name, RequestCategoryID, status, CreatorID, page);
             List<RequestListDTO> result = new List<RequestListDTO>();
             foreach (DataAccess.Entity.Request item in list)
             {
@@ -52,12 +52,12 @@ namespace API.Services.Service
             }
             return result;
         }
-        public async Task<ResponseDTO<PagedResultDTO<RequestListDTO>?>> List(string? name, string? status, Guid? CreatorID, int page)
+        public async Task<ResponseDTO<PagedResultDTO<RequestListDTO>?>> List(string? name, int? RequestCategoryID, string? status, Guid? CreatorID, int page)
         {
             try
             {
-                List<RequestListDTO> list = await getList(name, status, CreatorID, page);
-                int RowCount = await daoRequest.getRowCount(name, status, CreatorID);
+                List<RequestListDTO> list = await getList(name, RequestCategoryID, status, CreatorID, page);
+                int RowCount = await daoRequest.getRowCount(name, RequestCategoryID, status, CreatorID);
                 PagedResultDTO<RequestListDTO> result = new PagedResultDTO<RequestListDTO>(page, RowCount, PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, list);
                 return new ResponseDTO<PagedResultDTO<RequestListDTO>?>(result, string.Empty);
             }
@@ -1023,7 +1023,7 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
                 }
-                if (!request.Status.Equals(RequestConst.STATUS_PENDING))
+                if (request.Status != RequestConst.STATUS_PENDING)
                 {
                     return new ResponseDTO<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
                 }
@@ -1055,7 +1055,7 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
                 }
-                if (!request.Status.Equals(RequestConst.STATUS_PENDING))
+                if (request.Status != RequestConst.STATUS_PENDING)
                 {
                     return new ResponseDTO<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
                 }
@@ -1535,5 +1535,6 @@ namespace API.Services.Service
                 return new ResponseDTO<RequestDetailDTO?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
+
     }
 }

@@ -143,7 +143,7 @@ namespace API.Services.Service
                     RouteId = DTO.RouteId,
                     Status = DTO.Status == null || DTO.Status.Trim().Length == 0 ? null : DTO.Status.Trim(),
                 };
-                daoNode.CreateNode(node);
+                await daoNode.CreateNode(node);
                 return new ResponseDTO<bool>(true, "Thêm thành công");
             }
             catch (Exception ex)

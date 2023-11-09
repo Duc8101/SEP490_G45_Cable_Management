@@ -17,7 +17,7 @@ namespace API.Model.DAO
     {
         public async Task<User?> getUser(LoginDTO DTO)
         {
-            User? user = await context.Users.Include(u => u.Role).SingleOrDefaultAsync(u => u.Username == DTO.UserName && u.IsDeleted == false);
+            User? user = await context.Users.Include(u => u.Role).SingleOrDefaultAsync(u => u.Username == DTO.Username && u.IsDeleted == false);
             // if username or password invalid
             if (user == null || string.Compare(user.Password, UserUtil.HashPassword(DTO.Password), false) != 0)
             {
@@ -59,7 +59,7 @@ namespace API.Model.DAO
             }
             return query;
         }
-
+        // get all user
         public async Task<List<User>> getList(string? filter, int page)
         {
             IQueryable<User> query = getQuery(filter);
@@ -90,6 +90,7 @@ namespace API.Model.DAO
         {
             return await context.Users.Where(u => u.RoleId == RoleConst.INT_ROLE_ADMIN && u.IsDeleted == false).Select(u => u.Email).ToListAsync();
         }
+        // get list warehouse keeper
         public async Task<List<User>> getList()
         {
             IQueryable<User> query = getQuery(null);
