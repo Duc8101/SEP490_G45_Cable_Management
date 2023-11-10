@@ -91,9 +91,9 @@ namespace API.Model.DAO
             cable.IsDeleted = true;
             await UpdateCable(cable);
         }
-        public async Task<List<Cable>> getList(int CableCategoryID)
+        public async Task<Cable?> getCable(int CableCategoryID)
         {
-            return await context.Cables.Include(c => c.CableCategory).Where(c => c.CableCategoryId == CableCategoryID && c.IsInRequest == false).ToListAsync();
+            return await context.Cables.Include(c => c.CableCategory).Where(c => c.CableCategoryId == CableCategoryID && c.IsInRequest == false).FirstOrDefaultAsync();
         }
 
         public async Task<List<CableCategory>> getListCategory(int? WarehouseID)
@@ -114,16 +114,9 @@ namespace API.Model.DAO
             }
             return sum;
         }
-
         public async Task<Cable?> getCable(Guid CableID, int StartPoint, int EndPoint)
         {
             return await context.Cables.Where(c => c.CableParentId == CableID && c.StartPoint <= StartPoint && c.EndPoint >= EndPoint && c.IsDeleted == false).FirstOrDefaultAsync();
-        }
-
-        public async Task<List<Cable>> getListAll()
-        {
-            IQueryable<Cable> query = getQuery(null, null, false);
-            return await query.ToListAsync();
         }
 
     }

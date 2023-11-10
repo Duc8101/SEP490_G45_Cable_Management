@@ -60,13 +60,13 @@ namespace API.Services.Service
                 // if choose category
                 if (CableCategoryID != null)
                 {
-                    List<Cable> list = await daoCable.getList(CableCategoryID.Value);
+                    Cable? cable = await daoCable.getCable(CableCategoryID.Value);
                     // if not found
-                    if (list.Count == 0)
+                    if (cable == null)
                     {
                         return new ResponseDTO<CableFluctuationPerYear?>(null, "Không tìm thấy cáp", (int)HttpStatusCode.NotFound);
                     }
-                    data.CableName = list[0].CableCategory.CableCategoryName;
+                    data.CableName = cable.CableCategory.CableCategoryName;
                 }
                 data.WarehouseId = WarehouseID;
                 data.LengthInJanuary = await daoTransactionCable.getLengthPerMonth(CableCategoryID, WarehouseID, year, 1);

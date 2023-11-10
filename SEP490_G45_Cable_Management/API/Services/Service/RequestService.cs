@@ -1116,7 +1116,7 @@ namespace API.Services.Service
         {
             try
             {
-                List<Cable> list = await daoCable.getListAll();
+                List<Cable> list = await daoCable.getListAll(null);
                 // if choose warehouse
                 if(suggestion.WarehouseIds.Count > 0)
                 {

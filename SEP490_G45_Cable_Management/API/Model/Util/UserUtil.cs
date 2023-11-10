@@ -113,21 +113,21 @@ namespace API.Model.Util
             {
                 foreach (RequestCable item in requestCables)
                 {
-                    if (item.Cable.Warehouse != null)
+                    if (item.RecoveryDestWarehouse != null)
                     {
                         if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT || request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER)
                         {
-                            builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " xuất từ kho " + item.Cable.Warehouse.WarehouseName
+                            builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " xuất từ kho " + item.RecoveryDestWarehouse.WarehouseName
                                 + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
                         }
                         else if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_RECOVERY)
                         {
-                            builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " được thu hồi về kho " + item.Cable.Warehouse.WarehouseName
+                            builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " được thu hồi về kho " + item.RecoveryDestWarehouse.WarehouseName
                                 + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
                         }
                         else if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_CANCEL_INSIDE)
                         {
-                            builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " được hủy trong kho " + item.Cable.Warehouse.WarehouseName
+                            builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " được hủy trong kho " + item.RecoveryDestWarehouse.WarehouseName
                                 + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
                         }
                     }else if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_CANCEL_OUTSIDE)
@@ -142,22 +142,22 @@ namespace API.Model.Util
             {
                 foreach (RequestOtherMaterial item in requestMaterials)
                 {
-                    if (item.OtherMaterials.Warehouse != null)
+                    if (item.RecoveryDestWarehouse != null)
                     {
                         if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT || request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER)
                         {
                             builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " xuất từ trong kho " +
-                                item.OtherMaterials.Warehouse.WarehouseName + ", số lượng: " + item.Quantity + "</p>");
+                                item.RecoveryDestWarehouse.WarehouseName + ", số lượng: " + item.Quantity + "</p>");
                         }
                         else if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_RECOVERY)
                         {
                             builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " được thu hồi về kho " +
-                                item.OtherMaterials.Warehouse.WarehouseName + ", số lượng: " + item.Quantity + "</p>");
+                                item.RecoveryDestWarehouse.WarehouseName + ", số lượng: " + item.Quantity + "</p>");
                         }
                         else if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_CANCEL_INSIDE)
                         {
                             builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " được hủy trong kho " +
-                                item.OtherMaterials.Warehouse.WarehouseName + ", số lượng: " + item.Quantity + "</p>");
+                                item.RecoveryDestWarehouse.WarehouseName + ", số lượng: " + item.Quantity + "</p>");
                         }
                     }else if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_CANCEL_OUTSIDE)
                     {
