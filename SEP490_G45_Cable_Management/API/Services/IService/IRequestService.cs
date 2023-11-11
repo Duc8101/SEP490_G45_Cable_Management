@@ -13,8 +13,8 @@ namespace API.Services.IService
         Task<ResponseDTO<bool>> Approve(Guid RequestID, Guid ApproverID, string ApproverName);
         Task<ResponseDTO<bool>> Reject(Guid RequestID, Guid RejectorID);
         Task<ResponseDTO<List<CableListDTO>?>> SuggestionCable(SuggestionCableDTO suggestion);
-        Task<ResponseDTO<bool>> CreateCancelInside(RequestCreateCancelInsideDTO DTO, Guid CreatorID);
-        Task<ResponseDTO<bool>> CreateCancelOutside(RequestCreateCancelOutsideDTO DTO, Guid CreatorID);
+        Task<ResponseDTO<bool>> CreateRequestCancelInside(RequestCreateCancelInsideDTO DTO, Guid CreatorID);
+        Task<ResponseDTO<bool>> CreateRequestCancelOutside(RequestCreateCancelOutsideDTO DTO, Guid CreatorID);
         Task<ResponseDTO<bool>> Delete(Guid RequestID);
         Task<ResponseDTO<RequestDetailDTO?>> Detail(Guid RequestID);
     }

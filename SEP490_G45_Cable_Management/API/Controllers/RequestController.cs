@@ -153,7 +153,7 @@ namespace API.Controllers
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
                 }
-                return await service.CreateCancelInside(DTO, Guid.Parse(CreatorID));
+                return await service.CreateRequestCancelInside(DTO, Guid.Parse(CreatorID));
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
@@ -170,7 +170,7 @@ namespace API.Controllers
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
                 }
-                return await service.CreateCancelOutside(DTO,Guid.Parse(CreatorID));
+                return await service.CreateRequestCancelOutside(DTO,Guid.Parse(CreatorID));
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }

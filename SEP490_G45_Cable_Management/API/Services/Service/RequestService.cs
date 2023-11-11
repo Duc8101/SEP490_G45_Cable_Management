@@ -213,7 +213,7 @@ namespace API.Services.Service
                     return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
                 }
                 // if issue done
-                if (issue.Status.Equals(IssueConst.STATUS_DONE))
+                if (issue.Status == IssueConst.STATUS_DONE)
                 {
                     return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int)HttpStatusCode.NotAcceptable);
                 }
@@ -440,7 +440,7 @@ namespace API.Services.Service
             // if request export
             if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT)
             {
-                Dictionary<string, object> result = await ApproveRequestExport(request, ApproverName, requestCables, requestMaterials);
+                Dictionary<string, object> result = await ApproveRequestExport(request, requestCables, requestMaterials);
                 List<Cable> listCableExported = (List<Cable>) result["listCableExported"];
                 List<int> listCableWarehouseID = (List<int>) result["listCableWarehouseID"];
                 List<int> listMaterialWarehouseID = (List<int>) result["listMaterialWarehouseID"];
@@ -450,7 +450,7 @@ namespace API.Services.Service
              // if request deliver
             }else if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER)
             {
-                Dictionary<string, object> result = await ApproveRequestDeliver(request, ApproverName, requestCables, requestMaterials);
+                Dictionary<string, object> result = await ApproveRequestDeliver(request, requestCables, requestMaterials);
                 List<Cable> listCableDeliver = (List<Cable>)result["listCableDeliver"];
                 List<int> listCableWarehouseID = (List<int>)result["listCableWarehouseID"];
                 List<int> listMaterialWarehouseID = (List<int>)result["listMaterialWarehouseID"];
@@ -460,7 +460,7 @@ namespace API.Services.Service
             }
             else
             {
-                Dictionary<string, object> result = await ApproveRequestCancelInside(request, ApproverName, requestCables, requestMaterials);
+                Dictionary<string, object> result = await ApproveRequestCancelInside(requestCables, requestMaterials);
                 List<Cable> listCableCancelInside = (List<Cable>)result["listCableCancelInside"];
                 List<int> listCableWarehouseID = (List<int>)result["listCableWarehouseID"];
                 List<int> listMaterialWarehouseID = (List<int>)result["listMaterialWarehouseID"];
@@ -474,7 +474,7 @@ namespace API.Services.Service
             await sendEmailToCreator(request, ApproverName);
             return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
         }
-        private async Task<Dictionary<string, object>> ApproveRequestExport(DataAccess.Entity.Request request, string ApproverName, List<RequestCable> requestCables, List<RequestOtherMaterial> requestMaterials)
+        private async Task<Dictionary<string, object>> ApproveRequestExport(DataAccess.Entity.Request request, List<RequestCable> requestCables, List<RequestOtherMaterial> requestMaterials)
         {
             Dictionary<string, object> result = new Dictionary<string, object>();
             // list cable
@@ -579,7 +579,7 @@ namespace API.Services.Service
             return result;
 
         }
-        private async Task<Dictionary<string, object>> ApproveRequestDeliver(DataAccess.Entity.Request request, string ApproverName, List<RequestCable> requestCables, List<RequestOtherMaterial> requestMaterials)
+        private async Task<Dictionary<string, object>> ApproveRequestDeliver(DataAccess.Entity.Request request, List<RequestCable> requestCables, List<RequestOtherMaterial> requestMaterials)
         {
             Dictionary<string, object> result = new Dictionary<string, object>();
             // list cable
@@ -753,7 +753,7 @@ namespace API.Services.Service
             result["listQuantity"] = listQuantity;
             return result;
         }
-        private async Task<Dictionary<string, object>> ApproveRequestCancelInside(DataAccess.Entity.Request request, string ApproverName, List<RequestCable> requestCables, List<RequestOtherMaterial> requestMaterials)
+        private async Task<Dictionary<string, object>> ApproveRequestCancelInside(List<RequestCable> requestCables, List<RequestOtherMaterial> requestMaterials)
         {
             Dictionary<string, object> result = new Dictionary<string, object>();
             // list cable
@@ -858,141 +858,6 @@ namespace API.Services.Service
             result["listQuantity"] = listQuantity;
             return result;
         }
-        // create cable while creating request recovery
-        private async Task<List<Cable>> CreateCable(List<CableCreateUpdateDTO> list, Guid CreatorID)
-        {
-            List<Cable> result = new List<Cable>();
-            if (list.Count > 0)
-            {
-                foreach(CableCreateUpdateDTO DTO in list)
-                {
-                    Cable cable = new Cable()
-                    {
-                        CableId = Guid.NewGuid(),
-                        WarehouseId = DTO.WarehouseId,
-                        SupplierId = DTO.SupplierId,
-                        StartPoint = DTO.StartPoint,
-                        EndPoint = DTO.EndPoint,
-                        Length = DTO.EndPoint - DTO.StartPoint,
-                        YearOfManufacture = DTO.YearOfManufacture,
-                        Code = DTO.Code.Trim(),
-                        Status = DTO.Status.Trim(),
-                        CreatorId = CreatorID,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                        IsExportedToUse = false,
-                        CableCategoryId = DTO.CableCategoryId,
-                        IsInRequest = true,
-                    };
-                    await daoCable.CreateCable(cable);
-                    result.Add(cable);
-                }
-            }
-            return result;
-        }
-        // create material while creating request recovery
-        private async Task<Dictionary<string, object>> CreateMaterial(List<OtherMaterialsRecoveryDTO> list)
-        {
-            // result to store list warehouse, list material id, list quantity, list status
-            Dictionary<string, object> result = new Dictionary<string, object>();
-            // list warehouse
-            List<int?> listWareHouse = new List<int?>();
-            // list quantity
-            List<int> listQuantity = new List<int>();
-            // list material id
-            List<int> listID = new List<int>();
-            // list status
-            List<string> listStatus = new List<string>();
-            if(list.Count > 0)
-            {
-                foreach(OtherMaterialsRecoveryDTO DTO in list)
-                {
-                    OtherMaterial material = new OtherMaterial()
-                    {
-                        Unit = DTO.Unit.Trim(),
-                        Code = DTO.Code,
-                        SupplierId = DTO.SupplierId,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                        WarehouseId = DTO.WarehouseId,
-                        Status = DTO.Status.Trim(),
-                        OtherMaterialsCategoryId = DTO.OtherMaterialsCategoryId
-                    };
-                    int OtherMaterialID = await daoOtherMaterial.CreateMaterial(material);
-                    listWareHouse.Add(DTO.WarehouseId);
-                    listQuantity.Add(DTO.Quantity);
-                    listID.Add(OtherMaterialID);
-                    listStatus.Add(DTO.Status);
-                }
-                // ----------------------- update quantity -----------------
-                foreach (int MaterialID in listID)
-                {
-                    OtherMaterial? material = await daoOtherMaterial.getOtherMaterial(MaterialID);
-                    if (material != null)
-                    {
-                        material.Quantity = 0;
-                        await daoOtherMaterial.UpdateMaterial(material);
-                    }
-                }
-            }
-            result["Warehouse"] = listWareHouse;
-            result["quantity"] = listQuantity;
-            result["ID"] = listID;
-            result["status"] = listStatus;
-            return result;
-        }
-        // create request cable when create request recovery
-        private async Task CreateRequestCableRecovery(List<Cable> list, Guid RequestID)
-        {
-            if(list.Count > 0)
-            {
-                foreach(Cable cable in list)
-                {
-                    RequestCable request = new RequestCable()
-                    {
-                        RequestId = RequestID,
-                        CableId = cable.CableId,
-                        StartPoint = cable.StartPoint,
-                        EndPoint = cable.EndPoint,
-                        Length = cable.EndPoint - cable.StartPoint,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                        RecoveryDestWarehouseId = cable.WarehouseId,
-                        Status = cable.Status,
-                    };
-                    await daoRequestCable.CreateRequestCable(request);
-                }
-            }
-        }
-        // create request material when create request recovery
-        private async Task CreateRequestMaterialRecovery(Dictionary<string, object> dic, Guid RequestID)
-        {
-            if(dic.Count > 0)
-            {
-                List<int?> listWareHouse = (List<int?>) dic["Warehouse"];
-                List<int> listQuantity = (List<int>) dic["quantity"];
-                List<int> listID = (List<int>) dic["ID"];
-                List<string> listStatus = (List<string>) dic["status"];
-                for(int i = 0; i < listID.Count; i++)
-                {
-                    RequestOtherMaterial request = new RequestOtherMaterial()
-                    {
-                        RequestId = RequestID,
-                        OtherMaterialsId = listID[i],
-                        Quantity = listQuantity[i],
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                        RecoveryDestWarehouseId = listWareHouse[i],
-                        Status = listStatus[i]
-                    };
-                    await daoRequestMaterial.CreateRequestOtherMaterial(request);
-                }
-            }
-        }
         public async Task<ResponseDTO<bool>> CreateRequestRecovery(RequestCreateRecoveryDTO DTO, Guid CreatorID)
         {
             if (DTO.RequestName.Trim().Length == 0)
@@ -1012,21 +877,123 @@ namespace API.Services.Service
                     return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
                 }
                 // if issue done
-                if (issue.Status.Equals(IssueConst.STATUS_DONE))
+                if (issue.Status == IssueConst.STATUS_DONE)
                 {
                     return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int)HttpStatusCode.NotAcceptable);
                 }
-                // create cable
-                List<Cable> listCable = await CreateCable(DTO.CableRecoveryDTOs, CreatorID);
-                // create material
-                // result to store list warehouse, list material id, list quantity, list status
-                Dictionary<string, object> dic  = await CreateMaterial(DTO.OtherMaterialsRecoveryDTOs);
-                // ------------------------------ create request ----------------------
+                // ------------------------------- create cable --------------------------
+                List<Cable> listCable = new List<Cable>();
+                if (DTO.CableRecoveryDTOs.Count > 0)
+                {
+                    foreach (CableCreateUpdateDTO item in DTO.CableRecoveryDTOs)
+                    {
+                        Cable cable = new Cable()
+                        {
+                            CableId = Guid.NewGuid(),
+                            WarehouseId = item.WarehouseId,
+                            SupplierId = item.SupplierId,
+                            StartPoint = item.StartPoint,
+                            EndPoint = item.EndPoint,
+                            Length = item.EndPoint - item.StartPoint,
+                            YearOfManufacture = item.YearOfManufacture,
+                            Code = item.Code.Trim(),
+                            Status = item.Status.Trim(),
+                            CreatorId = CreatorID,
+                            CreatedAt = DateTime.Now,
+                            UpdateAt = DateTime.Now,
+                            IsDeleted = false,
+                            IsExportedToUse = false,
+                            CableCategoryId = item.CableCategoryId,
+                            IsInRequest = true,
+                        };
+                        await daoCable.CreateCable(cable);
+                        listCable.Add(cable);
+                    }
+                }
+                // ------------------------------- create material --------------------------
+                // list warehouse
+                List<int?> listWareHouse = new List<int?>();
+                // list quantity
+                List<int> listQuantity = new List<int>();
+                // list material id
+                List<int> listID = new List<int>();
+                // list status
+                List<string> listStatus = new List<string>();
+                if (DTO.OtherMaterialsRecoveryDTOs.Count > 0)
+                {
+                    foreach (OtherMaterialsRecoveryDTO item in DTO.OtherMaterialsRecoveryDTOs)
+                    {
+                        OtherMaterial material = new OtherMaterial()
+                        {
+                            Unit = item.Unit.Trim(),
+                            Code = item.Code,
+                            SupplierId = item.SupplierId,
+                            CreatedAt = DateTime.Now,
+                            UpdateAt = DateTime.Now,
+                            IsDeleted = false,
+                            WarehouseId = item.WarehouseId,
+                            Status = item.Status.Trim(),
+                            OtherMaterialsCategoryId = item.OtherMaterialsCategoryId
+                        };
+                        int OtherMaterialID = await daoOtherMaterial.CreateMaterial(material);
+                        listWareHouse.Add(item.WarehouseId);
+                        listQuantity.Add(item.Quantity);
+                        listID.Add(OtherMaterialID);
+                        listStatus.Add(item.Status.Trim());
+                    }
+                    // ----------------------- update quantity -----------------
+                    foreach (int MaterialID in listID)
+                    {
+                        OtherMaterial? material = await daoOtherMaterial.getOtherMaterial(MaterialID);
+                        if (material != null)
+                        {
+                            material.Quantity = 0;
+                            await daoOtherMaterial.UpdateMaterial(material);
+                        }
+                    }
+                }
+                //----------------------------- create request --------------------------------
                 Guid RequestID = await CreateRequest(DTO.RequestName.Trim(), DTO.Content, DTO.IssueId, CreatorID, DTO.RequestCategoryId, null);
-                // create request cable
-                await CreateRequestCableRecovery(listCable, RequestID);
-                // create request material
-                await CreateRequestMaterialRecovery(dic, RequestID);
+                //----------------------------- create request cable --------------------------------
+                if (listCable.Count > 0)
+                {
+                    foreach (Cable cable in listCable)
+                    {
+                        RequestCable request = new RequestCable()
+                        {
+                            RequestId = RequestID,
+                            CableId = cable.CableId,
+                            StartPoint = cable.StartPoint,
+                            EndPoint = cable.EndPoint,
+                            Length = cable.EndPoint - cable.StartPoint,
+                            CreatedAt = DateTime.Now,
+                            UpdateAt = DateTime.Now,
+                            IsDeleted = false,
+                            RecoveryDestWarehouseId = cable.WarehouseId,
+                            Status = cable.Status,
+                        };
+                        await daoRequestCable.CreateRequestCable(request);
+                    }
+                }
+                //----------------------------- create request material --------------------------------
+                if(listID.Count >  0)
+                {
+                    for (int i = 0; i < listID.Count; i++)
+                    {
+                        RequestOtherMaterial request = new RequestOtherMaterial()
+                        {
+                            RequestId = RequestID,
+                            OtherMaterialsId = listID[i],
+                            Quantity = listQuantity[i],
+                            CreatedAt = DateTime.Now,
+                            UpdateAt = DateTime.Now,
+                            IsDeleted = false,
+                            RecoveryDestWarehouseId = listWareHouse[i],
+                            Status = listStatus[i]
+                        };
+                        await daoRequestMaterial.CreateRequestOtherMaterial(request);
+                    }
+                }
                 // ----------------------------- send email to admin ---------------------------
                 await sendEmailToAdmin(DTO.RequestName.Trim(), "Thu hồi", issue);
                 return new ResponseDTO<bool>(true, "Tạo yêu cầu thành công");
@@ -1328,7 +1295,7 @@ namespace API.Services.Service
             }
             return new ResponseDTO<bool>(true, string.Empty);
         }
-        public async Task<ResponseDTO<bool>> CreateCancelInside(RequestCreateCancelInsideDTO DTO,Guid CreatorID)
+        public async Task<ResponseDTO<bool>> CreateRequestCancelInside(RequestCreateCancelInsideDTO DTO,Guid CreatorID)
         {
             if (DTO.RequestName.Trim().Length == 0)
             {
@@ -1347,7 +1314,7 @@ namespace API.Services.Service
                     return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
                 }
                 // if issue done
-                if (issue.Status.Equals(IssueConst.STATUS_DONE))
+                if (issue.Status == IssueConst.STATUS_DONE)
                 {
                     return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int)HttpStatusCode.NotAcceptable);
                 }
@@ -1481,7 +1448,7 @@ namespace API.Services.Service
             }
             return result;
         }
-        public async Task<ResponseDTO<bool>> CreateCancelOutside(RequestCreateCancelOutsideDTO DTO, Guid CreatorID)
+        public async Task<ResponseDTO<bool>> CreateRequestCancelOutside(RequestCreateCancelOutsideDTO DTO, Guid CreatorID)
         {
             if (DTO.RequestName.Trim().Length == 0)
             {
@@ -1500,7 +1467,7 @@ namespace API.Services.Service
                     return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
                 }
                 // if issue done
-                if (issue.Status.Equals(IssueConst.STATUS_DONE))
+                if (issue.Status == IssueConst.STATUS_DONE)
                 {
                     return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int)HttpStatusCode.NotAcceptable);
                 }
@@ -1555,32 +1522,9 @@ namespace API.Services.Service
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        // check cable valid when approve request cancel outside
-        private async Task<ResponseDTO<bool>> isCableValidApproveCancelOutside(List<RequestCable> list)
-        {
-            if(list.Count == 0)
-            {
-                return new ResponseDTO<bool>(true, string.Empty);
-            }
-            foreach(RequestCable item in list)
-            {
-                Cable? cable = await daoCable.getCable(item.CableId);
-                if(cable == null || cable.IsInRequest == false)
-                {
-                    return new ResponseDTO<bool>(false, item.Cable.CableCategory.CableCategoryName + " với ID: " + item.CableId
-                                + " không tồn tại ", (int) HttpStatusCode.NotFound);
-                }
-            }
-            return new ResponseDTO<bool>(true, string.Empty);
-        }
         public async Task<ResponseDTO<bool>> ApproveRequestCancelOutside(Guid ApproverID, DataAccess.Entity.Request request, string ApproverName)
         {
              List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
-             ResponseDTO<bool> check = await isCableValidApproveCancelOutside(requestCables);
-             if(check.Success == false)
-             {
-                return check;
-             }
              if(requestCables.Count > 0)
              {
                 foreach(RequestCable item in requestCables)
