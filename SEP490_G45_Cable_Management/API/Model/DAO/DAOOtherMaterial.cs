@@ -100,12 +100,7 @@ namespace API.Model.DAO
         }
         public async Task<List<OtherMaterialsCategory>> getListCategory(int? WarehouseID)
         {
-            IQueryable<OtherMaterial> query = context.OtherMaterials.Include(o => o.OtherMaterialsCategory).Where(o => o.IsDeleted == false);
-            // if choose warehouse
-            if (WarehouseID != null)
-            {
-                query = query.Where(o => o.WarehouseId == WarehouseID);
-            }
+            IQueryable<OtherMaterial> query = getQuery(null, WarehouseID, null);
             List<OtherMaterialsCategory> result = await query.Select(o => o.OtherMaterialsCategory).Distinct().ToListAsync();
             return result;
         }

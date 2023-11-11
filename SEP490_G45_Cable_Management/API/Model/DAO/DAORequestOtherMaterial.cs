@@ -10,17 +10,10 @@ namespace API.Model.DAO
             await context.RequestOtherMaterials.AddAsync(request);
             await context.SaveChangesAsync();
         }
-
         public async Task<List<RequestOtherMaterial>> getList(Guid RequestID)
         {
             return await context.RequestOtherMaterials.Include(r => r.OtherMaterials).ThenInclude(r => r.OtherMaterialsCategory)
                 .Include(r => r.OtherMaterials).ThenInclude(r => r.Warehouse).Include(r => r.RecoveryDestWarehouse).Where(r => r.RequestId == RequestID).ToListAsync();
-        }
-
-        public async Task RemoveRequestMaterial(RequestOtherMaterial request)
-        {
-            context.RequestOtherMaterials.Remove(request);
-            await context.SaveChangesAsync();
         }
     }
 }

@@ -21,10 +21,5 @@ namespace API.Model.DAO
                 .ThenInclude(r => r.Warehouse).Include(r => r.RecoveryDestWarehouse).Where(r => r.RequestId == RequestID)
                 .ToListAsync();
         }
-        public async Task RemoveRequestCable(RequestCable request)
-        {
-            context.RequestCables.Remove(request);
-            await context.SaveChangesAsync();
-        }
     }
 }
