@@ -1,8 +1,8 @@
-﻿using API.Services.Service;
+﻿using API.Services.IService;
+using API.Services.Service;
 using DataAccess.DTO;
 using DataAccess.DTO.WarehouseDTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -13,18 +13,24 @@ namespace API.Controllers
     [ApiController]
     public class WarehouseController : BaseAPIController
     {
-        private readonly WarehouseService service = new WarehouseService();
+        private readonly IWarehouseService service;
+
+        public WarehouseController(IWarehouseService service)
+        {
+            this.service = service;
+        }
+
 
         [HttpGet("Paged")]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<WarehouseListDTO>?>> List(string? name , [Required] int page = 1)
+        public async Task<ResponseDTO<PagedResultDTO<WarehouseListDTO>?>> List(string? name, [Required] int page = 1)
         {
             // if admin, warehousekeeper, leader
-            if(isAdmin() || isWarehouseKeeper() || isLeader())
+            if (isAdmin() || isWarehouseKeeper() || isLeader())
             {
                 return await service.ListPaged(name, page);
             }
-            return new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpGet("All")]
@@ -42,13 +48,13 @@ namespace API.Controllers
             if (isAdmin())
             {
                 string? CreatorID = getUserID();
-                if(CreatorID == null)
+                if (CreatorID == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int) HttpStatusCode.NotFound);
+                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
                 }
                 return await service.Create(DTO, Guid.Parse(CreatorID));
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPut("{WarehouseID}")]
@@ -72,7 +78,7 @@ namespace API.Controllers
             {
                 return await service.Delete(WarehouseID);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
     }
 }

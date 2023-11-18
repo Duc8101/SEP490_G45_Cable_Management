@@ -1,10 +1,10 @@
-﻿using API.Services.Service;
+﻿using API.Services.IService;
+using API.Services.Service;
 using DataAccess.DTO;
 using DataAccess.DTO.CableDTO;
 using DataAccess.DTO.RequestDTO;
 using DataAccess.Entity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -15,10 +15,16 @@ namespace API.Controllers
     [ApiController]
     public class RequestController : BaseAPIController
     {
-        private readonly RequestService service = new RequestService();
+        private readonly IRequestService service;
+
+        public RequestController(IRequestService service)
+        {
+            this.service = service;
+        }
+
         [HttpGet]
         [Authorize]
-        public async Task<ResponseDTO<PagedResultDTO<RequestListDTO>?>> List(string? name , int? RequestCategoryID, string? status, [Required] int page = 1)
+        public async Task<ResponseDTO<PagedResultDTO<RequestListDTO>?>> List(string? name, int? RequestCategoryID, string? status, [Required] int page = 1)
         {
             // if admin, leader
             if (isAdmin() || isLeader())
@@ -126,7 +132,7 @@ namespace API.Controllers
                 }
                 return await service.Reject(RequestID, Guid.Parse(RejectorID));
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPost]
@@ -170,7 +176,7 @@ namespace API.Controllers
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
                 }
-                return await service.CreateRequestCancelOutside(DTO,Guid.Parse(CreatorID));
+                return await service.CreateRequestCancelOutside(DTO, Guid.Parse(CreatorID));
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
@@ -192,7 +198,7 @@ namespace API.Controllers
         public async Task<ResponseDTO<RequestDetailDTO?>> Detail([Required] Guid RequestID)
         {
             // if admin, warehousekeeper, staff
-            if(isAdmin() || isWarehouseKeeper() || isStaff())
+            if (isAdmin() || isWarehouseKeeper() || isStaff())
             {
                 return await service.Detail(RequestID);
             }

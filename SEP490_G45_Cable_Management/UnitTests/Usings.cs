@@ -1,1 +1,10 @@
 global using NUnit.Framework;
+global using Moq;
+global using API.Controllers;
+global using API.Services.IService;
+global using DataAccess.DTO;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Mvc;
+global using System.Net;
+global using System.Security.Claims;
+global using DataAccess.Const;

@@ -1,16 +1,12 @@
-﻿using DataAccess.DTO.UserDTO;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using MimeKit;
-using System.ComponentModel.DataAnnotations;
-using MailKit.Net.Smtp;
-using System.Security.Claims;
-using static Org.BouncyCastle.Math.EC.ECCurve;
-using DataAccess.DTO;
-using Microsoft.AspNetCore.Authorization;
-using DataAccess.Entity;
-using System.Net;
+﻿using API.Services.IService;
 using API.Services.Service;
+using DataAccess.DTO;
+using DataAccess.DTO.UserDTO;
+using DataAccess.Entity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace API.Controllers
 {
@@ -18,7 +14,13 @@ namespace API.Controllers
     [ApiController]
     public class UserController : BaseAPIController
     {
-        private readonly UserService service = new UserService();
+        private readonly IUserService service;
+
+        public UserController(IUserService service)
+        {
+            this.service = service;
+        }
+
 
         [HttpPost]
         public async Task<ResponseDTO<TokenDTO?>> Login([Required] LoginDTO DTO)
@@ -35,7 +37,7 @@ namespace API.Controllers
             {
                 return await service.ListPaged(filter, page);
             }
-            return new ResponseDTO<PagedResultDTO<UserListDTO>?>(null, "Bạn không có quyền truy cập" , (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<PagedResultDTO<UserListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpGet("WarehouseKeeper")]
@@ -58,7 +60,7 @@ namespace API.Controllers
             {
                 return await service.Create(DTO);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPut("{UserID}")]
@@ -70,7 +72,7 @@ namespace API.Controllers
             {
                 return await service.Update(UserID, DTO);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpDelete("{UserID}")]
@@ -82,7 +84,7 @@ namespace API.Controllers
             {
                 string? UserLoginID = getUserID();
                 // if not found
-                if(UserLoginID == null)
+                if (UserLoginID == null)
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy ID", (int)HttpStatusCode.NotFound);
                 }
@@ -103,9 +105,9 @@ namespace API.Controllers
         {
             string? email = getEmail();
             // if not found email
-            if(email == null)
+            if (email == null)
             {
-                return new ResponseDTO<bool>(false, "Không tìm thấy email. Cần xác minh lại thông tin đăng nhập", (int) HttpStatusCode.NotFound);
+                return new ResponseDTO<bool>(false, "Không tìm thấy email. Cần xác minh lại thông tin đăng nhập", (int)HttpStatusCode.NotFound);
             }
             return await service.ChangePassword(DTO, email);
         }

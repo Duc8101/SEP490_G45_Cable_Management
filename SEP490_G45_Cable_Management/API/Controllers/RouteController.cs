@@ -1,4 +1,5 @@
-﻿using API.Services.Service;
+﻿using API.Services.IService;
+using API.Services.Service;
 using DataAccess.DTO;
 using DataAccess.DTO.RouteDTO;
 using Microsoft.AspNetCore.Authorization;
@@ -13,7 +14,13 @@ namespace API.Controllers
     [ApiController]
     public class RouteController : BaseAPIController
     {
-        private readonly RouteService service = new RouteService();
+        private readonly IRouteService service;
+
+        public RouteController(IRouteService service)
+        {
+            this.service = service;
+        }
+
 
         [HttpGet("All")]
         [Authorize]

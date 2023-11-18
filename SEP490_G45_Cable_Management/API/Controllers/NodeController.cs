@@ -1,8 +1,7 @@
-﻿using API.Services.Service;
+﻿using API.Services.IService;
 using DataAccess.DTO;
 using DataAccess.DTO.NodeDTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -13,17 +12,23 @@ namespace API.Controllers
     [ApiController]
     public class NodeController : BaseAPIController
     {
-        private readonly NodeService service = new NodeService();
+        private readonly INodeService service;
+
+        public NodeController(INodeService service)
+        {
+            this.service = service;
+        }
+
         [HttpGet]
         [Authorize]
         public async Task<ResponseDTO<List<NodeListDTO>?>> List([Required] Guid RouteID)
         {
             // if admin or leader
-            if(isAdmin() || isLeader())
+            if (isAdmin() || isLeader())
             {
                 return await service.List(RouteID);
             }
-            return new ResponseDTO<List<NodeListDTO>?>(null , "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<List<NodeListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPost]
@@ -35,7 +40,7 @@ namespace API.Controllers
             {
                 return await service.Create(DTO);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpGet("{NodeID}")]
@@ -59,7 +64,7 @@ namespace API.Controllers
             {
                 return await service.Update(NodeID, DTO);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpDelete("{NodeID}")]
@@ -71,7 +76,7 @@ namespace API.Controllers
             {
                 return await service.Delete(NodeID);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
     }
 }

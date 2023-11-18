@@ -1,8 +1,8 @@
-﻿using API.Services.Service;
+﻿using API.Services.IService;
+using API.Services.Service;
 using DataAccess.DTO;
 using DataAccess.DTO.CableDTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -13,18 +13,23 @@ namespace API.Controllers
     [ApiController]
     public class CableController : BaseAPIController
     {
-        private readonly CableService service = new CableService();
+        private readonly ICableService service;
+
+        public CableController(ICableService service)
+        {
+            this.service = service;
+        }
 
         [HttpGet("Paged")]
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<CableListDTO>?>> List(string? filter, int? WarehouseID, [Required] bool isExportedToUse = false, [Required] int page = 1)
         {
             // if admin, warehouse keeper
-            if(isAdmin() || isWarehouseKeeper())
+            if (isAdmin() || isWarehouseKeeper())
             {
                 return await service.ListPaged(filter, WarehouseID, isExportedToUse, page);
             }
-            return new ResponseDTO<PagedResultDTO<CableListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<PagedResultDTO<CableListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpGet("All")]
@@ -47,13 +52,13 @@ namespace API.Controllers
             if (isAdmin() || isWarehouseKeeper())
             {
                 string? CreatorID = getUserID();
-                if(CreatorID == null)
+                if (CreatorID == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int) HttpStatusCode.NotFound);
+                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
                 }
-                return await service.Create(DTO,Guid.Parse(CreatorID));
+                return await service.Create(DTO, Guid.Parse(CreatorID));
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPut("{CableID}")]
@@ -65,7 +70,7 @@ namespace API.Controllers
             {
                 return await service.Update(CableID, DTO);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpDelete("{CableID}")]
@@ -77,7 +82,7 @@ namespace API.Controllers
             {
                 return await service.Delete(CableID);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
     }
 }

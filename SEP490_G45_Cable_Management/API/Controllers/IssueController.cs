@@ -1,11 +1,8 @@
-﻿using API.Services.Service;
+﻿using API.Services.IService;
 using DataAccess.DTO;
 using DataAccess.DTO.IssueDTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using MimeKit.Encodings;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 
@@ -15,17 +12,24 @@ namespace API.Controllers
     [ApiController]
     public class IssueController : BaseAPIController
     {
-        private readonly IssueService service = new IssueService();
+        private readonly IIssueService service;
+
+        public IssueController(IIssueService service)
+        {
+            this.service = service;
+        }
+
+
         [HttpGet("Paged/All")]
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List(string? filter, [Required] int page = 1)
         {
             // if admin, leader, staff
-            if(isAdmin() || isLeader() || isStaff())
+            if (isAdmin() || isLeader() || isStaff())
             {
                 return await service.ListPagedAll(filter, page);
             }
-            return new ResponseDTO<PagedResultDTO<IssueListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<PagedResultDTO<IssueListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpGet("Paged/Doing")]
@@ -55,13 +59,13 @@ namespace API.Controllers
             if (isAdmin() || isLeader() || isStaff())
             {
                 string? CreatorID = getUserID();
-                if(CreatorID == null)
+                if (CreatorID == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int) HttpStatusCode.NotFound);
+                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
                 }
                 return await service.Create(DTO, Guid.Parse(CreatorID));
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPut("{IssueID}")]

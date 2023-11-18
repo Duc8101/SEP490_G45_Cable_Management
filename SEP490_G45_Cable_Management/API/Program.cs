@@ -7,6 +7,8 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using Microsoft.AspNetCore.DataProtection;
 using System.Reflection;
+using API.Services.IService;
+using API.Services.Service;
 
 namespace API
 {
@@ -69,6 +71,15 @@ namespace API
                     .AllowAnyMethod()
                     .AllowAnyHeader();
             }));
+            builder.Services.AddScoped<ICableCategoryService, CableCategoryService>();
+            builder.Services.AddScoped<ICableService, CableService>();
+            builder.Services.AddScoped<IIssueService, IssueService>();
+            builder.Services.AddScoped<INodeMaterialCategoryService, NodeMaterialCategoryService>();
+            builder.Services.AddScoped<INodeService, NodeService>();
+            builder.Services.AddScoped<IOtherMaterialsCategoryService, OtherMaterialsCategoryService>();
+            builder.Services.AddScoped<IOtherMaterialsService, OtherMaterialsService>();
+            builder.Services.AddScoped<IRequestService, RequestService>();
+            builder.Services.AddScoped<IRouteService, RouteService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

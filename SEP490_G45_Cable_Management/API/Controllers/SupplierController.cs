@@ -1,4 +1,5 @@
-﻿using API.Services.Service;
+﻿using API.Services.IService;
+using API.Services.Service;
 using DataAccess.DTO;
 using DataAccess.DTO.SupplierDTO;
 using DataAccess.Entity;
@@ -17,7 +18,12 @@ namespace API.Controllers
     [ApiController]
     public class SupplierController : BaseAPIController
     {
-        private readonly SupplierService service = new SupplierService();
+        private readonly ISupplierService service;
+
+        public SupplierController(ISupplierService service)
+        {
+            this.service = service;
+        }
 
         [HttpGet("Paged")]
         [Authorize]
