@@ -1392,8 +1392,7 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task
-        CreateCancelInside_WhenRequestCategoryIsNotCancelInside_ReturnsConflictResponse()
+        public async Task CreateCancelInside_WhenRequestCategoryIsNotCancelInside_ReturnsConflictResponse()
         {
             // Arrange
             var requestCreateCancelInsideDTOSample = new RequestCreateCancelInsideDTO
@@ -1647,8 +1646,7 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task
-        CreateCancelOutside_WhenRequestCategoryIsNotCancelOutside_ReturnsConflictResponse()
+        public async Task CreateCancelOutside_WhenRequestCategoryIsNotCancelOutside_ReturnsConflictResponse()
         {
             // Arrange
             var requestCreateCancelOutsideDTOSample =

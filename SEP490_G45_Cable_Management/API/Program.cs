@@ -1,14 +1,9 @@
+using API.Services.IService;
+using API.Services.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using Microsoft.AspNetCore.DataProtection;
-using System.Reflection;
-using API.Services.IService;
-using API.Services.Service;
 
 namespace API
 {
@@ -80,12 +75,17 @@ namespace API
             builder.Services.AddScoped<IOtherMaterialsService, OtherMaterialsService>();
             builder.Services.AddScoped<IRequestService, RequestService>();
             builder.Services.AddScoped<IRouteService, RouteService>();
+            builder.Services.AddScoped<IStatisticService, StatisticService>();
+            builder.Services.AddScoped<ISupplierService, SupplierService>();
+            builder.Services.AddScoped<ITransactionService, TransactionService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IWarehouseService, WarehouseService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-          
+
             }
             app.UseSwagger();
             app.UseSwaggerUI();
