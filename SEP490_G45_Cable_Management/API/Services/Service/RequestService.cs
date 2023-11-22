@@ -918,38 +918,44 @@ namespace API.Services.Service
                 // list material id
                 List<int> listID = new List<int>();
                 // list status
-                List<string> listStatus = new List<string>();
+                List<string?> listStatus = new List<string?>();
                 if (DTO.OtherMaterialsRecoveryDTOs.Count > 0)
                 {
                     foreach (OtherMaterialsRecoveryDTO item in DTO.OtherMaterialsRecoveryDTOs)
                     {
-                        OtherMaterial material = new OtherMaterial()
+                        OtherMaterial? material = await daoOtherMaterial.getOtherMaterial(item);
+                        // if material not exist
+                        if(material == null)
                         {
-                            Unit = item.Unit.Trim(),
-                            Code = item.Code,
-                            SupplierId = item.SupplierId,
-                            CreatedAt = DateTime.Now,
-                            UpdateAt = DateTime.Now,
-                            IsDeleted = false,
-                            WarehouseId = item.WarehouseId,
-                            Status = item.Status.Trim(),
-                            OtherMaterialsCategoryId = item.OtherMaterialsCategoryId
-                        };
-                        int OtherMaterialID = await daoOtherMaterial.CreateMaterial(material);
-                        listWareHouse.Add(item.WarehouseId);
-                        listQuantity.Add(item.Quantity);
-                        listID.Add(OtherMaterialID);
-                        listStatus.Add(item.Status.Trim());
-                    }
-                    // ----------------------- update quantity -----------------
-                    foreach (int MaterialID in listID)
-                    {
-                        OtherMaterial? material = await daoOtherMaterial.getOtherMaterial(MaterialID);
-                        if (material != null)
-                        {
-                            material.Quantity = 0;
-                            await daoOtherMaterial.UpdateMaterial(material);
+                            material = new OtherMaterial()
+                            {
+                                Unit = item.Unit.Trim(),
+                                Quantity = 0,
+                                Code = item.Code,
+                                SupplierId = item.SupplierId,
+                                CreatedAt = DateTime.Now,
+                                UpdateAt = DateTime.Now,
+                                IsDeleted = false,
+                                WarehouseId = item.WarehouseId,
+                                Status = item.Status.Trim(),
+                                OtherMaterialsCategoryId = item.OtherMaterialsCategoryId
+                            };
+                            int OtherMaterialID = await daoOtherMaterial.CreateMaterial(material);
+                            listWareHouse.Add(item.WarehouseId);
+                            listQuantity.Add(item.Quantity);
+                            listID.Add(OtherMaterialID);
+                            listStatus.Add(item.Status.Trim());
                         }
+                        else
+                        {
+                            listWareHouse.Add(item.WarehouseId);
+                            listQuantity.Add(item.Quantity);
+                            listID.Add(material.OtherMaterialsId);
+                            listStatus.Add(null);
+                            // update material
+                            material.UpdateAt = DateTime.Now;
+                            await daoOtherMaterial.UpdateMaterial(material);
+                        }  
                     }
                 }
                 //----------------------------- create request --------------------------------

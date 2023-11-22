@@ -63,7 +63,7 @@ namespace API.Model.DAO
         public async Task<OtherMaterial?> getOtherMaterial(OtherMaterialsCreateUpdateDTO DTO)
         {
             return await context.OtherMaterials.Where(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == DTO.OtherMaterialsCategoryId
-            && o.Unit == DTO.Unit.Trim() && DTO.Code != null && o.Code == DTO.Code.Trim() /*&& o.SupplierId == DTO.SupplierId*/
+            && o.Unit == DTO.Unit.Trim() && DTO.Code != null && o.Code == DTO.Code.Trim() && o.SupplierId == 1
             && o.Status == DTO.Status.Trim() && o.WarehouseId == DTO.WarehouseId).FirstOrDefaultAsync();
         }
         public async Task<int> CreateMaterial(OtherMaterial material)
@@ -133,5 +133,12 @@ namespace API.Model.DAO
             return await context.OtherMaterials.Include(x => x.OtherMaterialsCategory).Where(o => o.Unit == DTO.Unit && o.Status == DTO.Status
             && o.SupplierId == DTO.SupplierId && o.OtherMaterialsCategoryId == DTO.OtherMaterialsCategoryId && o.IsDeleted).FirstOrDefaultAsync();
         }
+        public async Task<OtherMaterial?> getOtherMaterial(OtherMaterialsRecoveryDTO DTO)
+        {
+            return await context.OtherMaterials.Where(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == DTO.OtherMaterialsCategoryId
+            && o.Unit == DTO.Unit.Trim() && DTO.Code != null && o.Code == DTO.Code.Trim() && o.SupplierId == DTO.SupplierId
+            && o.Status == DTO.Status.Trim() && o.WarehouseId == DTO.WarehouseId).FirstOrDefaultAsync();
+        }
+
     }
 }
