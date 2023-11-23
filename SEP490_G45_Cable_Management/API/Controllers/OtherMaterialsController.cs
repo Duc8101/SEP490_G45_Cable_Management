@@ -57,8 +57,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] OtherMaterialsCreateUpdateDTO DTO)
         {
-            // if admin, warehouse keeper
-            if (isAdmin() || isWarehouseKeeper())
+            // if admin
+            if (isAdmin())
             {
                 return await service.Create(DTO);
             }
@@ -69,8 +69,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Update([Required] int OtherMaterialsID, [Required] OtherMaterialsCreateUpdateDTO DTO)
         {
-            // if admin, warehouse keeper
-            if (isAdmin() || isWarehouseKeeper())
+            // if admin
+            if (isAdmin())
             {
                 return await service.Update(OtherMaterialsID, DTO);
             }
@@ -81,8 +81,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Delete([Required] int OtherMaterialsID)
         {
-            // if admin, warehouse keeper
-            if (isAdmin() || isWarehouseKeeper())
+            // if admin
+            if (isAdmin())
             {
                 return await service.Delete(OtherMaterialsID);
             }

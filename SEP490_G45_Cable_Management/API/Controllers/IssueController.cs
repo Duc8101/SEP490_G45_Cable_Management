@@ -24,12 +24,7 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List(string? filter, [Required] int page = 1)
         {
-            // if admin, leader, staff
-            if (isAdmin() || isLeader() || isStaff())
-            {
-                return await service.ListPagedAll(filter, page);
-            }
-            return new ResponseDTO<PagedResultDTO<IssueListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            return await service.ListPagedAll(filter, page);
         }
 
         [HttpGet("Paged/Doing")]
@@ -55,8 +50,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Create(IssueCreateDTO DTO)
         {
-            // if admin, leader, staff
-            if (isAdmin() || isLeader() || isStaff())
+            // if admin, staff
+            if (isAdmin() || isStaff())
             {
                 string? CreatorID = getUserID();
                 if (CreatorID == null)
@@ -72,8 +67,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Update([Required] Guid IssueID, [Required] IssueUpdateDTO DTO)
         {
-            // if admin, leader, staff
-            if (isAdmin() || isLeader() || isStaff())
+            // if admin or staff
+            if (isAdmin() || isStaff())
             {
                 return await service.Update(IssueID, DTO);
             }
@@ -84,8 +79,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Delete([Required] Guid IssueID)
         {
-            // if admin, leader, staff
-            if (isAdmin() || isLeader() || isStaff())
+            // if admin or staff
+            if (isAdmin() || isStaff())
             {
                 return await service.Delete(IssueID);
             }
@@ -96,12 +91,7 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<List<IssueDetailDTO>?>> Detail([Required] Guid IssueID)
         {
-            // if admin, leader, staff
-            if (isAdmin() || isLeader() || isStaff())
-            {
-                return await service.Detail(IssueID);
-            }
-            return new ResponseDTO<List<IssueDetailDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            return await service.Detail(IssueID);
         }
     }
 }

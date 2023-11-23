@@ -8,7 +8,7 @@ namespace API.Model.DAO
     {
         public async Task<NodeMaterialCategory?> getMaterial(int MaterialCategoryID)
         {
-            return await context.NodeMaterialCategories.Where(n => n.OtherMaterialCategoryId == MaterialCategoryID).FirstOrDefaultAsync();
+            return await context.NodeMaterialCategories.Where(n => n.OtherMaterialCategoryId == MaterialCategoryID && n.IsDeleted == false).FirstOrDefaultAsync();
         }
         public async Task CreateNodeMaterialCategory(NodeMaterialCategory material)
         {
@@ -23,17 +23,17 @@ namespace API.Model.DAO
         public async Task<List<NodeMaterialCategory>> getList(Guid NodeID)
         {
             return await context.NodeMaterialCategories.Include(n => n.OtherMaterialCategory).OrderByDescending(n => n.UpdateAt)
-                .Where(n => n.NodeId == NodeID).ToListAsync();
+                .Where(n => n.NodeId == NodeID && n.IsDeleted == false).ToListAsync();
         }
 
         public async Task<List<OtherMaterialsCategory>> getListOtherMaterialCategory(Guid RouteID)
         {
-            return await context.NodeMaterialCategories.Where(n => n.Node.RouteId == RouteID).Select(n => n.OtherMaterialCategory).Distinct().ToListAsync();
+            return await context.NodeMaterialCategories.Where(n => n.Node.RouteId == RouteID && n.IsDeleted == false).Select(n => n.OtherMaterialCategory).Distinct().ToListAsync();
         }
 
         public async Task<int> getSumQuantity(Guid RouteID, int OtherMaterialCategoryID)
         {
-            return await context.NodeMaterialCategories.Where(n => n.Node.RouteId == RouteID && n.OtherMaterialCategoryId == OtherMaterialCategoryID)
+            return await context.NodeMaterialCategories.Where(n => n.Node.RouteId == RouteID && n.IsDeleted == false && n.OtherMaterialCategoryId == OtherMaterialCategoryID)
                 .SumAsync(n => n.Quantity);
         }
     }

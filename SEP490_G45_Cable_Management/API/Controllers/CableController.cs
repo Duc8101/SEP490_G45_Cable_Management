@@ -48,8 +48,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] CableCreateUpdateDTO DTO)
         {
-            /// if admin, warehouse keeper
-            if (isAdmin() || isWarehouseKeeper())
+            /// if admin
+            if (isAdmin())
             {
                 string? CreatorID = getUserID();
                 if (CreatorID == null)
@@ -65,8 +65,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Update([Required] Guid CableID, [Required] CableCreateUpdateDTO DTO)
         {
-            // if admin, warehouse keeper
-            if (isAdmin() || isWarehouseKeeper())
+            // if admin
+            if (isAdmin())
             {
                 return await service.Update(CableID, DTO);
             }
@@ -77,8 +77,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Delete([Required] Guid CableID)
         {
-            // if admin, warehouse keeper
-            if (isAdmin() || isWarehouseKeeper())
+            // if admin
+            if (isAdmin())
             {
                 return await service.Delete(CableID);
             }

@@ -26,12 +26,7 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<List<RouteListDTO>?>> List(string? name)
         {
-            // if admin, leader
-            if (isAdmin() || isLeader())
-            {
-                return await service.ListAll(name);
-            }
-            return new ResponseDTO<List<RouteListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return await service.ListAll(name);
         }
 
         [HttpGet("Paged")]
@@ -50,8 +45,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] RouteCreateDTO DTO)
         {
-            // if admin, leader
-            if (isAdmin() || isLeader())
+            // if admin
+            if (isAdmin())
             {
                 return await service.Create(DTO);
             }
@@ -62,8 +57,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Delete([Required] Guid RouteID)
         {
-            // if admin, leader
-            if (isAdmin() || isLeader())
+            // if admin
+            if (isAdmin())
             {
                 return await service.Delete(RouteID);
             }

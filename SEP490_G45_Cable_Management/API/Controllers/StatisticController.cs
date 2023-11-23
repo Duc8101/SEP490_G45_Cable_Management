@@ -23,8 +23,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<MaterialFluctuationPerYear?>> MaterialFluctuationPerYear(int? MaterialCategoryID, int? WarehouseID, int? year)
         {
-            // if admin or leader
-            if (isAdmin() || isLeader())
+            // if admin or leader , ware keeper
+            if (isAdmin() || isLeader() || isWarehouseKeeper())
             {
                 return await service.MaterialFluctuationPerYear(MaterialCategoryID, WarehouseID, year);
             }
@@ -35,8 +35,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<CableFluctuationPerYear?>> CableFluctuationPerYear(int? CableCategoryID, int? WarehouseID, int? year)
         {
-            // if admin or leader
-            if (isAdmin() || isLeader())
+            // if admin or leader , ware keeper
+            if (isAdmin() || isLeader() || isWarehouseKeeper())
             {
                 return await service.CableFluctuationPerYear(CableCategoryID, WarehouseID, year);
             }
@@ -47,8 +47,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<List<CableCategoryStatistic>?>> CableCategory(int? WarehouseID)
         {
-            // if admin or leader
-            if (isAdmin() || isLeader())
+            // if admin or leader , ware keeper
+            if (isAdmin() || isLeader() || isWarehouseKeeper())
             {
                 return await service.CableCategory(WarehouseID);
             }
@@ -59,8 +59,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<List<OtherMaterialCategoryStatistic>?>> MaterialCategory(int? WarehouseID)
         {
-            // if admin or leader
-            if (isAdmin() || isLeader())
+            // if admin or leader , ware keeper
+            if (isAdmin() || isLeader() || isWarehouseKeeper())
             {
                 return await service.MaterialCategory(WarehouseID);
             }
@@ -71,8 +71,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<List<RouteStatistic>?>> Route([Required] Guid RouteID)
         {
-            // if admin or leader
-            if (isAdmin() || isLeader())
+            // if admin or leader , ware keeper
+            if (isAdmin() || isLeader() || isWarehouseKeeper())
             {
                 return await service.Route(RouteID);
             }

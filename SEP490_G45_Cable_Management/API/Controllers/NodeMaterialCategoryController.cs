@@ -19,14 +19,14 @@ namespace API.Controllers
             this.service = service;
         }
 
-        [HttpPost]
+        [HttpPut("{NodeID}")]
         [Authorize]
-        public async Task<ResponseDTO<bool>> Create([Required] NodeMaterialCategoryCreateDTO DTO)
+        public async Task<ResponseDTO<bool>> Update([Required] Guid NodeID, [Required] NodeMaterialCategoryUpdateDTO DTO)
         {
-            // if admin or leader
-            if (isAdmin() || isLeader())
+            // if admin
+            if (isAdmin())
             {
-                return await service.Create(DTO);
+                return await service.Update(NodeID, DTO);
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
