@@ -24,8 +24,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<CableListDTO>?>> List(string? filter, int? WarehouseID, [Required] bool isExportedToUse = false, [Required] int page = 1)
         {
-            // if admin, warehouse keeper
-            if (isAdmin() || isWarehouseKeeper())
+            // if admin, warehouse keeper, leader
+            if (isAdmin() || isWarehouseKeeper() || isLeader())
             {
                 return await service.ListPaged(filter, WarehouseID, isExportedToUse, page);
             }
@@ -36,12 +36,7 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<List<CableListDTO>?>> List(int? WarehouseID)
         {
-            // if warehouse keeper, staff
-            if (isWarehouseKeeper() || isStaff())
-            {
-                return await service.ListAll(WarehouseID);
-            }
-            return new ResponseDTO<List<CableListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            return await service.ListAll(WarehouseID);
         }
 
         [HttpPost]

@@ -71,12 +71,7 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<List<RouteStatistic>?>> Route([Required] Guid RouteID)
         {
-            // if admin or leader , ware keeper
-            if (isAdmin() || isLeader() || isWarehouseKeeper())
-            {
-                return await service.Route(RouteID);
-            }
-            return new ResponseDTO<List<RouteStatistic>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            return await service.Route(RouteID);
         }
     }
 }

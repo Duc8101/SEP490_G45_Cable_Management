@@ -23,8 +23,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, int? WareHouseID, [Required] int page = 1)
         {
-            // if admin
-            if (isAdmin())
+            // if admin or leader
+            if (isAdmin() || isLeader())
             {
                 return await service.ListPaged(filter, WareHouseID, null, page);
             }
@@ -45,12 +45,7 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<List<OtherMaterialsListDTO>?>> List(int? WareHouseID)
         {
-            // if warehouse keeper or staff
-            if (isWarehouseKeeper() || isStaff())
-            {
-                return await service.ListAll(WareHouseID);
-            }
-            return new ResponseDTO<List<OtherMaterialsListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            return await service.ListAll(WareHouseID);
         }
 
         [HttpPost]

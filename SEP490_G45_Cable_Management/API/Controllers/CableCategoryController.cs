@@ -25,8 +25,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>> List(string? name, [Required] int page = 1)
         {
-            // if admin or leader
-            if (isAdmin() || isLeader())
+            // if admin
+            if (isAdmin())
             {
                 return await service.ListPaged(name, page);
             }
@@ -44,8 +44,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] CableCategoryCreateUpdateDTO DTO)
         {
-            // if admin or leader
-            if (isAdmin() || isLeader())
+            // if admin
+            if (isAdmin())
             {
                 return await service.Create(DTO);
             }
@@ -56,8 +56,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Update([Required] int CableCategoryID, [Required] CableCategoryCreateUpdateDTO DTO)
         {
-            // if admin or leader
-            if (isAdmin() || isLeader())
+            // if admin
+            if (isAdmin())
             {
                 return await service.Update(CableCategoryID, DTO);
             }

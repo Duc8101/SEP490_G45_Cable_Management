@@ -48,59 +48,44 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] RequestCreateExportDTO DTO)
         {
-            // if warehouse keeper or staff
-            if (isWarehouseKeeper() || isStaff())
+            string? CreatorID = getUserID();
+            if (CreatorID == null)
             {
-                string? CreatorID = getUserID();
-                if (CreatorID == null)
-                {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
-                }
-                return await service.CreateRequestExport(DTO, Guid.Parse(CreatorID));
+                return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            return await service.CreateRequestExport(DTO, Guid.Parse(CreatorID));
         }
 
         [HttpPost("Recovery")]
         [Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] RequestCreateRecoveryDTO DTO)
         {
-            // if warehouse keeper or staff
-            if (isWarehouseKeeper() || isStaff())
+            string? CreatorID = getUserID();
+            if (CreatorID == null)
             {
-                string? CreatorID = getUserID();
-                if (CreatorID == null)
-                {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
-                }
-                return await service.CreateRequestRecovery(DTO, Guid.Parse(CreatorID));
+                return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
-
+            return await service.CreateRequestRecovery(DTO, Guid.Parse(CreatorID));
         }
 
         [HttpPost("Deliver")]
         [Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] RequestCreateDeliverDTO DTO)
         {
-            if (isWarehouseKeeper() || isStaff())
+            string? CreatorID = getUserID();
+            if (CreatorID == null)
             {
-                string? CreatorID = getUserID();
-                if (CreatorID == null)
-                {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
-                }
-                return await service.CreateRequestDeliver(DTO, Guid.Parse(CreatorID));
+                return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            return await service.CreateRequestDeliver(DTO, Guid.Parse(CreatorID));
         }
 
         [HttpPut("{RequestID}")]
         [Authorize]
         public async Task<ResponseDTO<bool>> Approve([Required] Guid RequestID)
         {
-            // if admin
-            if (isAdmin())
+            // if admin or leader
+            if (isAdmin() || isLeader())
             {
                 string? ApproverID = getUserID();
                 string? FirstName = getFirstName();
@@ -122,8 +107,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Reject([Required] Guid RequestID)
         {
-            // if admin
-            if (isAdmin())
+            // if admin or leader
+            if (isAdmin() || isLeader())
             {
                 string? RejectorID = getUserID();
                 if (RejectorID == null)
@@ -139,20 +124,15 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<List<CableListDTO>?>> SuggestionCable(SuggestionCableDTO suggestion)
         {
-            // if warehousekeeper or staff
-            if (isWarehouseKeeper() || isStaff())
-            {
-                return await service.SuggestionCable(suggestion);
-            }
-            return new ResponseDTO<List<CableListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            return await service.SuggestionCable(suggestion);
         }
 
         [HttpPost("Cancel-Inside-Warehouse")]
         [Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] RequestCreateCancelInsideDTO DTO)
         {
-            // if warehousekeeper or staff
-            if (isWarehouseKeeper() || isStaff())
+            // if admin or warehouse keeper or staff
+            if (isAdmin() || isWarehouseKeeper() || isStaff())
             {
                 string? CreatorID = getUserID();
                 if (CreatorID == null)
@@ -168,8 +148,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] RequestCreateCancelOutsideDTO DTO)
         {
-            // if warehousekeeper or staff
-            if (isWarehouseKeeper() || isStaff())
+            // if admin or warehouse keeper or staff
+            if (isAdmin() || isWarehouseKeeper() || isStaff())
             {
                 string? CreatorID = getUserID();
                 if (CreatorID == null)
@@ -185,24 +165,14 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Delete([Required] Guid RequestID)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.Delete(RequestID);
-            }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            return await service.Delete(RequestID);
         }
 
         [HttpGet("{RequestID}")]
         [Authorize]
         public async Task<ResponseDTO<RequestDetailDTO?>> Detail([Required] Guid RequestID)
         {
-            // if admin, warehousekeeper, staff
-            if (isAdmin() || isWarehouseKeeper() || isStaff())
-            {
-                return await service.Detail(RequestID);
-            }
-            return new ResponseDTO<RequestDetailDTO?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            return await service.Detail(RequestID);
         }
     }
 }

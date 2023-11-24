@@ -23,12 +23,7 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<List<NodeListDTO>?>> List([Required] Guid RouteID)
         {
-            // if admin or leader
-            if (isAdmin() || isLeader())
-            {
-                return await service.List(RouteID);
-            }
-            return new ResponseDTO<List<NodeListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            return await service.List(RouteID);
         }
 
         [HttpPost]
@@ -47,12 +42,7 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<NodeListDTO?>> Detail([Required] Guid NodeID)
         {
-            // if admin or leader
-            if (isAdmin() || isLeader())
-            {
-                return await service.Detail(NodeID);
-            }
-            return new ResponseDTO<NodeListDTO?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            return await service.Detail(NodeID);
         }
 
         [HttpPut("{NodeID}")]

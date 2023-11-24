@@ -24,8 +24,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>> List(string? name, [Required] int page = 1)
         {
-            // if admin or leader
-            if (isAdmin() || isLeader())
+            // if admin
+            if (isAdmin())
             {
                 return await service.ListPaged(name, page);
             }
@@ -43,8 +43,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
-            // if admin or leader
-            if (isAdmin() || isLeader())
+            // if admin
+            if (isAdmin())
             {
                 return await service.Create(DTO);
             }
@@ -55,8 +55,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<bool>> Update([Required] int OtherMaterialsCategoryID, [Required] OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
-            // if admin or leader
-            if (isAdmin() || isLeader())
+            // if admin
+            if (isAdmin())
             {
                 return await service.Update(OtherMaterialsCategoryID, DTO);
             }

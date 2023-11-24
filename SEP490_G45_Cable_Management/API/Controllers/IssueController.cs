@@ -31,12 +31,7 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List([Required] int page = 1)
         {
-            // if admin, leader, staff
-            if (isAdmin() || isLeader() || isStaff())
-            {
-                return await service.ListPagedDoing(page);
-            }
-            return new ResponseDTO<PagedResultDTO<IssueListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            return await service.ListPagedDoing(page);         
         }
 
         [HttpGet("Doing")]

@@ -16,7 +16,7 @@ namespace API.Services.Service
     {
         private readonly DAONode daoNode = new DAONode();
         private readonly DAONodeMaterialCategory daoCategory = new DAONodeMaterialCategory();
-        private async Task<List<NodeMaterialCategoryListDTO>> getListCategory(Guid NodeID)
+        private async Task<List<NodeMaterialCategoryListDTO>> getListNodeCategory(Guid NodeID)
         {
             List<NodeMaterialCategory> NodeMaterialCategories = await daoCategory.getList(NodeID);
             List<NodeMaterialCategoryListDTO> list = new List<NodeMaterialCategoryListDTO>();
@@ -37,7 +37,7 @@ namespace API.Services.Service
             List<NodeListDTO> result = new List<NodeListDTO>();
             foreach (Node node in list)
             {
-                List<NodeMaterialCategoryListDTO> categories = await getListCategory(node.Id);
+                List<NodeMaterialCategoryListDTO> categories = await getListNodeCategory(node.Id);
                 NodeListDTO DTO = new NodeListDTO()
                 {
                     Id = node.Id,
@@ -162,7 +162,7 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<NodeListDTO?>(null, "Không tìm thấy điểm", (int) HttpStatusCode.NotFound);
                 }
-                List<NodeMaterialCategoryListDTO> list = await getListCategory(NodeID);
+                List<NodeMaterialCategoryListDTO> list = await getListNodeCategory(NodeID);
                 NodeListDTO nodeDTO = new NodeListDTO()
                 {
                     Id = node.Id,

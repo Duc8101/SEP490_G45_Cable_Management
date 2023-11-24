@@ -24,8 +24,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>> List(string? filter, int? WareHouseID, [Required] int page = 1)
         {
-            // if admin or leader
-            if (isAdmin() || isLeader())
+            // if admin
+            if (isAdmin())
             {
                 return await service.List(filter, WareHouseID, page);
             }
