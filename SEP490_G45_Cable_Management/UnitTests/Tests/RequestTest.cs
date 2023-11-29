@@ -216,7 +216,7 @@ namespace UnitTests.Tests
                         Is.EqualTo("Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập"));
         }
 
-        [Test]
+/*        [Test]
         public async Task SuggestionCable_WhenUserNotWarehouseKeeperOrStaff_ReturnsForbiddenResponse()
         {
             // Arrange
@@ -234,7 +234,7 @@ namespace UnitTests.Tests
             Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập trang này"));
             Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
         }
-
+*/
         [Test]
         public async Task Create_CancelInside_WhenUserNotWarehouseKeeperOrStaff_ReturnsForbiddenResponse()
         {
@@ -1295,8 +1295,8 @@ namespace UnitTests.Tests
             Assert.ThrowsAsync<Exception>(async () => await controller.Reject(requestID));
         }
 
-        [Test]
-        public async Task SuggestionCable_WhenWarehouseChosen_ReturnsCorrectResponse()
+        //[Test]
+/*        public async Task SuggestionCable_WhenWarehouseChosen_ReturnsCorrectResponse()
         {
             // Arrange
             var suggestionCableDTOSample =
@@ -1337,8 +1337,8 @@ namespace UnitTests.Tests
             Assert.That(result.Data, Is.Not.Null);
             Assert.That(result.Message, Is.EqualTo(string.Empty));
         }
-
-        [Test]
+*/
+/*        [Test]
         public void SuggestionCable_WhenChoosingWarehouse_ThrowsException()
         {
             // Arrange
@@ -1359,7 +1359,7 @@ namespace UnitTests.Tests
             Assert.ThrowsAsync<Exception>(async () =>
                                               await controller.SuggestionCable(suggestionCableDTOSample));
         }
-
+*/
         [Test]
         public async Task CreateCancelInside_WhenRequestNameIsEmpty_ReturnsConflictResponse()
         {

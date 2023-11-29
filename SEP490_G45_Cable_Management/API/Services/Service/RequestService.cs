@@ -1225,7 +1225,7 @@ namespace API.Services.Service
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<List<CableListDTO>?>> SuggestionCable(SuggestionCableDTO suggestion)
+/*        public async Task<ResponseDTO<List<CableListDTO>?>> SuggestionCable(SuggestionCableDTO suggestion)
         {
             try
             {
@@ -1278,7 +1278,7 @@ namespace API.Services.Service
                 return new ResponseDTO<List<CableListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        // check cable valid when create request cancel inside 
+*/        // check cable valid when create request cancel inside 
         private async Task<ResponseDTO<bool>> isCableValidCreateCancelInside(List<CableCancelInsideDTO> list)
         {
             if (list.Count == 0)
