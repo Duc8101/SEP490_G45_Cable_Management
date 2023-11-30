@@ -120,13 +120,6 @@ namespace API.Controllers
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
-/*        [HttpPost]
-        [Authorize]
-        public async Task<ResponseDTO<List<CableListDTO>?>> SuggestionCable(SuggestionCableDTO suggestion)
-        {
-            return await service.SuggestionCable(suggestion);
-        }
-*/
         [HttpPost("Cancel-Inside-Warehouse")]
         [Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] RequestCreateCancelInsideDTO DTO)

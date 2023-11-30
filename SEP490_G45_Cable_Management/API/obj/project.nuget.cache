@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "mGexMJVgITp2sgjOSRTYMrJYCdeiTQdJtxlQmA0Us6mVx4vKI294VHUM3xY6QS5JC4r++Z+sQ4ILsgj2RFqahg==",
+  "dgSpecHash": "auZxzXhFOTT1IgaYBZlR8rrH/SlMdWCCfTuMb0nbZKb3McID9yBirDVbhhDDVM2Aowr/xrXFiktJ6FT8g6s93w==",
   "success": true,
   "projectFilePath": "D:\\SEP490\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\API\\API.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Admin\\.nuget\\packages\\awssdk.core\\3.7.300.12\\awssdk.core.3.7.300.12.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\awssdk.simpleemail\\3.7.300.12\\awssdk.simpleemail.3.7.300.12.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\bouncycastle.cryptography\\2.2.1\\bouncycastle.cryptography.2.2.1.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\mailkit\\4.2.0\\mailkit.4.2.0.nupkg.sha512",

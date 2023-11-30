@@ -13,12 +13,18 @@ using DataAccess.Entity;
 using Org.BouncyCastle.Asn1.Ocsp;
 using API.Model.DAO;
 using DataAccess.Const;
+using Amazon;
+using System;
+using Amazon.SimpleEmail;
+using Amazon.SimpleEmail.Model;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace API.Model.Util
 {
     public class UserUtil
     {
         private const int MAX_SIZE = 8; // randow password 8 characters
+        private const string SENDER_EMAIL = "phong0246802468@gmail.com";
         public static string HashPassword(string password)
         {
             // using SHA256 for hash password
@@ -51,10 +57,34 @@ namespace API.Model.Util
                             "<p>Mật khẩu của bạn là: " + password + "</p>\n";
             return body;
         }
-        public static Task sendEmail(string subject, string body, string to)
+        public static async Task sendEmail(string subject, string body, string to)
         {
-            // get information of mail address
-            ConfigurationBuilder builder = new ConfigurationBuilder();
+            using (var client = new AmazonSimpleEmailServiceClient(RegionEndpoint.USWest2))
+            {
+                SendEmailRequest sendRequest = new SendEmailRequest
+                {
+                    Source = SENDER_EMAIL,
+                    Destination = new Destination
+                    {
+                        ToAddresses = new List<string> { to }
+                    },
+                    Message = new Message
+                    {
+                        Subject = new Content(subject),
+                        Body = new Body
+                        {
+                            Html = new Content
+                            {
+                                Charset = "UTF-8",
+                                Data = body
+                            },
+                        }
+                    },
+                };
+                await client.SendEmailAsync(sendRequest);
+            }
+/*                // get information of mail address
+                ConfigurationBuilder builder = new ConfigurationBuilder();
             IConfigurationRoot config = builder.SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true).Build();
             IConfigurationSection mail = config.GetSection("MailAddress");
@@ -71,8 +101,8 @@ namespace API.Model.Util
             smtp.Connect(mail["Host"]);
             smtp.Authenticate(mail["Username"], mail["Password"]);
             smtp.Send(mime);
-            smtp.Disconnect(true);
-            return Task.CompletedTask;
+            smtp.Disconnect(true);*/
+            //return Task.CompletedTask;
         }
         public static string BodyEmailForForgetPassword(string password)
         {
