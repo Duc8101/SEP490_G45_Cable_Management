@@ -59,7 +59,7 @@ namespace API.Model.Util
         }
         public static async Task sendEmail(string subject, string body, string to)
         {
-            using (var client = new AmazonSimpleEmailServiceClient(RegionEndpoint.USWest2))
+            using (var client = new AmazonSimpleEmailServiceClient(RegionEndpoint.APSoutheast1))
             {
                 SendEmailRequest sendRequest = new SendEmailRequest
                 {
