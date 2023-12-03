@@ -4,11 +4,7 @@ using DataAccess.DTO;
 using DataAccess.DTO.NodeDTO;
 using DataAccess.DTO.NodeMaterialCategoryDTO;
 using DataAccess.Entity;
-using MimeKit.Cryptography;
-using Org.BouncyCastle.Utilities.Net;
-using System.Collections.Generic;
 using System.Net;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace API.Services.Service
 {
@@ -49,6 +45,7 @@ namespace API.Services.Service
                     Status = node.Status,
                     RouteId = node.RouteId,
                     Note = node.Note,
+                    NumberOrder = node.NumberOrder,
                     //NodeCables = (List<NodeCable>)node.NodeCables,
                     //NodeMaterials = (List<NodeMaterial>)node.NodeMaterials,
                     NodeMaterialCategoryListDTOs = categories
@@ -158,9 +155,9 @@ namespace API.Services.Service
             {
                 Node? node = await daoNode.getNode(NodeID);
                 // if not found
-                if(node == null)
+                if (node == null)
                 {
-                    return new ResponseDTO<NodeListDTO?>(null, "Không tìm thấy điểm", (int) HttpStatusCode.NotFound);
+                    return new ResponseDTO<NodeListDTO?>(null, "Không tìm thấy điểm", (int)HttpStatusCode.NotFound);
                 }
                 List<NodeMaterialCategoryListDTO> list = await getListNodeCategory(NodeID);
                 NodeListDTO nodeDTO = new NodeListDTO()
@@ -174,6 +171,7 @@ namespace API.Services.Service
                     Status = node.Status,
                     RouteId = node.RouteId,
                     Note = node.Note,
+                    NumberOrder = node.NumberOrder,
                     //NodeCables = (List<NodeCable>)node.NodeCables,
                     //NodeMaterials = (List<NodeMaterial>)node.NodeMaterials,
                     NodeMaterialCategoryListDTOs = list
@@ -227,6 +225,6 @@ namespace API.Services.Service
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        
+
     }
 }
