@@ -1,23 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
-using MimeKit;
-using MailKit.Net.Smtp;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
-using DataAccess.Entity;
-using Org.BouncyCastle.Asn1.Ocsp;
-using API.Model.DAO;
-using DataAccess.Const;
-using Amazon;
-using System;
+﻿using Amazon;
 using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using API.Model.DAO;
+using DataAccess.Const;
+using DataAccess.Entity;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace API.Model.Util
 {
@@ -83,25 +71,25 @@ namespace API.Model.Util
                 };
                 await client.SendEmailAsync(sendRequest);
             }
-/*                // get information of mail address
-                ConfigurationBuilder builder = new ConfigurationBuilder();
-            IConfigurationRoot config = builder.SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", true, true).Build();
-            IConfigurationSection mail = config.GetSection("MailAddress");
-            // create message to send
-            MimeMessage mime = new MimeMessage();
-            MailboxAddress mailFrom = MailboxAddress.Parse(mail["Username"]);
-            MailboxAddress mailTo = MailboxAddress.Parse(to);
-            mime.From.Add(mailFrom);
-            mime.To.Add(mailTo);
-            mime.Subject = subject;
-            mime.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = body };
-            // send message
-            SmtpClient smtp = new SmtpClient();
-            smtp.Connect(mail["Host"]);
-            smtp.Authenticate(mail["Username"], mail["Password"]);
-            smtp.Send(mime);
-            smtp.Disconnect(true);*/
+            /*                // get information of mail address
+                            ConfigurationBuilder builder = new ConfigurationBuilder();
+                        IConfigurationRoot config = builder.SetBasePath(Directory.GetCurrentDirectory())
+                            .AddJsonFile("appsettings.json", true, true).Build();
+                        IConfigurationSection mail = config.GetSection("MailAddress");
+                        // create message to send
+                        MimeMessage mime = new MimeMessage();
+                        MailboxAddress mailFrom = MailboxAddress.Parse(mail["Username"]);
+                        MailboxAddress mailTo = MailboxAddress.Parse(to);
+                        mime.From.Add(mailFrom);
+                        mime.To.Add(mailTo);
+                        mime.Subject = subject;
+                        mime.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = body };
+                        // send message
+                        SmtpClient smtp = new SmtpClient();
+                        smtp.Connect(mail["Host"]);
+                        smtp.Authenticate(mail["Username"], mail["Password"]);
+                        smtp.Send(mime);
+                        smtp.Disconnect(true);*/
             //return Task.CompletedTask;
         }
         public static string BodyEmailForForgetPassword(string password)
@@ -122,7 +110,7 @@ namespace API.Model.Util
             body = body + "<p>Vui lòng kiểm tra chi tiết yêu cầu</p>\n";
             return body;
         }
-        public static async Task<string> BodyEmailForApproveRequest(DataAccess.Entity.Request request, string ApproverName)
+        public static async Task<string> BodyEmailForApproveRequest(Request request, string ApproverName)
         {
             DAORequestCable daoRequestCable = new DAORequestCable();
             DAORequestOtherMaterial daoRequestMaterial = new DAORequestOtherMaterial();
@@ -160,7 +148,8 @@ namespace API.Model.Util
                             builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " được hủy trong kho " + item.RecoveryDestWarehouse.WarehouseName
                                 + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
                         }
-                    }else if(request.RequestCategoryId == RequestCategoryConst.CATEGORY_CANCEL_OUTSIDE)
+                    }
+                    else if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_CANCEL_OUTSIDE)
                     {
                         builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName
                            + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
@@ -189,7 +178,8 @@ namespace API.Model.Util
                             builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " được hủy trong kho " +
                                 item.RecoveryDestWarehouse.WarehouseName + ", số lượng: " + item.Quantity + "</p>");
                         }
-                    }else if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_CANCEL_OUTSIDE)
+                    }
+                    else if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_CANCEL_OUTSIDE)
                     {
                         builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + ", số lượng: " + item.Quantity + "</p>");
                     }

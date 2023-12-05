@@ -1,6 +1,5 @@
-﻿using DataAccess.DTO.RequestDTO;
-using DataAccess.DTO;
-using DataAccess.DTO.CableDTO;
+﻿using DataAccess.DTO;
+using DataAccess.DTO.RequestDTO;
 
 namespace API.Services.IService
 {
@@ -12,7 +11,6 @@ namespace API.Services.IService
         Task<ResponseDTO<bool>> CreateRequestDeliver(RequestCreateDeliverDTO DTO, Guid CreatorID);
         Task<ResponseDTO<bool>> Approve(Guid RequestID, Guid ApproverID, string ApproverName);
         Task<ResponseDTO<bool>> Reject(Guid RequestID, Guid RejectorID);
-        //Task<ResponseDTO<List<CableListDTO>?>> SuggestionCable(SuggestionCableDTO suggestion);
         Task<ResponseDTO<bool>> CreateRequestCancelInside(RequestCreateCancelInsideDTO DTO, Guid CreatorID);
         Task<ResponseDTO<bool>> CreateRequestCancelOutside(RequestCreateCancelOutsideDTO DTO, Guid CreatorID);
         Task<ResponseDTO<bool>> Delete(Guid RequestID);

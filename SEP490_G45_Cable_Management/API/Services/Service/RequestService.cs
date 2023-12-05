@@ -26,9 +26,9 @@ namespace API.Services.Service
         private readonly DAOWarehouse daoWarehouse = new DAOWarehouse();
         private async Task<List<RequestListDTO>> getList(string? name, int? RequestCategoryID, string? status, Guid? CreatorID, int page)
         {
-            List<DataAccess.Entity.Request> list = await daoRequest.getListAll(name, RequestCategoryID, status, CreatorID, page);
+            List<Request> list = await daoRequest.getListAll(name, RequestCategoryID, status, CreatorID, page);
             List<RequestListDTO> result = new List<RequestListDTO>();
-            foreach (DataAccess.Entity.Request item in list)
+            foreach (Request item in list)
             {
                 RequestListDTO DTO = new RequestListDTO()
                 {
@@ -290,7 +290,7 @@ namespace API.Services.Service
             }
             return new ResponseDTO<bool>(true, string.Empty);
         }
-        private async Task UpdateRequest(DataAccess.Entity.Request request, Guid ID, string status)
+        private async Task UpdateRequest(Request request, Guid ID, string status)
         {
             request.ApproverId = ID;
             request.Status = status;
@@ -298,12 +298,12 @@ namespace API.Services.Service
             await daoRequest.UpdateRequest(request);
         }
         // send email to creator after approve request
-        private async Task sendEmailToCreator(DataAccess.Entity.Request request, string ApproverName)
+        private async Task sendEmailToCreator(Request request, string ApproverName)
         {
             string body = await UserUtil.BodyEmailForApproveRequest(request, ApproverName);
             await UserUtil.sendEmail("Thông báo yêu cầu được phê duyệt", body, request.Creator.Email);
         }
-        private async Task CreateTransaction(DataAccess.Entity.Request request, List<int> listCableWarehouseID, List<Cable> listCable, List<int> listMaterialWarehouseID, List<int> listMaterialID, List<int> listQuantity, bool? action)
+        private async Task CreateTransaction(Request request, List<int> listCableWarehouseID, List<Cable> listCable, List<int> listMaterialWarehouseID, List<int> listMaterialID, List<int> listQuantity, bool? action)
         {
             string CategoryName;
             int? FromWarehouseID = null;
@@ -410,7 +410,7 @@ namespace API.Services.Service
             }
 
         }
-        private async Task<ResponseDTO<bool>> ApproveRequestExportDeliverCancelInside(Guid ApproverID, DataAccess.Entity.Request request, string ApproverName)
+        private async Task<ResponseDTO<bool>> ApproveRequestExportDeliverCancelInside(Guid ApproverID, Request request, string ApproverName)
         {
             List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
             List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(request.RequestId);
@@ -466,7 +466,7 @@ namespace API.Services.Service
             await sendEmailToCreator(request, ApproverName);
             return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
         }
-        private async Task<Dictionary<string, object>> ApproveRequestExport(DataAccess.Entity.Request request, List<RequestCable> requestCables, List<RequestOtherMaterial> requestMaterials)
+        private async Task<Dictionary<string, object>> ApproveRequestExport(Request request, List<RequestCable> requestCables, List<RequestOtherMaterial> requestMaterials)
         {
             Dictionary<string, object> result = new Dictionary<string, object>();
             // list cable
@@ -571,7 +571,7 @@ namespace API.Services.Service
             return result;
 
         }
-        private async Task<Dictionary<string, object>> ApproveRequestDeliver(DataAccess.Entity.Request request, List<RequestCable> requestCables, List<RequestOtherMaterial> requestMaterials)
+        private async Task<Dictionary<string, object>> ApproveRequestDeliver(Request request, List<RequestCable> requestCables, List<RequestOtherMaterial> requestMaterials)
         {
             Dictionary<string, object> result = new Dictionary<string, object>();
             // list cable
@@ -1047,7 +1047,7 @@ namespace API.Services.Service
             }
             return new ResponseDTO<bool>(true, string.Empty);
         }
-        private async Task<ResponseDTO<bool>> ApproveRequestRecovery(Guid ApproverID, DataAccess.Entity.Request request, string ApproverName)
+        private async Task<ResponseDTO<bool>> ApproveRequestRecovery(Guid ApproverID, Request request, string ApproverName)
         {
             List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
             List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(request.RequestId);
@@ -1123,7 +1123,7 @@ namespace API.Services.Service
         {
             try
             {
-                DataAccess.Entity.Request? request = await daoRequest.getRequest(RequestID);
+                Request? request = await daoRequest.getRequest(RequestID);
                 if (request == null)
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
@@ -1466,7 +1466,7 @@ namespace API.Services.Service
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> ApproveRequestCancelOutside(Guid ApproverID, DataAccess.Entity.Request request, string ApproverName)
+        public async Task<ResponseDTO<bool>> ApproveRequestCancelOutside(Guid ApproverID, Request request, string ApproverName)
         {
             List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
             if (requestCables.Count > 0)

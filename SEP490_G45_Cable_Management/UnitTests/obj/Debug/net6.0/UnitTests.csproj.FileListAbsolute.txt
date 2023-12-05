@@ -157,3 +157,5 @@ D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\UnitTests\obj\
 D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\UnitTests\obj\Debug\net6.0\ref\UnitTests.dll
 D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\UnitTests\bin\Debug\net6.0\Castle.Core.dll
 D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\UnitTests\bin\Debug\net6.0\Moq.dll
+D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\UnitTests\bin\Debug\net6.0\AWSSDK.Core.dll
+D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\UnitTests\bin\Debug\net6.0\AWSSDK.SimpleEmail.dll
