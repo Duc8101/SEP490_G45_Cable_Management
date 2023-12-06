@@ -35,7 +35,6 @@ namespace UnitTests.Tests
             Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
         }
 
-
         [Test]
         public async Task List_WhenWarehouseKeeperIDNotFound_ReturnsNotFoundResponse()
         {
@@ -43,7 +42,8 @@ namespace UnitTests.Tests
             string filter = "SampleFilter";
             int page = 1;
 
-            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            TestHelper.SimulateUserWithRoleWithoutID(
+              controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
 
             // Act
             var result = await controller.List(filter, null, page);
@@ -51,8 +51,10 @@ namespace UnitTests.Tests
             // Assert
             Assert.IsNotNull(result);
             Assert.IsNull(result.Data);
-            Assert.That(result.Message,
-                        Is.EqualTo("Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập"));
+            Assert.That(
+              result.Message,
+              Is.EqualTo(
+                "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập"));
             Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.NotFound));
         }
 
@@ -62,16 +64,20 @@ namespace UnitTests.Tests
             // Arrange
             string filter = "SampleFilter";
             int page = 1;
-            int? warehouseId = 123;  // Sample warehouse ID
-            Guid warehouseKeeperId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            int? warehouseId = 123; // Sample warehouse ID
+            Guid warehouseKeeperId = TestHelper.SimulateUserWithRoleAndId(
+              controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
 
-            otherMaterialsService.Setup(x => x.ListPaged(filter, warehouseId, warehouseKeeperId, page))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(
-                    new PagedResultDTO<OtherMaterialsListDTO>(page, 10,
-                                                              PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE,
-                                                              new List<OtherMaterialsListDTO>(), 100),
-                    string.Empty));
+            otherMaterialsService
+              .Setup(x => x.ListPaged(filter, warehouseId, warehouseKeeperId, page))
+              .ReturnsAsync(new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(
+                new PagedResultDTO<OtherMaterialsListDTO>(
+                  page,
+                  10,
+                  PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE,
+                  new List<OtherMaterialsListDTO>(),
+                  100),
+                string.Empty));
 
             // Act
             var result = await controller.List(filter, warehouseId, page);
@@ -90,15 +96,18 @@ namespace UnitTests.Tests
             // Arrange
             string filter = "SampleFilter";
             int page = 1;
-            int? warehouseId = 123;  // Sample warehouse ID
+            int? warehouseId = 123; // Sample warehouse ID
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.ListPaged(filter, warehouseId, null, page))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(
-                    new PagedResultDTO<OtherMaterialsListDTO>(page, 10,
-                                                              PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE,
-                                                              new List<OtherMaterialsListDTO>(), 100),
-                    string.Empty));
+              .ReturnsAsync(new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(
+                new PagedResultDTO<OtherMaterialsListDTO>(
+                  page,
+                  10,
+                  PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE,
+                  new List<OtherMaterialsListDTO>(),
+                  100),
+                string.Empty));
 
             // Act
             var result = await controller.List(filter, warehouseId, page);
@@ -113,14 +122,16 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task Create_WhenNotAdminNorWarehouseKeeper_ReturnsForbiddenResponse()
+        public async Task
+        Create_WhenNotAdminNorWarehouseKeeper_ReturnsForbiddenResponse()
         {
             // Arrange
             var otherMaterialsCreateUpdateDTO = new OtherMaterialsCreateUpdateDTO { };
 
             TestHelper.SimulateUserWithRoleAndId(
-                controller,
-                RoleConst.STRING_ROLE_LEADER);  // Set a user role that is not admin or warehouse keeper
+              controller,
+              RoleConst.STRING_ROLE_LEADER); // Set a user role that is not admin or
+                                             // warehouse keeper
 
             // Act
             var result = await controller.Create(otherMaterialsCreateUpdateDTO);
@@ -135,13 +146,14 @@ namespace UnitTests.Tests
         public async Task Create_WhenQuantityIsNegative_ReturnsConflictResponse()
         {
             // Arrange
-            var otherMaterialsCreateUpdateDTO = new OtherMaterialsCreateUpdateDTO { Quantity = -100 };
+            var otherMaterialsCreateUpdateDTO =
+              new OtherMaterialsCreateUpdateDTO { Quantity = -100 };
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
-                .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Số lượng không hợp lệ", (int)HttpStatusCode.Conflict));
+              .ReturnsAsync(new ResponseDTO<bool>(
+                false, "Số lượng không hợp lệ", (int)HttpStatusCode.Conflict));
 
             // Act
             var result = await controller.Create(otherMaterialsCreateUpdateDTO);
@@ -170,8 +182,8 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Mã hàng không được để trống",
-                                                    (int)HttpStatusCode.Conflict));
+              .ReturnsAsync(new ResponseDTO<bool>(
+                false, "Mã hàng không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
             var result = await controller.Create(otherMaterialsCreateUpdateDTO);
@@ -187,22 +199,21 @@ namespace UnitTests.Tests
         public async Task Create_WhenStatusIsEmpty_ReturnsErrorResponse()
         {
             // Arrange
-            var otherMaterialsCreateUpdateDTO =
-                new OtherMaterialsCreateUpdateDTO
-                {
-                    Unit = "SampleUnit",
-                    Quantity = 10,
-                    Code = "SampleCode",
-                    WarehouseId = 1,
-                    Status = "      ",
-                    OtherMaterialsCategoryId = 1
-                };
+            var otherMaterialsCreateUpdateDTO = new OtherMaterialsCreateUpdateDTO
+            {
+                Unit = "SampleUnit",
+                Quantity = 10,
+                Code = "SampleCode",
+                WarehouseId = 1,
+                Status = "      ",
+                OtherMaterialsCategoryId = 1
+            };
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Trạng thái không được để trống",
-                                                    (int)HttpStatusCode.Conflict));
+              .ReturnsAsync(new ResponseDTO<bool>(
+                false, "Trạng thái không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
             var result = await controller.Create(otherMaterialsCreateUpdateDTO);
@@ -219,21 +230,20 @@ namespace UnitTests.Tests
         public async Task Create_WhenWarehouseIdIsNull_ReturnsErrorResponse()
         {
             // Arrange
-            var otherMaterialsCreateUpdateDTO =
-                new OtherMaterialsCreateUpdateDTO
-                {
-                    Unit = "SampleUnit",
-                    Quantity = 10,
-                    Code = "SampleCode",
-                    WarehouseId = null,
-                    Status = "SampleStatus",
-                    OtherMaterialsCategoryId = 1
-                };
+            var otherMaterialsCreateUpdateDTO = new OtherMaterialsCreateUpdateDTO
+            {
+                Unit = "SampleUnit",
+                Quantity = 10,
+                Code = "SampleCode",
+                WarehouseId = null,
+                Status = "SampleStatus",
+                OtherMaterialsCategoryId = 1
+            };
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
-                .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Kho không được để trống", (int)HttpStatusCode.Conflict));
+              .ReturnsAsync(new ResponseDTO<bool>(
+                false, "Kho không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
             var result = await controller.Create(otherMaterialsCreateUpdateDTO);
@@ -249,21 +259,20 @@ namespace UnitTests.Tests
         public async Task Create_WhenMaterialIsNull_ReturnsSuccessResponse()
         {
             // Arrange
-            var otherMaterialsCreateUpdateDTO =
-                new OtherMaterialsCreateUpdateDTO
-                {
-                    Unit = "SampleUnit",
-                    Quantity = 10,
-                    Code = "SampleCode",
-                    WarehouseId = 1,
-                    Status = "SampleStatus",
-                    OtherMaterialsCategoryId = 1
-                };
+            var otherMaterialsCreateUpdateDTO = new OtherMaterialsCreateUpdateDTO
+            {
+                Unit = "SampleUnit",
+                Quantity = 10,
+                Code = "SampleCode",
+                WarehouseId = 1,
+                Status = "SampleStatus",
+                OtherMaterialsCategoryId = 1
+            };
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
+              .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
 
             // Act
             var result = await controller.Create(otherMaterialsCreateUpdateDTO);
@@ -281,23 +290,22 @@ namespace UnitTests.Tests
         public async Task Create_WhenMaterialIsNotNull_ReturnsSuccessResponse()
         {
             // Arrange
-            var otherMaterialsCreateUpdateDTO =
-                new OtherMaterialsCreateUpdateDTO
-                {
-                    Unit = "SampleUnit",
-                    Quantity = 10,
-                    Code = "SampleCode",
-                    WarehouseId = 1,
-                    Status = "SampleStatus",
-                    OtherMaterialsCategoryId = 1
-                };
+            var otherMaterialsCreateUpdateDTO = new OtherMaterialsCreateUpdateDTO
+            {
+                Unit = "SampleUnit",
+                Quantity = 10,
+                Code = "SampleCode",
+                WarehouseId = 1,
+                Status = "SampleStatus",
+                OtherMaterialsCategoryId = 1
+            };
 
             OtherMaterial existingMaterial = new OtherMaterial { };
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
+              .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
 
             // Act
             var result = await controller.Create(otherMaterialsCreateUpdateDTO);
@@ -316,50 +324,53 @@ namespace UnitTests.Tests
         {
             // Arrange
             int otherMaterialsID = 1;
-            var otherMaterialsCreateUpdateDTO =
-                new OtherMaterialsCreateUpdateDTO
-                {
-                    Unit = "SampleUnit",
-                    Quantity = 10,
-                    Code = "SampleCode",
-                    WarehouseId = 1,
-                    Status = "SampleStatus",
-                    OtherMaterialsCategoryId = 1
-                };
+            var otherMaterialsCreateUpdateDTO = new OtherMaterialsCreateUpdateDTO
+            {
+                Unit = "SampleUnit",
+                Quantity = 10,
+                Code = "SampleCode",
+                WarehouseId = 1,
+                Status = "SampleStatus",
+                OtherMaterialsCategoryId = 1
+            };
 
             OtherMaterial existingMaterial =
-                new OtherMaterial
-                {
-                    OtherMaterialsId = 1,
-                    Unit = "SampleUnit",
-                    Quantity = 50,
-                    Code = "SampleCode",
-                    SupplierId = 1,
-                    CreatedAt = new DateTime(2023, 10, 1),
-                    UpdateAt = new DateTime(2023, 10, 15),
-                    IsDeleted = false,
-                    WarehouseId = 1,
-                    MaxQuantity = 100,
-                    MinQuantity = 10,
-                    Status = "Active",
-                    OtherMaterialsCategoryId = 1,
-                    OtherMaterialsCategory = new OtherMaterialsCategory { },
-                    Supplier = new Supplier { },
-                    Warehouse = new Warehouse { },
-                    NodeMaterials = new List<NodeMaterial> { },
-                    RequestOtherMaterials = new List<RequestOtherMaterial> { },
-                    TransactionOtherMaterials = new List<TransactionOtherMaterial> { }
-                };
+              new OtherMaterial
+              {
+                  OtherMaterialsId = 1,
+                  Unit = "SampleUnit",
+                  Quantity = 50,
+                  Code = "SampleCode",
+                  SupplierId = 1,
+                  CreatedAt = new DateTime(2023, 10, 1),
+                  UpdateAt = new DateTime(2023, 10, 15),
+                  IsDeleted = false,
+                  WarehouseId = 1,
+                  MaxQuantity = 100,
+                  MinQuantity = 10,
+                  Status = "Active",
+                  OtherMaterialsCategoryId = 1,
+                  OtherMaterialsCategory = new OtherMaterialsCategory { },
+                  Supplier = new Supplier { },
+                  Warehouse = new Warehouse { },
+                  NodeMaterials = new List<NodeMaterial> { },
+                  RequestOtherMaterials = new List<RequestOtherMaterial> { },
+                  TransactionOtherMaterials =
+                                    new List<TransactionOtherMaterial> { }
+              };
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
-            otherMaterialsService.Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
+            otherMaterialsService
+              .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
+              .ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
 
             // Act
-            var result = await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO);
+            var result =
+              await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO);
 
-            otherMaterialsService.Verify(s => s.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO));
+            otherMaterialsService.Verify(
+              s => s.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO));
 
             // Assert
             Assert.IsNotNull(result);
@@ -373,27 +384,29 @@ namespace UnitTests.Tests
         {
             // Arrange
             int otherMaterialsID = 1;
-            var otherMaterialsCreateUpdateDTO =
-                new OtherMaterialsCreateUpdateDTO
-                {
-                    Unit = "SampleUnit",
-                    Quantity = 10,
-                    Code = "SampleCode",
-                    WarehouseId = 1,
-                    Status = "SampleStatus",
-                    OtherMaterialsCategoryId = 1
-                };
+            var otherMaterialsCreateUpdateDTO = new OtherMaterialsCreateUpdateDTO
+            {
+                Unit = "SampleUnit",
+                Quantity = 10,
+                Code = "SampleCode",
+                WarehouseId = 1,
+                Status = "SampleStatus",
+                OtherMaterialsCategoryId = 1
+            };
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
-            otherMaterialsService.Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
-                .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Không tìm thấy vật liệu", (int)HttpStatusCode.NotFound));
+            otherMaterialsService
+              .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
+              .ReturnsAsync(new ResponseDTO<bool>(
+                false, "Không tìm thấy vật liệu", (int)HttpStatusCode.NotFound));
 
             // Act
-            var result = await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO);
+            var result =
+              await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO);
 
-            otherMaterialsService.Verify(s => s.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO));
+            otherMaterialsService.Verify(
+              s => s.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO));
 
             // Assert
             Assert.IsNotNull(result);
@@ -419,14 +432,17 @@ namespace UnitTests.Tests
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
-            otherMaterialsService.Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Mã hàng không được để trống",
-                                                    (int)HttpStatusCode.Conflict));
+            otherMaterialsService
+              .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
+              .ReturnsAsync(new ResponseDTO<bool>(
+                false, "Mã hàng không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
-            var result = await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO);
+            var result =
+              await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO);
 
-            otherMaterialsService.Verify(s => s.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO));
+            otherMaterialsService.Verify(
+              s => s.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO));
 
             // Assert
             Assert.IsNotNull(result);
@@ -440,27 +456,29 @@ namespace UnitTests.Tests
         {
             // Arrange
             int otherMaterialsID = 1;
-            var otherMaterialsCreateUpdateDTO =
-                new OtherMaterialsCreateUpdateDTO
-                {
-                    Unit = string.Empty,
-                    Quantity = 10,
-                    Code = "SampleCode",
-                    WarehouseId = 1,
-                    Status = "SampleStatus",
-                    OtherMaterialsCategoryId = 1
-                };
+            var otherMaterialsCreateUpdateDTO = new OtherMaterialsCreateUpdateDTO
+            {
+                Unit = string.Empty,
+                Quantity = 10,
+                Code = "SampleCode",
+                WarehouseId = 1,
+                Status = "SampleStatus",
+                OtherMaterialsCategoryId = 1
+            };
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
-            otherMaterialsService.Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Đơn vị không được để trống",
-                                                    (int)HttpStatusCode.Conflict));
+            otherMaterialsService
+              .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
+              .ReturnsAsync(new ResponseDTO<bool>(
+                false, "Đơn vị không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
-            var result = await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO);
+            var result =
+              await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO);
 
-            otherMaterialsService.Verify(s => s.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO));
+            otherMaterialsService.Verify(
+              s => s.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO));
 
             // Assert
             Assert.IsNotNull(result);
@@ -474,27 +492,29 @@ namespace UnitTests.Tests
         {
             // Arrange
             int otherMaterialsID = 1;
-            var otherMaterialsCreateUpdateDTO =
-                new OtherMaterialsCreateUpdateDTO
-                {
-                    Unit = "SampleUnit",
-                    Quantity = 10,
-                    Code = "SampleCode",
-                    WarehouseId = 1,
-                    Status = string.Empty,
-                    OtherMaterialsCategoryId = 1
-                };
+            var otherMaterialsCreateUpdateDTO = new OtherMaterialsCreateUpdateDTO
+            {
+                Unit = "SampleUnit",
+                Quantity = 10,
+                Code = "SampleCode",
+                WarehouseId = 1,
+                Status = string.Empty,
+                OtherMaterialsCategoryId = 1
+            };
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
-            otherMaterialsService.Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Trạng thái không được để trống",
-                                                    (int)HttpStatusCode.Conflict));
+            otherMaterialsService
+              .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
+              .ReturnsAsync(new ResponseDTO<bool>(
+                false, "Trạng thái không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
-            var result = await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO);
+            var result =
+              await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO);
 
-            otherMaterialsService.Verify(s => s.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO));
+            otherMaterialsService.Verify(
+              s => s.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO));
 
             // Assert
             Assert.IsNotNull(result);
@@ -508,27 +528,29 @@ namespace UnitTests.Tests
         {
             // Arrange
             int otherMaterialsID = 1;
-            var otherMaterialsCreateUpdateDTO =
-                new OtherMaterialsCreateUpdateDTO
-                {
-                    Unit = "SampleUnit",
-                    Quantity = 10,
-                    Code = "SampleCode",
-                    WarehouseId = null,
-                    Status = "SampleStatus",
-                    OtherMaterialsCategoryId = 1
-                };
+            var otherMaterialsCreateUpdateDTO = new OtherMaterialsCreateUpdateDTO
+            {
+                Unit = "SampleUnit",
+                Quantity = 10,
+                Code = "SampleCode",
+                WarehouseId = null,
+                Status = "SampleStatus",
+                OtherMaterialsCategoryId = 1
+            };
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
-            otherMaterialsService.Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
-                .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Kho không được để trống", (int)HttpStatusCode.Conflict));
+            otherMaterialsService
+              .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
+              .ReturnsAsync(new ResponseDTO<bool>(
+                false, "Kho không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
-            var result = await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO);
+            var result =
+              await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO);
 
-            otherMaterialsService.Verify(s => s.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO));
+            otherMaterialsService.Verify(
+              s => s.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO));
 
             // Assert
             Assert.IsNotNull(result);
@@ -542,29 +564,31 @@ namespace UnitTests.Tests
         {
             // Arrange
             int otherMaterialsID = 1;
-            var otherMaterialsCreateUpdateDTO =
-                new OtherMaterialsCreateUpdateDTO
-                {
-                    Unit = "SampleUnit",
-                    Quantity = 10,
-                    Code = "SampleCode",
-                    WarehouseId = 1,
-                    Status = "SampleStatus",
-                    OtherMaterialsCategoryId = 1
-                };
+            var otherMaterialsCreateUpdateDTO = new OtherMaterialsCreateUpdateDTO
+            {
+                Unit = "SampleUnit",
+                Quantity = 10,
+                Code = "SampleCode",
+                WarehouseId = 1,
+                Status = "SampleStatus",
+                OtherMaterialsCategoryId = 1
+            };
 
             OtherMaterial existingMaterial = new OtherMaterial { };
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
-            otherMaterialsService.Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
-                .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Vật liệu đã tồn tại", (int)HttpStatusCode.Conflict));
+            otherMaterialsService
+              .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
+              .ReturnsAsync(new ResponseDTO<bool>(
+                false, "Vật liệu đã tồn tại", (int)HttpStatusCode.Conflict));
 
             // Act
-            var result = await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO);
+            var result =
+              await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO);
 
-            otherMaterialsService.Verify(s => s.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO));
+            otherMaterialsService.Verify(
+              s => s.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO));
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -582,12 +606,14 @@ namespace UnitTests.Tests
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
-            otherMaterialsService.Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
-                .ThrowsAsync(new Exception("An error occurred during the update operation"));
+            otherMaterialsService
+              .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
+              .ThrowsAsync(new Exception("An error occurred during the update operation"));
 
             // Act and Assert
             Assert.ThrowsAsync<Exception>(
-                async () => await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO));
+              async () =>
+                await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO));
         }
 
         [Test]
@@ -599,11 +625,11 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
-                .ThrowsAsync(new Exception("An error occurred during the update operation"));
+              .ThrowsAsync(new Exception("An error occurred during the update operation"));
 
             // Act and Assert
-            Assert.ThrowsAsync<Exception>(async () =>
-                                              await controller.Create(otherMaterialsCreateUpdateDTO));
+            Assert.ThrowsAsync<Exception>(
+              async () => await controller.Create(otherMaterialsCreateUpdateDTO));
         }
 
         [Test]
@@ -616,7 +642,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Delete(otherMaterialsID))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
+              .ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
 
             // Act
             var result = await controller.Delete(otherMaterialsID);
@@ -639,8 +665,8 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Delete(otherMaterialsID))
-                .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Không tìm thấy vật liệu", (int)HttpStatusCode.NotFound));
+              .ReturnsAsync(new ResponseDTO<bool>(
+                false, "Không tìm thấy vật liệu", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Delete(otherMaterialsID);
@@ -663,28 +689,31 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Delete(otherMaterialsID))
-                .ThrowsAsync(new Exception("Mocked exception"));
+              .ThrowsAsync(new Exception("Mocked exception"));
 
             // Act and Assert
-            var ex = Assert.ThrowsAsync<Exception>(async () => await controller.Delete(otherMaterialsID));
+            var ex = Assert.ThrowsAsync<Exception>(
+              async () => await controller.Delete(otherMaterialsID));
             Assert.That(ex.Message, Is.EqualTo("Mocked exception"));
         }
 
         [Test]
-        public async Task Update_WhenNotAdminOrWarehouseKeeper_ReturnsForbiddenResponse()
+        public async Task
+        Update_WhenNotAdminOrWarehouseKeeper_ReturnsForbiddenResponse()
         {
             // Arrange
             int otherMaterialsID = 1;
             OtherMaterialsCreateUpdateDTO otherMaterialsCreateUpdateDTO =
-                new OtherMaterialsCreateUpdateDTO();  // Add appropriate DTO values
+              new OtherMaterialsCreateUpdateDTO(); // Add appropriate DTO values
 
             TestHelper.SimulateUserWithRoleAndId(
-                controller,
-                RoleConst
-                    .STRING_ROLE_LEADER);  // Assuming the current user is not an admin or warehouse keeper
+              controller,
+              RoleConst.STRING_ROLE_LEADER); // Assuming the current user is not an admin or
+                                             // warehouse keeper
 
             // Act
-            var result = await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO);
+            var result =
+              await controller.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -694,15 +723,16 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task Delete_WhenNotAdminOrWarehouseKeeper_ReturnsForbiddenResponse()
+        public async Task
+        Delete_WhenNotAdminOrWarehouseKeeper_ReturnsForbiddenResponse()
         {
             // Arrange
             int otherMaterialsID = 1;
 
             TestHelper.SimulateUserWithRoleAndId(
-                controller,
-                RoleConst
-                    .STRING_ROLE_STAFF);  // Assuming the current user is not an admin or warehouse keeper
+              controller,
+              RoleConst.STRING_ROLE_STAFF); // Assuming the current user is not an admin or
+                                            // warehouse keeper
 
             // Act
             var result = await controller.Delete(otherMaterialsID);
@@ -713,5 +743,63 @@ namespace UnitTests.Tests
             Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập"));
             Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
         }
+
+        [Test]
+        public async Task ListAll_WhenSuccess_ReturnsSuccessResponse()
+        {
+            // Arrange
+            int? warehouseId = 1; // Set a warehouse ID or null
+            var otherMaterialsListDTOs = new List<OtherMaterialsListDTO> {
+  new OtherMaterialsListDTO { OtherMaterialsId = 1,
+                              Unit = "Piece",
+                              Quantity = 100,
+                              Code = "ABC123",
+                              Status = "In Stock",
+                              WarehouseId = 1,
+                              WarehouseName = "Main Warehouse",
+                              OtherMaterialsCategoryId = 1,
+                              OtherMaterialsCategoryName =
+                                "Electrical Components" },
+  new OtherMaterialsListDTO { OtherMaterialsId = 2,
+                              Unit = "Meter",
+                              Quantity = 50,
+                              Code = "XYZ789",
+                              Status = "Out of Stock",
+                              WarehouseId = 2,
+                              WarehouseName = "Secondary Warehouse",
+                              OtherMaterialsCategoryId = 2,
+                              OtherMaterialsCategoryName = "Mechanical Parts" },
+};
+
+            otherMaterialsService.Setup(x => x.ListAll(warehouseId))
+              .ReturnsAsync(new ResponseDTO<List<OtherMaterialsListDTO>?>(
+                otherMaterialsListDTOs, string.Empty));
+
+            // Act
+            var result = await controller.List(warehouseId);
+
+            otherMaterialsService.Verify(x => x.ListAll(warehouseId));
+            // Assert
+            Assert.That(result.Data, Is.EqualTo(otherMaterialsListDTOs));
+            Assert.That(result.Message, Is.Empty);
+            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.OK));
+        }
+
+        [Test]
+        public void ListAll_WhenExceptionThrown_ReturnsErrorResponse()
+        {
+            // Arrange
+            int? warehouseId = 1; // Set a warehouse ID or null based on your scenario
+            var expectedExceptionMessage = "Simulated exception message";
+
+            otherMaterialsService.Setup(x => x.ListAll(warehouseId))
+                                .ThrowsAsync(new Exception(expectedExceptionMessage));
+
+            // Act and Assert
+            var exception = Assert.ThrowsAsync<Exception>(
+                async () => await controller.List(warehouseId));
+            Assert.That(exception.Message, Is.EqualTo(expectedExceptionMessage));
+        }
+
     }
 }
