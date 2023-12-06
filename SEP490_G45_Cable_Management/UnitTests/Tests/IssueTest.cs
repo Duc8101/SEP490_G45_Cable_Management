@@ -1,4 +1,5 @@
 ﻿using DataAccess.DTO.IssueDTO;
+using DataAccess.Entity;
 
 namespace UnitTests.Tests
 {
@@ -46,41 +47,6 @@ namespace UnitTests.Tests
             Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.OK));
         }
 
-        [Test]
-        public async Task List_WhenUserIsNotAdminOrLeaderOrStaff_ReturnsForbiddenResponse()
-        {
-            // Arrange
-            var filter = "sampleFilter";
-            var page = 1;
-
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
-
-            // Act
-            var result = await controller.List(filter, page);
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.IsNull(result.Data);
-            Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập trang này"));
-            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
-        }
-
-        [Test]
-        public async Task ListDoing_WhenUserIsNotAdminOrLeaderOrStaff_ReturnsForbiddenResponse()
-        {
-            // Arrange
-            var page = 1;
-
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
-            // Act
-            var result = await controller.List(page);
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.IsNull(result.Data);
-            Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập trang này"));
-            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
-        }
 
         [Test]
         public async Task ListPagedDoing_WhenCalled_ReturnsIssueListDTO()
@@ -131,7 +97,7 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task Create_WhenNotAdminOrLeaderOrStaff_ReturnsForbiddenResponse()
+        public async Task Create_WhenNotAdminOrStaff_ReturnsForbiddenResponse()
         {
             // Arrange
             var sampleData = new IssueCreateDTO
@@ -207,7 +173,7 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task Create_WhenValidInput_ReturnsSuccessResponse()
+        public async Task Create_WhenValidInput_Admin_ReturnsSuccessResponse()
         {
             // Arrange
             var sampleData = new IssueCreateDTO
@@ -220,6 +186,34 @@ namespace UnitTests.Tests
                 Group = "SampleGroup"
             };
             var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+
+            // Setup the necessary mocks
+            issueService.Setup(x => x.Create(sampleData, creatorId)).ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
+
+            // Act
+            var result = await controller.Create(sampleData);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Data);
+            Assert.That(result.Message, Is.EqualTo("Tạo thành công"));
+            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.OK));
+        }
+
+        [Test]
+        public async Task Create_WhenValidInput_Staff_ReturnsSuccessResponse()
+        {
+            // Arrange
+            var sampleData = new IssueCreateDTO
+            {
+                IssueName = "SampleIssueName",
+                IssueCode = "SampleIssueCode",
+                Description = "SampleDescription",
+                CreatedDate = DateTime.Now,
+                CableRoutingName = "SampleCableRoutingName",
+                Group = "SampleGroup"
+            };
+            var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
 
             // Setup the necessary mocks
             issueService.Setup(x => x.Create(sampleData, creatorId)).ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
@@ -261,7 +255,7 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task Update_WhenValidInput_ReturnsSuccessResponse()
+        public async Task Update_WhenValidInput_Admin_ReturnsSuccessResponse()
         {
             // Arrange
             var issueId = Guid.NewGuid();
@@ -277,6 +271,34 @@ namespace UnitTests.Tests
             };
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+
+            issueService.Setup(x => x.Update(issueId, sampleData)).ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
+            // Act
+            var result = await controller.Update(issueId, sampleData);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Data);
+            Assert.That(result.Message, Is.EqualTo("Chỉnh sửa thành công"));
+            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.OK));
+        }
+        [Test]
+        public async Task Update_WhenValidInput_Staff_ReturnsSuccessResponse()
+        {
+            // Arrange
+            var issueId = Guid.NewGuid();
+            var sampleData = new IssueUpdateDTO
+            {
+                IssueName = "UpdatedIssueName",
+                IssueCode = "UpdatedIssueCode",
+                Description = "UpdatedDescription",
+                CreatedDate = DateTime.Now,
+                CableRoutingName = "UpdatedCableRoutingName",
+                Group = "UpdatedGroup",
+                Status = "UpdatedStatus"
+            };
+
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
 
             issueService.Setup(x => x.Update(issueId, sampleData)).ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
             // Act
@@ -400,11 +422,28 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task Delete_WhenValidIssueId_ReturnsSuccessResponse()
+        public async Task Delete_WhenValidIssueId_Admin_ReturnsSuccessResponse()
         {
             // Arrange
             var issueId = Guid.NewGuid();
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            issueService.Setup(x => x.Delete(issueId)).ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
+
+            // Act
+            var result = await controller.Delete(issueId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Data);
+            Assert.That(result.Message, Is.EqualTo("Xóa thành công"));
+            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.OK));
+        }
+        [Test]
+        public async Task Delete_WhenValidIssueId_Staff_ReturnsSuccessResponse()
+        {
+            // Arrange
+            var issueId = Guid.NewGuid();
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
             issueService.Setup(x => x.Delete(issueId)).ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
 
             // Act
@@ -436,6 +475,72 @@ namespace UnitTests.Tests
             Assert.IsFalse(result.Data);
             Assert.That(result.Message, Is.EqualTo("Không tìm thấy sự vụ"));
             Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.NotFound));
+        }
+
+        [Test]
+        public async Task Detail_WhenIssueNotFound_ReturnsNotFoundResponse()
+        {
+            // Arrange
+            Guid issueId = Guid.NewGuid();
+
+
+            var expertResult = new ResponseDTO<List<IssueDetailDTO>>(null, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
+            issueService.Setup(x => x.Detail(issueId))
+                        .ReturnsAsync(expertResult); // Corrected to use ReturnsAsync
+
+
+            // Act
+            var result = await controller.Detail(issueId);
+
+            issueService.Verify(s => s.Detail(issueId));
+            // Assert
+            Assert.That(result.Data, Is.Null);
+            Assert.That(result.Message, Is.EqualTo("Không tìm thấy sự vụ"));
+            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.NotFound));
+        }
+        [Test]
+        public async Task Detail_WhenIssueFound_ReturnsSuccessResponse()
+        {
+            // Arrange
+            Guid issueId = Guid.NewGuid();
+
+            // Create a sample list of IssueDetailDTOs
+            var issueDetails = new List<IssueDetailDTO>
+    {
+        new IssueDetailDTO { /* Populate with sample data */ },
+        // Add more IssueDetailDTO items as needed
+    };
+
+            var expertResult = new ResponseDTO<List<IssueDetailDTO>>(issueDetails, string.Empty);
+
+            issueService.Setup(x => x.Detail(issueId))
+                        .ReturnsAsync(expertResult);
+
+            // Act
+            var result = await controller.Detail(issueId);
+
+
+            issueService.Verify(s => s.Detail(issueId));
+            // Assert
+            Assert.That(result.Data, Is.EqualTo(issueDetails));
+            Assert.That(result.Message, Is.Empty);
+            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.OK));
+        }
+
+        [Test]
+        public async Task Detail_WhenExceptionThrown_ReturnsErrorResponse()
+        {
+            // Arrange
+            Guid issueId = Guid.NewGuid();
+            var expectedExceptionMessage = "Simulated exception message";
+
+            issueService.Setup(x => x.Detail(issueId))
+                        .ThrowsAsync(new Exception(expectedExceptionMessage));
+
+            // Act
+            Assert.ThrowsAsync<Exception>(async () =>
+                                            await controller.Detail(issueId));
+
         }
 
         // Additional tests can be added based on specific scenarios and conditions.

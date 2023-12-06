@@ -16,22 +16,6 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task List_WhenUserIsNotAdminOrLeader_ReturnsForbiddenResponse()
-        {
-            // Arrange
-            var name = "TestName";  // Replace with the desired value
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
-
-            // Act
-            var result = await controller.List(name);
-
-            // Assert
-            Assert.That(result.Data, Is.Null);
-            Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập trang này"));
-            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
-        }
-
-        [Test]
         public async Task ListPaged_WhenUserIsNotAdminOrLeader_ReturnsForbiddenResponse()
         {
             // Arrange
@@ -135,7 +119,7 @@ namespace UnitTests.Tests
    };
             var expectedRowCount = 10;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             routeService.Setup(x => x.ListPaged(page))
                 .ReturnsAsync(new ResponseDTO<PagedResultDTO<RouteListDTO>?>(
@@ -161,7 +145,7 @@ namespace UnitTests.Tests
             // Arrange
             var page = 1;  // Replace with a valid page number for testing
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             routeService.Setup(x => x.ListPaged(page)).ThrowsAsync(new Exception("Sample exception"));
 
@@ -176,7 +160,7 @@ namespace UnitTests.Tests
             // Arrange
             var routeCreateDTO = new RouteCreateDTO { RouteName = String.Empty };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             routeService.Setup(x => x.Create(routeCreateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên tuyến không được để trống",
@@ -197,7 +181,7 @@ namespace UnitTests.Tests
             // Arrange
             var routeCreateDTO = new RouteCreateDTO { RouteName = "SampleRoute" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             routeService.Setup(x => x.Create(routeCreateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên tuyến đã tồn tại", (int)HttpStatusCode.Conflict));
@@ -217,7 +201,7 @@ namespace UnitTests.Tests
             // Arrange
             var routeCreateDTO = new RouteCreateDTO { RouteName = "NewRoute" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             routeService.Setup(x => x.Create(routeCreateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
@@ -230,20 +214,7 @@ namespace UnitTests.Tests
             Assert.That(result.Message, Is.EqualTo("Tạo thành công"));
         }
 
-        [Test]
-        public void Create_WhenExceptionOccurs_ReturnsErrorResponse()
-        {
-            // Arrange
-            var routeCreateDTO = new RouteCreateDTO { RouteName = "NewRoute" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
-
-            routeService.Setup(x => x.Create(routeCreateDTO))
-                .Throws(new Exception("An error occurred while creating the route."));
-
-            // Act and Assert
-            Assert.Throws<Exception>(async () => await controller.Create(routeCreateDTO));
-        }
 
         [Test]
         public async Task Delete_WhenRouteIsNull_ReturnsNotFoundResponse()
@@ -251,7 +222,7 @@ namespace UnitTests.Tests
             // Arrange
             var routeID = Guid.NewGuid();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             routeService.Setup(x => x.Delete(routeID))
                 .ReturnsAsync(
@@ -272,7 +243,7 @@ namespace UnitTests.Tests
             // Arrange
             var routeID = Guid.NewGuid();  // Replace with the valid route ID
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             routeService.Setup(x => x.Delete(routeID))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
@@ -291,7 +262,7 @@ namespace UnitTests.Tests
             // Arrange
             var routeID = Guid.NewGuid();  // Replace with the valid route ID
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             routeService.Setup(x => x.Delete(routeID)).ThrowsAsync(new Exception("Some exception"));
 

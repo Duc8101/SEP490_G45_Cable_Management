@@ -1,4 +1,5 @@
 ﻿using DataAccess.DTO.CableCategoryDTO;
+using DataAccess.Entity;
 
 namespace UnitTests.Tests
 {
@@ -129,6 +130,7 @@ namespace UnitTests.Tests
             // Arrange
             var sampleData = new CableCategoryCreateUpdateDTO { CableCategoryName = "Sample Cable Category Name" };
 
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
             // Act
             var result = await controller.Create(sampleData);
             // Assert
@@ -145,6 +147,7 @@ namespace UnitTests.Tests
             var sampleData = new CableCategoryCreateUpdateDTO { CableCategoryName = "Updated Sample Cable Category Name" };
             int cableCategoryId = 1;  // Sample cable category ID
 
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
             // Act
             var result = await controller.Update(cableCategoryId, sampleData);
 
@@ -165,6 +168,53 @@ namespace UnitTests.Tests
             Assert.NotNull(result);
             Assert.That(result.Success, Is.True);
             Assert.That(result.Data, Is.True);
+        }
+        [Test]
+        public void ListAll_WhenExceptionThrown_ReturnsErrorResponse()
+        {
+            // Arrange
+            var expectedExceptionMessage = "Simulated exception message";
+
+            // Mock the ListAll method to throw an exception
+            cableCategoryService.Setup(x => x.ListAll())
+                               .ThrowsAsync(new Exception(expectedExceptionMessage));
+
+            // Act and Assert
+            var exception = Assert.ThrowsAsync<Exception>(async () =>
+
+                await controller.List()
+            );
+
+            // Verify that the exception has the expected message
+            Assert.That(exception.Message, Is.EqualTo(expectedExceptionMessage));
+        }
+
+        [Test]
+        public void Create_WhenExceptionThrown_ReturnsErrorResponse()
+        {
+            // Arrange
+            var cableCategoryCreateUpdateDTO = new CableCategoryCreateUpdateDTO
+            {
+                CableCategoryName = "TestCableCategory"
+            };
+
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+
+            var expectedExceptionMessage = "Simulated exception message";
+
+            cableCategoryService.Setup(x => x.Create(cableCategoryCreateUpdateDTO))
+                               .ThrowsAsync(new Exception(expectedExceptionMessage));
+
+
+            // Act and Assert
+            var exception = Assert.ThrowsAsync<Exception>(async () =>
+
+                await controller.Create(cableCategoryCreateUpdateDTO)
+            );
+
+            // Verify that the exception has the expected message
+            Assert.That(exception.Message, Is.EqualTo(expectedExceptionMessage));
+
         }
 
     }

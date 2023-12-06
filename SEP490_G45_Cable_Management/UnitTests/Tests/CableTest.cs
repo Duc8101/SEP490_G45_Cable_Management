@@ -22,26 +22,66 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task List_Returns_Forbidden_When_User_Is_Not_Admin_Or_WarehouseKeeper()
+        public async Task List_Returns_Forbidden_When_User_Is_Not_Admin_Or_WarehouseKeeper_Or_Leader()
         {
             // Arrange
 
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
             // Act
             var result = await controller.List("filter", 1, true, 1);
 
             // Assert
-            Assert.NotNull(result);
+            Assert.IsNotNull(result);
             Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập trang này"));
             Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
             Assert.IsNull(result.Data);  // Assuming Data is nullable in your implementation
         }
 
         [Test]
-        public async Task List_Returns_Data_When_User_Is_Admin_Or_WarehouseKeeper()
+        public async Task List_Returns_Data_When_User_Is_Admin()
+        {
+            // Arrange
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+
+            var expectedPagedResult = new PagedResultDTO<CableListDTO>(1, 10, 5, new List<CableListDTO>());  // Provide expected paged result here
+            cableService.Setup(x => x.ListPaged(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<bool>(), It.IsAny<int>()))
+                .ReturnsAsync(new ResponseDTO<PagedResultDTO<CableListDTO>?>(expectedPagedResult, string.Empty));
+
+            // Act
+            var result = await controller.List("filter", 1, true, 1);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Message, Is.EqualTo(string.Empty));
+            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.OK));
+        }
+        [Test]
+        public async Task List_Returns_Data_When_User_Is_WarehouseKeeper()
         {
             // Arrange
             var user = new ClaimsPrincipal(
                 new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER) }));
+
+            var context = new ControllerContext { HttpContext = new DefaultHttpContext { User = user } };
+            controller.ControllerContext = context;
+            var expectedPagedResult = new PagedResultDTO<CableListDTO>(1, 10, 5, new List<CableListDTO>());  // Provide expected paged result here
+            cableService.Setup(x => x.ListPaged(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<bool>(), It.IsAny<int>()))
+                .ReturnsAsync(new ResponseDTO<PagedResultDTO<CableListDTO>?>(expectedPagedResult, string.Empty));
+
+            // Act
+            var result = await controller.List("filter", 1, true, 1);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Message, Is.EqualTo(string.Empty));
+            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.OK));
+        }
+        [Test]
+        public async Task List_Returns_Data_When_User_Is_Leader()
+        {
+            // Arrange
+            var user = new ClaimsPrincipal(
+                new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, RoleConst.STRING_ROLE_LEADER) }));
 
             var context = new ControllerContext { HttpContext = new DefaultHttpContext { User = user } };
             controller.ControllerContext = context;
@@ -137,11 +177,7 @@ namespace UnitTests.Tests
             var sampleData = new CableCreateUpdateDTO { };
 
             // Simulate user with admin or warehouse keeper role
-            var user = new ClaimsPrincipal(
-                new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER) }));
-
-            var context = new ControllerContext { HttpContext = new DefaultHttpContext { User = user } };
-            controller.ControllerContext = context;
+            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.STRING_ROLE_ADMIN);
 
             // Act
             var result = await controller.Create(sampleData);
@@ -295,7 +331,7 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task Delete_WhenNotAdminOrWarehouseKeeper_ReturnsForbiddenResponse()
+        public async Task Delete_WhenNotAdmin_ReturnsForbiddenResponse()
         {
             // Arrange
             Guid cableId = Guid.NewGuid();
@@ -332,13 +368,14 @@ namespace UnitTests.Tests
             Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.OK));
         }
 
+
         [Test]
-        public async Task Delete_WhenCableDoesNotExist_ReturnsNotFoundResponse()
+        public async Task Delete_WhenCableDoesNotExist_Admin_ReturnsNotFoundResponse()
         {
             // Arrange
             var cableId = Guid.NewGuid();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             cableService.Setup(x => x.Delete(cableId)).ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy cáp", (int)HttpStatusCode.NotFound));
 
@@ -351,6 +388,5 @@ namespace UnitTests.Tests
             Assert.That(result.Message, Is.EqualTo("Không tìm thấy cáp"));
             Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.NotFound));
         }
-
     }
 }

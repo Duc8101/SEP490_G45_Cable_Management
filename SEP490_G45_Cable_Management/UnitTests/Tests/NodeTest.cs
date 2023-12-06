@@ -16,24 +16,6 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task List_WhenNotAdminOrLeader_ReturnsForbiddenResponse()
-        {
-            // Arrange
-            var routeId = Guid.NewGuid();  // Replace with the actual route ID
-
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
-
-            // Act
-            var result = await controller.List(routeId);
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.IsNull(result.Data);
-            Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập trang này"));
-            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
-        }
-
-        [Test]
         public async Task List_WhenValidRouteId_ReturnsListOfNodes()
         {
             // Arrange
@@ -135,23 +117,7 @@ namespace UnitTests.Tests
             Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.OK));
         }
 
-        [Test]
-        public async Task Detail_WhenUserIsNotAdminOrLeader_ReturnsForbiddenResponse()
-        {
-            // Arrange
-            var nodeId = Guid.NewGuid();
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
 
-            // Act
-            var result = await controller.Detail(nodeId);
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.IsNull(result.Data);
-            Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập trang này"));
-            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
-            // Add additional assertions if necessary
-        }
 
         [Test]
         public async Task Detail_WhenNodeExists_ReturnsNodeListDTO()
@@ -245,7 +211,7 @@ namespace UnitTests.Tests
                 Status = "UpdatedStatus"
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             nodeService.Setup(x => x.Update(nodeId, nodeUpdateDTO)).ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
 
@@ -274,7 +240,7 @@ namespace UnitTests.Tests
                 Status = "UpdatedStatus"
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             nodeService.Setup(x => x.Update(nodeId, nodeUpdateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy điểm", (int)HttpStatusCode.NotFound));

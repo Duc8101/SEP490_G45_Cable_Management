@@ -1,11 +1,10 @@
 ﻿using DataAccess.DTO.OtherMaterialsDTO;
 using DataAccess.Entity;
-using Moq;
 
 namespace UnitTests.Tests
 {
     [TestFixture]
-    internal class OtherMaterialsTests
+    public class OtherMaterialsTest
     {
         private OtherMaterialsController controller;
         private Mock<IOtherMaterialsService> otherMaterialsService;
@@ -24,7 +23,7 @@ namespace UnitTests.Tests
             string filter = "SampleFilter";
             int page = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
 
             // Act
             var result = await controller.List(filter, null, page);
@@ -35,6 +34,7 @@ namespace UnitTests.Tests
             Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập"));
             Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
         }
+
 
         [Test]
         public async Task List_WhenWarehouseKeeperIDNotFound_ReturnsNotFoundResponse()
@@ -485,7 +485,7 @@ namespace UnitTests.Tests
                     OtherMaterialsCategoryId = 1
                 };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Trạng thái không được để trống",

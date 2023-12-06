@@ -49,7 +49,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, "SampleUserRole");
 
             // Act
-            var result = await controller.List(name,null, status, page);
+            var result = await controller.List(name, null, status, page);
 
             // Assert
             Assert.NotNull(result);
@@ -58,24 +58,7 @@ namespace UnitTests.Tests
             Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
         }
 
-        [Test]
-        public async Task Create_WhenUserNotWarehouseKeeperOrStaff_ReturnsForbiddenResponse()
-        {
-            // Arrange
-            var requestCreateExportDTO = new RequestCreateExportDTO();
-            TestHelper.SimulateUserWithRoleAndId(
-                controller, RoleConst.STRING_ROLE_ADMIN);  // Simulating a user with a role other than
-                                                           // warehouse keeper or staff
 
-            // Act
-            var result = await controller.Create(requestCreateExportDTO);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.That(result.Data, Is.False);
-            Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập trang này"));
-            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
-        }
 
         [Test]
         public async Task CreateRequestExport_WhenStaffCreatorIdNull_ReturnsFalseResponse()
@@ -97,25 +80,7 @@ namespace UnitTests.Tests
                         Is.EqualTo("Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập"));
         }
 
-        [Test]
-        public async Task CreateRequestRecovery_WhenUserNotWarehouseKeeperOrStaff_ReturnsForbiddenResponse()
-        {
-            // Arrange
-            var requestCreateRecoveryDTO =
-                new RequestCreateRecoveryDTO();  // Add relevant data to the DTO if necessary
-            TestHelper.SimulateUserWithRoleAndId(
-                controller, RoleConst.STRING_ROLE_ADMIN);  // Simulating a user with a role other than
-                                                           // warehouse keeper or staff
 
-            // Act
-            var result = await controller.Create(requestCreateRecoveryDTO);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.That(result.Data, Is.False);
-            Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập trang này"));
-            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
-        }
 
         [Test]
         public async Task CreateRequestRecovery_WhenWarehouseKeeperCreatorIdNull_ReturnsFalseResponse()
@@ -138,25 +103,7 @@ namespace UnitTests.Tests
                         Is.EqualTo("Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập"));
         }
 
-        [Test]
-        public async Task CreateRequestDeliver_WhenUserNotWarehouseKeeperOrStaff_ReturnsForbiddenResponse()
-        {
-            // Arrange
-            var requestCreateDeliverDTO =
-                new RequestCreateDeliverDTO();  // Add relevant data to the DTO if necessary
-            TestHelper.SimulateUserWithRoleAndId(
-                controller,
-                "SampleUserRole");  // Simulating a user with a role other than warehouse keeper or staff
 
-            // Act
-            var result = await controller.Create(requestCreateDeliverDTO);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.That(result.Data, Is.False);
-            Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập trang này"));
-            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
-        }
 
         [Test]
         public async Task CreateRequestDeliver_WhenWarehouseKeeperCreatorIdNull_ReturnsFalseResponse()
@@ -216,25 +163,25 @@ namespace UnitTests.Tests
                         Is.EqualTo("Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập"));
         }
 
-/*        [Test]
-        public async Task SuggestionCable_WhenUserNotWarehouseKeeperOrStaff_ReturnsForbiddenResponse()
-        {
-            // Arrange
-            var suggestion = new SuggestionCableDTO();  // Replace with a valid SuggestionCableDTO object
-            TestHelper.SimulateUserWithRoleAndId(
-                controller, RoleConst.STRING_ROLE_ADMIN);  // Simulating a user with a role other than
-                                                           // warehouse keeper or staff
+        /*        [Test]
+                public async Task SuggestionCable_WhenUserNotWarehouseKeeperOrStaff_ReturnsForbiddenResponse()
+                {
+                    // Arrange
+                    var suggestion = new SuggestionCableDTO();  // Replace with a valid SuggestionCableDTO object
+                    TestHelper.SimulateUserWithRoleAndId(
+                        controller, RoleConst.STRING_ROLE_ADMIN);  // Simulating a user with a role other than
+                                                                   // warehouse keeper or staff
 
-            // Act
-            var result = await controller.SuggestionCable(suggestion);
+                    // Act
+                    var result = await controller.SuggestionCable(suggestion);
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.That(result.Data, Is.Null);
-            Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập trang này"));
-            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
-        }
-*/
+                    // Assert
+                    Assert.NotNull(result);
+                    Assert.That(result.Data, Is.Null);
+                    Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập trang này"));
+                    Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
+                }
+        */
         [Test]
         public async Task Create_CancelInside_WhenUserNotWarehouseKeeperOrStaff_ReturnsForbiddenResponse()
         {
@@ -282,8 +229,7 @@ namespace UnitTests.Tests
                 new RequestCreateCancelOutsideDTO();  // Replace with a valid RequestCreateCancelOutsideDTO
                                                       // object
             TestHelper.SimulateUserWithRoleAndId(
-                controller, RoleConst.STRING_ROLE_ADMIN);  // Simulating a user with a role other than
-                                                           // warehouse keeper or staff
+                controller, RoleConst.STRING_ROLE_LEADER);  // Simulating a user with a role 
 
             // Act
             var result = await controller.Create(cancelOutsideDTO);
@@ -315,45 +261,80 @@ namespace UnitTests.Tests
                         Is.EqualTo("Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập"));
         }
 
-        [Test]
-        public async Task Delete_WhenUserNotAdmin_ReturnsForbiddenResponse()
-        {
-            // Arrange
-            var requestId = Guid.NewGuid();  // Replace with a valid request ID
-            TestHelper.SimulateUserWithRoleAndId(
-                controller, RoleConst.STRING_ROLE_LEADER);  // Simulating a user with a role other than admin
-
-            // Act
-            var result = await controller.Delete(requestId);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.That(result.Data, Is.False);
-            Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập trang này"));
-            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
-        }
-
-        [Test]
-        public async Task Detail_WhenUserNotAdminOrWarehouseKeeperOrStaff_ReturnsForbiddenResponse()
-        {
-            // Arrange
-            var requestId = Guid.NewGuid();  // Replace with a valid request ID
-            TestHelper.SimulateUserWithRoleAndId(
-                controller, RoleConst.STRING_ROLE_LEADER);  // Simulating a user with a role other than
-                                                            // warehouse keeper or staff
-
-            // Act
-            var result = await controller.Detail(requestId);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.That(result.Data, Is.Null);
-            Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập trang này"));
-            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
-        }
 
         [Test]
         public async Task List_WhenAdmin_ReturnsSuccessResponse()
+        {
+            // Arrange
+            string name = "SampleName";
+            string status = "SampleStatus";
+            int page = 1;
+            var resultSample = new PagedResultDTO<RequestListDTO>(
+                currentPage: 1, pageSize: PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, rowCount: 10,
+                results: new List<RequestListDTO> {
+        new RequestListDTO { RequestId = Guid.NewGuid(), RequestName = "Sample Request",
+                             Content = "Sample content", CreatorName = "Sample Creator",
+                             ApproverName = "Sample Approver", Status = "Sample Status",
+                             RequestCategoryName = "Sample Request Category" },
+                });
+
+            var creatorId =
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+
+            var expectedResponse =
+                new ResponseDTO<PagedResultDTO<RequestListDTO>?>(resultSample, string.Empty);
+
+            requestService.Setup(x => x.List(name, null, status, null, page)).ReturnsAsync(expectedResponse);
+
+            // Act
+            var result = await controller.List(name, null, status, page);
+
+            requestService.Verify(s => s.List(name, null, status, null, page), Times.Once);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Data, Is.EqualTo(expectedResponse.Data));
+            Assert.That(result.Message, Is.EqualTo(expectedResponse.Message));
+            Assert.That(result.Code, Is.EqualTo(expectedResponse.Code));
+        }
+
+        [Test]
+        public async Task List_WhenLeader_ReturnsSuccessResponse()
+        {
+            // Arrange
+            string name = "SampleName";
+            string status = "SampleStatus";
+            int page = 1;
+            var resultSample = new PagedResultDTO<RequestListDTO>(
+                currentPage: 1, pageSize: PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, rowCount: 10,
+                results: new List<RequestListDTO> {
+        new RequestListDTO { RequestId = Guid.NewGuid(), RequestName = "Sample Request",
+                             Content = "Sample content", CreatorName = "Sample Creator",
+                             ApproverName = "Sample Approver", Status = "Sample Status",
+                             RequestCategoryName = "Sample Request Category" },
+                });
+
+            var creatorId =
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+
+            var expectedResponse =
+                new ResponseDTO<PagedResultDTO<RequestListDTO>?>(resultSample, string.Empty);
+
+            requestService.Setup(x => x.List(name, null, status, null, page)).ReturnsAsync(expectedResponse);
+
+            // Act
+            var result = await controller.List(name, null, status, page);
+
+            requestService.Verify(s => s.List(name, null, status, null, page), Times.Once);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Data, Is.EqualTo(expectedResponse.Data));
+            Assert.That(result.Message, Is.EqualTo(expectedResponse.Message));
+            Assert.That(result.Code, Is.EqualTo(expectedResponse.Code));
+        }
+        [Test]
+        public async Task List_WhenWarehouseKeeper_ReturnsSuccessResponse()
         {
             // Arrange
             string name = "SampleName";
@@ -374,10 +355,47 @@ namespace UnitTests.Tests
             var expectedResponse =
                 new ResponseDTO<PagedResultDTO<RequestListDTO>?>(resultSample, string.Empty);
 
-            requestService.Setup(x => x.List(name,null, status, creatorId, page)).ReturnsAsync(expectedResponse);
+            requestService.Setup(x => x.List(name, null, status, creatorId, page)).ReturnsAsync(expectedResponse);
 
             // Act
-            var result = await controller.List(name, null,status, page);
+            var result = await controller.List(name, null, status, page);
+
+            requestService.Verify(s => s.List(name, null, status, creatorId, page), Times.Once);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Data, Is.EqualTo(expectedResponse.Data));
+            Assert.That(result.Message, Is.EqualTo(expectedResponse.Message));
+            Assert.That(result.Code, Is.EqualTo(expectedResponse.Code));
+        }
+
+
+        [Test]
+        public async Task List_WhenStaff_ReturnsSuccessResponse()
+        {
+            // Arrange
+            string name = "SampleName";
+            string status = "SampleStatus";
+            int page = 1;
+            var resultSample = new PagedResultDTO<RequestListDTO>(
+                currentPage: 1, pageSize: PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, rowCount: 10,
+                results: new List<RequestListDTO> {
+        new RequestListDTO { RequestId = Guid.NewGuid(), RequestName = "Sample Request",
+                             Content = "Sample content", CreatorName = "Sample Creator",
+                             ApproverName = "Sample Approver", Status = "Sample Status",
+                             RequestCategoryName = "Sample Request Category" },
+                });
+
+            var creatorId =
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+
+            var expectedResponse =
+                new ResponseDTO<PagedResultDTO<RequestListDTO>?>(resultSample, string.Empty);
+
+            requestService.Setup(x => x.List(name, null, status, creatorId, page)).ReturnsAsync(expectedResponse);
+
+            // Act
+            var result = await controller.List(name, null, status, page);
 
             requestService.Verify(s => s.List(name, null, status, creatorId, page), Times.Once);
 
@@ -399,11 +417,11 @@ namespace UnitTests.Tests
             var creatorId =
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
 
-            requestService.Setup(x => x.List(name,null, status, creatorId, page))
+            requestService.Setup(x => x.List(name, null, status, creatorId, page))
                 .ThrowsAsync(new Exception("Simulated exception"));
 
             // Act and Assert
-            Assert.ThrowsAsync<Exception>(async () => await controller.List(name,null, status, page));
+            Assert.ThrowsAsync<Exception>(async () => await controller.List(name, null, status, page));
         }
 
         [Test]
@@ -1087,7 +1105,7 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task Approve_WhenRequestCategoryMatches_ReturnsExpectedResponse()
+        public async Task Approve_WhenRequestCategoryMatches_Admin_ReturnsExpectedResponse()
         {
             // Arrange
             var requestID = Guid.NewGuid();  // Replace with a valid request ID
@@ -1112,7 +1130,32 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task Approve_WhenRequestCategoryIsRecovery_ReturnsExpectedResponse()
+        public async Task Approve_WhenRequestCategoryMatches_Leader_ReturnsExpectedResponse()
+        {
+            // Arrange
+            var requestID = Guid.NewGuid();  // Replace with a valid request ID
+            var approverName = "Last First";
+
+            var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
+
+            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+
+            requestService.Setup(x => x.Approve(requestID, approverID, approverName))
+                .ReturnsAsync(new ResponseDTO<bool>(true, "Request approved successfully"));
+
+            // Act
+            var result = await controller.Approve(requestID);
+
+            requestService.Setup(s => s.Approve(requestID, approverID, approverName));
+
+            // Assert
+            Assert.That(result.Data, Is.True);
+            Assert.That(result.Message, Is.EqualTo("Request approved successfully"));
+            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.OK));
+        }
+
+        [Test]
+        public async Task Approve_WhenRequestCategoryIsRecovery_Admin_ReturnsExpectedResponse()
         {
             // Arrange
             var requestID = Guid.NewGuid();  // Replace with a valid request ID
@@ -1137,7 +1180,32 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task Approve_WhenRequestCategoryIsCancelOutside_ReturnsExpectedResponse()
+        public async Task Approve_WhenRequestCategoryIsRecovery_Leader_ReturnsExpectedResponse()
+        {
+            // Arrange
+            var requestID = Guid.NewGuid();  // Replace with a valid request ID
+            var approverName = "Last First";
+
+            var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
+
+            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+
+            requestService.Setup(x => x.Approve(requestID, approverID, approverName))
+                .ReturnsAsync(new ResponseDTO<bool>(true, "Request approved successfully"));
+
+            // Act
+            var result = await controller.Approve(requestID);
+
+            requestService.Setup(s => s.Approve(requestID, approverID, approverName));
+
+            // Assert
+            Assert.That(result.Data, Is.True);
+            Assert.That(result.Message, Is.EqualTo("Request approved successfully"));
+            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.OK));
+        }
+
+        [Test]
+        public async Task Approve_WhenRequestCategoryIsCancelOutside_Admin_ReturnsExpectedResponse()
         {
             // Arrange
             var requestID = Guid.NewGuid();  // Replace with a valid request ID
@@ -1146,6 +1214,30 @@ namespace UnitTests.Tests
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
             var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+
+            requestService.Setup(x => x.Approve(requestID, approverID, approverName))
+                .ReturnsAsync(new ResponseDTO<bool>(true, "Request approved successfully"));
+
+            // Act
+            var result = await controller.Approve(requestID);
+
+            requestService.Setup(s => s.Approve(requestID, approverID, approverName));
+
+            // Assert
+            Assert.That(result.Data, Is.True);
+            Assert.That(result.Message, Is.EqualTo("Request approved successfully"));
+            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.OK));
+        }
+        [Test]
+        public async Task Approve_WhenRequestCategoryIsCancelOutside_Leader_ReturnsExpectedResponse()
+        {
+            // Arrange
+            var requestID = Guid.NewGuid();  // Replace with a valid request ID
+            var approverName = "Last First";
+
+            var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
+
+            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Request approved successfully"));
@@ -1258,11 +1350,32 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task Reject_WhenRequestRejectionIsSuccessful_ReturnsSuccessResponse()
+        public async Task Reject_WhenRequestRejectionIsSuccessful_Admin_ReturnsSuccessResponse()
         {
             // Arrange
             var requestID = Guid.NewGuid();  // Replace with a valid request ID
             var rejectorID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+
+            var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
+
+            requestService.Setup(x => x.Reject(requestID, rejectorID))
+                .ReturnsAsync(new ResponseDTO<bool>(true, string.Empty));
+
+            // Act
+            var result = await controller.Reject(requestID);
+
+            requestService.Verify(s => s.Reject(requestID, rejectorID));
+
+            // Assert
+            Assert.That(result.Data, Is.True);
+            Assert.That(result.Message, Is.EqualTo(string.Empty));
+        }
+        [Test]
+        public async Task Reject_WhenRequestRejectionIsSuccessful_Leader_ReturnsSuccessResponse()
+        {
+            // Arrange
+            var requestID = Guid.NewGuid();  // Replace with a valid request ID
+            var rejectorID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
 
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
@@ -1494,7 +1607,68 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task CreateCancelInside_WhenRequestIsValid_ReturnsSuccessResponse()
+        public async Task CreateCancelInside_WhenRequestIsValid_Admin_ReturnsSuccessResponse()
+        {
+            // Arrange
+            var requestCreateCancelInsideDTOSample = new RequestCreateCancelInsideDTO
+            {
+                RequestName = "SampleRequest",
+                Content = "SampleContent",
+                IssueId = Guid.NewGuid(),  // Replace with a valid Issue ID
+                RequestCategoryId = RequestCategoryConst.CATEGORY_CANCEL_INSIDE,
+                CableCancelInsideDTOs = new List<CableCancelInsideDTO>(),
+                OtherMaterialsCancelInsideDTOs = new List<OtherMaterialsExportDeliverCancelInsideDTO>()
+            };
+
+            var creatorId =
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+
+            requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
+                .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
+
+            // Act
+            var result = await controller.Create(requestCreateCancelInsideDTOSample);
+
+            requestService.Verify(s => s.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId));
+
+            // Assert
+            Assert.That(result.Data, Is.True);
+            Assert.That(result.Message, Is.EqualTo("Tạo yêu cầu thành công"));
+            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.OK));
+        }
+
+        [Test]
+        public async Task CreateCancelInside_WhenRequestIsValid_Staff_ReturnsSuccessResponse()
+        {
+            // Arrange
+            var requestCreateCancelInsideDTOSample = new RequestCreateCancelInsideDTO
+            {
+                RequestName = "SampleRequest",
+                Content = "SampleContent",
+                IssueId = Guid.NewGuid(),  // Replace with a valid Issue ID
+                RequestCategoryId = RequestCategoryConst.CATEGORY_CANCEL_INSIDE,
+                CableCancelInsideDTOs = new List<CableCancelInsideDTO>(),
+                OtherMaterialsCancelInsideDTOs = new List<OtherMaterialsExportDeliverCancelInsideDTO>()
+            };
+
+            var creatorId =
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+
+            requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
+                .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
+
+            // Act
+            var result = await controller.Create(requestCreateCancelInsideDTOSample);
+
+            requestService.Verify(s => s.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId));
+
+            // Assert
+            Assert.That(result.Data, Is.True);
+            Assert.That(result.Message, Is.EqualTo("Tạo yêu cầu thành công"));
+            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.OK));
+        }
+        [Test]
+        public async Task CreateCancelInside_WhenRequestIsValid_WarehouseKeeper_ReturnsSuccessResponse()
         {
             // Arrange
             var requestCreateCancelInsideDTOSample = new RequestCreateCancelInsideDTO
@@ -1678,7 +1852,35 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task CreateCancelOutside_WhenRequestIsSuccessful_ReturnsSuccessResponse()
+        public async Task CreateCancelOutside_WhenRequestIsSuccessful_Admin_ReturnsSuccessResponse()
+        {
+            // Arrange
+            var requestCreateCancelOutsideDTOSample = new RequestCreateCancelOutsideDTO
+            {
+                RequestName = "SampleRequest",
+                Content = "SampleContent",
+                IssueId = Guid.NewGuid(),
+                RequestCategoryId = RequestCategoryConst.CATEGORY_CANCEL_OUTSIDE
+            };
+
+            var creatorId =
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+
+            requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
+                .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
+
+            // Act
+            var result = await controller.Create(requestCreateCancelOutsideDTOSample);
+
+            requestService.Verify(s =>
+                                      s.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId));
+
+            // Assert
+            Assert.That(result.Data, Is.True);
+            Assert.That(result.Message, Is.EqualTo("Tạo yêu cầu thành công"));
+        }
+        [Test]
+        public async Task CreateCancelOutside_WhenRequestIsSuccessful_Warehousekeeper_ReturnsSuccessResponse()
         {
             // Arrange
             var requestCreateCancelOutsideDTOSample = new RequestCreateCancelOutsideDTO
@@ -1691,6 +1893,34 @@ namespace UnitTests.Tests
 
             var creatorId =
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+
+            requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
+                .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
+
+            // Act
+            var result = await controller.Create(requestCreateCancelOutsideDTOSample);
+
+            requestService.Verify(s =>
+                                      s.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId));
+
+            // Assert
+            Assert.That(result.Data, Is.True);
+            Assert.That(result.Message, Is.EqualTo("Tạo yêu cầu thành công"));
+        }
+        [Test]
+        public async Task CreateCancelOutside_WhenRequestIsSuccessful_Staff_ReturnsSuccessResponse()
+        {
+            // Arrange
+            var requestCreateCancelOutsideDTOSample = new RequestCreateCancelOutsideDTO
+            {
+                RequestName = "SampleRequest",
+                Content = "SampleContent",
+                IssueId = Guid.NewGuid(),
+                RequestCategoryId = RequestCategoryConst.CATEGORY_CANCEL_OUTSIDE
+            };
+
+            var creatorId =
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
 
             requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));

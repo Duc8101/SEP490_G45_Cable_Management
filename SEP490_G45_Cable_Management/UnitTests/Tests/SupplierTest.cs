@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace UnitTests.Tests
 {
     [TestFixture]
-    internal class SupplierTests
+    public class SupplierTest
     {
         private Mock<ISupplierService> supplierService;
         private SupplierController controller;
@@ -38,17 +38,7 @@ namespace UnitTests.Tests
             Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
         }
 
-        [Test]
-        public async Task List_WhenUserIsNotAdmin_ReturnsForbiddenResponse()
-        {
-            // Act
-            var result = await controller.List();
 
-            // Assert
-            Assert.That(result.Data, Is.Null);
-            Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập"));
-            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
-        }
 
         [Test]
         public async Task Create_WhenUserIsNotAdmin_ReturnsForbiddenResponse()
@@ -121,7 +111,7 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task ListPaged_WhenDataRetrievedSuccessfully_ReturnsListOfSuppliers()
+        public async Task ListPaged_WhenDataRetrievedSuccessfully_Admin_ReturnsListOfSuppliers()
         {
             // Arrange
             var name = "SampleName";
@@ -134,6 +124,71 @@ namespace UnitTests.Tests
    };
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+
+            supplierService.Setup(x => x.ListPaged(name, page))
+                .ReturnsAsync(new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(
+                    new PagedResultDTO<SupplierListDTO>(page, expectedSuppliers.Count,
+                                                        PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE,
+                                                        expectedSuppliers),
+                    string.Empty));
+
+            // Act
+            var result = await controller.List(name, page);
+
+            supplierService.Verify(x => x.ListPaged(name, page));
+
+            // Assert
+            Assert.That(result.Data, Is.Not.Null);
+            Assert.That(result.Data.Results, Is.EqualTo(expectedSuppliers));
+            Assert.That(result.Message, Is.EqualTo(string.Empty));
+        }
+        [Test]
+        public async Task ListPaged_WhenDataRetrievedSuccessfully_Leader_ReturnsListOfSuppliers()
+        {
+            // Arrange
+            var name = "SampleName";
+            var page = 1;
+
+            // Define a sample list of suppliers that the method should return
+            var expectedSuppliers = new List<SupplierListDTO> {
+    new SupplierListDTO { SupplierId = 1, SupplierName = "Supplier1" },
+    new SupplierListDTO { SupplierId = 2, SupplierName = "Supplier2" }
+   };
+
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+
+            supplierService.Setup(x => x.ListPaged(name, page))
+                .ReturnsAsync(new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(
+                    new PagedResultDTO<SupplierListDTO>(page, expectedSuppliers.Count,
+                                                        PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE,
+                                                        expectedSuppliers),
+                    string.Empty));
+
+            // Act
+            var result = await controller.List(name, page);
+
+            supplierService.Verify(x => x.ListPaged(name, page));
+
+            // Assert
+            Assert.That(result.Data, Is.Not.Null);
+            Assert.That(result.Data.Results, Is.EqualTo(expectedSuppliers));
+            Assert.That(result.Message, Is.EqualTo(string.Empty));
+        }
+
+        [Test]
+        public async Task ListPaged_WhenDataRetrievedSuccessfully_WarehouseKeeper_ReturnsListOfSuppliers()
+        {
+            // Arrange
+            var name = "SampleName";
+            var page = 1;
+
+            // Define a sample list of suppliers that the method should return
+            var expectedSuppliers = new List<SupplierListDTO> {
+    new SupplierListDTO { SupplierId = 1, SupplierName = "Supplier1" },
+    new SupplierListDTO { SupplierId = 2, SupplierName = "Supplier2" }
+   };
+
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
 
             supplierService.Setup(x => x.ListPaged(name, page))
                 .ReturnsAsync(new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(
@@ -271,10 +326,10 @@ namespace UnitTests.Tests
             var errorMessage = "An error occurred while creating the supplier.";
 
             supplierService.Setup(x => x.Create(supplierCreateDTO, creatorId))
-                .Throws(new Exception(errorMessage));
+                .ThrowsAsync(new Exception(errorMessage));
 
             // Act and Assert
-            Assert.Throws<Exception>(async() => await controller.Create(supplierCreateDTO));
+            Assert.ThrowsAsync<Exception>(async () => await controller.Create(supplierCreateDTO));
         }
 
         [Test]

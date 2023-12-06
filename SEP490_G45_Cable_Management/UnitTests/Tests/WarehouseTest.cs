@@ -1,10 +1,4 @@
 ﻿using DataAccess.DTO.WarehouseDTO;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UnitTests.Tests
 {
@@ -39,20 +33,6 @@ namespace UnitTests.Tests
             Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
         }
 
-        [Test]
-        public async Task List_WhenUserIsNotWarehouseKeeperOrStaff_ReturnsForbiddenResponse()
-        {
-            // Arrange
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
-
-            // Act
-            var result = await controller.List();
-
-            // Assert
-            Assert.That(result.Data, Is.Null);
-            Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập trang này"));
-            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
-        }
 
         [Test]
         public async Task Create_WhenUserIsNotAdmin_ReturnsForbiddenResponse()
@@ -106,7 +86,7 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public async Task ListPaged_WhenDataRetrievedSuccessfully_ReturnsListOfWarehouses()
+        public async Task ListPaged_WhenDataRetrievedSuccessfully_Admin_ReturnsListOfWarehouses()
         {
             // Arrange
             var name = "SampleName";
@@ -137,6 +117,72 @@ namespace UnitTests.Tests
             Assert.That(result.Data.Results, Is.EqualTo(expectedWarehouses));
             Assert.That(result.Message, Is.EqualTo(string.Empty));
         }
+        [Test]
+        public async Task ListPaged_WhenDataRetrievedSuccessfully_Warehousekeeper_ReturnsListOfWarehouses()
+        {
+            // Arrange
+            var name = "SampleName";
+            var page = 1;
+
+            // Define a sample list of warehouses that the method should return
+            var expectedWarehouses = new List<WarehouseListDTO> {
+    new WarehouseListDTO { WarehouseId = 1, WarehouseName = "Warehouse1" },
+    new WarehouseListDTO { WarehouseId = 2, WarehouseName = "Warehouse2" }
+   };
+
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+
+            warehouseService.Setup(x => x.ListPaged(name, page))
+                .ReturnsAsync(new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(
+                    new PagedResultDTO<WarehouseListDTO>(page, expectedWarehouses.Count,
+                                                         PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE,
+                                                         expectedWarehouses),
+                    string.Empty));
+
+            // Act
+            var result = await controller.List(name, page);
+
+            warehouseService.Verify(x => x.ListPaged(name, page));
+
+            // Assert
+            Assert.That(result.Data, Is.Not.Null);
+            Assert.That(result.Data.Results, Is.EqualTo(expectedWarehouses));
+            Assert.That(result.Message, Is.EqualTo(string.Empty));
+        }
+
+        [Test]
+        public async Task ListPaged_WhenDataRetrievedSuccessfully_Leader_ReturnsListOfWarehouses()
+        {
+            // Arrange
+            var name = "SampleName";
+            var page = 1;
+
+            // Define a sample list of warehouses that the method should return
+            var expectedWarehouses = new List<WarehouseListDTO> {
+    new WarehouseListDTO { WarehouseId = 1, WarehouseName = "Warehouse1" },
+    new WarehouseListDTO { WarehouseId = 2, WarehouseName = "Warehouse2" }
+   };
+
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+
+            warehouseService.Setup(x => x.ListPaged(name, page))
+                .ReturnsAsync(new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(
+                    new PagedResultDTO<WarehouseListDTO>(page, expectedWarehouses.Count,
+                                                         PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE,
+                                                         expectedWarehouses),
+                    string.Empty));
+
+            // Act
+            var result = await controller.List(name, page);
+
+            warehouseService.Verify(x => x.ListPaged(name, page));
+
+            // Assert
+            Assert.That(result.Data, Is.Not.Null);
+            Assert.That(result.Data.Results, Is.EqualTo(expectedWarehouses));
+            Assert.That(result.Message, Is.EqualTo(string.Empty));
+        }
+
 
         [Test]
         public void ListPaged_WhenExceptionOccurs_ReturnsNull()

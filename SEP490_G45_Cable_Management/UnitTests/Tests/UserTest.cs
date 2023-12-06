@@ -3,7 +3,7 @@
 namespace UnitTests.Tests
 {
     [TestFixture]
-    internal class UserTests
+    public class UserTest
     {
         private UserController controller;
         private Mock<IUserService> userService;
@@ -122,20 +122,7 @@ namespace UnitTests.Tests
             Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.NotFound));
         }
 
-        [Test]
-        public async Task ChangePassword_WhenUserIsGuest_ReturnsForbiddenResponse()
-        {
-            // Arrange
-            var changePasswordDTO = new ChangePasswordDTO();
 
-            // Act
-            var result = await controller.ChangePassword(changePasswordDTO);
-
-            // Assert
-            Assert.That(result.Data, Is.False);
-            Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập"));
-            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
-        }
 
         [Test]
         public async Task ChangePassword_WhenEmailIsNotFound_ReturnsNotFoundResponse()

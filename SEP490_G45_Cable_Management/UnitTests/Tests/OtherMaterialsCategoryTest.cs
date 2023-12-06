@@ -4,7 +4,7 @@ using Moq;
 namespace UnitTests.Tests
 {
     [TestFixture]
-    internal class OtherMaterialsCategoryTests
+    public class OtherMaterialsCategoryTest
     {
         private OtherMaterialsCategoryController controller;
         private Mock<IOtherMaterialsCategoryService> otherMaterialsCategoryService;
@@ -45,7 +45,7 @@ namespace UnitTests.Tests
             var expectedRowCount = 10;
             var expectedPage = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             otherMaterialsCategoryService.Setup(x => x.ListPaged(null, expectedPage))
                 .ReturnsAsync(new ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>>(
@@ -217,7 +217,7 @@ namespace UnitTests.Tests
             var categoryId = 1;
             var sampleDTO = new OtherMaterialsCategoryCreateUpdateDTO { OtherMaterialsCategoryName = "" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
 
             otherMaterialsCategoryService.Setup(x => x.Update(categoryId, sampleDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên vật liệu không được để trống", (int)HttpStatusCode.Conflict));
