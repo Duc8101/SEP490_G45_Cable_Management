@@ -6,9 +6,9 @@ namespace API.Model.DAO
 {
     public class DAONodeMaterialCategory : BaseDAO
     {
-        public async Task<NodeMaterialCategory?> getMaterial(int MaterialCategoryID)
+        public async Task<NodeMaterialCategory?> getMaterial(int MaterialCategoryID, Guid NodeID)
         {
-            return await context.NodeMaterialCategories.Where(n => n.OtherMaterialCategoryId == MaterialCategoryID && n.IsDeleted == false).FirstOrDefaultAsync();
+            return await context.NodeMaterialCategories.Where(n => n.OtherMaterialCategoryId == MaterialCategoryID && n.IsDeleted == false && n.NodeId == NodeID).FirstOrDefaultAsync();
         }
         public async Task CreateNodeMaterialCategory(NodeMaterialCategory material)
         {

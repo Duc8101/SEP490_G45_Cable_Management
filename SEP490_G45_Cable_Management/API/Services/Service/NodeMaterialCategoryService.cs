@@ -23,7 +23,7 @@ namespace API.Services.Service
                 List<NodeMaterialCategory> listUpdate = new List<NodeMaterialCategory>();
                 foreach(MaterialCategoryDTO item in DTO.MaterialCategoryDTOs)
                 {
-                    NodeMaterialCategory? material = await daoMaterial.getMaterial(item.OtherMaterialsCategoryId);
+                    NodeMaterialCategory? material = await daoMaterial.getMaterial(item.OtherMaterialsCategoryId, NodeID);
                     // if material category not exist
                     if (material == null)
                     {
