@@ -1,6 +1,5 @@
 ﻿using DataAccess.Entity;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
 
 namespace API.Model.DAO
 {
@@ -25,12 +24,10 @@ namespace API.Model.DAO
             return await context.NodeMaterialCategories.Include(n => n.OtherMaterialCategory).OrderByDescending(n => n.UpdateAt)
                 .Where(n => n.NodeId == NodeID && n.IsDeleted == false).ToListAsync();
         }
-
         public async Task<List<OtherMaterialsCategory>> getListOtherMaterialCategory(Guid RouteID)
         {
-            return await context.NodeMaterialCategories.Where(n => n.Node.RouteId == RouteID/* && n.IsDeleted == false*/).Select(n => n.OtherMaterialCategory).Distinct().ToListAsync();
+            return await context.NodeMaterialCategories.Where(n => n.Node.RouteId == RouteID && n.IsDeleted == false).Select(n => n.OtherMaterialCategory).Distinct().ToListAsync();
         }
-
         public async Task<int> getSumQuantity(Guid RouteID, int OtherMaterialCategoryID)
         {
             return await context.NodeMaterialCategories.Where(n => n.Node.RouteId == RouteID && n.IsDeleted == false && n.OtherMaterialCategoryId == OtherMaterialCategoryID)
