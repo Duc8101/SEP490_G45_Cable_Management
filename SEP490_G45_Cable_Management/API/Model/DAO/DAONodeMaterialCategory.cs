@@ -26,11 +26,11 @@ namespace API.Model.DAO
         }
         public async Task<List<OtherMaterialsCategory>> getListOtherMaterialCategory(Guid RouteID)
         {
-            return await context.NodeMaterialCategories.Where(n => n.Node.RouteId == RouteID && n.IsDeleted == false).Select(n => n.OtherMaterialCategory).Distinct().ToListAsync();
+            return await context.NodeMaterialCategories.Where(n => n.Node.RouteId == RouteID && n.Node.IsDeleted == false && n.IsDeleted == false).Select(n => n.OtherMaterialCategory).Distinct().ToListAsync();
         }
         public async Task<int> getSumQuantity(Guid RouteID, int OtherMaterialCategoryID)
         {
-            return await context.NodeMaterialCategories.Where(n => n.Node.RouteId == RouteID && n.IsDeleted == false && n.OtherMaterialCategoryId == OtherMaterialCategoryID)
+            return await context.NodeMaterialCategories.Where(n => n.Node.RouteId == RouteID && n.Node.IsDeleted == false && n.IsDeleted == false && n.OtherMaterialCategoryId == OtherMaterialCategoryID)
                 .SumAsync(n => n.Quantity);
         }
     }

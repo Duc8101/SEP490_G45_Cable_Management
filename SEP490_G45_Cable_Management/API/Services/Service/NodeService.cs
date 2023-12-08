@@ -12,6 +12,7 @@ namespace API.Services.Service
     {
         private readonly DAONode daoNode = new DAONode();
         private readonly DAONodeMaterialCategory daoCategory = new DAONodeMaterialCategory();
+        private readonly DAORoute daoRoute = new DAORoute();
         private async Task<List<NodeMaterialCategoryListDTO>> getListNodeCategory(Guid NodeID)
         {
             List<NodeMaterialCategory> NodeMaterialCategories = await daoCategory.getList(NodeID);
@@ -66,28 +67,19 @@ namespace API.Services.Service
                 return new ResponseDTO<List<NodeListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        private async Task UpdateNodeDeleted(Guid RouteID)
-        {
-            List<Node> list = await daoNode.getListDeleted(RouteID);
-            if (list.Count > 0)
-            {
-                foreach (Node node in list)
-                {
-                    node.RouteId = null;
-                    await daoNode.UpdateNode(node);
-                }
-            }
-        }
         public async Task<ResponseDTO<bool>> Create(NodeCreateDTO DTO)
         {
             if (DTO.RouteId == null)
             {
-                return new ResponseDTO<bool>(false, "Bạn chưa chọn tuyến", (int)HttpStatusCode.Conflict);
+                return new ResponseDTO<bool>(false, "Bạn chưa chọn tuyến", (int) HttpStatusCode.Conflict);
             }
             try
             {
-                // update node deleted
-                await UpdateNodeDeleted(DTO.RouteId.Value);
+                DataAccess.Entity.Route? route = await daoRoute.getRoute(DTO.RouteId.Value);
+                if(route == null)
+                {
+                    return new ResponseDTO<bool>(false, "Không tìm thấy tuyến", (int) HttpStatusCode.NotFound);
+                }
                 // --------------------------- update list node order by ---------------------------
                 List<Node> list = await daoNode.getListNodeOrderByNumberOrder(DTO.RouteId.Value);
                 if (list.Count > 0)
