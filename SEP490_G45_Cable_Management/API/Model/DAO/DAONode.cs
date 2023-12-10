@@ -6,13 +6,9 @@ namespace API.Model.DAO
 {
     public class DAONode : BaseDAO
     {
-        public async Task<List<Node>> getListNotDeleted(Guid RouteID)
+        public async Task<List<Node>> getList(Guid RouteID)
         {
             return await context.Nodes.Where(n => n.IsDeleted == false && n.RouteId == RouteID).OrderByDescending(n => n.UpdateAt).ToListAsync();
-        }
-        public async Task<List<Node>> getListDeleted(Guid RouteID)
-        {
-            return await context.Nodes.Where(n => n.IsDeleted == true && n.RouteId == RouteID).ToListAsync();
         }
         public async Task UpdateNode(Node node)
         {

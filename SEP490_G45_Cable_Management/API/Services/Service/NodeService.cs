@@ -30,7 +30,7 @@ namespace API.Services.Service
         }
         private async Task<List<NodeListDTO>> getListNode(Guid RouteID)
         {
-            List<Node> list = await daoNode.getListNotDeleted(RouteID);
+            List<Node> list = await daoNode.getList(RouteID);
             List<NodeListDTO> result = new List<NodeListDTO>();
             foreach (Node node in list)
             {

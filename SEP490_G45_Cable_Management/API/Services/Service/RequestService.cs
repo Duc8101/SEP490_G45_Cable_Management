@@ -1466,7 +1466,7 @@ namespace API.Services.Service
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> ApproveRequestCancelOutside(Guid ApproverID, Request request, string ApproverName)
+        private async Task<ResponseDTO<bool>> ApproveRequestCancelOutside(Guid ApproverID, Request request, string ApproverName)
         {
             List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
             if (requestCables.Count > 0)
