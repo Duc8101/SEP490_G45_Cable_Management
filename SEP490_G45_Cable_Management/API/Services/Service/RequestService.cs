@@ -1493,10 +1493,14 @@ namespace API.Services.Service
         {
             try
             {
-                DataAccess.Entity.Request? request = await daoRequest.getRequest(RequestID);
-                if (request == null || !request.Status.Equals(RequestConst.STATUS_PENDING))
+                Request? request = await daoRequest.getRequest(RequestID);
+                if (request == null)
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
+                }
+                if (!request.Status.Equals(RequestConst.STATUS_PENDING))
+                {
+                    return new ResponseDTO<bool>(false, "Yêu cầu đã được chấp thuận hoặc bị từ chối", (int)HttpStatusCode.NotFound);
                 }
                 await daoRequest.DeleteRequest(request);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
