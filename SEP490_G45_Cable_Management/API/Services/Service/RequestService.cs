@@ -1014,13 +1014,13 @@ namespace API.Services.Service
                 if (cable == null)
                 {
                     return new ResponseDTO<bool>(false, request.Cable.CableCategory.CableCategoryName + " với ID: " + request.CableId
-                                + " không tồn tại ", (int)HttpStatusCode.NotFound);
+                                + " không tồn tại ", (int) HttpStatusCode.NotFound);
                 }
 
                 if (cable.StartPoint < 0 || cable.EndPoint < 0 || cable.StartPoint >= cable.EndPoint)
                 {
                     return new ResponseDTO<bool>(false, request.Cable.CableCategory.CableCategoryName + " với ID: " + request.CableId
-                                + " có chỉ số đầu chỉ số cuối không hợp lệ ", (int)HttpStatusCode.NotFound);
+                                + " có chỉ số đầu chỉ số cuối không hợp lệ ", (int) HttpStatusCode.Conflict);
                 }
             }
             return new ResponseDTO<bool>(true, string.Empty);
