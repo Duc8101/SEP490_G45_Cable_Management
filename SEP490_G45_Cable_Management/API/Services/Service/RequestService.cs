@@ -1500,7 +1500,7 @@ namespace API.Services.Service
                 }
                 if (!request.Status.Equals(RequestConst.STATUS_PENDING))
                 {
-                    return new ResponseDTO<bool>(false, "Yêu cầu đã được chấp thuận hoặc bị từ chối", (int)HttpStatusCode.NotFound);
+                    return new ResponseDTO<bool>(false, "Yêu cầu đã được chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
                 }
                 await daoRequest.DeleteRequest(request);
                 return new ResponseDTO<bool>(true, "Xóa thành công");
@@ -1514,7 +1514,7 @@ namespace API.Services.Service
         {
             try
             {
-                DataAccess.Entity.Request? request = await daoRequest.getRequest(RequestID);
+                Request? request = await daoRequest.getRequest(RequestID);
                 if (request == null)
                 {
                     return new ResponseDTO<RequestDetailDTO?>(null, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
