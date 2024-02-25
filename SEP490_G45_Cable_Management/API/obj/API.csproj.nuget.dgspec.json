@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\SEP490\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\API\\API.csproj": {}
+    "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\API\\API.csproj": {}
   },
   "projects": {
-    "D:\\SEP490\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\API\\API.csproj": {
+    "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\SEP490\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\API\\API.csproj",
+        "projectUniqueName": "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "D:\\SEP490\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\API\\API.csproj",
+        "projectPath": "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\API\\API.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\SEP490\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\API\\obj\\",
+        "outputPath": "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -29,8 +29,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\SEP490\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj": {
-                "projectPath": "D:\\SEP490\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj"
+              "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj": {
+                "projectPath": "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj"
               }
             }
           }
@@ -95,14 +95,14 @@
         }
       }
     },
-    "D:\\SEP490\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj": {
+    "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\SEP490\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj",
+        "projectUniqueName": "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj",
         "projectName": "DataAccess",
-        "projectPath": "D:\\SEP490\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj",
+        "projectPath": "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\SEP490\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\DataAccess\\obj\\",
+        "outputPath": "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\DataAccess\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
