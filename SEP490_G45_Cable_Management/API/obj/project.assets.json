@@ -3265,11 +3265,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\API\\API.csproj",
+      "projectUniqueName": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\API\\API.csproj",
       "projectName": "API",
-      "projectPath": "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\API\\API.csproj",
+      "projectPath": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\API\\API.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\API\\obj\\",
+      "outputPath": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -3287,8 +3287,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj": {
-              "projectPath": "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj"
+            "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj": {
+              "projectPath": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj"
             }
           }
         }

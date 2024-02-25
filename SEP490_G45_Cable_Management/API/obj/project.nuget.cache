@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Kg10aHcg0PsAX07VjKQ2CgHGSsUxewH3lrLK+SM/b4MD/Fh9teOh5q4zJiW0utG8lfjhyh0HtnhG2G8+oby8Rg==",
+  "dgSpecHash": "cfGv6ECWQmn4o0RJhGFF4O+SG1h5YtZ3AswS+4TypSYqcvheIPJGLXbpRUl0IupWsADdA6ZU/TCuvjCxlcyC0Q==",
   "success": true,
-  "projectFilePath": "D:\\.NET Project\\SEP490\\SEP490_G45_Cable_Management\\API\\API.csproj",
+  "projectFilePath": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\API\\API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\awssdk.core\\3.7.300.12\\awssdk.core.3.7.300.12.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\awssdk.simpleemail\\3.7.300.12\\awssdk.simpleemail.3.7.300.12.nupkg.sha512",
