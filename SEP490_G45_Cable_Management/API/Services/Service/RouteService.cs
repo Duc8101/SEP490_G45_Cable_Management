@@ -1,31 +1,27 @@
-﻿using DataAccess.DTO;
+﻿using API.Model.DAO;
+using API.Services.IService;
+using AutoMapper;
+using DataAccess.Const;
+using DataAccess.DTO;
 using DataAccess.DTO.RouteDTO;
 using System.Net;
-using API.Model.DAO;
-using System.Xml.Linq;
-using DataAccess.Const;
-using API.Services.IService;
 
 namespace API.Services.Service
 {
-    public class RouteService : IRouteService
+    public class RouteService : BaseService,  IRouteService
     {
         private readonly DAORoute daoRoute = new DAORoute();
+
+        public RouteService(IMapper mapper) : base(mapper)
+        {
+        }
+
         public async Task<ResponseDTO<List<RouteListDTO>?>> ListAll(string? name)
         {
             try
             {
                 List<DataAccess.Entity.Route> list = await daoRoute.getListAll(name);
-                List<RouteListDTO> result = new List<RouteListDTO>();
-                foreach (DataAccess.Entity.Route route in list)
-                {
-                    RouteListDTO DTO = new RouteListDTO()
-                    {
-                        RouteId = route.RouteId,
-                        RouteName = route.RouteName,
-                    };
-                    result.Add(DTO);
-                }
+                List<RouteListDTO> result = mapper.Map<List<RouteListDTO>>(list);
                 return new ResponseDTO<List<RouteListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
@@ -39,16 +35,7 @@ namespace API.Services.Service
             try
             {
                 List<DataAccess.Entity.Route> list = await daoRoute.getListPaged(page);
-                List<RouteListDTO> DTOs = new List<RouteListDTO>();
-                foreach (DataAccess.Entity.Route route in list)
-                {
-                    RouteListDTO DTO = new RouteListDTO()
-                    {
-                        RouteId = route.RouteId,
-                        RouteName = route.RouteName,
-                    };
-                    DTOs.Add(DTO);
-                }
+                List<RouteListDTO> DTOs = mapper.Map<List<RouteListDTO>>(list);
                 int RowCount = await daoRoute.getRowCount();
                 PagedResultDTO<RouteListDTO> result = new PagedResultDTO<RouteListDTO>(page, RowCount, PageSizeConst.MAX_ROUTE_LIST_IN_PAGE, DTOs);
                 return new ResponseDTO<PagedResultDTO<RouteListDTO>?>(result, string.Empty);

@@ -1,43 +1,30 @@
-﻿using DataAccess.Const;
+﻿using API.Model.DAO;
+using API.Services.IService;
+using AutoMapper;
+using DataAccess.Const;
 using DataAccess.DTO;
 using DataAccess.DTO.SupplierDTO;
 using DataAccess.Entity;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.Metrics;
 using System.Net;
-using API.Model.DAO;
-using API.Services.IService;
 
 namespace API.Services.Service
 {
-    public class SupplierService : ISupplierService
+    public class SupplierService : BaseService, ISupplierService
     {
         private readonly DAOSupplier daoSupplier = new DAOSupplier();
-        private async Task<List<SupplierListDTO>> getListPaged(string? name, int page)
+
+        public SupplierService(IMapper mapper) : base(mapper)
         {
-            List<Supplier> list = await daoSupplier.getListPaged(name, page);
-            List<SupplierListDTO> result = new List<SupplierListDTO>();
-            foreach (Supplier supplier in list)
-            {
-                SupplierListDTO DTO = new SupplierListDTO()
-                {
-                    SupplierId = supplier.SupplierId,
-                    SupplierName = supplier.SupplierName,
-                    Country = supplier.Country,
-                    SupplierDescription = supplier.SupplierDescription == null ? null : supplier.SupplierDescription,
-                };
-                result.Add(DTO);
-            }
-            return result;
         }
+
         public async Task<ResponseDTO<PagedResultDTO<SupplierListDTO>?>> ListPaged(string? name, int page)
         {
             try
             {
-                List<SupplierListDTO> list = await getListPaged(name, page);
+                List<Supplier> list = await daoSupplier.getListPaged(name, page);
+                List<SupplierListDTO> DTOs = mapper.Map<List<SupplierListDTO>>(list);
                 int RowCount = await daoSupplier.getRowCount(name);
-                PagedResultDTO<SupplierListDTO> result = new PagedResultDTO<SupplierListDTO>(page, RowCount, PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE, list);
+                PagedResultDTO<SupplierListDTO> result = new PagedResultDTO<SupplierListDTO>(page, RowCount, PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE, DTOs);
                 return new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
@@ -45,29 +32,14 @@ namespace API.Services.Service
                 return new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        private async Task<List<SupplierListDTO>> getListAll()
-        {
-            List<Supplier> list = await daoSupplier.getListAll();
-            List<SupplierListDTO> result = new List<SupplierListDTO>();
-            foreach (Supplier supplier in list)
-            {
-                SupplierListDTO DTO = new SupplierListDTO()
-                {
-                    SupplierId = supplier.SupplierId,
-                    SupplierName = supplier.SupplierName,
-                    Country = supplier.Country,
-                    SupplierDescription = supplier.SupplierDescription == null ? null : supplier.SupplierDescription,
-                };
-                result.Add(DTO);
-            }
-            return result;
-        }
+
         public async Task<ResponseDTO<List<SupplierListDTO>?>> ListAll()
         {
             try
             {
-                List<SupplierListDTO> list = await getListAll();
-                return new ResponseDTO<List<SupplierListDTO>?>(list, string.Empty);
+                List<Supplier> list = await daoSupplier.getListAll();
+                List<SupplierListDTO> data = mapper.Map<List<SupplierListDTO>>(list);
+                return new ResponseDTO<List<SupplierListDTO>?>(data, string.Empty);
             }
             catch (Exception ex)
             {
@@ -87,16 +59,11 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
-                Supplier supplier = new Supplier()
-                {
-                    SupplierName = DTO.SupplierName.Trim(),
-                    Country = DTO.Country == null || DTO.Country.Trim().Length == 0 ? null : DTO.Country.Trim(),
-                    SupplierDescription = DTO.SupplierDescription == null || DTO.SupplierDescription.Trim().Length == 0 ? null : DTO.SupplierDescription.Trim(),
-                    CreatedAt = DateTime.Now,
-                    UpdateAt = DateTime.Now,
-                    IsDeleted = false,
-                    CreatorId = CreatorID
-                };
+                Supplier supplier = mapper.Map<Supplier>(DTO);
+                supplier.CreatedAt = DateTime.Now;
+                supplier.UpdateAt = DateTime.Now;
+                supplier.IsDeleted = false;
+                supplier.CreatorId = CreatorID;
                 // create supplier
                 await daoSupplier.CreateSupplier(supplier);
                 return new ResponseDTO<bool>(true, "Thêm thành công");

@@ -1,6 +1,7 @@
 ﻿using API.Model.DAO;
 using API.Model.Util;
 using API.Services.IService;
+using AutoMapper;
 using DataAccess.Const;
 using DataAccess.DTO;
 using DataAccess.DTO.CableDTO;
@@ -11,7 +12,7 @@ using System.Net;
 
 namespace API.Services.Service
 {
-    public class RequestService : IRequestService
+    public class RequestService : BaseService, IRequestService
     {
         private readonly DAORequest daoRequest = new DAORequest();
         private readonly DAOIssue daoIssue = new DAOIssue();
@@ -24,33 +25,19 @@ namespace API.Services.Service
         private readonly DAOTransactionHistory daoHistory = new DAOTransactionHistory();
         private readonly DAOUser daoUser = new DAOUser();
         private readonly DAOWarehouse daoWarehouse = new DAOWarehouse();
-        private async Task<List<RequestListDTO>> getList(string? name, int? RequestCategoryID, string? status, Guid? CreatorID, int page)
+
+        public RequestService(IMapper mapper) : base(mapper)
         {
-            List<Request> list = await daoRequest.getListAll(name, RequestCategoryID, status, CreatorID, page);
-            List<RequestListDTO> result = new List<RequestListDTO>();
-            foreach (Request item in list)
-            {
-                RequestListDTO DTO = new RequestListDTO()
-                {
-                    RequestId = item.RequestId,
-                    RequestName = item.RequestName,
-                    Content = item.Content,
-                    CreatorName = item.Creator.Lastname + " " + item.Creator.Firstname,
-                    ApproverName = item.Approver == null ? null : item.Approver.Lastname + " " + item.Approver.Firstname,
-                    Status = item.Status,
-                    RequestCategoryName = item.RequestCategory.RequestCategoryName
-                };
-                result.Add(DTO);
-            }
-            return result;
         }
+
         public async Task<ResponseDTO<PagedResultDTO<RequestListDTO>?>> List(string? name, int? RequestCategoryID, string? status, Guid? CreatorID, int page)
         {
             try
             {
-                List<RequestListDTO> list = await getList(name, RequestCategoryID, status, CreatorID, page);
+                List<Request> list = await daoRequest.getListAll(name, RequestCategoryID, status, CreatorID, page);
+                List<RequestListDTO> DTOs = mapper.Map<List<RequestListDTO>>(list);
                 int RowCount = await daoRequest.getRowCount(name, RequestCategoryID, status, CreatorID);
-                PagedResultDTO<RequestListDTO> result = new PagedResultDTO<RequestListDTO>(page, RowCount, PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, list);
+                PagedResultDTO<RequestListDTO> result = new PagedResultDTO<RequestListDTO>(page, RowCount, PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, DTOs);
                 return new ResponseDTO<PagedResultDTO<RequestListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
@@ -112,7 +99,7 @@ namespace API.Services.Service
         // add request to db
         private async Task<Guid> CreateRequest(string RequestName, string? content, Guid? IssueID, Guid CreatorID, int RequestCategoryID, int? DeliverWarehouseID)
         {
-            DataAccess.Entity.Request request = new DataAccess.Entity.Request()
+            Request request = new Request()
             {
                 RequestId = Guid.NewGuid(),
                 RequestName = RequestName.Trim(),
@@ -1014,13 +1001,13 @@ namespace API.Services.Service
                 if (cable == null)
                 {
                     return new ResponseDTO<bool>(false, request.Cable.CableCategory.CableCategoryName + " với ID: " + request.CableId
-                                + " không tồn tại ", (int) HttpStatusCode.NotFound);
+                                + " không tồn tại ", (int)HttpStatusCode.NotFound);
                 }
 
                 if (cable.StartPoint < 0 || cable.EndPoint < 0 || cable.StartPoint >= cable.EndPoint)
                 {
                     return new ResponseDTO<bool>(false, request.Cable.CableCategory.CableCategoryName + " với ID: " + request.CableId
-                                + " có chỉ số đầu chỉ số cuối không hợp lệ ", (int) HttpStatusCode.Conflict);
+                                + " có chỉ số đầu chỉ số cuối không hợp lệ ", (int)HttpStatusCode.Conflict);
                 }
             }
             return new ResponseDTO<bool>(true, string.Empty);
@@ -1520,47 +1507,13 @@ namespace API.Services.Service
                     return new ResponseDTO<RequestDetailDTO?>(null, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
                 }
                 List<RequestCable> requestCables = await daoRequestCable.getList(RequestID);
-                List<RequestCableListDTO> RequestCableDTOs = new List<RequestCableListDTO>();
-                foreach (RequestCable item in requestCables)
-                {
-                    RequestCableListDTO DTO = new RequestCableListDTO()
-                    {
-                        CableCategoryName = item.Cable.CableCategory.CableCategoryName,
-                        StartPoint = item.StartPoint,
-                        EndPoint = item.EndPoint,
-                        Length = item.Length,
-                        RecoveryDestWarehouseName = item.RecoveryDestWarehouse == null ? null : item.RecoveryDestWarehouse.WarehouseName
-                    };
-                    RequestCableDTOs.Add(DTO);
-                }
+                List<RequestCableListDTO> RequestCableDTOs = mapper.Map<List<RequestCableListDTO>>(requestCables);
                 List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(RequestID);
-                List<RequestOtherMaterialsListDTO> RequestOtherMaterialsDTOs = new List<RequestOtherMaterialsListDTO>();
-                foreach (RequestOtherMaterial item in requestMaterials)
-                {
-                    RequestOtherMaterialsListDTO DTO = new RequestOtherMaterialsListDTO()
-                    {
-                        OtherMaterialsCategoryName = item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName,
-                        Quantity = item.Quantity,
-                        RecoveryDestWarehouseName = item.RecoveryDestWarehouse == null ? null : item.RecoveryDestWarehouse.WarehouseName
-                    };
-                    RequestOtherMaterialsDTOs.Add(DTO);
-                }
-                RequestDetailDTO detail = new RequestDetailDTO()
-                {
-                    RequestId = request.RequestId,
-                    RequestName = request.RequestName,
-                    Content = request.Content,
-                    CreatorName = request.Creator.Lastname + " " + request.Creator.Firstname,
-                    ApproverName = request.Approver == null ? null : request.Approver.Lastname + " " + request.Approver.Firstname,
-                    Status = request.Status,
-                    RequestCategoryName = request.RequestCategory.RequestCategoryName,
-                    IssueName = request.Issue == null ? null : request.Issue.IssueName,
-                    CableRoutingName = request.Issue == null ? null : request.Issue.CableRoutingName,
-                    DeliverWarehouseName = request.DeliverWarehouse == null ? null : request.DeliverWarehouse.WarehouseName,
-                    RequestCableDTOs = RequestCableDTOs,
-                    RequestOtherMaterialsDTOs = RequestOtherMaterialsDTOs
-                };
-                return new ResponseDTO<RequestDetailDTO?>(detail, string.Empty);
+                List<RequestOtherMaterialsListDTO> RequestOtherMaterialsDTOs = mapper.Map<List<RequestOtherMaterialsListDTO>>(requestMaterials);
+                RequestDetailDTO data = mapper.Map<RequestDetailDTO>(request);
+                data.RequestCableDTOs = RequestCableDTOs;
+                data.RequestOtherMaterialsDTOs = RequestOtherMaterialsDTOs;
+                return new ResponseDTO<RequestDetailDTO?>(data, string.Empty);
             }
             catch (Exception ex)
             {

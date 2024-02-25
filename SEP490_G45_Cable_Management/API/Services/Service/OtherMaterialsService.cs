@@ -5,47 +5,27 @@ using DataAccess.Entity;
 using System.Net;
 using API.Model.DAO;
 using API.Services.IService;
+using AutoMapper;
 
 namespace API.Services.Service
 {
-    public class OtherMaterialsService : IOtherMaterialsService
+    public class OtherMaterialsService : BaseService, IOtherMaterialsService
     {
         private readonly DAOOtherMaterial daoOtherMaterials = new DAOOtherMaterial();
-        private List<OtherMaterialsListDTO> getListDTO(List<OtherMaterial> list)
+
+        public OtherMaterialsService(IMapper mapper) : base(mapper)
         {
-            List<OtherMaterialsListDTO> result = new List<OtherMaterialsListDTO>();
-            foreach (OtherMaterial item in list)
-            {
-                OtherMaterialsListDTO DTO = new OtherMaterialsListDTO()
-                {
-                    OtherMaterialsId = item.OtherMaterialsId,
-                    Unit = item.Unit,
-                    Quantity = item.Quantity,
-                    Code = item.Code,
-                    WarehouseId = item.WarehouseId,
-                    WarehouseName = item.Warehouse == null ? null : item.Warehouse.WarehouseName,
-                    OtherMaterialsCategoryId = item.OtherMaterialsCategoryId,
-                    OtherMaterialsCategoryName = item.OtherMaterialsCategory.OtherMaterialsCategoryName,
-                    Status = item.Status,
-                };
-                result.Add(DTO);
-            }
-            return result;
         }
-        private async Task<List<OtherMaterialsListDTO>> getListPaged(string? filter, int? WareHouseID, Guid? WareHouseKeeperID, int page)
-        {
-            List<OtherMaterial> list = await daoOtherMaterials.getListPaged(filter, WareHouseID, WareHouseKeeperID, page);
-            List<OtherMaterialsListDTO> result = getListDTO(list);
-            return result;
-        }
+
         public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> ListPaged(string? filter, int? WareHouseID, Guid? WareHouseKeeperID, int page)
         {
             try
             {
-                List<OtherMaterialsListDTO> list = await getListPaged(filter, WareHouseID, WareHouseKeeperID, page);
+                List<OtherMaterial> list = await daoOtherMaterials.getListPaged(filter, WareHouseID, WareHouseKeeperID, page);
+                List<OtherMaterialsListDTO> DTOs = mapper.Map<List<OtherMaterialsListDTO>>(list);
                 int RowCount = await daoOtherMaterials.getRowCount(filter, WareHouseID, WareHouseKeeperID);
                 int sum = await daoOtherMaterials.getSum(filter, WareHouseID, WareHouseKeeperID);
-                PagedResultDTO<OtherMaterialsListDTO> result = new PagedResultDTO<OtherMaterialsListDTO>(page, RowCount, PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE, list, sum);
+                PagedResultDTO<OtherMaterialsListDTO> result = new PagedResultDTO<OtherMaterialsListDTO>(page, RowCount, PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE, DTOs, sum);
                 return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
@@ -53,6 +33,7 @@ namespace API.Services.Service
                 return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
+
         public async Task<ResponseDTO<bool>> Create(OtherMaterialsCreateUpdateDTO DTO)
         {
             if (DTO.Code == null || DTO.Code.Trim().Length == 0)
@@ -86,19 +67,12 @@ namespace API.Services.Service
                 // if not exist
                 if (material == null)
                 {
-                    material = new OtherMaterial()
-                    {
-                        Unit = DTO.Unit.Trim(),
-                        Quantity = DTO.Quantity,
-                        Code = DTO.Code.Trim(),
-                        SupplierId = 1/*DTO.SupplierId*/,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                        WarehouseId = DTO.WarehouseId,
-                        Status = DTO.Status.Trim(),
-                        OtherMaterialsCategoryId = DTO.OtherMaterialsCategoryId
-                    };
+                    material = mapper.Map<OtherMaterial>(DTO);
+                    material.Code = DTO.Code.Trim();
+                    material.SupplierId = 1;
+                    material.CreatedAt = DateTime.Now;
+                    material.UpdateAt = DateTime.Now;
+                    material.IsDeleted = false;
                     await daoOtherMaterials.CreateMaterial(material);
                 }
                 else
@@ -192,8 +166,8 @@ namespace API.Services.Service
             try
             {
                 List<OtherMaterial> list = await daoOtherMaterials.getListAll(WareHouseID);
-                List<OtherMaterialsListDTO> result = getListDTO(list);
-                return new ResponseDTO<List<OtherMaterialsListDTO>?>(result, string.Empty);
+                List<OtherMaterialsListDTO> data = mapper.Map<List<OtherMaterialsListDTO>>(list);
+                return new ResponseDTO<List<OtherMaterialsListDTO>?>(data, string.Empty);
             }
             catch (Exception ex)
             {

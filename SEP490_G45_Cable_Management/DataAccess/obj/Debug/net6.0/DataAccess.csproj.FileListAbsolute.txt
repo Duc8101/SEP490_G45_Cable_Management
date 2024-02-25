@@ -22,3 +22,15 @@ D:\.NET Project\SEP490\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\D
 D:\.NET Project\SEP490\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\refint\DataAccess.dll
 D:\.NET Project\SEP490\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\DataAccess.pdb
 D:\.NET Project\SEP490\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\ref\DataAccess.dll
+D:\C# Project\SEP490\SEP490_G45_Cable_Management\DataAccess\bin\Debug\net6.0\DataAccess.deps.json
+D:\C# Project\SEP490\SEP490_G45_Cable_Management\DataAccess\bin\Debug\net6.0\DataAccess.dll
+D:\C# Project\SEP490\SEP490_G45_Cable_Management\DataAccess\bin\Debug\net6.0\DataAccess.pdb
+D:\C# Project\SEP490\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\DataAccess.csproj.AssemblyReference.cache
+D:\C# Project\SEP490\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\DataAccess.GeneratedMSBuildEditorConfig.editorconfig
+D:\C# Project\SEP490\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\DataAccess.AssemblyInfoInputs.cache
+D:\C# Project\SEP490\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\DataAccess.AssemblyInfo.cs
+D:\C# Project\SEP490\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\DataAccess.csproj.CoreCompileInputs.cache
+D:\C# Project\SEP490\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\DataAccess.dll
+D:\C# Project\SEP490\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\refint\DataAccess.dll
+D:\C# Project\SEP490\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\DataAccess.pdb
+D:\C# Project\SEP490\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\ref\DataAccess.dll

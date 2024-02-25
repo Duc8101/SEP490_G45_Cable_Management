@@ -1,5 +1,6 @@
 using API.Services.IService;
 using API.Services.Service;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -66,6 +67,11 @@ namespace API
                     .AllowAnyMethod()
                     .AllowAnyHeader();
             }));
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new MappingProfile());
+            });
             builder.Services.AddScoped<ICableCategoryService, CableCategoryService>();
             builder.Services.AddScoped<ICableService, CableService>();
             builder.Services.AddScoped<IIssueService, IssueService>();

@@ -1,5 +1,6 @@
 ﻿using API.Model.DAO;
 using API.Services.IService;
+using AutoMapper;
 using DataAccess.DTO;
 using DataAccess.DTO.NodeDTO;
 using DataAccess.DTO.NodeMaterialCategoryDTO;
@@ -8,59 +9,29 @@ using System.Net;
 
 namespace API.Services.Service
 {
-    public class NodeService : INodeService
+    public class NodeService : BaseService, INodeService
     {
         private readonly DAONode daoNode = new DAONode();
         private readonly DAONodeMaterialCategory daoCategory = new DAONodeMaterialCategory();
         private readonly DAORoute daoRoute = new DAORoute();
-        private async Task<List<NodeMaterialCategoryListDTO>> getListNodeCategory(Guid NodeID)
+
+        public NodeService(IMapper mapper) : base(mapper)
         {
-            List<NodeMaterialCategory> NodeMaterialCategories = await daoCategory.getList(NodeID);
-            List<NodeMaterialCategoryListDTO> list = new List<NodeMaterialCategoryListDTO>();
-            foreach (NodeMaterialCategory item in NodeMaterialCategories)
-            {
-                NodeMaterialCategoryListDTO categoryDTO = new NodeMaterialCategoryListDTO()
-                {
-                    OtherMaterialsCategoryName = item.OtherMaterialCategory.OtherMaterialsCategoryName,
-                    Quantity = item.Quantity,
-                };
-                list.Add(categoryDTO);
-            }
-            return list;
         }
-        private async Task<List<NodeListDTO>> getListNode(Guid RouteID)
-        {
-            List<Node> list = await daoNode.getList(RouteID);
-            List<NodeListDTO> result = new List<NodeListDTO>();
-            foreach (Node node in list)
-            {
-                List<NodeMaterialCategoryListDTO> categories = await getListNodeCategory(node.Id);
-                NodeListDTO DTO = new NodeListDTO()
-                {
-                    Id = node.Id,
-                    NodeCode = node.NodeCode,
-                    NodeNumberSign = node.NodeNumberSign,
-                    Address = node.Address,
-                    Longitude = node.Longitude,
-                    Latitude = node.Latitude,
-                    Status = node.Status,
-                    RouteId = node.RouteId,
-                    Note = node.Note,
-                    NumberOrder = node.NumberOrder,
-                    //NodeCables = (List<NodeCable>)node.NodeCables,
-                    //NodeMaterials = (List<NodeMaterial>)node.NodeMaterials,
-                    NodeMaterialCategoryListDTOs = categories
-                };
-                result.Add(DTO);
-            }
-            return result;
-        }
+
         public async Task<ResponseDTO<List<NodeListDTO>?>> List(Guid RouteID)
         {
             try
             {
-                List<NodeListDTO> list = await getListNode(RouteID);
-                return new ResponseDTO<List<NodeListDTO>?>(list, string.Empty);
+                List<Node> list = await daoNode.getList(RouteID);
+                List<NodeListDTO> data = mapper.Map<List<NodeListDTO>>(list);
+                foreach (NodeListDTO item in data)
+                {
+                    List<NodeMaterialCategory> NodeMaterialCategories = await daoCategory.getList(item.Id);
+                    List<NodeMaterialCategoryListDTO> categories = mapper.Map<List<NodeMaterialCategoryListDTO>>(NodeMaterialCategories);
+                    item.NodeMaterialCategoryListDTOs = categories;
+                }
+                return new ResponseDTO<List<NodeListDTO>?>(data, string.Empty);
             }
             catch (Exception ex)
             {
@@ -151,24 +122,11 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<NodeListDTO?>(null, "Không tìm thấy điểm", (int)HttpStatusCode.NotFound);
                 }
-                List<NodeMaterialCategoryListDTO> list = await getListNodeCategory(NodeID);
-                NodeListDTO nodeDTO = new NodeListDTO()
-                {
-                    Id = node.Id,
-                    NodeCode = node.NodeCode,
-                    NodeNumberSign = node.NodeNumberSign,
-                    Address = node.Address,
-                    Longitude = node.Longitude,
-                    Latitude = node.Latitude,
-                    Status = node.Status,
-                    RouteId = node.RouteId,
-                    Note = node.Note,
-                    NumberOrder = node.NumberOrder,
-                    //NodeCables = (List<NodeCable>)node.NodeCables,
-                    //NodeMaterials = (List<NodeMaterial>)node.NodeMaterials,
-                    NodeMaterialCategoryListDTOs = list
-                };
-                return new ResponseDTO<NodeListDTO?>(nodeDTO, string.Empty);
+                List<NodeMaterialCategory> NodeMaterialCategories = await daoCategory.getList(NodeID);
+                List<NodeMaterialCategoryListDTO> list = mapper.Map<List<NodeMaterialCategoryListDTO>>(NodeMaterialCategories);
+                NodeListDTO DTO = mapper.Map<NodeListDTO>(node);
+                DTO.NodeMaterialCategoryListDTOs = list;
+                return new ResponseDTO<NodeListDTO?>(DTO, string.Empty);
             }
             catch (Exception ex)
             {

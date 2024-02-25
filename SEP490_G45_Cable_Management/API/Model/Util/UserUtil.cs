@@ -1,9 +1,10 @@
 ﻿using Amazon;
 using Amazon.SimpleEmail;
-using Amazon.SimpleEmail.Model;
 using API.Model.DAO;
 using DataAccess.Const;
 using DataAccess.Entity;
+using MailKit.Net.Smtp;
+using MimeKit;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -45,9 +46,9 @@ namespace API.Model.Util
                             "<p>Mật khẩu của bạn là: " + password + "</p>\n";
             return body;
         }
-        public static async Task sendEmail(string subject, string body, string to)
+        public static Task sendEmail(string subject, string body, string to)
         {
-            using (var client = new AmazonSimpleEmailServiceClient(RegionEndpoint.APSoutheast1))
+            /*using (var client = new AmazonSimpleEmailServiceClient(RegionEndpoint.APSoutheast1))
             {
                 SendEmailRequest sendRequest = new SendEmailRequest
                 {
@@ -70,28 +71,30 @@ namespace API.Model.Util
                     },
                 };
                 await client.SendEmailAsync(sendRequest);
-            }
-            /*                // get information of mail address
-                            ConfigurationBuilder builder = new ConfigurationBuilder();
-                        IConfigurationRoot config = builder.SetBasePath(Directory.GetCurrentDirectory())
-                            .AddJsonFile("appsettings.json", true, true).Build();
-                        IConfigurationSection mail = config.GetSection("MailAddress");
-                        // create message to send
-                        MimeMessage mime = new MimeMessage();
-                        MailboxAddress mailFrom = MailboxAddress.Parse(mail["Username"]);
-                        MailboxAddress mailTo = MailboxAddress.Parse(to);
-                        mime.From.Add(mailFrom);
-                        mime.To.Add(mailTo);
-                        mime.Subject = subject;
-                        mime.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = body };
-                        // send message
-                        SmtpClient smtp = new SmtpClient();
-                        smtp.Connect(mail["Host"]);
-                        smtp.Authenticate(mail["Username"], mail["Password"]);
-                        smtp.Send(mime);
-                        smtp.Disconnect(true);*/
-            //return Task.CompletedTask;
+            }*/
+            // get information of mail address
+            ConfigurationBuilder builder = new ConfigurationBuilder();
+            IConfigurationRoot config = builder.SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", true, true).Build();
+            IConfigurationSection mail = config.GetSection("MailAddress");
+            // create message to send
+            MimeMessage mime = new MimeMessage();
+            MailboxAddress mailFrom = MailboxAddress.Parse(mail["Username"]);
+            MailboxAddress mailTo = MailboxAddress.Parse(to);
+            mime.From.Add(mailFrom);
+            mime.To.Add(mailTo);
+            mime.Subject = subject;
+            mime.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = body };
+            // send message
+            SmtpClient smtp = new SmtpClient();
+            smtp.Connect(mail["Host"]);
+            smtp.Authenticate(mail["Username"], mail["Password"]);
+            smtp.Send(mime);
+            smtp.Disconnect(true);
+            return Task.CompletedTask;
         }
+           
+
         public static string BodyEmailForForgetPassword(string password)
         {
             string body = "<h1>Mật khẩu mới</h1>\n" +
@@ -191,3 +194,4 @@ namespace API.Model.Util
         }
     }
 }
+

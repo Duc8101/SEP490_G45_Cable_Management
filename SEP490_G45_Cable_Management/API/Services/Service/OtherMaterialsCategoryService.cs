@@ -1,45 +1,30 @@
-﻿using DataAccess.Const;
+﻿using API.Model.DAO;
+using API.Services.IService;
+using AutoMapper;
+using DataAccess.Const;
 using DataAccess.DTO;
 using DataAccess.DTO.OtherMaterialsCategoryDTO;
 using DataAccess.Entity;
 using System.Net;
-using API.Model.DAO;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Xml.Linq;
-using API.Services.IService;
 
 namespace API.Services.Service
 {
-    public class OtherMaterialsCategoryService : IOtherMaterialsCategoryService
+    public class OtherMaterialsCategoryService : BaseService, IOtherMaterialsCategoryService
     {
         private readonly DAOOtherMaterialsCategory daoOtherMaterialsCategory = new DAOOtherMaterialsCategory();
-        private List<OtherMaterialsCategoryListDTO> getListDTO(List<OtherMaterialsCategory> list)
+
+        public OtherMaterialsCategoryService(IMapper mapper) : base(mapper)
         {
-            List<OtherMaterialsCategoryListDTO> result = new List<OtherMaterialsCategoryListDTO>();
-            foreach (OtherMaterialsCategory item in list)
-            {
-                OtherMaterialsCategoryListDTO DTO = new OtherMaterialsCategoryListDTO()
-                {
-                    OtherMaterialsCategoryId = item.OtherMaterialsCategoryId,
-                    OtherMaterialsCategoryName = item.OtherMaterialsCategoryName
-                };
-                result.Add(DTO);
-            }
-            return result;
         }
-        private async Task<List<OtherMaterialsCategoryListDTO>> getListPaged(string? name, int page)
-        {
-            List<OtherMaterialsCategory> list = await daoOtherMaterialsCategory.getListPaged(name, page);
-            List<OtherMaterialsCategoryListDTO> result = getListDTO(list);
-            return result;
-        }
+
         public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>> ListPaged(string? name, int page)
         {
             try
             {
-                List<OtherMaterialsCategoryListDTO> list = await getListPaged(name, page);
+                List<OtherMaterialsCategory> list = await daoOtherMaterialsCategory.getListPaged(name, page);
+                List<OtherMaterialsCategoryListDTO> DTOs = mapper.Map<List<OtherMaterialsCategoryListDTO>>(list);
                 int RowCount = await daoOtherMaterialsCategory.getRowCount(name);
-                PagedResultDTO<OtherMaterialsCategoryListDTO> result = new PagedResultDTO<OtherMaterialsCategoryListDTO>(page, RowCount, PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE, list);
+                PagedResultDTO<OtherMaterialsCategoryListDTO> result = new PagedResultDTO<OtherMaterialsCategoryListDTO>(page, RowCount, PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE, DTOs);
                 return new ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
@@ -47,18 +32,13 @@ namespace API.Services.Service
                 return new ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        private async Task<List<OtherMaterialsCategoryListDTO>> getListAll()
-        {
-            List<OtherMaterialsCategory> list = await daoOtherMaterialsCategory.getListAll();
-            List<OtherMaterialsCategoryListDTO> result = getListDTO(list);
-            return result;
-        }
         public async Task<ResponseDTO<List<OtherMaterialsCategoryListDTO>?>> ListAll()
         {
             try
             {
-                List<OtherMaterialsCategoryListDTO> list = await getListAll();
-                return new ResponseDTO<List<OtherMaterialsCategoryListDTO>?>(list, string.Empty);
+                List<OtherMaterialsCategory> list = await daoOtherMaterialsCategory.getListAll();
+                List<OtherMaterialsCategoryListDTO> data = mapper.Map<List<OtherMaterialsCategoryListDTO>>(list);
+                return new ResponseDTO<List<OtherMaterialsCategoryListDTO>?>(data, string.Empty);
             }
             catch (Exception ex)
             {

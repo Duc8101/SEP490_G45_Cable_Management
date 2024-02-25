@@ -49,6 +49,10 @@
               "target": "Package",
               "version": "[3.7.300.12, )"
             },
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[6.0.22, )"

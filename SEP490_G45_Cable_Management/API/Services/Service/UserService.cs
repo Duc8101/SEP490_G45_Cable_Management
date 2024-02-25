@@ -1,25 +1,27 @@
-﻿using DataAccess.Const;
+﻿using API.Model.DAO;
+using API.Model.Util;
+using API.Services.IService;
+using AutoMapper;
+using DataAccess.Const;
 using DataAccess.DTO;
 using DataAccess.DTO.UserDTO;
 using DataAccess.Entity;
 using Microsoft.IdentityModel.Tokens;
-using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
-using API.Model.DAO;
-using System.Linq.Expressions;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using API.Services.IService;
-using API.Model.Util;
 
 namespace API.Services.Service
 {
-    public class UserService : IUserService
+    public class UserService : BaseService, IUserService
     {
         private readonly DAOUser daoUser = new DAOUser();
+
+        public UserService(IMapper mapper) : base(mapper)
+        {
+        }
+
         public async Task<ResponseDTO<TokenDTO?>> Login(LoginDTO DTO)
         {
             try
@@ -98,21 +100,14 @@ namespace API.Services.Service
                 // send email
                 await UserUtil.sendEmail("Welcome to Cable Management System", body, DTO.Email);
                 // create
-                User user = new User()
-                {
-                    UserId = Guid.NewGuid(),
-                    Username = DTO.UserName,
-                    Lastname = DTO.LastName.Trim(),
-                    Firstname = DTO.FirstName.Trim(),
-                    Email = DTO.Email,
-                    Password = hashPw,
-                    Phone = DTO.Phone,
-                    RoleId = RoleConst.INT_ROLE_STAFF,
-                    CreatedAt = DateTime.Now,
-                    CreatedDate = DateTime.Now,
-                    UpdateAt = DateTime.Now,
-                    IsDeleted = false
-                };
+                User user = mapper.Map<User>(DTO);
+                user.UserId = Guid.NewGuid();
+                user.Password = hashPw;
+                user.RoleId = RoleConst.INT_ROLE_STAFF;
+                user.CreatedAt = DateTime.Now;
+                user.CreatedDate = DateTime.Now;
+                user.UpdateAt = DateTime.Now;
+                user.IsDeleted = false;
                 await daoUser.CreateUser(user);
                 return new ResponseDTO<bool>(true, "Tạo thành công");
             }
@@ -177,33 +172,14 @@ namespace API.Services.Service
                 return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        private async Task<List<UserListDTO>> getListPaged(string? filter, int page)
-        {
-            List<User> list = await daoUser.getList(filter, page);
-            List<UserListDTO> result = new List<UserListDTO>();
-            foreach (User user in list)
-            {
-                UserListDTO DTO = new UserListDTO()
-                {
-                    UserId = user.UserId,
-                    UserName = user.Username,
-                    FirstName = user.Firstname,
-                    LastName = user.Lastname,
-                    Email = user.Email,
-                    Phone = user.Phone,
-                    RoleName = user.Role.Rolename
-                };
-                result.Add(DTO);
-            }
-            return result;
-        }
         public async Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> ListPaged(string? filter, int page)
         {
             try
             {
-                List<UserListDTO> list = await getListPaged(filter, page);
+                List<User> list = await daoUser.getList(filter, page);
+                List<UserListDTO> DTOs = mapper.Map<List<UserListDTO>>(list);
                 int RowCount = await daoUser.getRowCount(filter);
-                PagedResultDTO<UserListDTO> result = new PagedResultDTO<UserListDTO>(page, RowCount, PageSizeConst.MAX_USER_LIST_IN_PAGE, list);
+                PagedResultDTO<UserListDTO> result = new PagedResultDTO<UserListDTO>(page, RowCount, PageSizeConst.MAX_USER_LIST_IN_PAGE, DTOs);
                 return new ResponseDTO<PagedResultDTO<UserListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
@@ -296,7 +272,7 @@ namespace API.Services.Service
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<List<UserListDTO>?>(null, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+                return new ResponseDTO<List<UserListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
     }
