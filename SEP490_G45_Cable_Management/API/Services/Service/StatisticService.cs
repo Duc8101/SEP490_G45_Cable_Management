@@ -21,7 +21,7 @@ namespace API.Services.Service
             try
             {
                 // if choose category
-                if (MaterialCategoryID != null)
+                if (MaterialCategoryID.HasValue)
                 {
                     List<OtherMaterial> list = await daoOtherMaterial.getListAll(MaterialCategoryID.Value);
                     // if not found
@@ -58,7 +58,7 @@ namespace API.Services.Service
             try
             {
                 // if choose category
-                if (CableCategoryID != null)
+                if (CableCategoryID.HasValue)
                 {
                     Cable? cable = await daoCable.getCable(CableCategoryID.Value);
                     // if not found
