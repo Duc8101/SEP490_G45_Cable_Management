@@ -24,7 +24,7 @@ namespace API.Model.DAO
         private IQueryable<Supplier> getQuery(string? name)
         {
             IQueryable<Supplier> query = context.Suppliers.Where(s => s.IsDeleted == false);
-            if (name != null && name.Trim().Length != 0)
+            if (name != null && name.Trim().Length > 0)
             {
                 query = query.Where(s => s.SupplierName.ToLower().Contains(name.ToLower().Trim()));
             }

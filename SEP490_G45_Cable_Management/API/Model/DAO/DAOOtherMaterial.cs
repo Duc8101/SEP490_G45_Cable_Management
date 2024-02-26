@@ -2,32 +2,27 @@
 using DataAccess.DTO.OtherMaterialsDTO;
 using DataAccess.Entity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace API.Model.DAO
 {
     public class DAOOtherMaterial : BaseDAO
     {
-        private IQueryable<OtherMaterial> getQuery(string? filter,int? WareHouseID, Guid? WareHouseKeeperID)
+        private IQueryable<OtherMaterial> getQuery(string? filter, int? WareHouseID, Guid? WareHouseKeeperID)
         {
             IQueryable<OtherMaterial> query = context.OtherMaterials.Include(o => o.OtherMaterialsCategory).Include(o => o.Supplier).Include(o => o.Warehouse)
                 .Where(o => o.IsDeleted == false);
-            if (filter != null && filter.Trim().Length != 0)
+            if (filter != null && filter.Trim().Length > 0)
             {
                 query = query.Where(o => o.OtherMaterialsCategory.OtherMaterialsCategoryName.ToLower().Contains(filter.ToLower().Trim())
                 || (o.Warehouse != null && o.Warehouse.WarehouseName.ToLower().Contains(filter.ToLower().Trim())));
             }
-            // if login as warehousekeeper
-            if(WareHouseKeeperID != null)
+            // if login as warehouse keeper
+            if (WareHouseKeeperID.HasValue)
             {
                 query = query.Where(o => o.Warehouse != null && o.Warehouse.WarehouseKeeperid == WareHouseKeeperID);
             }
             // if choose warehouse
-            if(WareHouseID != null)
+            if (WareHouseID.HasValue)
             {
                 query = query.Where(o => o.WarehouseId == WareHouseID);
             }
@@ -90,7 +85,7 @@ namespace API.Model.DAO
         public async Task<bool> isExist(int OtherMaterialsID, OtherMaterialsCreateUpdateDTO DTO)
         {
             return await context.OtherMaterials.AnyAsync(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == DTO.OtherMaterialsCategoryId
-            && o.Unit == DTO.Unit.Trim() && DTO.Code !=null && o.Code == DTO.Code.Trim() && o.Status == DTO.Status.Trim()
+            && o.Unit == DTO.Unit.Trim() && DTO.Code != null && o.Code == DTO.Code.Trim() && o.Status == DTO.Status.Trim()
             && o.WarehouseId == DTO.WarehouseId && o.OtherMaterialsId != OtherMaterialsID);
         }
         public async Task DeleteMaterial(OtherMaterial material)
@@ -108,7 +103,7 @@ namespace API.Model.DAO
         {
             IQueryable<OtherMaterial> query = context.OtherMaterials.Where(o => o.IsDeleted == false && o.OtherMaterialsCategoryId == CategoryID);
             // if choose warehouse
-            if (WarehouseID != null)
+            if (WarehouseID.HasValue)
             {
                 query = query.Where(o => o.WarehouseId == WarehouseID);
             }

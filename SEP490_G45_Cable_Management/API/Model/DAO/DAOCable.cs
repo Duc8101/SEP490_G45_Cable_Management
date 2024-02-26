@@ -18,13 +18,13 @@ namespace API.Model.DAO
             IQueryable<Cable> query = context.Cables.Include(c => c.CableCategory).Include(c => c.Supplier).Include(c => c.Warehouse)
                 .Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == isExportedToUse);
             // if search base on name
-            if (filter != null && filter.Trim().Length != 0)
+            if (filter != null && filter.Trim().Length > 0)
             {
                 query = query.Where(c => c.CableCategory.CableCategoryName.ToLower().Contains(filter.ToLower().Trim())
                 || c.Code.ToLower().Contains(filter.ToLower().Trim()) || c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()));
             }
             // if choose warehouse
-            if (WarehouseID != null)
+            if (WarehouseID.HasValue)
             {
                 query = query.Where(c => c.WarehouseId == WarehouseID);
             }

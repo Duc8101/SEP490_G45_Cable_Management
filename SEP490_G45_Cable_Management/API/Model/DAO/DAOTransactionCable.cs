@@ -25,9 +25,9 @@ namespace API.Model.DAO
             }
             IQueryable<TransactionCable> query = context.TransactionCables.Where(t => t.Transaction.CreatedAt.Year == year);
             // if choose category
-            if (CableCategoryID != null)
+            if (CableCategoryID.HasValue)
             {
-                query = query.Where(t => t.Cable.CableCategory.CableCategoryId == CableCategoryID);
+                query = query.Where(t => t.Cable.CableCategoryId == CableCategoryID);
             }
             // if choose warehouse
             if (WarehouseID != null)

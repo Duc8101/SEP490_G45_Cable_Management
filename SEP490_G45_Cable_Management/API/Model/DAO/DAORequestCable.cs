@@ -1,10 +1,5 @@
 ﻿using DataAccess.Entity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace API.Model.DAO
 {
@@ -12,7 +7,7 @@ namespace API.Model.DAO
     {
         public async Task CreateRequestCable(RequestCable request)
         {
-            context.RequestCables.Add(request);
+            await context.RequestCables.AddAsync(request);
             await context.SaveChangesAsync();
         }
         public async Task<List<RequestCable>> getList(Guid RequestID)

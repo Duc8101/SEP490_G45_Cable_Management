@@ -24,12 +24,12 @@ namespace API.Model.DAO
             }
             IQueryable<TransactionOtherMaterial> query = context.TransactionOtherMaterials.Where(t => t.Transaction.CreatedAt.Year == year);
             // if choose material category
-            if(MaterialCategoryID != null)
+            if(MaterialCategoryID.HasValue)
             {
-                query = query.Where(t => t.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryId == MaterialCategoryID);
+                query = query.Where(t => t.OtherMaterials.OtherMaterialsCategoryId == MaterialCategoryID);
             }
             // if choose warehouse
-            if(WarehouseID != null)
+            if(WarehouseID.HasValue)
             {
                 query = query.Where(t => t.Transaction.WarehouseId == WarehouseID);
             }

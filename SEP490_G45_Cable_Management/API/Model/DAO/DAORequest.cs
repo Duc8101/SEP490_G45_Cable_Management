@@ -1,36 +1,31 @@
 ﻿using DataAccess.Const;
 using DataAccess.Entity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace API.Model.DAO
 {
     public class DAORequest : BaseDAO
     {
-        private IQueryable<Request> getQuery(string? name, int? RequestCategoryID , string? status, Guid? CreatorID, Guid? IssueID)
+        private IQueryable<Request> getQuery(string? name, int? RequestCategoryID, string? status, Guid? CreatorID, Guid? IssueID)
         {
             IQueryable<Request> query = context.Requests.Include(r => r.RequestCategory).Include(r => r.Creator).Include(r => r.Approver).Include(r => r.Issue).Where(r => r.IsDeleted == false);
-            if (name != null && name.Trim().Length != 0)
+            if (name != null && name.Trim().Length > 0)
             {
                 query = query.Where(r => r.RequestName.ToLower().Contains(name.ToLower().Trim()));
             }
-            if (status != null)
+            if (status != null && status.Trim().Length > 0)
             {
                 query = query.Where(r => r.Status == status.Trim());
             }
-            if(CreatorID != null)
+            if (CreatorID.HasValue)
             {
                 query = query.Where(r => r.CreatorId == CreatorID);
             }
-            if(IssueID != null)
+            if (IssueID.HasValue)
             {
                 query = query.Where(r => r.IssueId == IssueID);
             }
-            if(RequestCategoryID != null)
+            if (RequestCategoryID.HasValue)
             {
                 query = query.Where(r => r.RequestCategoryId == RequestCategoryID);
             }
@@ -69,7 +64,7 @@ namespace API.Model.DAO
         }
         public async Task<List<Request>> getListByIssue(Guid IssueID)
         {
-            IQueryable<Request> query = getQuery(null,null, null, null, IssueID);
+            IQueryable<Request> query = getQuery(null, null, null, null, IssueID);
             return await query.ToListAsync();
         }
 

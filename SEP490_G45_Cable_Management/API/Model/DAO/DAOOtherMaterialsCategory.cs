@@ -15,7 +15,7 @@ namespace API.Model.DAO
         private IQueryable<OtherMaterialsCategory> getQuery(string? name)
         {
             IQueryable<OtherMaterialsCategory> query = context.OtherMaterialsCategories;
-            if(name != null && name.Trim().Length != 0)
+            if(name != null && name.Trim().Length > 0)
             {
                 query = query.Where(o => o.OtherMaterialsCategoryName.ToLower().Contains(name.ToLower().Trim())); 
             }

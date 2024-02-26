@@ -15,7 +15,7 @@ namespace API.Model.DAO
         private IQueryable<Warehouse> getQuery(string? name)
         {
             IQueryable<Warehouse> query = context.Warehouses.Include(w => w.WarehouseKeeper).Where(w => w.IsDeleted == false);
-            if (name != null && name.Trim().Length != 0)
+            if (name != null && name.Trim().Length > 0)
             {
                 query = query.Where(w => w.WarehouseName != null && w.WarehouseName.ToLower().Contains(name.ToLower().Trim()));
             }
