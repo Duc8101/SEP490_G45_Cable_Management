@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "jnCQw+lhNkhZkU5s6Fs+Huw9oYTif4O24JvVfx4qlkxMj2eAkDuzn4QC4ef31auVtaFyHheuJp3Z2pxOgb4Osg==",
+  "dgSpecHash": "hCxOjgF4JXhlNiuPsHQhoP5Z05EzySGfljtmECPTpqhxszNt9j/Rvgejf5BsQgc0DxTGpNOLC+hjDf0Qf9y8Yg==",
   "success": true,
-  "projectFilePath": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\API\\API.csproj",
+  "projectFilePath": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\API\\API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\awssdk.core\\3.7.300.12\\awssdk.core.3.7.300.12.nupkg.sha512",
@@ -69,7 +69,11 @@
     "C:\\Users\\Admin\\.nuget\\packages\\system.text.encoding.codepages\\7.0.0\\system.text.encoding.codepages.7.0.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\system.text.encodings.web\\6.0.0\\system.text.encodings.web.6.0.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\system.text.json\\6.0.0\\system.text.json.6.0.0.nupkg.sha512",
-    "C:\\Users\\Admin\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512"
+    "C:\\Users\\Admin\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.27\\microsoft.windowsdesktop.app.ref.6.0.27.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.27\\microsoft.netcore.app.ref.6.0.27.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.27\\microsoft.aspnetcore.app.ref.6.0.27.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.27\\microsoft.netcore.app.host.win-x64.6.0.27.nupkg.sha512"
   ],
   "logs": []
 }

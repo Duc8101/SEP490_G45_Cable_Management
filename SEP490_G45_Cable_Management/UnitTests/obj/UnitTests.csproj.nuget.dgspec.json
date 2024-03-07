@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\UnitTests\\UnitTests.csproj": {}
+    "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\UnitTests\\UnitTests.csproj": {}
   },
   "projects": {
-    "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\API\\API.csproj": {
+    "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\API\\API.csproj",
+        "projectUniqueName": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\API\\API.csproj",
+        "projectPath": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\API\\API.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\API\\obj\\",
+        "outputPath": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -22,15 +22,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\sdk\\7.0.306\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj": {
-                "projectPath": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj"
+              "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj": {
+                "projectPath": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj"
               }
             }
           }
@@ -39,6 +38,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -87,6 +91,24 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[6.0.27, 6.0.27]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[6.0.27, 6.0.27]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[6.0.27, 6.0.27]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[6.0.27, 6.0.27]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -95,18 +117,18 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj": {
+    "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj",
+        "projectUniqueName": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj",
         "projectName": "DataAccess",
-        "projectPath": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj",
+        "projectPath": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\DataAccess\\DataAccess.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\DataAccess\\obj\\",
+        "outputPath": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\DataAccess\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -129,6 +151,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -163,23 +190,37 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[6.0.27, 6.0.27]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[6.0.27, 6.0.27]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[6.0.27, 6.0.27]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\UnitTests\\UnitTests.csproj": {
+    "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\UnitTests\\UnitTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\UnitTests\\UnitTests.csproj",
+        "projectUniqueName": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\UnitTests\\UnitTests.csproj",
         "projectName": "UnitTests",
-        "projectPath": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\UnitTests\\UnitTests.csproj",
+        "projectPath": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\UnitTests\\UnitTests.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\UnitTests\\obj\\",
+        "outputPath": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\UnitTests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -196,8 +237,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\API\\API.csproj": {
-                "projectPath": "D:\\C# Project\\SEP490\\SEP490_G45_Cable_Management\\API\\API.csproj"
+              "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\API\\API.csproj": {
+                "projectPath": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\API\\API.csproj"
               }
             }
           }
@@ -206,6 +247,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -248,12 +294,26 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[6.0.27, 6.0.27]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[6.0.27, 6.0.27]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[6.0.27, 6.0.27]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     }

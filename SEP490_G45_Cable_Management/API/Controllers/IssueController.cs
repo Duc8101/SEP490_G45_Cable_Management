@@ -31,7 +31,7 @@ namespace API.Controllers
         [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List([Required] int page = 1)
         {
-            return await service.ListPagedDoing(page);         
+            return await service.ListPagedDoing(page);
         }
 
         [HttpGet("Doing")]

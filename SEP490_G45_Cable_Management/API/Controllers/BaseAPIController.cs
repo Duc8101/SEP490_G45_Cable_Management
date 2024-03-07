@@ -1,5 +1,4 @@
 ﻿using DataAccess.Const;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -17,47 +16,47 @@ namespace API.Controllers
             return claim == null ? null : claim.Value;
         }
 
-        protected bool isAdmin()
+        internal bool isAdmin()
         {
             string? role = getRole();
             return role != null && role.Equals(RoleConst.STRING_ROLE_ADMIN);
         }
-        protected bool isStaff()
+        internal bool isStaff()
         {
             string? role = getRole();
             return role != null && role.Equals(RoleConst.STRING_ROLE_STAFF);
         }
 
-        protected bool isLeader()
+        internal bool isLeader()
         {
             string? role = getRole();
             return role != null && role.Equals(RoleConst.STRING_ROLE_LEADER);
         }
 
-        protected bool isWarehouseKeeper()
+        internal bool isWarehouseKeeper()
         {
             string? role = getRole();
             return role != null && role.Equals(RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
         }
 
-        protected string? getUserID()
+        internal string? getUserID()
         {
             Claim? claim = getClaim("UserID");
             return claim == null ? null : claim.Value;
         }
 
-        protected string? getEmail()
+        internal string? getEmail()
         {
             Claim? claim = getClaim(ClaimTypes.Email);
             return claim == null ? null : claim.Value;
         }
 
-        protected string? getFirstName()
+        internal string? getFirstName()
         {
             Claim? claim = getClaim("FirstName");
             return claim == null ? null : claim.Value;
         }
-        protected string? getLastName()
+        internal string? getLastName()
         {
             Claim? claim = getClaim("LastName");
             return claim == null ? null : claim.Value;

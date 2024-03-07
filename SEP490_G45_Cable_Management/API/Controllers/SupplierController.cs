@@ -1,16 +1,11 @@
 ﻿using API.Services.IService;
-using API.Services.Service;
 using DataAccess.DTO;
 using DataAccess.DTO.SupplierDTO;
 using DataAccess.Entity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
-using System.Xml.Linq;
 
 namespace API.Controllers
 {
@@ -47,7 +42,7 @@ namespace API.Controllers
         [HttpPost]
         [Authorize]
         public async Task<ResponseDTO<bool>> Create([Required] SupplierCreateUpdateDTO DTO)
-        { 
+        {
             // if admin
             if (isAdmin())
             {
@@ -56,11 +51,11 @@ namespace API.Controllers
                 // if not found user id
                 if (CreatorID == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra lại thông tin đăng nhập", (int) HttpStatusCode.NotFound);
+                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra lại thông tin đăng nhập", (int)HttpStatusCode.NotFound);
                 }
-                return await service.Create(DTO, Guid.Parse(CreatorID));             
+                return await service.Create(DTO, Guid.Parse(CreatorID));
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpPut("{SupplierID}")]
@@ -70,9 +65,9 @@ namespace API.Controllers
             // if admin
             if (isAdmin())
             {
-                return await service.Update(SupplierID, DTO);  
+                return await service.Update(SupplierID, DTO);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpDelete("{SupplierID}")]
@@ -84,7 +79,7 @@ namespace API.Controllers
             {
                 return await service.Delete(SupplierID);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
         }
     }
 }

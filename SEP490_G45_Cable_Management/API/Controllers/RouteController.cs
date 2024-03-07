@@ -1,9 +1,7 @@
 ﻿using API.Services.IService;
-using API.Services.Service;
 using DataAccess.DTO;
 using DataAccess.DTO.RouteDTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -50,7 +48,7 @@ namespace API.Controllers
             {
                 return await service.Create(DTO);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int) HttpStatusCode.Forbidden);
+            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }
 
         [HttpDelete("{RouteID}")]
