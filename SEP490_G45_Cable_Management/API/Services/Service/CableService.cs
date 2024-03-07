@@ -54,7 +54,6 @@ namespace API.Services.Service
                 cable.IsDeleted = false;
                 cable.IsExportedToUse = false;
                 cable.IsInRequest = false;
-                cable.Length = DTO.EndPoint - DTO.StartPoint;
                 await daoCable.CreateCable(cable);
                 return new ResponseDTO<bool>(true, "Thêm thành công");
             }

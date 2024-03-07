@@ -42,14 +42,14 @@ namespace API.Services.Service
         {
             if (DTO.RouteId == null)
             {
-                return new ResponseDTO<bool>(false, "Bạn chưa chọn tuyến", (int) HttpStatusCode.Conflict);
+                return new ResponseDTO<bool>(false, "Bạn chưa chọn tuyến", (int)HttpStatusCode.Conflict);
             }
             try
             {
                 DataAccess.Entity.Route? route = await daoRoute.getRoute(DTO.RouteId.Value);
-                if(route == null)
+                if (route == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy tuyến", (int) HttpStatusCode.NotFound);
+                    return new ResponseDTO<bool>(false, "Không tìm thấy tuyến", (int)HttpStatusCode.NotFound);
                 }
                 // --------------------------- update list node order by ---------------------------
                 List<Node> list = await daoNode.getListNodeOrderByNumberOrder(DTO.RouteId.Value);
@@ -87,22 +87,11 @@ namespace API.Services.Service
                     }
                 }
                 // --------------------------- create node ---------------------------
-                Node node = new Node()
-                {
-                    Id = Guid.NewGuid(),
-                    Longitude = DTO.Longitude,
-                    Latitude = DTO.Latitude,
-                    CreatedAt = DateTime.Now,
-                    UpdateAt = DateTime.Now,
-                    IsDeleted = false,
-                    Address = DTO.Address == null || DTO.Address.Trim().Length == 0 ? null : DTO.Address.Trim(),
-                    NodeCode = DTO.NodeCode.Trim(),
-                    NodeNumberSign = DTO.NodeNumberSign.Trim(),
-                    Note = DTO.Note == null || DTO.Note.Trim().Length == 0 ? null : DTO.Note.Trim(),
-                    NumberOrder = DTO.NumberOrder,
-                    RouteId = DTO.RouteId,
-                    Status = DTO.Status == null || DTO.Status.Trim().Length == 0 ? null : DTO.Status.Trim(),
-                };
+                Node node = mapper.Map<Node>(DTO);
+                node.Id = Guid.NewGuid();
+                node.CreatedAt = DateTime.Now;
+                node.UpdateAt = DateTime.Now;
+                node.IsDeleted = false;
                 await daoNode.CreateNode(node);
                 return new ResponseDTO<bool>(true, "Thêm thành công");
             }

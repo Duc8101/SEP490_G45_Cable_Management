@@ -123,18 +123,11 @@ namespace API.Services.Service
             {
                 foreach (CableExportDeliverDTO item in list)
                 {
-                    RequestCable request = new RequestCable()
-                    {
-                        RequestId = RequestID,
-                        CableId = item.CableId,
-                        StartPoint = item.StartPoint,
-                        EndPoint = item.EndPoint,
-                        Length = item.EndPoint - item.StartPoint,
-                        RecoveryDestWarehouseId = item.WarehouseId,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                    };
+                    RequestCable request = mapper.Map<RequestCable>(item);
+                    request.RequestId = RequestID;
+                    request.CreatedAt = DateTime.Now;
+                    request.UpdateAt = DateTime.Now;
+                    request.IsDeleted = false;
                     await daoRequestCable.CreateRequestCable(request);
                 }
             }
@@ -146,16 +139,11 @@ namespace API.Services.Service
             {
                 foreach (OtherMaterialsExportDeliverCancelInsideDTO item in list)
                 {
-                    RequestOtherMaterial request = new RequestOtherMaterial()
-                    {
-                        RequestId = RequestID,
-                        OtherMaterialsId = item.OtherMaterialsId,
-                        Quantity = item.Quantity,
-                        RecoveryDestWarehouseId = item.WarehouseId,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsDeleted = false,
-                    };
+                    RequestOtherMaterial request = mapper.Map<RequestOtherMaterial>(item);
+                    request.RequestId = RequestID;
+                    request.CreatedAt = DateTime.Now;
+                    request.UpdateAt = DateTime.Now;
+                    request.IsDeleted = false;
                     await daoRequestMaterial.CreateRequestOtherMaterial(request);
                 }
             }
@@ -866,25 +854,14 @@ namespace API.Services.Service
                 {
                     foreach (CableCreateUpdateDTO item in DTO.CableRecoveryDTOs)
                     {
-                        Cable cable = new Cable()
-                        {
-                            CableId = Guid.NewGuid(),
-                            WarehouseId = item.WarehouseId,
-                            SupplierId = item.SupplierId,
-                            StartPoint = item.StartPoint,
-                            EndPoint = item.EndPoint,
-                            Length = item.EndPoint - item.StartPoint,
-                            YearOfManufacture = item.YearOfManufacture,
-                            Code = item.Code.Trim(),
-                            Status = item.Status.Trim(),
-                            CreatorId = CreatorID,
-                            CreatedAt = DateTime.Now,
-                            UpdateAt = DateTime.Now,
-                            IsDeleted = false,
-                            IsExportedToUse = false,
-                            CableCategoryId = item.CableCategoryId,
-                            IsInRequest = true,
-                        };
+                        Cable cable = mapper.Map<Cable>(DTO);
+                        cable.CableId = Guid.NewGuid();
+                        cable.CreatorId = CreatorID;
+                        cable.CreatedAt = DateTime.Now;
+                        cable.UpdateAt = DateTime.Now;
+                        cable.IsDeleted = false;
+                        cable.IsExportedToUse = false;
+                        cable.IsInRequest = true;
                         await daoCable.CreateCable(cable);
                         listCable.Add(cable);
                     }
@@ -906,19 +883,11 @@ namespace API.Services.Service
                         // if material not exist
                         if (material == null)
                         {
-                            material = new OtherMaterial()
-                            {
-                                Unit = item.Unit.Trim(),
-                                Quantity = 0,
-                                Code = item.Code,
-                                SupplierId = item.SupplierId,
-                                CreatedAt = DateTime.Now,
-                                UpdateAt = DateTime.Now,
-                                IsDeleted = false,
-                                WarehouseId = item.WarehouseId,
-                                Status = item.Status.Trim(),
-                                OtherMaterialsCategoryId = item.OtherMaterialsCategoryId
-                            };
+                            material = mapper.Map<OtherMaterial>(DTO);
+                            material.Quantity = 0;
+                            material.CreatedAt = DateTime.Now;
+                            material.UpdateAt = DateTime.Now;
+                            material.IsDeleted = false;
                             int OtherMaterialID = await daoOtherMaterial.CreateMaterial(material);
                             listWareHouse.Add(item.WarehouseId);
                             listQuantity.Add(item.Quantity);
@@ -944,19 +913,11 @@ namespace API.Services.Service
                 {
                     foreach (Cable cable in listCable)
                     {
-                        RequestCable request = new RequestCable()
-                        {
-                            RequestId = RequestID,
-                            CableId = cable.CableId,
-                            StartPoint = cable.StartPoint,
-                            EndPoint = cable.EndPoint,
-                            Length = cable.EndPoint - cable.StartPoint,
-                            CreatedAt = DateTime.Now,
-                            UpdateAt = DateTime.Now,
-                            IsDeleted = false,
-                            RecoveryDestWarehouseId = cable.WarehouseId,
-                            Status = cable.Status,
-                        };
+                        RequestCable request = mapper.Map<RequestCable>(cable);
+                        request.RequestId = RequestID;
+                        request.CreatedAt = DateTime.Now;
+                        request.UpdateAt = DateTime.Now;
+                        request.IsDeleted = false;
                         await daoRequestCable.CreateRequestCable(request);
                     }
                 }
@@ -1274,21 +1235,13 @@ namespace API.Services.Service
                         // if cable valid
                         if (cable != null && cable.IsExportedToUse == false)
                         {
-                            RequestCable requestCable = new RequestCable()
-                            {
-                                RequestId = RequestID,
-                                CableId = item.CableId,
-                                StartPoint = cable.StartPoint,
-                                EndPoint = cable.EndPoint,
-                                Length = cable.Length,
-                                CreatedAt = DateTime.Now,
-                                UpdateAt = DateTime.Now,
-                                IsDeleted = false,
-                                RecoveryDestWarehouseId = item.WarehouseId
-                            };
+                            RequestCable requestCable = mapper.Map<RequestCable>(cable);
+                            requestCable.RequestId = RequestID;
+                            requestCable.CreatedAt = DateTime.Now;
+                            requestCable.UpdateAt = DateTime.Now;
+                            requestCable.IsDeleted = false;
                             await daoRequestCable.CreateRequestCable(requestCable);
                         }
-
                     }
                 }
                 //----------------------------- create request material --------------------------------
@@ -1296,16 +1249,11 @@ namespace API.Services.Service
                 {
                     foreach (OtherMaterialsExportDeliverCancelInsideDTO item in DTO.OtherMaterialsCancelInsideDTOs)
                     {
-                        RequestOtherMaterial requestMaterial = new RequestOtherMaterial()
-                        {
-                            RequestId = RequestID,
-                            OtherMaterialsId = item.OtherMaterialsId,
-                            Quantity = item.Quantity,
-                            CreatedAt = DateTime.Now,
-                            UpdateAt = DateTime.Now,
-                            IsDeleted = false,
-                            RecoveryDestWarehouseId = item.WarehouseId
-                        };
+                        RequestOtherMaterial requestMaterial = mapper.Map<RequestOtherMaterial>(item);
+                        requestMaterial.RequestId = RequestID;
+                        requestMaterial.CreatedAt = DateTime.Now;
+                        requestMaterial.UpdateAt = DateTime.Now;
+                        requestMaterial.IsDeleted = false;
                         await daoRequestMaterial.CreateRequestOtherMaterial(requestMaterial);
                     }
                 }
@@ -1325,24 +1273,15 @@ namespace API.Services.Service
             {
                 foreach (CableCancelOutsideDTO DTO in list)
                 {
-                    Cable cable = new Cable()
-                    {
-                        CableId = Guid.NewGuid(),
-                        SupplierId = DTO.SupplierId,
-                        StartPoint = DTO.StartPoint,
-                        EndPoint = DTO.EndPoint,
-                        Length = DTO.EndPoint - DTO.StartPoint,
-                        YearOfManufacture = DTO.YearOfManufacture,
-                        Code = DTO.Code,
-                        Status = DTO.Status,
-                        CreatorId = CreatorID,
-                        CreatedAt = DateTime.Now,
-                        UpdateAt = DateTime.Now,
-                        IsExportedToUse = false,
-                        IsDeleted = false,
-                        CableCategoryId = DTO.CableCategoryId,
-                        IsInRequest = true
-                    };
+                    Cable cable = mapper.Map<Cable>(DTO);
+                    cable.CableId = Guid.NewGuid();
+                    cable.CreatorId = CreatorID;
+                    cable.CreatedAt = DateTime.Now;
+                    cable.UpdateAt = DateTime.Now;
+                    cable.IsDeleted = false;
+                    cable.IsExportedToUse = false;
+                    cable.IsInRequest = true;
+                    cable.WarehouseId = null;
                     await daoCable.CreateCable(cable);
                     result.Add(cable);
                 }
@@ -1360,14 +1299,11 @@ namespace API.Services.Service
                     OtherMaterial? material = await daoOtherMaterial.getOtherMaterial(DTO);
                     if (material == null)
                     {
-                        material = new OtherMaterial()
-                        {
-                            Unit = DTO.Unit.Trim(),
-                            OtherMaterialsCategoryId = DTO.OtherMaterialsCategoryId,
-                            Status = DTO.Status,
-                            SupplierId = DTO.SupplierId,
-                            IsDeleted = true
-                        };
+                        material = mapper.Map<OtherMaterial>(DTO);
+                        material.CreatedAt = DateTime.Now;
+                        material.UpdateAt = DateTime.Now;
+                        material.WarehouseId = null;
+                        material.IsDeleted = true;
                         int MaterialID = await daoOtherMaterial.CreateMaterial(material);
                         result[MaterialID] = DTO.Quantity;
                     }
@@ -1414,17 +1350,11 @@ namespace API.Services.Service
                 {
                     foreach (Cable item in listCable)
                     {
-                        RequestCable requestCable = new RequestCable()
-                        {
-                            RequestId = RequestID,
-                            CableId = item.CableId,
-                            StartPoint = item.StartPoint,
-                            EndPoint = item.EndPoint,
-                            Length = item.Length,
-                            CreatedAt = DateTime.Now,
-                            UpdateAt = DateTime.Now,
-                            IsDeleted = false
-                        };
+                        RequestCable requestCable = mapper.Map<RequestCable>(item);
+                        requestCable.RequestId = RequestID;
+                        requestCable.CreatedAt = DateTime.Now;
+                        requestCable.UpdateAt = DateTime.Now;
+                        requestCable.IsDeleted = false;
                         await daoRequestCable.CreateRequestCable(requestCable);
                     }
                 }

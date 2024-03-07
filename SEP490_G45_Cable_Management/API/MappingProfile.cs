@@ -27,7 +27,8 @@ namespace API
                 .ForMember(des => des.CableCategoryName, src => src.MapFrom(c => c.CableCategory.CableCategoryName));
             CreateMap<CableCreateUpdateDTO, Cable>()
                 .ForMember(des => des.Code, src => src.MapFrom(c => c.Code.Trim()))
-                .ForMember(des => des.Status, src => src.MapFrom(c => c.Status.Trim()));
+                .ForMember(des => des.Status, src => src.MapFrom(c => c.Status.Trim()))
+                .ForMember(des => des.Length, src => src.MapFrom(c => c.EndPoint - c.StartPoint));
             CreateMap<Issue, IssueListDTO>();
             CreateMap<IssueCreateDTO, Issue>()
                 .ForMember(des => des.IssueName, src => src.MapFrom(i => i.IssueName.Trim()))
@@ -93,6 +94,30 @@ namespace API
                 .ForMember(des => des.IssueName, src => src.MapFrom(r => r.Issue == null ? null : r.Issue.IssueName))
                 .ForMember(des => des.CableRoutingName, src => src.MapFrom(r => r.Issue == null ? null : r.Issue.CableRoutingName))
                 .ForMember(des => des.DeliverWarehouseName, src => src.MapFrom(r => r.DeliverWarehouse == null ? null : r.DeliverWarehouse.WarehouseName));
+            CreateMap<CableExportDeliverDTO, RequestCable>()
+                .ForMember(des => des.Length, src => src.MapFrom(r => r.EndPoint - r.StartPoint))
+                .ForMember(des => des.RecoveryDestWarehouseId, src => src.MapFrom(r => r.WarehouseId));
+            CreateMap<OtherMaterialsExportDeliverCancelInsideDTO, RequestOtherMaterial>()
+                .ForMember(des => des.RecoveryDestWarehouseId, src => src.MapFrom(r => r.WarehouseId));
+            CreateMap<OtherMaterialsRecoveryDTO, OtherMaterial>()
+                .ForMember(des => des.Unit, src => src.MapFrom(o => o.Unit.Trim()))
+                .ForMember(des => des.Status, src => src.MapFrom(o => o.Status.Trim()));
+            CreateMap<Cable, RequestCable>()
+                .ForMember(des => des.Length, src => src.MapFrom(r => r.EndPoint - r.StartPoint))
+                .ForMember(des => des.RecoveryDestWarehouseId, src => src.MapFrom(r => r.WarehouseId));
+            CreateMap<CableCancelOutsideDTO, Cable>()
+                .ForMember(des => des.Code, src => src.MapFrom(c => c.Code.Trim()))
+                .ForMember(des => des.Status, src => src.MapFrom(c => c.Status.Trim()))
+                .ForMember(des => des.Length, src => src.MapFrom(c => c.EndPoint - c.StartPoint));
+            CreateMap<OtherMaterialsCancelOutsideDTO, OtherMaterial>()
+                .ForMember(des => des.Unit, src => src.MapFrom(o => o.Unit.Trim()))
+                .ForMember(des => des.Status, src => src.MapFrom(o => o.Status.Trim()));
+            CreateMap<NodeCreateDTO, Node>()
+                .ForMember(des => des.Address, src => src.MapFrom(o => o.Address == null || o.Address.Trim().Length == 0 ? null : o.Address.Trim()))
+                .ForMember(des => des.NodeCode, src => src.MapFrom(o => o.NodeCode.Trim()))
+                .ForMember(des => des.NodeNumberSign, src => src.MapFrom(o => o.NodeNumberSign.Trim()))
+                .ForMember(des => des.Note, src => src.MapFrom(o => o.Note == null || o.Note.Trim().Length == 0 ? null : o.Note.Trim()))
+                .ForMember(des => des.Status, src => src.MapFrom(o => o.Status == null || o.Status.Trim().Length == 0 ? null : o.Status.Trim()));
         }
     }
 }
