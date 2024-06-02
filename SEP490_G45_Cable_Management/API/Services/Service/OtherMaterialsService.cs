@@ -80,7 +80,7 @@ namespace API.Services.Service
                     material.UpdateAt = DateTime.Now;
                     await daoOtherMaterials.UpdateMaterial(material);
                 }
-                return new ResponseDTO<bool>(true, "Tạo thành công " + material.OtherMaterialsId);
+                return new ResponseDTO<bool>(true, "Tạo thành công");
             }
             catch (Exception ex)
             {
