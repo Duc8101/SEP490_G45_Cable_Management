@@ -23,7 +23,7 @@ namespace UnitTests.Tests
             string filter = "SampleFilter";
             int page = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.List(filter, null, page);
@@ -43,7 +43,7 @@ namespace UnitTests.Tests
             int page = 1;
 
             TestHelper.SimulateUserWithRoleWithoutID(
-              controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+              controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             // Act
             var result = await controller.List(filter, null, page);
@@ -66,7 +66,7 @@ namespace UnitTests.Tests
             int page = 1;
             int? warehouseId = 123; // Sample warehouse ID
             Guid warehouseKeeperId = TestHelper.SimulateUserWithRoleAndId(
-              controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+              controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             otherMaterialsService
               .Setup(x => x.ListPaged(filter, warehouseId, warehouseKeeperId, page))
@@ -97,7 +97,7 @@ namespace UnitTests.Tests
             string filter = "SampleFilter";
             int page = 1;
             int? warehouseId = 123; // Sample warehouse ID
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.ListPaged(filter, warehouseId, null, page))
               .ReturnsAsync(new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(
@@ -130,7 +130,7 @@ namespace UnitTests.Tests
 
             TestHelper.SimulateUserWithRoleAndId(
               controller,
-              RoleConst.STRING_ROLE_LEADER); // Set a user role that is not admin or
+              RoleConst.ROLE_LEADER); // Set a user role that is not admin or
                                              // warehouse keeper
 
             // Act
@@ -149,7 +149,7 @@ namespace UnitTests.Tests
             var otherMaterialsCreateUpdateDTO =
               new OtherMaterialsCreateUpdateDTO { Quantity = -100 };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
               .ReturnsAsync(new ResponseDTO<bool>(
@@ -179,7 +179,7 @@ namespace UnitTests.Tests
                 OtherMaterialsCategoryId = 1
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
               .ReturnsAsync(new ResponseDTO<bool>(
@@ -209,7 +209,7 @@ namespace UnitTests.Tests
                 OtherMaterialsCategoryId = 1
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
               .ReturnsAsync(new ResponseDTO<bool>(
@@ -239,7 +239,7 @@ namespace UnitTests.Tests
                 Status = "SampleStatus",
                 OtherMaterialsCategoryId = 1
             };
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
               .ReturnsAsync(new ResponseDTO<bool>(
@@ -269,7 +269,7 @@ namespace UnitTests.Tests
                 OtherMaterialsCategoryId = 1
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
               .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
@@ -302,7 +302,7 @@ namespace UnitTests.Tests
 
             OtherMaterial existingMaterial = new OtherMaterial { };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
               .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
@@ -359,7 +359,7 @@ namespace UnitTests.Tests
                                     new List<TransactionOtherMaterial> { }
               };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService
               .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
@@ -394,7 +394,7 @@ namespace UnitTests.Tests
                 OtherMaterialsCategoryId = 1
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService
               .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
@@ -430,7 +430,7 @@ namespace UnitTests.Tests
                 OtherMaterialsCategoryId = 1
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService
               .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
@@ -466,7 +466,7 @@ namespace UnitTests.Tests
                 OtherMaterialsCategoryId = 1
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService
               .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
@@ -502,7 +502,7 @@ namespace UnitTests.Tests
                 OtherMaterialsCategoryId = 1
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService
               .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
@@ -538,7 +538,7 @@ namespace UnitTests.Tests
                 OtherMaterialsCategoryId = 1
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService
               .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
@@ -576,7 +576,7 @@ namespace UnitTests.Tests
 
             OtherMaterial existingMaterial = new OtherMaterial { };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService
               .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
@@ -604,7 +604,7 @@ namespace UnitTests.Tests
             int otherMaterialsID = 1;
             var otherMaterialsCreateUpdateDTO = new OtherMaterialsCreateUpdateDTO { };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService
               .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
@@ -622,7 +622,7 @@ namespace UnitTests.Tests
             // Arrange
             var otherMaterialsCreateUpdateDTO = new OtherMaterialsCreateUpdateDTO { };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
               .ThrowsAsync(new Exception("An error occurred during the update operation"));
@@ -639,7 +639,7 @@ namespace UnitTests.Tests
             int otherMaterialsID = 1;
             OtherMaterial existingMaterial = new OtherMaterial();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Delete(otherMaterialsID))
               .ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
@@ -662,7 +662,7 @@ namespace UnitTests.Tests
             // Arrange
             int otherMaterialsID = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Delete(otherMaterialsID))
               .ReturnsAsync(new ResponseDTO<bool>(
@@ -686,7 +686,7 @@ namespace UnitTests.Tests
             // Arrange
             int otherMaterialsID = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Delete(otherMaterialsID))
               .ThrowsAsync(new Exception("Mocked exception"));
@@ -708,7 +708,7 @@ namespace UnitTests.Tests
 
             TestHelper.SimulateUserWithRoleAndId(
               controller,
-              RoleConst.STRING_ROLE_LEADER); // Assuming the current user is not an admin or
+              RoleConst.ROLE_LEADER); // Assuming the current user is not an admin or
                                              // warehouse keeper
 
             // Act
@@ -731,7 +731,7 @@ namespace UnitTests.Tests
 
             TestHelper.SimulateUserWithRoleAndId(
               controller,
-              RoleConst.STRING_ROLE_STAFF); // Assuming the current user is not an admin or
+              RoleConst.ROLE_STAFF); // Assuming the current user is not an admin or
                                             // warehouse keeper
 
             // Act

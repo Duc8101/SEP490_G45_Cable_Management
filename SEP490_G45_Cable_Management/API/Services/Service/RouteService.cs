@@ -21,7 +21,7 @@ namespace API.Services.Service
             try
             {
                 List<DataAccess.Entity.Route> list = await daoRoute.getListAll(name);
-                List<RouteListDTO> result = mapper.Map<List<RouteListDTO>>(list);
+                List<RouteListDTO> result = _mapper.Map<List<RouteListDTO>>(list);
                 return new ResponseDTO<List<RouteListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
@@ -35,7 +35,7 @@ namespace API.Services.Service
             try
             {
                 List<DataAccess.Entity.Route> list = await daoRoute.getListPaged(page);
-                List<RouteListDTO> DTOs = mapper.Map<List<RouteListDTO>>(list);
+                List<RouteListDTO> DTOs = _mapper.Map<List<RouteListDTO>>(list);
                 int RowCount = await daoRoute.getRowCount();
                 PagedResultDTO<RouteListDTO> result = new PagedResultDTO<RouteListDTO>(page, RowCount, PageSizeConst.MAX_ROUTE_LIST_IN_PAGE, DTOs);
                 return new ResponseDTO<PagedResultDTO<RouteListDTO>?>(result, string.Empty);

@@ -23,7 +23,7 @@ namespace API.Services.Service
             try
             {
                 List<Warehouse> list = await daoWarehouse.getListPaged(name, page);
-                List<WarehouseListDTO> DTOs = mapper.Map<List<WarehouseListDTO>>(list);
+                List<WarehouseListDTO> DTOs = _mapper.Map<List<WarehouseListDTO>>(list);
                 int RowCount = await daoWarehouse.getRowCount(name);
                 PagedResultDTO<WarehouseListDTO> result = new PagedResultDTO<WarehouseListDTO>(page, RowCount, PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE, DTOs);
                 return new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(result, string.Empty);
@@ -38,7 +38,7 @@ namespace API.Services.Service
             try
             {
                 List<Warehouse> list = await daoWarehouse.getListAll();
-                List<WarehouseListDTO> data = mapper.Map<List<WarehouseListDTO>>(list);
+                List<WarehouseListDTO> data = _mapper.Map<List<WarehouseListDTO>>(list);
                 return new ResponseDTO<List<WarehouseListDTO>?>(data, string.Empty);
             }
             catch (Exception ex)

@@ -26,7 +26,7 @@ namespace UnitTests.Tests
             int? year = 2023;
 
             TestHelper.SimulateUserWithRoleAndId(
-                controller, RoleConst.STRING_ROLE_STAFF);  // Simulate a regular employee
+                controller, RoleConst.ROLE_STAFF);  // Simulate a regular employee
 
             // Act
             var result = await controller.MaterialFluctuationPerYear(materialCategoryID, warehouseID, year);
@@ -46,7 +46,7 @@ namespace UnitTests.Tests
             int? year = 2023;
 
             TestHelper.SimulateUserWithRoleAndId(
-                controller, RoleConst.STRING_ROLE_STAFF);  // Simulate a regular employee
+                controller, RoleConst.ROLE_STAFF);  // Simulate a regular employee
 
             // Act
             var result = await controller.CableFluctuationPerYear(cableCategoryID, warehouseID, year);
@@ -64,7 +64,7 @@ namespace UnitTests.Tests
             int? warehouseID = 1;
 
             TestHelper.SimulateUserWithRoleAndId(
-                controller, RoleConst.STRING_ROLE_STAFF);  // Simulate a regular employee
+                controller, RoleConst.ROLE_STAFF);  // Simulate a regular employee
 
             // Act
             var result = await controller.CableCategory(warehouseID);
@@ -82,7 +82,7 @@ namespace UnitTests.Tests
             int? warehouseID = 1;
 
             TestHelper.SimulateUserWithRoleAndId(
-                controller, RoleConst.STRING_ROLE_STAFF);  // Simulate a regular employee
+                controller, RoleConst.ROLE_STAFF);  // Simulate a regular employee
 
             // Act
             var result = await controller.MaterialCategory(warehouseID);
@@ -109,7 +109,7 @@ namespace UnitTests.Tests
             };
 
             TestHelper.SimulateUserWithRoleAndId(controller,
-                                                 RoleConst.STRING_ROLE_ADMIN);  // Simulate an admin
+                                                 RoleConst.ROLE_ADMIN);  // Simulate an admin
 
             statisticService.Setup(x => x.MaterialFluctuationPerYear(materialCategoryID, warehouseID, year))
                 .ReturnsAsync(new ResponseDTO<MaterialFluctuationPerYear?>(expectedData, ""));
@@ -140,7 +140,7 @@ namespace UnitTests.Tests
             };
 
             TestHelper.SimulateUserWithRoleAndId(controller,
-                                                 RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);  // Simulate an admin
+                                                 RoleConst.ROLE_WAREHOUSE_KEEPER);  // Simulate an admin
 
             statisticService.Setup(x => x.MaterialFluctuationPerYear(materialCategoryID, warehouseID, year))
                 .ReturnsAsync(new ResponseDTO<MaterialFluctuationPerYear?>(expectedData, ""));
@@ -172,7 +172,7 @@ namespace UnitTests.Tests
             };
 
             TestHelper.SimulateUserWithRoleAndId(controller,
-                                                 RoleConst.STRING_ROLE_LEADER);  // Simulate an admin
+                                                 RoleConst.ROLE_LEADER);  // Simulate an admin
 
             statisticService.Setup(x => x.MaterialFluctuationPerYear(materialCategoryID, warehouseID, year))
                 .ReturnsAsync(new ResponseDTO<MaterialFluctuationPerYear?>(expectedData, ""));
@@ -196,7 +196,7 @@ namespace UnitTests.Tests
             int? year = 2023;
 
             TestHelper.SimulateUserWithRoleAndId(controller,
-                                                 RoleConst.STRING_ROLE_ADMIN);  // Simulate an admin
+                                                 RoleConst.ROLE_ADMIN);  // Simulate an admin
 
             statisticService.Setup(x => x.MaterialFluctuationPerYear(materialCategoryID, warehouseID, year))
                 .ThrowsAsync(new Exception("Sample exception message"));
@@ -215,7 +215,7 @@ namespace UnitTests.Tests
             int? year = 2023;
 
             TestHelper.SimulateUserWithRoleAndId(controller,
-                                                 RoleConst.STRING_ROLE_ADMIN);  // Simulate an admin
+                                                 RoleConst.ROLE_ADMIN);  // Simulate an admin
 
             statisticService.Setup(x => x.CableFluctuationPerYear(cableCategoryID, warehouseID, year))
                 .ReturnsAsync(new ResponseDTO<CableFluctuationPerYear?>(null, "Không tìm thấy cáp",
@@ -248,7 +248,7 @@ namespace UnitTests.Tests
             };
 
             TestHelper.SimulateUserWithRoleAndId(controller,
-                                                 RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);  // Simulate an admin
+                                                 RoleConst.ROLE_WAREHOUSE_KEEPER);  // Simulate an admin
 
             statisticService.Setup(x => x.CableFluctuationPerYear(cableCategoryID, warehouseID, year))
                 .ReturnsAsync(new ResponseDTO<CableFluctuationPerYear?>(expectedData, string.Empty));
@@ -284,7 +284,7 @@ namespace UnitTests.Tests
             };
 
             TestHelper.SimulateUserWithRoleAndId(controller,
-                                                 RoleConst.STRING_ROLE_LEADER);  // Simulate an admin
+                                                 RoleConst.ROLE_LEADER);  // Simulate an admin
 
             statisticService.Setup(x => x.CableFluctuationPerYear(cableCategoryID, warehouseID, year))
                 .ReturnsAsync(new ResponseDTO<CableFluctuationPerYear?>(expectedData, string.Empty));
@@ -314,7 +314,7 @@ namespace UnitTests.Tests
             int? year = null;
 
             TestHelper.SimulateUserWithRoleAndId(controller,
-                                                 RoleConst.STRING_ROLE_ADMIN);  // Simulate an admin
+                                                 RoleConst.ROLE_ADMIN);  // Simulate an admin
 
             statisticService.Setup(x => x.CableFluctuationPerYear(cableCategoryID, warehouseID, year))
                 .ThrowsAsync(new Exception("Sample exception message"));
@@ -339,7 +339,7 @@ namespace UnitTests.Tests
                                  SumOfLength = 150 }
    };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             statisticService.Setup(x => x.CableCategory(warehouseID))
                 .ReturnsAsync(
@@ -370,7 +370,7 @@ namespace UnitTests.Tests
                                  SumOfLength = 150 }
    };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             statisticService.Setup(x => x.CableCategory(warehouseID))
                 .ReturnsAsync(
@@ -401,7 +401,7 @@ namespace UnitTests.Tests
                                  SumOfLength = 150 }
    };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             statisticService.Setup(x => x.CableCategory(warehouseID))
                 .ReturnsAsync(
@@ -425,7 +425,7 @@ namespace UnitTests.Tests
             // Arrange
             int? warehouseID = null;  // Replace with a valid warehouse ID
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             statisticService.Setup(x => x.CableCategory(warehouseID))
                 .ThrowsAsync(new Exception("Sample exception message"));
@@ -441,7 +441,7 @@ namespace UnitTests.Tests
             // Arrange
             int? warehouseID = null;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             var expectedStatistics = new List<OtherMaterialCategoryStatistic> {
     new OtherMaterialCategoryStatistic { CategoryId = 1, CategoryName = "Category1",
@@ -470,7 +470,7 @@ namespace UnitTests.Tests
             // Arrange
             int? warehouseID = null;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             var expectedStatistics = new List<OtherMaterialCategoryStatistic> {
     new OtherMaterialCategoryStatistic { CategoryId = 1, CategoryName = "Category1",
@@ -499,7 +499,7 @@ namespace UnitTests.Tests
             // Arrange
             int? warehouseID = null;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             var expectedStatistics = new List<OtherMaterialCategoryStatistic> {
     new OtherMaterialCategoryStatistic { CategoryId = 1, CategoryName = "Category1",
@@ -527,7 +527,7 @@ namespace UnitTests.Tests
             // Arrange
             int? warehouseID = null;  // Replace with a valid warehouse ID
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             statisticService.Setup(x => x.MaterialCategory(warehouseID))
                 .ThrowsAsync(new Exception("Sample exception message"));

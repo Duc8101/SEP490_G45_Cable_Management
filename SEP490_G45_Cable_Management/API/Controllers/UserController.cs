@@ -1,8 +1,8 @@
-﻿using API.Services.IService;
+﻿using API.Attributes;
+using API.Services.IService;
 using DataAccess.DTO;
 using DataAccess.DTO.UserDTO;
 using DataAccess.Entity;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -13,89 +13,85 @@ namespace API.Controllers
     [ApiController]
     public class UserController : BaseAPIController
     {
-        private readonly IUserService service;
+        private readonly IUserService _service;
 
         public UserController(IUserService service)
         {
-            this.service = service;
+            _service = service;
         }
 
 
         [HttpPost]
         public async Task<ResponseDTO<TokenDTO?>> Login([Required] LoginDTO DTO)
         {
-            return await service.Login(DTO);
+            ResponseDTO<TokenDTO?> response = await _service.Login(DTO);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpGet("Paged")]
         [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> List(string? filter, [Required] int page = 1)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.ListPaged(filter, page);
-            }
-            return new ResponseDTO<PagedResultDTO<UserListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<PagedResultDTO<UserListDTO>?> response = await _service.ListPaged(filter, page);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpGet("WarehouseKeeper")]
         [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<List<UserListDTO>?>> List()
         {
-            if (isAdmin())
-            {
-                return await service.ListWarehouseKeeper();
-            }
-            return new ResponseDTO<List<UserListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<List<UserListDTO>?> response = await _service.ListWarehouseKeeper();
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpPost]
         [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<bool>> Create([Required] UserCreateDTO DTO)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.Create(DTO);
-            }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<bool> response = await _service.Create(DTO);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpPut("{UserID}")]
         [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<bool>> Update([Required] Guid UserID, [Required] UserUpdateDTO DTO)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.Update(UserID, DTO);
-            }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<bool> response = await _service.Update(UserID, DTO);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpDelete("{UserID}")]
         [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<bool>> Delete([Required] Guid UserID)
         {
-            // if admin
-            if (isAdmin())
+            ResponseDTO<bool> response;
+            Guid? UserLoginID = getUserID();
+            // if not found
+            if (UserLoginID == null)
             {
-                string? UserLoginID = getUserID();
-                // if not found
-                if (UserLoginID == null)
-                {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy ID", (int)HttpStatusCode.NotFound);
-                }
-                return await service.Delete(UserID, Guid.Parse(UserLoginID));
+                response = new ResponseDTO<bool>(false, "Không tìm thấy ID", (int)HttpStatusCode.NotFound);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            else
+            {
+                response = await _service.Delete(UserID, UserLoginID.Value);
+            }
+            return response;
         }
 
         [HttpPost]
         public async Task<ResponseDTO<bool>> ForgotPassword([Required] ForgotPasswordDTO DTO)
         {
-            return await service.ForgotPassword(DTO);
+            return await _service.ForgotPassword(DTO);
         }
 
         [HttpPost]
@@ -108,7 +104,7 @@ namespace API.Controllers
             {
                 return new ResponseDTO<bool>(false, "Không tìm thấy email. Cần xác minh lại thông tin đăng nhập", (int)HttpStatusCode.NotFound);
             }
-            return await service.ChangePassword(DTO, email);
+            return await _service.ChangePassword(DTO, email);
         }
     }
 }

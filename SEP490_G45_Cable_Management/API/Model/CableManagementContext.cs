@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DataAccess.Entity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
-using DataAccess.Entity;
 
 namespace API.Model
 {
@@ -47,8 +43,8 @@ namespace API.Model
                 ConfigurationBuilder builder = new ConfigurationBuilder();
                 IConfigurationRoot config = builder.SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("appsettings.json", true, true).Build();
-                string connection = config.GetConnectionString("DefaultConnection");
-                optionsBuilder.UseSqlServer(connection);
+                string connect = config.GetConnectionString("DefaultConnection");
+                optionsBuilder.UseSqlServer(connect);
             }
         }
 

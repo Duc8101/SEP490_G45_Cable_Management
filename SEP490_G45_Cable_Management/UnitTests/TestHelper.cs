@@ -28,7 +28,7 @@ namespace UnitTests
             return userId;
         }
 
-        public static String SimulateUser(BaseAPIController controller, string role)
+        public static string SimulateUser(BaseAPIController controller, string role)
         {
             Guid userId = Guid.NewGuid();
             String email = "emailsample@gmail.com";

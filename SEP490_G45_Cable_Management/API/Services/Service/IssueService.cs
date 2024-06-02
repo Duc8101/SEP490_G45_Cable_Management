@@ -27,7 +27,7 @@ namespace API.Services.Service
             try
             {
                 List<Issue> list = await daoIssue.getListPagedAll(filter, page);
-                List<IssueListDTO> DTOs = mapper.Map<List<IssueListDTO>>(list);
+                List<IssueListDTO> DTOs = _mapper.Map<List<IssueListDTO>>(list);
                 int RowCount = await daoIssue.getRowCount(filter);
                 PagedResultDTO<IssueListDTO> result = new PagedResultDTO<IssueListDTO>(page, RowCount, PageSizeConst.MAX_ISSUE_LIST_IN_PAGE, DTOs);
                 return new ResponseDTO<PagedResultDTO<IssueListDTO>?>(result, string.Empty);
@@ -42,7 +42,7 @@ namespace API.Services.Service
             try
             {
                 List<Issue> list = await daoIssue.getListPagedDoing(page);
-                List<IssueListDTO> DTOs = mapper.Map<List<IssueListDTO>>(list);
+                List<IssueListDTO> DTOs = _mapper.Map<List<IssueListDTO>>(list);
                 int RowCount = await daoIssue.getRowCount();
                 PagedResultDTO<IssueListDTO> result = new PagedResultDTO<IssueListDTO>(page, RowCount, PageSizeConst.MAX_ISSUE_LIST_IN_PAGE, DTOs);
                 return new ResponseDTO<PagedResultDTO<IssueListDTO>?>(result, string.Empty);
@@ -57,7 +57,7 @@ namespace API.Services.Service
             try
             {
                 List<Issue> list = await daoIssue.getListDoing();
-                List<IssueListDTO> data = mapper.Map<List<IssueListDTO>>(list);
+                List<IssueListDTO> data = _mapper.Map<List<IssueListDTO>>(list);
                 return new ResponseDTO<List<IssueListDTO>?>(data, string.Empty);
             }
             catch (Exception ex)
@@ -76,7 +76,7 @@ namespace API.Services.Service
             {
                 return new ResponseDTO<bool>(false, "Mã sự vụ không được để trống", (int)HttpStatusCode.Conflict);
             }
-            Issue issue = mapper.Map<Issue>(DTO);
+            Issue issue = _mapper.Map<Issue>(DTO);
             issue.IssueId = Guid.NewGuid();
             issue.CreatedAt = DateTime.Now;
             issue.UpdateAt = DateTime.Now;
@@ -164,9 +164,9 @@ namespace API.Services.Service
                 foreach (Request request in requests)
                 {
                     List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
-                    List<RequestCableByIssueDTO> requestCableDTOs = mapper.Map<List<RequestCableByIssueDTO>>(requestCables);
+                    List<RequestCableByIssueDTO> requestCableDTOs = _mapper.Map<List<RequestCableByIssueDTO>>(requestCables);
                     List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(request.RequestId);
-                    List<RequestOtherMaterialsByIssueDTO> requestOtherMaterialsDTOs = mapper.Map<List<RequestOtherMaterialsByIssueDTO>>(requestMaterials);
+                    List<RequestOtherMaterialsByIssueDTO> requestOtherMaterialsDTOs = _mapper.Map<List<RequestOtherMaterialsByIssueDTO>>(requestMaterials);
                     IssueDetailDTO detail = new IssueDetailDTO()
                     {
                         RequestName = request.RequestName,

@@ -1,77 +1,66 @@
-﻿using API.Services.IService;
+﻿using API.Attributes;
+using API.Services.IService;
 using DataAccess.DTO;
 using DataAccess.DTO.StatisticDTO;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
 
 namespace API.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class StatisticController : BaseAPIController
     {
-        private readonly IStatisticService service;
+        private readonly IStatisticService _service;
 
         public StatisticController(IStatisticService service)
         {
-            this.service = service;
+            _service = service;
         }
 
         [HttpGet]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Leader, DataAccess.Enum.Role.Warehouse_Keeper)]
         public async Task<ResponseDTO<MaterialFluctuationPerYear?>> MaterialFluctuationPerYear(int? MaterialCategoryID, int? WarehouseID, int? year)
         {
-            // if admin or leader , ware keeper
-            if (isAdmin() || isLeader() || isWarehouseKeeper())
-            {
-                return await service.MaterialFluctuationPerYear(MaterialCategoryID, WarehouseID, year);
-            }
-            return new ResponseDTO<MaterialFluctuationPerYear?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<MaterialFluctuationPerYear?> response = await _service.MaterialFluctuationPerYear(MaterialCategoryID, WarehouseID, year);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpGet]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Leader, DataAccess.Enum.Role.Warehouse_Keeper)]
         public async Task<ResponseDTO<CableFluctuationPerYear?>> CableFluctuationPerYear(int? CableCategoryID, int? WarehouseID, int? year)
         {
-            // if admin or leader , ware keeper
-            if (isAdmin() || isLeader() || isWarehouseKeeper())
-            {
-                return await service.CableFluctuationPerYear(CableCategoryID, WarehouseID, year);
-            }
-            return new ResponseDTO<CableFluctuationPerYear?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<CableFluctuationPerYear?> response = await _service.CableFluctuationPerYear(CableCategoryID, WarehouseID, year); ;
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpGet]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Leader, DataAccess.Enum.Role.Warehouse_Keeper)]
         public async Task<ResponseDTO<List<CableCategoryStatistic>?>> CableCategory(int? WarehouseID)
         {
-            // if admin or leader , ware keeper
-            if (isAdmin() || isLeader() || isWarehouseKeeper())
-            {
-                return await service.CableCategory(WarehouseID);
-            }
-            return new ResponseDTO<List<CableCategoryStatistic>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<List<CableCategoryStatistic>?> response = await _service.CableCategory(WarehouseID);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpGet]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Leader, DataAccess.Enum.Role.Warehouse_Keeper)]
         public async Task<ResponseDTO<List<OtherMaterialCategoryStatistic>?>> MaterialCategory(int? WarehouseID)
         {
-            // if admin or leader , ware keeper
-            if (isAdmin() || isLeader() || isWarehouseKeeper())
-            {
-                return await service.MaterialCategory(WarehouseID);
-            }
-            return new ResponseDTO<List<OtherMaterialCategoryStatistic>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<List<OtherMaterialCategoryStatistic>?> response = await _service.MaterialCategory(WarehouseID);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<ResponseDTO<List<RouteStatistic>?>> Route([Required] Guid RouteID)
         {
-            return await service.Route(RouteID);
+            ResponseDTO<List<RouteStatistic>?> response = await _service.Route(RouteID);
+            Response.StatusCode = response.Code;
+            return response;
         }
     }
 }

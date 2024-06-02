@@ -24,11 +24,11 @@ namespace API.Services.Service
             try
             {
                 List<Node> list = await daoNode.getList(RouteID);
-                List<NodeListDTO> data = mapper.Map<List<NodeListDTO>>(list);
+                List<NodeListDTO> data = _mapper.Map<List<NodeListDTO>>(list);
                 foreach (NodeListDTO item in data)
                 {
                     List<NodeMaterialCategory> NodeMaterialCategories = await daoCategory.getList(item.Id);
-                    List<NodeMaterialCategoryListDTO> categories = mapper.Map<List<NodeMaterialCategoryListDTO>>(NodeMaterialCategories);
+                    List<NodeMaterialCategoryListDTO> categories = _mapper.Map<List<NodeMaterialCategoryListDTO>>(NodeMaterialCategories);
                     item.NodeMaterialCategoryListDTOs = categories;
                 }
                 return new ResponseDTO<List<NodeListDTO>?>(data, string.Empty);
@@ -87,7 +87,7 @@ namespace API.Services.Service
                     }
                 }
                 // --------------------------- create node ---------------------------
-                Node node = mapper.Map<Node>(DTO);
+                Node node = _mapper.Map<Node>(DTO);
                 node.Id = Guid.NewGuid();
                 node.CreatedAt = DateTime.Now;
                 node.UpdateAt = DateTime.Now;
@@ -112,8 +112,8 @@ namespace API.Services.Service
                     return new ResponseDTO<NodeListDTO?>(null, "Không tìm thấy điểm", (int)HttpStatusCode.NotFound);
                 }
                 List<NodeMaterialCategory> NodeMaterialCategories = await daoCategory.getList(NodeID);
-                List<NodeMaterialCategoryListDTO> list = mapper.Map<List<NodeMaterialCategoryListDTO>>(NodeMaterialCategories);
-                NodeListDTO DTO = mapper.Map<NodeListDTO>(node);
+                List<NodeMaterialCategoryListDTO> list = _mapper.Map<List<NodeMaterialCategoryListDTO>>(NodeMaterialCategories);
+                NodeListDTO DTO = _mapper.Map<NodeListDTO>(node);
                 DTO.NodeMaterialCategoryListDTOs = list;
                 return new ResponseDTO<NodeListDTO?>(DTO, string.Empty);
             }

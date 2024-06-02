@@ -22,7 +22,7 @@ namespace API.Services.Service
             try
             {
                 List<OtherMaterialsCategory> list = await daoOtherMaterialsCategory.getListPaged(name, page);
-                List<OtherMaterialsCategoryListDTO> DTOs = mapper.Map<List<OtherMaterialsCategoryListDTO>>(list);
+                List<OtherMaterialsCategoryListDTO> DTOs = _mapper.Map<List<OtherMaterialsCategoryListDTO>>(list);
                 int RowCount = await daoOtherMaterialsCategory.getRowCount(name);
                 PagedResultDTO<OtherMaterialsCategoryListDTO> result = new PagedResultDTO<OtherMaterialsCategoryListDTO>(page, RowCount, PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE, DTOs);
                 return new ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>(result, string.Empty);
@@ -37,7 +37,7 @@ namespace API.Services.Service
             try
             {
                 List<OtherMaterialsCategory> list = await daoOtherMaterialsCategory.getListAll();
-                List<OtherMaterialsCategoryListDTO> data = mapper.Map<List<OtherMaterialsCategoryListDTO>>(list);
+                List<OtherMaterialsCategoryListDTO> data = _mapper.Map<List<OtherMaterialsCategoryListDTO>>(list);
                 return new ResponseDTO<List<OtherMaterialsCategoryListDTO>?>(data, string.Empty);
             }
             catch (Exception ex)

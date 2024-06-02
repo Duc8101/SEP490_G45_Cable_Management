@@ -1,7 +1,11 @@
+using API.Middleware;
+using API.Model;
+using API.Provider;
 using API.Services.IService;
 using API.Services.Service;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -46,7 +50,7 @@ namespace API
                 });
             }
            );
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+           /* builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
@@ -60,7 +64,7 @@ namespace API
                     ValidIssuer = builder.Configuration["Jwt:Issuer"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
                 };
-            });
+            });*/
             builder.Services.AddCors(o => o.AddPolicy("AllowOrigin", builder =>
             {
                 builder.AllowAnyOrigin()
@@ -72,6 +76,9 @@ namespace API
             {
                 cfg.AddProfile(new MappingProfile());
             });
+            // ----------------------- register db context -----------------------
+            builder.Services.AddDbContext<CableManagementContext>(/*options => options.UseSqlServer(connection),*/ ServiceLifetime.Scoped);
+            // ----------------------- register service -----------------------
             builder.Services.AddScoped<ICableCategoryService, CableCategoryService>();
             builder.Services.AddScoped<ICableService, CableService>();
             builder.Services.AddScoped<IIssueService, IssueService>();
@@ -86,13 +93,15 @@ namespace API
             builder.Services.AddScoped<ITransactionService, TransactionService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IWarehouseService, WarehouseService>();
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             var app = builder.Build();
-
+            StaticServiceProvider.Provider = app.Services;
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
 
             }
+            app.UseMiddleware<JwtMiddleware>();
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseHttpsRedirection();

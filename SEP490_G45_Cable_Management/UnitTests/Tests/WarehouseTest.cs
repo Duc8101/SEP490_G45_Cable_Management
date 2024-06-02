@@ -22,7 +22,7 @@ namespace UnitTests.Tests
             var name = "SampleName";  // Replace with a valid name or leave it as null for testing
             int page = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.List(name, page);
@@ -39,7 +39,7 @@ namespace UnitTests.Tests
         {
             // Arrange
             var warehouseCreateUpdateDTO = new WarehouseCreateUpdateDTO { };
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.Create(warehouseCreateUpdateDTO);
@@ -56,7 +56,7 @@ namespace UnitTests.Tests
             // Arrange
             var warehouseCreateUpdateDTO = new WarehouseCreateUpdateDTO { };
 
-            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.ROLE_ADMIN);
 
             // Act
             var result = await controller.Create(warehouseCreateUpdateDTO);
@@ -74,7 +74,7 @@ namespace UnitTests.Tests
             // Arrange
             var warehouseID = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.Delete(warehouseID);
@@ -98,7 +98,7 @@ namespace UnitTests.Tests
     new WarehouseListDTO { WarehouseId = 2, WarehouseName = "Warehouse2" }
    };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             warehouseService.Setup(x => x.ListPaged(name, page))
                 .ReturnsAsync(new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(
@@ -130,7 +130,7 @@ namespace UnitTests.Tests
     new WarehouseListDTO { WarehouseId = 2, WarehouseName = "Warehouse2" }
    };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             warehouseService.Setup(x => x.ListPaged(name, page))
                 .ReturnsAsync(new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(
@@ -163,7 +163,7 @@ namespace UnitTests.Tests
     new WarehouseListDTO { WarehouseId = 2, WarehouseName = "Warehouse2" }
    };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             warehouseService.Setup(x => x.ListPaged(name, page))
                 .ReturnsAsync(new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(
@@ -191,7 +191,7 @@ namespace UnitTests.Tests
             var name = "SampleName";
             var page = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             warehouseService.Setup(x => x.ListPaged(name, page))
                 .ThrowsAsync(new Exception("Sample exception"));
@@ -209,7 +209,7 @@ namespace UnitTests.Tests
     new WarehouseListDTO { WarehouseId = 2, WarehouseName = "Warehouse2" }
    };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             warehouseService.Setup(x => x.ListAll())
                 .ReturnsAsync(new ResponseDTO<List<WarehouseListDTO>?>(expectedWarehouses, string.Empty));
@@ -228,7 +228,7 @@ namespace UnitTests.Tests
         public void ListAll_WhenExceptionThrown_ReturnsErrorResponse()
         {
             // Arrange
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             warehouseService.Setup(x => x.ListAll()).ThrowsAsync(new Exception("Some error message"));
 
@@ -244,7 +244,7 @@ namespace UnitTests.Tests
             var warehouseId = 1;
             var warehouseUpdateDTO = new WarehouseCreateUpdateDTO { WarehouseName = "NewWarehouse" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             warehouseService.Setup(x => x.Update(warehouseId, warehouseUpdateDTO))
                 .ReturnsAsync(
@@ -268,7 +268,7 @@ namespace UnitTests.Tests
             var warehouseId = 1;
             var warehouseUpdateDTO = new WarehouseCreateUpdateDTO { WarehouseName = String.Empty };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             warehouseService.Setup(x => x.Update(warehouseId, warehouseUpdateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên kho không được để trống",
@@ -292,7 +292,7 @@ namespace UnitTests.Tests
             var warehouseId = 1;
             var warehouseUpdateDTO = new WarehouseCreateUpdateDTO { WarehouseName = "SampleWarehouse" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             warehouseService.Setup(x => x.Update(warehouseId, warehouseUpdateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
@@ -314,7 +314,7 @@ namespace UnitTests.Tests
             var warehouseId = 1;
             var warehouseUpdateDTO = new WarehouseCreateUpdateDTO { WarehouseName = "SampleWarehouse" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             warehouseService.Setup(x => x.Update(warehouseId, warehouseUpdateDTO))
                 .ThrowsAsync(new Exception("Some error occurred during warehouse update"));
@@ -330,7 +330,7 @@ namespace UnitTests.Tests
             // Arrange
             var warehouseId = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             warehouseService.Setup(x => x.Delete(warehouseId)).ThrowsAsync(new Exception(""));
 
@@ -344,7 +344,7 @@ namespace UnitTests.Tests
             // Arrange
             int warehouseId = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             warehouseService.Setup(x => x.Delete(warehouseId))
                 .ReturnsAsync(
@@ -367,7 +367,7 @@ namespace UnitTests.Tests
             // Arrange
             int warehouseId = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             warehouseService.Setup(x => x.Delete(warehouseId))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));

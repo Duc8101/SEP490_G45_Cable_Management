@@ -46,12 +46,12 @@ namespace API.Controllers
             // if admin
             if (isAdmin())
             {
-                string? CreatorID = getUserID();
+                Guid? CreatorID = getUserID();
                 if (CreatorID == null)
                 {
                     return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
                 }
-                return await service.Create(DTO, Guid.Parse(CreatorID));
+                return await service.Create(DTO, CreatorID.Value);
             }
             return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
         }

@@ -1,72 +1,65 @@
-﻿using API.Services.IService;
+﻿using API.Attributes;
+using API.Services.IService;
 using DataAccess.DTO;
 using DataAccess.DTO.NodeDTO;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
 
 namespace API.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class NodeController : BaseAPIController
     {
-        private readonly INodeService service;
+        private readonly INodeService _service;
 
         public NodeController(INodeService service)
         {
-            this.service = service;
+            _service = service;
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<ResponseDTO<List<NodeListDTO>?>> List([Required] Guid RouteID)
         {
-            return await service.List(RouteID);
+            ResponseDTO<List<NodeListDTO>?> response = await _service.List(RouteID);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpPost]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<bool>> Create([Required] NodeCreateDTO DTO)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.Create(DTO);
-            }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<bool> response = await _service.Create(DTO);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpGet("{NodeID}")]
-        [Authorize]
         public async Task<ResponseDTO<NodeListDTO?>> Detail([Required] Guid NodeID)
         {
-            return await service.Detail(NodeID);
+            ResponseDTO<NodeListDTO?> response = await _service.Detail(NodeID);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpPut("{NodeID}")]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<bool>> Update([Required] Guid NodeID, [Required] NodeUpdateDTO DTO)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.Update(NodeID, DTO);
-            }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<bool> response = await _service.Update(NodeID, DTO);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpDelete("{NodeID}")]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<bool>> Delete([Required] Guid NodeID)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.Delete(NodeID);
-            }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<bool> response = await _service.Delete(NodeID);
+            Response.StatusCode = response.Code;
+            return response;
         }
     }
 }

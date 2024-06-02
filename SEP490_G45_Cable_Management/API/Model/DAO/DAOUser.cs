@@ -1,15 +1,8 @@
 ﻿using API.Model.Util;
-using DataAccess;
 using DataAccess.Const;
 using DataAccess.DTO.UserDTO;
 using DataAccess.Entity;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Crypto.Operators;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace API.Model.DAO
 {
@@ -88,13 +81,13 @@ namespace API.Model.DAO
         }
         public async Task<List<string>> getEmailAdmins()
         {
-            return await context.Users.Where(u => u.RoleId == RoleConst.INT_ROLE_ADMIN && u.IsDeleted == false).Select(u => u.Email).ToListAsync();
+            return await context.Users.Where(u => u.RoleId == (int) DataAccess.Enum.Role.Admin && u.IsDeleted == false).Select(u => u.Email).ToListAsync();
         }
         // get list warehouse keeper
         public async Task<List<User>> getList()
         {
             IQueryable<User> query = getQuery(null);
-            return await query.OrderByDescending(u => u.UpdateAt).Where(u => u.RoleId == RoleConst.INT_ROLE_WAREHOUSE_KEEPER).ToListAsync();
+            return await query.OrderByDescending(u => u.UpdateAt).Where(u => u.RoleId == (int)DataAccess.Enum.Role.Warehouse_Keeper).ToListAsync();
         }
 
     }

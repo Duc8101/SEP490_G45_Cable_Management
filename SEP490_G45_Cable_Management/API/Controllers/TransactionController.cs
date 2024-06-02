@@ -1,46 +1,39 @@
-﻿using API.Services.IService;
+﻿using API.Attributes;
+using API.Services.IService;
 using DataAccess.DTO;
 using DataAccess.DTO.TransactionDTO;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
 
 namespace API.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
+    [Authorize]
+    [Role(DataAccess.Enum.Role.Admin)]
     public class TransactionController : BaseAPIController
     {
-        private readonly ITransactionService service;
+        private readonly ITransactionService _service;
 
         public TransactionController(ITransactionService service)
         {
-            this.service = service;
+            _service = service;
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>> List(string? filter, int? WareHouseID, [Required] int page = 1)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.List(filter, WareHouseID, page);
-            }
-            return new ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?> response = await _service.List(filter, WareHouseID, page);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpGet("{TransactionID}")]
-        [Authorize]
         public async Task<ResponseDTO<TransactionDetailDTO?>> Detail([Required] Guid TransactionID)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.Detail(TransactionID);
-            }
-            return new ResponseDTO<TransactionDetailDTO?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<TransactionDetailDTO?> response = await _service.Detail(TransactionID);
+            Response.StatusCode = response.Code;
+            return response;
         }
     }
 }

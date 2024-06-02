@@ -24,7 +24,7 @@ namespace API.Services.Service
             try
             {
                 List<TransactionHistory> list = await daoHistory.getList(filter, WareHouseID, page);
-                List<TransactionHistoryDTO> DTOs = mapper.Map<List<TransactionHistoryDTO>>(list);
+                List<TransactionHistoryDTO> DTOs = _mapper.Map<List<TransactionHistoryDTO>>(list);
                 int RowCount = await daoHistory.getRowCount(filter, WareHouseID);
                 PagedResultDTO<TransactionHistoryDTO> result = new PagedResultDTO<TransactionHistoryDTO>(page, RowCount, PageSizeConst.MAX_TRANSACTION_LIST_IN_PAGE, DTOs);
                 return new ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>(result, string.Empty);
@@ -44,10 +44,10 @@ namespace API.Services.Service
                     return new ResponseDTO<TransactionDetailDTO?>(null, "Không tìm thấy giao dịch", (int)HttpStatusCode.NotFound);
                 }
                 List<TransactionCable> listCable = await daoTransactionCable.getList(TransactionID);
-                List<TransactionCableDTO> cableDTOs = mapper.Map<List<TransactionCableDTO>>(listCable);
+                List<TransactionCableDTO> cableDTOs = _mapper.Map<List<TransactionCableDTO>>(listCable);
                 List<TransactionOtherMaterial> listMaterial = await daoTransactionMaterial.getList(TransactionID);
-                List<TransactionMaterialDTO> materialDTOs = mapper.Map<List<TransactionMaterialDTO>>(listMaterial);
-                TransactionDetailDTO data = mapper.Map<TransactionDetailDTO>(history);
+                List<TransactionMaterialDTO> materialDTOs = _mapper.Map<List<TransactionMaterialDTO>>(listMaterial);
+                TransactionDetailDTO data = _mapper.Map<TransactionDetailDTO>(history);
                 data.CableTransactions = cableDTOs;
                 data.MaterialsTransaction = materialDTOs;
                 return new ResponseDTO<TransactionDetailDTO?>(data, "");

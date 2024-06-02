@@ -1,5 +1,4 @@
 ﻿using DataAccess.DTO.IssueDTO;
-using DataAccess.Entity;
 
 namespace UnitTests.Tests
 {
@@ -28,7 +27,7 @@ namespace UnitTests.Tests
 
             // Simulate user with admin, leader, or staff role
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
-     new Claim(ClaimTypes.Role, RoleConst.STRING_ROLE_ADMIN),
+     new Claim(ClaimTypes.Role, RoleConst.ROLE_ADMIN),
     }));
 
             var context = new ControllerContext { HttpContext = new DefaultHttpContext { User = user } };
@@ -58,7 +57,7 @@ namespace UnitTests.Tests
 
             var mockRowCount = 10;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             issueService.Setup(x => x.ListPagedDoing(page))
                 .ReturnsAsync(new ResponseDTO<PagedResultDTO<IssueListDTO>>(
@@ -84,7 +83,7 @@ namespace UnitTests.Tests
 
             issueService.Setup(x => x.ListDoing()).ReturnsAsync(new ResponseDTO<List<IssueListDTO>>(expectedList, string.Empty));
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.List();
@@ -104,7 +103,7 @@ namespace UnitTests.Tests
             {
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             // Act
             var result = await controller.Create(sampleData);
@@ -129,7 +128,7 @@ namespace UnitTests.Tests
                 CableRoutingName = "SampleCableRoutingName",
                 Group = "SampleGroup"
             };
-            Guid CreatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            Guid CreatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             issueService.Setup(x => x.Create(sampleData, CreatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên sự vụ không được để trống", (int)HttpStatusCode.Conflict));
@@ -157,7 +156,7 @@ namespace UnitTests.Tests
                 CableRoutingName = "SampleCableRoutingName",
                 Group = "SampleGroup"
             };
-            Guid CreatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            Guid CreatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             issueService.Setup(x => x.Create(sampleData, CreatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Mã sự vụ không được để trống", (int)HttpStatusCode.Conflict));
@@ -185,7 +184,7 @@ namespace UnitTests.Tests
                 CableRoutingName = "SampleCableRoutingName",
                 Group = "SampleGroup"
             };
-            var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             // Setup the necessary mocks
             issueService.Setup(x => x.Create(sampleData, creatorId)).ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
@@ -213,7 +212,7 @@ namespace UnitTests.Tests
                 CableRoutingName = "SampleCableRoutingName",
                 Group = "SampleGroup"
             };
-            var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Setup the necessary mocks
             issueService.Setup(x => x.Create(sampleData, creatorId)).ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
@@ -242,7 +241,7 @@ namespace UnitTests.Tests
                 CableRoutingName = "UpdatedCableRoutingName",
                 Group = "UpdatedGroup"
             };
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             // Act
             var result = await controller.Update(issueId, sampleData);
@@ -270,7 +269,7 @@ namespace UnitTests.Tests
                 Status = "UpdatedStatus"
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             issueService.Setup(x => x.Update(issueId, sampleData)).ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
             // Act
@@ -298,7 +297,7 @@ namespace UnitTests.Tests
                 Status = "UpdatedStatus"
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             issueService.Setup(x => x.Update(issueId, sampleData)).ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
             // Act
@@ -327,7 +326,7 @@ namespace UnitTests.Tests
                 Status = "UpdatedStatus"
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             issueService.Setup(x => x.Update(issueId, sampleData))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound));
@@ -358,7 +357,7 @@ namespace UnitTests.Tests
                 Status = "UpdatedStatus"
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             issueService.Setup(x => x.Update(issueId, sampleData))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên sự vụ không được để trống", (int)HttpStatusCode.Conflict));
@@ -389,7 +388,7 @@ namespace UnitTests.Tests
                 Status = "UpdatedStatus"
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
             issueService.Setup(x => x.Update(issueId, sampleData))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Mã sự vụ không được để trống", (int)HttpStatusCode.Conflict));
 
@@ -409,7 +408,7 @@ namespace UnitTests.Tests
             // Arrange
             var issueId = Guid.NewGuid();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             // Act
             var result = await controller.Delete(issueId);
@@ -426,7 +425,7 @@ namespace UnitTests.Tests
         {
             // Arrange
             var issueId = Guid.NewGuid();
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
             issueService.Setup(x => x.Delete(issueId)).ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
 
             // Act
@@ -443,7 +442,7 @@ namespace UnitTests.Tests
         {
             // Arrange
             var issueId = Guid.NewGuid();
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
             issueService.Setup(x => x.Delete(issueId)).ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
 
             // Act
@@ -462,7 +461,7 @@ namespace UnitTests.Tests
             // Arrange
             var issueId = Guid.NewGuid();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             issueService.Setup(x => x.Delete(issueId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound));

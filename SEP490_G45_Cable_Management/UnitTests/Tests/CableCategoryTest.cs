@@ -1,5 +1,4 @@
 ﻿using DataAccess.DTO.CableCategoryDTO;
-using DataAccess.Entity;
 
 namespace UnitTests.Tests
 {
@@ -17,7 +16,7 @@ namespace UnitTests.Tests
             cableCategoryService = new Mock<ICableCategoryService>();
             contextMock = new Mock<HttpContext>();
             var user = new ClaimsPrincipal();
-            var listClaim = new List<Claim> { new Claim(ClaimTypes.Role, RoleConst.STRING_ROLE_ADMIN), new Claim("userid", "1") };
+            var listClaim = new List<Claim> { new Claim(ClaimTypes.Role, RoleConst.ROLE_ADMIN), new Claim("userid", "1") };
             user.AddIdentity(new ClaimsIdentity(listClaim));
             contextMock.Setup(x => x.User).Returns(user);
             controller = new CableCategoryController(cableCategoryService.Object);
@@ -130,7 +129,7 @@ namespace UnitTests.Tests
             // Arrange
             var sampleData = new CableCategoryCreateUpdateDTO { CableCategoryName = "Sample Cable Category Name" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
             // Act
             var result = await controller.Create(sampleData);
             // Assert
@@ -147,7 +146,7 @@ namespace UnitTests.Tests
             var sampleData = new CableCategoryCreateUpdateDTO { CableCategoryName = "Updated Sample Cable Category Name" };
             int cableCategoryId = 1;  // Sample cable category ID
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
             // Act
             var result = await controller.Update(cableCategoryId, sampleData);
 
@@ -198,7 +197,7 @@ namespace UnitTests.Tests
                 CableCategoryName = "TestCableCategory"
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             var expectedExceptionMessage = "Simulated exception message";
 

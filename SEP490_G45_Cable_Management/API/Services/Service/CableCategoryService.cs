@@ -22,7 +22,7 @@ namespace API.Services.Service
             try
             {
                 List<CableCategory> list = await daoCableCategory.getListPaged(name, page);
-                List<CableCategoryListDTO> DTOs = mapper.Map<List<CableCategoryListDTO>>(list);
+                List<CableCategoryListDTO> DTOs = _mapper.Map<List<CableCategoryListDTO>>(list);
                 int RowCount = await daoCableCategory.getRowCount(name);
                 PagedResultDTO<CableCategoryListDTO> result = new PagedResultDTO<CableCategoryListDTO>(page, RowCount, PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE, DTOs);
                 return new ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>(result, string.Empty);
@@ -39,7 +39,7 @@ namespace API.Services.Service
             try
             {
                 List<CableCategory> list = await daoCableCategory.getListAll();
-                List<CableCategoryListDTO> data = mapper.Map<List<CableCategoryListDTO>>(list);
+                List<CableCategoryListDTO> data = _mapper.Map<List<CableCategoryListDTO>>(list);
                 return new ResponseDTO<List<CableCategoryListDTO>?>(data, string.Empty);
             }
             catch (Exception ex)

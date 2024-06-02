@@ -1,5 +1,6 @@
 ﻿using DataAccess.DTO.UserDTO;
 using DataAccess.DTO;
+using DataAccess.Entity;
 
 namespace API.Services.IService
 {

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "e32bdlEoW8nwl1koqWb6lau4sOQkJ7cUZNorN5+AHacsVX/P+nsL5Pzdicqv/P1sPZTn3hVwJ6zzQqGKV8h9ZA==",
+  "dgSpecHash": "x4TgAxPsn+0iZ0e5hum92UyzzSFh+OTD2hLDBBHfjcfH36e19A7Hh0OKX8+H2wpkYS2Kd59X0G/CyOrkM8xecw==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\UnitTests\\UnitTests.csproj",
   "expectedPackageFiles": [
@@ -83,9 +83,9 @@
     "C:\\Users\\Admin\\.nuget\\packages\\system.text.encodings.web\\6.0.0\\system.text.encodings.web.6.0.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\system.text.json\\6.0.0\\system.text.json.6.0.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512",
-    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.27\\microsoft.windowsdesktop.app.ref.6.0.27.nupkg.sha512",
-    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.27\\microsoft.netcore.app.ref.6.0.27.nupkg.sha512",
-    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.27\\microsoft.aspnetcore.app.ref.6.0.27.nupkg.sha512"
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.29\\microsoft.windowsdesktop.app.ref.6.0.29.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.29\\microsoft.netcore.app.ref.6.0.29.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.29\\microsoft.aspnetcore.app.ref.6.0.29.nupkg.sha512"
   ],
   "logs": []
 }

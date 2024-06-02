@@ -24,7 +24,7 @@ namespace UnitTests.Tests
             var sampleData = new NodeMaterialCategoryUpdateDTO { };
 
             // Simulate a user without admin
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.Update(nodeId, sampleData);
@@ -49,7 +49,7 @@ namespace UnitTests.Tests
         }
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             // Mocking the scenario where getNode returns a valid node
             nodeMaterialCategoryService.Setup(x => x.Update(nodeId, nodeMaterialCategoryUpdateDTO))
@@ -79,7 +79,7 @@ namespace UnitTests.Tests
             new MaterialCategoryDTO { OtherMaterialsCategoryId = 1, Quantity = 10 }
         }
             };
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             // Mocking the scenario where getNode returns null
             nodeMaterialCategoryService.Setup(x => x.Update(nodeId, nodeMaterialCategoryUpdateDTO))
@@ -109,7 +109,7 @@ namespace UnitTests.Tests
         }
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
 
             // Mocking the scenario where an exception is thrown

@@ -22,7 +22,7 @@ namespace API.Services.Service
             try
             {
                 List<Cable> list = await daoCable.getListPaged(filter, WarehouseID, isExportedToUse, page);
-                List<CableListDTO> DTOs = mapper.Map<List<CableListDTO>>(list);
+                List<CableListDTO> DTOs = _mapper.Map<List<CableListDTO>>(list);
                 int RowCount = await daoCable.getRowCount(filter, WarehouseID, isExportedToUse);
                 int sum = await daoCable.getSum(filter, WarehouseID, isExportedToUse);
                 PagedResultDTO<CableListDTO> result = new PagedResultDTO<CableListDTO>(page, RowCount, PageSizeConst.MAX_CABLE_LIST_IN_PAGE, DTOs, sum);
@@ -46,7 +46,7 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Cáp đã tồn tại trong hệ thống", (int)HttpStatusCode.Conflict);
                 }
-                Cable cable = mapper.Map<Cable>(DTO);
+                Cable cable = _mapper.Map<Cable>(DTO);
                 cable.CableId = Guid.NewGuid();
                 cable.CreatorId = CreatorID;
                 cable.CreatedAt = DateTime.Now;
@@ -122,7 +122,7 @@ namespace API.Services.Service
             try
             {
                 List<Cable> list = await daoCable.getListAll(WarehouseID);
-                List<CableListDTO> result = mapper.Map<List<CableListDTO>>(list);
+                List<CableListDTO> result = _mapper.Map<List<CableListDTO>>(list);
                 return new ResponseDTO<List<CableListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)

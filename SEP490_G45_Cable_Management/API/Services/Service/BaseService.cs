@@ -4,10 +4,10 @@ namespace API.Services.Service
 {
     public class BaseService
     {
-        internal readonly IMapper mapper;
+        internal readonly IMapper _mapper;
         public BaseService(IMapper mapper)
         {
-            this.mapper = mapper;
+            _mapper = mapper;
         }
     }
 }

@@ -27,7 +27,7 @@ namespace UnitTests.Tests
             var name = "SampleName";
             int page = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.List(name, page);
@@ -46,7 +46,7 @@ namespace UnitTests.Tests
             // Arrange
             var supplierCreateUpdateDTO = new SupplierCreateUpdateDTO();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.Create(supplierCreateUpdateDTO);
@@ -63,7 +63,7 @@ namespace UnitTests.Tests
             // Arrange
             var supplierCreateUpdateDTO = new SupplierCreateUpdateDTO();
 
-            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.ROLE_ADMIN);
 
             // Act
             var result = await controller.Create(supplierCreateUpdateDTO);
@@ -82,7 +82,7 @@ namespace UnitTests.Tests
             var supplierID = 123;  // Replace with a valid supplier ID
             var supplierCreateUpdateDTO = new SupplierCreateUpdateDTO();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.Update(supplierID, supplierCreateUpdateDTO);
@@ -99,7 +99,7 @@ namespace UnitTests.Tests
             // Arrange
             var supplierID = 123;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.Delete(supplierID);
@@ -123,7 +123,7 @@ namespace UnitTests.Tests
     new SupplierListDTO { SupplierId = 2, SupplierName = "Supplier2" }
    };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.ListPaged(name, page))
                 .ReturnsAsync(new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(
@@ -155,7 +155,7 @@ namespace UnitTests.Tests
     new SupplierListDTO { SupplierId = 2, SupplierName = "Supplier2" }
    };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             supplierService.Setup(x => x.ListPaged(name, page))
                 .ReturnsAsync(new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(
@@ -188,7 +188,7 @@ namespace UnitTests.Tests
     new SupplierListDTO { SupplierId = 2, SupplierName = "Supplier2" }
    };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             supplierService.Setup(x => x.ListPaged(name, page))
                 .ReturnsAsync(new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(
@@ -215,7 +215,7 @@ namespace UnitTests.Tests
             var name = "SampleName";
             var page = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.ListPaged(name, page))
                 .ThrowsAsync(new Exception("Simulated exception"));
@@ -232,7 +232,7 @@ namespace UnitTests.Tests
    { new SupplierListDTO { SupplierId = 1, SupplierName = "Supplier1" },
      new SupplierListDTO { SupplierId = 2, SupplierName = "Supplier2" } };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.ListAll())
                 .ReturnsAsync(new ResponseDTO<List<SupplierListDTO>?>(expectedSuppliers, string.Empty));
@@ -254,7 +254,7 @@ namespace UnitTests.Tests
             // Arrange
             var supplierCreateDTO = new SupplierCreateUpdateDTO { SupplierName = "" };
 
-            var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Create(supplierCreateDTO, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên nhà cung cấp không được để trống",
@@ -277,7 +277,7 @@ namespace UnitTests.Tests
             // Arrange
             var supplierCreateDTO = new SupplierCreateUpdateDTO { SupplierName = "ExistingSupplier" };
 
-            var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Create(supplierCreateDTO, creatorId))
                 .ReturnsAsync(
@@ -300,7 +300,7 @@ namespace UnitTests.Tests
             // Arrange
             var supplierCreateDTO = new SupplierCreateUpdateDTO { SupplierName = "NewSupplier" };
 
-            var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Create(supplierCreateDTO, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Thêm thành công"));
@@ -321,7 +321,7 @@ namespace UnitTests.Tests
             // Arrange
             var supplierCreateDTO = new SupplierCreateUpdateDTO { SupplierName = "NewSupplier" };
 
-            var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             var errorMessage = "An error occurred while creating the supplier.";
 
@@ -339,7 +339,7 @@ namespace UnitTests.Tests
             int supplierId = 0;
             var supplierCreateUpdateDTO = new SupplierCreateUpdateDTO { SupplierName = "UpdatedSupplier" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Update(supplierId, supplierCreateUpdateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy nhà cung cấp",
@@ -361,7 +361,7 @@ namespace UnitTests.Tests
             int supplierId = 1;
             var supplierCreateUpdateDTO = new SupplierCreateUpdateDTO { SupplierName = "" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Update(supplierId, supplierCreateUpdateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên nhà cung cấp không được để trống",
@@ -385,7 +385,7 @@ namespace UnitTests.Tests
             int supplierId = 1;
             var supplierCreateUpdateDTO = new SupplierCreateUpdateDTO { SupplierName = "ExistingSupplier" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Update(supplierId, supplierCreateUpdateDTO))
                 .ReturnsAsync(
@@ -409,7 +409,7 @@ namespace UnitTests.Tests
             int supplierId = 1;
             var supplierCreateUpdateDTO = new SupplierCreateUpdateDTO { SupplierName = "NewSupplier" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Update(supplierId, supplierCreateUpdateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
@@ -431,7 +431,7 @@ namespace UnitTests.Tests
             int supplierId = 1;
             var supplierCreateUpdateDTO = new SupplierCreateUpdateDTO { SupplierName = "NewSupplier" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Update(supplierId, supplierCreateUpdateDTO))
                 .ThrowsAsync(new Exception("Simulated exception"));
@@ -447,7 +447,7 @@ namespace UnitTests.Tests
             // Arrange
             int supplierId = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Delete(supplierId))
                 .ThrowsAsync(new Exception("Simulated exception"));
@@ -465,7 +465,7 @@ namespace UnitTests.Tests
             // Arrange
             int supplierId = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Delete(supplierId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy nhà cung cấp",
@@ -486,7 +486,7 @@ namespace UnitTests.Tests
             // Arrange
             int supplierId = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Delete(supplierId))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));

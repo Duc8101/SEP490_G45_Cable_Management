@@ -30,7 +30,7 @@ namespace UnitTests.Tests
             var warehouseID = 123;
             var page = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.List(filter, warehouseID, page);
@@ -47,7 +47,7 @@ namespace UnitTests.Tests
             // Arrange
             var transactionID = Guid.NewGuid();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.Detail(transactionID);
@@ -72,7 +72,7 @@ namespace UnitTests.Tests
     new TransactionHistoryDTO { TransactionId = Guid.NewGuid() }
    };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             transactionService.Setup(x => x.List(filter, warehouseId, page))
                 .ReturnsAsync(new ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>(
@@ -100,7 +100,7 @@ namespace UnitTests.Tests
             var warehouseId = 1;
             var page = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             transactionService.Setup(x => x.List(filter, warehouseId, page))
                 .ThrowsAsync(new Exception("Sample exception"));
@@ -115,7 +115,7 @@ namespace UnitTests.Tests
             // Arrange
             var transactionId = Guid.NewGuid();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             transactionService.Setup(x => x.Detail(transactionId))
                 .ReturnsAsync(new ResponseDTO<TransactionDetailDTO?>(null, "Không tìm thấy giao dịch",
@@ -153,7 +153,7 @@ namespace UnitTests.Tests
                     MaterialsTransaction = new List<TransactionMaterialDTO>()
                 };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             transactionService.Setup(x => x.Detail(transactionId))
                 .ReturnsAsync(
@@ -176,7 +176,7 @@ namespace UnitTests.Tests
             // Arrange
             var transactionId = Guid.NewGuid();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             transactionService.Setup(x => x.Detail(transactionId))
                 .ThrowsAsync(new Exception("Sample exception"));

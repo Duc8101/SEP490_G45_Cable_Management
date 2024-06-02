@@ -20,7 +20,7 @@ namespace UnitTests.Tests
         public async Task List_WhenNotAdminOrLeader_ReturnsForbiddenResponse()
         {
             // Arrange
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
             var page = 1;
 
             // Act
@@ -45,7 +45,7 @@ namespace UnitTests.Tests
             var expectedRowCount = 10;
             var expectedPage = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsCategoryService.Setup(x => x.ListPaged(null, expectedPage))
                 .ReturnsAsync(new ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>>(
@@ -73,7 +73,7 @@ namespace UnitTests.Tests
                                                                  OtherMaterialsCategoryId = 2,
                                                                 } };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsCategoryService.Setup(x => x.ListAll())
                 .ReturnsAsync(new ResponseDTO<List<OtherMaterialsCategoryListDTO>?>(expectedList, string.Empty));
@@ -93,7 +93,7 @@ namespace UnitTests.Tests
             // Arrange
             var sampleDTO = new OtherMaterialsCategoryCreateUpdateDTO { };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             // Act
             var result = await controller.Create(sampleDTO);
@@ -115,7 +115,7 @@ namespace UnitTests.Tests
 
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsCategoryService.Setup(x => x.Create(sampleDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên vật liệu không được để trống", (int)HttpStatusCode.Conflict));
@@ -138,7 +138,7 @@ namespace UnitTests.Tests
 
             otherMaterialsCategoryService.Setup(x => x.Create(sampleDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Loại vật liệu này đã tồn tại", (int)HttpStatusCode.Conflict));
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             // Act
             var result = await controller.Create(sampleDTO);
@@ -157,7 +157,7 @@ namespace UnitTests.Tests
             var sampleDTO = new OtherMaterialsCategoryCreateUpdateDTO { OtherMaterialsCategoryName = "SampleName" };
 
             otherMaterialsCategoryService.Setup(x => x.Create(sampleDTO)).ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             // Act
             var result = await controller.Create(sampleDTO);
@@ -176,7 +176,7 @@ namespace UnitTests.Tests
             var categoryId = 1;
             var sampleDTO = new OtherMaterialsCategoryCreateUpdateDTO { OtherMaterialsCategoryName = "SampleName" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.Update(categoryId, sampleDTO);
@@ -195,7 +195,7 @@ namespace UnitTests.Tests
             var categoryId = 1;
             var sampleDTO = new OtherMaterialsCategoryCreateUpdateDTO { OtherMaterialsCategoryName = "SampleName" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsCategoryService.Setup(x => x.Update(categoryId, sampleDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy loại vật liệu này", (int)HttpStatusCode.NotFound));
@@ -217,7 +217,7 @@ namespace UnitTests.Tests
             var categoryId = 1;
             var sampleDTO = new OtherMaterialsCategoryCreateUpdateDTO { OtherMaterialsCategoryName = "" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsCategoryService.Setup(x => x.Update(categoryId, sampleDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên vật liệu không được để trống", (int)HttpStatusCode.Conflict));
@@ -239,7 +239,7 @@ namespace UnitTests.Tests
             var categoryId = 1;
             var sampleDTO = new OtherMaterialsCategoryCreateUpdateDTO { OtherMaterialsCategoryName = "Chống rung 1350 (L1 1300mm)" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsCategoryService.Setup(x => x.Update(categoryId, sampleDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Loại vật liệu này đã tồn tại", (int)HttpStatusCode.Conflict));
@@ -261,7 +261,7 @@ namespace UnitTests.Tests
             var categoryId = 1;
             var sampleDTO = new OtherMaterialsCategoryCreateUpdateDTO { OtherMaterialsCategoryName = "SampleName" };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsCategoryService.Setup(x => x.Update(categoryId, sampleDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));

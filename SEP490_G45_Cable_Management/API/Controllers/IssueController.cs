@@ -1,7 +1,7 @@
-﻿using API.Services.IService;
+﻿using API.Attributes;
+using API.Services.IService;
 using DataAccess.DTO;
 using DataAccess.DTO.IssueDTO;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -10,83 +10,83 @@ namespace API.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class IssueController : BaseAPIController
     {
-        private readonly IIssueService service;
+        private readonly IIssueService _service;
 
         public IssueController(IIssueService service)
         {
-            this.service = service;
+            _service = service;
         }
 
 
         [HttpGet("Paged/All")]
-        [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List(string? filter, [Required] int page = 1)
         {
-            return await service.ListPagedAll(filter, page);
+            ResponseDTO<PagedResultDTO<IssueListDTO>?> response = await _service.ListPagedAll(filter, page);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpGet("Paged/Doing")]
-        [Authorize]
         public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List([Required] int page = 1)
         {
-            return await service.ListPagedDoing(page);
+            ResponseDTO<PagedResultDTO<IssueListDTO>?> response = await _service.ListPagedDoing(page);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpGet("Doing")]
-        [Authorize]
         public async Task<ResponseDTO<List<IssueListDTO>?>> List()
         {
-            return await service.ListDoing();
+            ResponseDTO<List<IssueListDTO>?> response = await _service.ListDoing();
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpPost]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Staff)]
         public async Task<ResponseDTO<bool>> Create(IssueCreateDTO DTO)
         {
-            // if admin, staff
-            if (isAdmin() || isStaff())
+            ResponseDTO<bool> response;
+            Guid? CreatorID = getUserID();
+            if (CreatorID == null)
             {
-                string? CreatorID = getUserID();
-                if (CreatorID == null)
-                {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
-                }
-                return await service.Create(DTO, Guid.Parse(CreatorID));
+                response = new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            else
+            {
+                response = await _service.Create(DTO, CreatorID.Value);
+            }
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpPut("{IssueID}")]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Staff)]
         public async Task<ResponseDTO<bool>> Update([Required] Guid IssueID, [Required] IssueUpdateDTO DTO)
         {
-            // if admin or staff
-            if (isAdmin() || isStaff())
-            {
-                return await service.Update(IssueID, DTO);
-            }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<bool> response = await _service.Update(IssueID, DTO);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpDelete("{IssueID}")]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Staff)]
         public async Task<ResponseDTO<bool>> Delete([Required] Guid IssueID)
         {
-            // if admin or staff
-            if (isAdmin() || isStaff())
-            {
-                return await service.Delete(IssueID);
-            }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<bool> response = await _service.Delete(IssueID);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpGet("{IssueID}")]
-        [Authorize]
         public async Task<ResponseDTO<List<IssueDetailDTO>?>> Detail([Required] Guid IssueID)
         {
-            return await service.Detail(IssueID);
+            ResponseDTO<List<IssueDetailDTO>?> response = await _service.Detail(IssueID);
+            Response.StatusCode = response.Code;
+            return response;
         }
     }
 }

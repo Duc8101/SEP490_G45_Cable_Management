@@ -22,7 +22,7 @@ namespace API.Services.Service
             try
             {
                 List<Supplier> list = await daoSupplier.getListPaged(name, page);
-                List<SupplierListDTO> DTOs = mapper.Map<List<SupplierListDTO>>(list);
+                List<SupplierListDTO> DTOs = _mapper.Map<List<SupplierListDTO>>(list);
                 int RowCount = await daoSupplier.getRowCount(name);
                 PagedResultDTO<SupplierListDTO> result = new PagedResultDTO<SupplierListDTO>(page, RowCount, PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE, DTOs);
                 return new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(result, string.Empty);
@@ -38,7 +38,7 @@ namespace API.Services.Service
             try
             {
                 List<Supplier> list = await daoSupplier.getListAll();
-                List<SupplierListDTO> data = mapper.Map<List<SupplierListDTO>>(list);
+                List<SupplierListDTO> data = _mapper.Map<List<SupplierListDTO>>(list);
                 return new ResponseDTO<List<SupplierListDTO>?>(data, string.Empty);
             }
             catch (Exception ex)
@@ -59,7 +59,7 @@ namespace API.Services.Service
                 {
                     return new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
-                Supplier supplier = mapper.Map<Supplier>(DTO);
+                Supplier supplier = _mapper.Map<Supplier>(DTO);
                 supplier.CreatedAt = DateTime.Now;
                 supplier.UpdateAt = DateTime.Now;
                 supplier.IsDeleted = false;

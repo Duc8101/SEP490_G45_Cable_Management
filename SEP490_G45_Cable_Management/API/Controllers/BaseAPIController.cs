@@ -1,65 +1,54 @@
-﻿using DataAccess.Const;
+﻿using DataAccess.Entity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace API.Controllers
 {
     public class BaseAPIController : ControllerBase
     {
-        private Claim? getClaim(string type)
+        private User? getUser()
         {
-            return User.Claims.Where(c => c.Type == type).FirstOrDefault();
-        }
-        private string? getRole()
-        {
-            Claim? claim = getClaim(ClaimTypes.Role);
-            return claim == null ? null : claim.Value;
+            return (User?)HttpContext.Items["user"];
         }
 
         internal bool isAdmin()
         {
-            string? role = getRole();
-            return role != null && role.Equals(RoleConst.STRING_ROLE_ADMIN);
-        }
-        internal bool isStaff()
-        {
-            string? role = getRole();
-            return role != null && role.Equals(RoleConst.STRING_ROLE_STAFF);
+            User? user = getUser();
+            return user != null && user.RoleId == (int)DataAccess.Enum.Role.Admin;
         }
 
         internal bool isLeader()
         {
-            string? role = getRole();
-            return role != null && role.Equals(RoleConst.STRING_ROLE_LEADER);
+            User? user = getUser();
+            return user != null && user.RoleId == (int)DataAccess.Enum.Role.Leader;
         }
 
         internal bool isWarehouseKeeper()
         {
-            string? role = getRole();
-            return role != null && role.Equals(RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            User? user = getUser();
+            return user != null && user.RoleId == (int)DataAccess.Enum.Role.Warehouse_Keeper;
         }
 
-        internal string? getUserID()
+        internal Guid? getUserID()
         {
-            Claim? claim = getClaim("UserID");
-            return claim == null ? null : claim.Value;
+            User? user = getUser();
+            return user?.UserId;
         }
 
         internal string? getEmail()
         {
-            Claim? claim = getClaim(ClaimTypes.Email);
-            return claim == null ? null : claim.Value;
+            User? user = getUser();
+            return user?.Email;
         }
 
         internal string? getFirstName()
         {
-            Claim? claim = getClaim("FirstName");
-            return claim == null ? null : claim.Value;
+            User? user = getUser();
+            return user?.Firstname;
         }
         internal string? getLastName()
         {
-            Claim? claim = getClaim("LastName");
-            return claim == null ? null : claim.Value;
+            User? user = getUser();
+            return user?.Lastname;
         }
     }
 }

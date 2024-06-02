@@ -1,7 +1,7 @@
-﻿using API.Services.IService;
+﻿using API.Attributes;
+using API.Services.IService;
 using DataAccess.DTO;
 using DataAccess.DTO.OtherMaterialsDTO;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -10,78 +10,75 @@ namespace API.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class OtherMaterialsController : BaseAPIController
     {
-        private readonly IOtherMaterialsService service;
+        private readonly IOtherMaterialsService _service;
 
         public OtherMaterialsController(IOtherMaterialsService service)
         {
-            this.service = service;
+            _service = service;
         }
 
         [HttpGet("Paged")]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Leader, DataAccess.Enum.Role.Warehouse_Keeper)]
         public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, int? WareHouseID, [Required] int page = 1)
         {
+            ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?> response;
             // if admin or leader
             if (isAdmin() || isLeader())
             {
-                return await service.ListPaged(filter, WareHouseID, null, page);
+                response = await _service.ListPaged(filter, WareHouseID, null, page);
             }
-            // if warehouse keeper
-            if (isWarehouseKeeper())
+            else
             {
-                string? WareHouseKeeperID = getUserID();
+                Guid? WareHouseKeeperID = getUserID();
                 if (WareHouseKeeperID == null)
                 {
-                    return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(null, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
+                    response = new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(null, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
                 }
-                return await service.ListPaged(filter, WareHouseID, Guid.Parse(WareHouseKeeperID), page);
+                else
+                {
+                    response = await _service.ListPaged(filter, WareHouseID, WareHouseKeeperID.Value, page);
+                }
             }
-            return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpGet("All")]
-        [Authorize]
         public async Task<ResponseDTO<List<OtherMaterialsListDTO>?>> List(int? WareHouseID)
         {
-            return await service.ListAll(WareHouseID);
+            ResponseDTO<List<OtherMaterialsListDTO>?> response = await _service.ListAll(WareHouseID);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpPost]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<bool>> Create([Required] OtherMaterialsCreateUpdateDTO DTO)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.Create(DTO);
-            }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<bool> response = await _service.Create(DTO);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpPut("{OtherMaterialsID}")]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<bool>> Update([Required] int OtherMaterialsID, [Required] OtherMaterialsCreateUpdateDTO DTO)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.Update(OtherMaterialsID, DTO);
-            }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<bool> response = await _service.Update(OtherMaterialsID, DTO);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpDelete("{OtherMaterialsID}")]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<bool>> Delete([Required] int OtherMaterialsID)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.Delete(OtherMaterialsID);
-            }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<bool> response = await _service.Delete(OtherMaterialsID);
+            Response.StatusCode = response.Code;
+            return response;
         }
     }
 }

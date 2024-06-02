@@ -22,18 +22,17 @@ namespace API.Services.Service
             try
             {
                 List<OtherMaterial> list = await daoOtherMaterials.getListPaged(filter, WareHouseID, WareHouseKeeperID, page);
-                List<OtherMaterialsListDTO> DTOs = mapper.Map<List<OtherMaterialsListDTO>>(list);
+                List<OtherMaterialsListDTO> DTOs = _mapper.Map<List<OtherMaterialsListDTO>>(list);
                 int RowCount = await daoOtherMaterials.getRowCount(filter, WareHouseID, WareHouseKeeperID);
                 int sum = await daoOtherMaterials.getSum(filter, WareHouseID, WareHouseKeeperID);
                 PagedResultDTO<OtherMaterialsListDTO> result = new PagedResultDTO<OtherMaterialsListDTO>(page, RowCount, PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE, DTOs, sum);
-                return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(result, string.Empty);
+                return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(result, "Size : " + list.Count);
             }
             catch (Exception ex)
             {
                 return new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-
         public async Task<ResponseDTO<bool>> Create(OtherMaterialsCreateUpdateDTO DTO)
         {
             if (DTO.Code == null || DTO.Code.Trim().Length == 0)
@@ -67,7 +66,7 @@ namespace API.Services.Service
                 // if not exist
                 if (material == null)
                 {
-                    material = mapper.Map<OtherMaterial>(DTO);
+                    material = _mapper.Map<OtherMaterial>(DTO);
                     material.Code = DTO.Code.Trim();
                     material.SupplierId = 1;
                     material.CreatedAt = DateTime.Now;
@@ -81,7 +80,7 @@ namespace API.Services.Service
                     material.UpdateAt = DateTime.Now;
                     await daoOtherMaterials.UpdateMaterial(material);
                 }
-                return new ResponseDTO<bool>(true, "Tạo thành công");
+                return new ResponseDTO<bool>(true, "Tạo thành công " + material.OtherMaterialsId);
             }
             catch (Exception ex)
             {
@@ -166,7 +165,7 @@ namespace API.Services.Service
             try
             {
                 List<OtherMaterial> list = await daoOtherMaterials.getListAll(WareHouseID);
-                List<OtherMaterialsListDTO> data = mapper.Map<List<OtherMaterialsListDTO>>(list);
+                List<OtherMaterialsListDTO> data = _mapper.Map<List<OtherMaterialsListDTO>>(list);
                 return new ResponseDTO<List<OtherMaterialsListDTO>?>(data, string.Empty);
             }
             catch (Exception ex)

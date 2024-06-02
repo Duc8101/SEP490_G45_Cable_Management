@@ -61,13 +61,13 @@ namespace API.Services.Service
             //  create list claim  to store user's information
             List<Claim> list = new List<Claim>()
             {
-                new Claim("username", user.Username),
+                //new Claim("username", user.Username),
                 new Claim("UserID", user.UserId.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
+/*                new Claim(ClaimTypes.Email, user.Email),
                 new Claim("phone",user.Phone == null ? "" : user.Phone),
                 new Claim("FirstName",user.Firstname),
                 new Claim("LastName",user.Lastname),
-                new Claim(ClaimTypes.Role, dic[user.RoleId])
+                new Claim(ClaimTypes.Role, dic[user.RoleId])*/
             };
             JwtSecurityToken token = new JwtSecurityToken(JWT["Issuer"],
                 JWT["Audience"], list, expires: DateTime.Now.AddDays(1),
@@ -100,10 +100,10 @@ namespace API.Services.Service
                 // send email
                 await UserUtil.sendEmail("Welcome to Cable Management System", body, DTO.Email);
                 // create
-                User user = mapper.Map<User>(DTO);
+                User user = _mapper.Map<User>(DTO);
                 user.UserId = Guid.NewGuid();
                 user.Password = hashPw;
-                user.RoleId = RoleConst.INT_ROLE_STAFF;
+                user.RoleId = (int)DataAccess.Enum.Role.Staff;
                 user.CreatedAt = DateTime.Now;
                 user.CreatedDate = DateTime.Now;
                 user.UpdateAt = DateTime.Now;
@@ -177,7 +177,7 @@ namespace API.Services.Service
             try
             {
                 List<User> list = await daoUser.getList(filter, page);
-                List<UserListDTO> DTOs = mapper.Map<List<UserListDTO>>(list);
+                List<UserListDTO> DTOs = _mapper.Map<List<UserListDTO>>(list);
                 int RowCount = await daoUser.getRowCount(filter);
                 PagedResultDTO<UserListDTO> result = new PagedResultDTO<UserListDTO>(page, RowCount, PageSizeConst.MAX_USER_LIST_IN_PAGE, DTOs);
                 return new ResponseDTO<PagedResultDTO<UserListDTO>?>(result, string.Empty);

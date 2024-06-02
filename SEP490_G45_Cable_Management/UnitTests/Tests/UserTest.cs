@@ -23,7 +23,7 @@ namespace UnitTests.Tests
             var filter = "SampleFilter";
             int page = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.List(filter, page);
@@ -38,7 +38,7 @@ namespace UnitTests.Tests
         public async Task List_NoPrama_WhenUserIsNotAdmin_ReturnsForbiddenResponse()
         {
             // Arrange
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.List();
@@ -55,7 +55,7 @@ namespace UnitTests.Tests
             // Arrange
             var userCreateDTO = new UserCreateDTO();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.Create(userCreateDTO);
@@ -73,7 +73,7 @@ namespace UnitTests.Tests
             var userID = Guid.NewGuid();
             var userUpdateDTO = new UserUpdateDTO();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.Update(userID, userUpdateDTO);
@@ -90,7 +90,7 @@ namespace UnitTests.Tests
             // Arrange
             var userID = Guid.NewGuid();  // Replace with an existing user ID
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             userService.Setup(x => x.Delete(userID, It.IsAny<Guid>()))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Bạn không có quyền truy cập",
@@ -111,7 +111,7 @@ namespace UnitTests.Tests
             // Arrange
             var userID = Guid.NewGuid();  // Replace with an appropriate user ID
 
-            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.ROLE_ADMIN);
 
             // Act
             var result = await controller.Delete(userID);
@@ -130,7 +130,7 @@ namespace UnitTests.Tests
             // Arrange
             var changePasswordDTO = new ChangePasswordDTO();
 
-            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             // Act
             var result = await controller.ChangePassword(changePasswordDTO);
@@ -204,7 +204,7 @@ namespace UnitTests.Tests
             // Arrange
             var userCreateDTO = new UserCreateDTO { FirstName = "", LastName = "", Phone = "" };
 
-            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Create(userCreateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên người dùng không được để trống",
@@ -227,7 +227,7 @@ namespace UnitTests.Tests
             // Arrange
             var userCreateDTO = new UserCreateDTO { FirstName = "John", LastName = "Doe", Phone = "" };
             var expectedMessage = "Số điện thoại không được để trống";
-            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Create(userCreateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, expectedMessage, (int)HttpStatusCode.Conflict));
@@ -257,7 +257,7 @@ namespace UnitTests.Tests
                     Email = "johndoe@example.com"
                 };
             var expectedMessage = "Email hoặc username đã được sử dụng";
-            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Create(userCreateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, expectedMessage, (int)HttpStatusCode.Conflict));
@@ -286,7 +286,7 @@ namespace UnitTests.Tests
                     UserName = "johndoe123",
                     Email = "johndoe@example.com"
                 };
-            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Create(userCreateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
@@ -314,7 +314,7 @@ namespace UnitTests.Tests
                     UserName = "johndoe123",
                     Email = "johndoe@example.com"
                 };
-            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Create(userCreateDTO))
                 .ThrowsAsync(new Exception("An error occurred while creating the user."));
@@ -392,7 +392,7 @@ namespace UnitTests.Tests
                     ConfirmPassword = "newPassword"
                 };
 
-            var email = TestHelper.SimulateUser(controller, RoleConst.STRING_ROLE_LEADER);
+            var email = TestHelper.SimulateUser(controller, RoleConst.ROLE_LEADER);
 
             userService.Setup(x => x.ChangePassword(changePasswordDTO, email))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy thông tin của bạn",
@@ -421,7 +421,7 @@ namespace UnitTests.Tests
                     ConfirmPassword = "newPassword"
                 };
 
-            var email = TestHelper.SimulateUser(controller, RoleConst.STRING_ROLE_LEADER);
+            var email = TestHelper.SimulateUser(controller, RoleConst.ROLE_LEADER);
 
             userService.Setup(x => x.ChangePassword(changePasswordDTO, email))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Mật khẩu hiện tại không chính xác",
@@ -450,7 +450,7 @@ namespace UnitTests.Tests
                     ConfirmPassword = "differentPassword"
                 };
 
-            var email = TestHelper.SimulateUser(controller, RoleConst.STRING_ROLE_LEADER);
+            var email = TestHelper.SimulateUser(controller, RoleConst.ROLE_LEADER);
 
             userService.Setup(x => x.ChangePassword(changePasswordDTO, email))
                 .ReturnsAsync(new ResponseDTO<bool>(false,
@@ -480,7 +480,7 @@ namespace UnitTests.Tests
                     ConfirmPassword = "newPassword"
                 };
 
-            var email = TestHelper.SimulateUser(controller, RoleConst.STRING_ROLE_LEADER);
+            var email = TestHelper.SimulateUser(controller, RoleConst.ROLE_LEADER);
 
             userService.Setup(x => x.ChangePassword(changePasswordDTO, email))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Đổi mật khẩu thành công"));
@@ -507,7 +507,7 @@ namespace UnitTests.Tests
                     ConfirmPassword = "newPassword"
                 };
 
-            var email = TestHelper.SimulateUser(controller, RoleConst.STRING_ROLE_LEADER);
+            var email = TestHelper.SimulateUser(controller, RoleConst.ROLE_LEADER);
 
             userService.Setup(x => x.ChangePassword(changePasswordDTO, email))
                 .ThrowsAsync(new Exception("Internal server error"));
@@ -527,7 +527,7 @@ namespace UnitTests.Tests
                 new List<UserListDTO> { new UserListDTO { UserId = Guid.NewGuid(), UserName = "User1" },
                                new UserListDTO { UserId = Guid.NewGuid(), UserName = "User2" } };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.ListPaged(filter, page))
                 .ReturnsAsync(new ResponseDTO<PagedResultDTO<UserListDTO>?>(
@@ -553,7 +553,7 @@ namespace UnitTests.Tests
             var filter = "sampleFilter";
             var page = 1;
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.ListPaged(filter, page))
                 .ThrowsAsync(new Exception("Simulated exception"));
@@ -578,7 +578,7 @@ namespace UnitTests.Tests
                     RoleId = 1
                 };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Update(userId, userUpdateDTO))
                 .ReturnsAsync(
@@ -611,7 +611,7 @@ namespace UnitTests.Tests
                     RoleId = 1
                 };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Update(userId, userUpdateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng",
@@ -644,7 +644,7 @@ namespace UnitTests.Tests
                     RoleId = 1
                 };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Update(userId, userUpdateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên người dùng không được để trống",
@@ -676,7 +676,7 @@ namespace UnitTests.Tests
                 RoleId = 1
             };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Update(userId, userUpdateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Số điện thoại không được để trống",
@@ -709,7 +709,7 @@ namespace UnitTests.Tests
                     RoleId = 1
                 };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Update(userId, userUpdateDTO))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
@@ -740,7 +740,7 @@ namespace UnitTests.Tests
                     RoleId = 1
                 };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Update(userId, userUpdateDTO))
                 .ThrowsAsync(new Exception("Simulated exception"));
@@ -757,7 +757,7 @@ namespace UnitTests.Tests
             // Arrange
             var userId = Guid.NewGuid();
 
-            var userLoginId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var userLoginId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Delete(userId, userLoginId))
                 .ReturnsAsync(
@@ -778,7 +778,7 @@ namespace UnitTests.Tests
         public async Task Delete_WhenDeletingUserWithUserLoginID_ReturnsNotAcceptableResponse()
         {
             // Arrange
-            var userId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var userId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
             var userLoginId = userId;
 
             // Setting up the expected response for the service method call
@@ -803,7 +803,7 @@ namespace UnitTests.Tests
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var userLoginId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var userLoginId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             // Setting up the expected response for the service method call
             userService.Setup(x => x.Delete(userId, userLoginId))
@@ -825,7 +825,7 @@ namespace UnitTests.Tests
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var userLoginId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var userLoginId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             // Setting up the expected exception for the service method call
             userService.Setup(x => x.Delete(userId, userLoginId))
@@ -848,7 +848,7 @@ namespace UnitTests.Tests
                       LastName = "Doe", Email = "jane@example.com", Phone = "9876543210",
                       RoleName = "Warehouse Keeper" }
    };
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             // Mocking the list of users returned by the service method
             userService.Setup(x => x.ListWarehouseKeeper())

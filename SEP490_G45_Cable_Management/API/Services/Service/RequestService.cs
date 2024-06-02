@@ -35,7 +35,7 @@ namespace API.Services.Service
             try
             {
                 List<Request> list = await daoRequest.getListAll(name, RequestCategoryID, status, CreatorID, page);
-                List<RequestListDTO> DTOs = mapper.Map<List<RequestListDTO>>(list);
+                List<RequestListDTO> DTOs = _mapper.Map<List<RequestListDTO>>(list);
                 int RowCount = await daoRequest.getRowCount(name, RequestCategoryID, status, CreatorID);
                 PagedResultDTO<RequestListDTO> result = new PagedResultDTO<RequestListDTO>(page, RowCount, PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, DTOs);
                 return new ResponseDTO<PagedResultDTO<RequestListDTO>?>(result, string.Empty);
@@ -123,7 +123,7 @@ namespace API.Services.Service
             {
                 foreach (CableExportDeliverDTO item in list)
                 {
-                    RequestCable request = mapper.Map<RequestCable>(item);
+                    RequestCable request = _mapper.Map<RequestCable>(item);
                     request.RequestId = RequestID;
                     request.CreatedAt = DateTime.Now;
                     request.UpdateAt = DateTime.Now;
@@ -139,7 +139,7 @@ namespace API.Services.Service
             {
                 foreach (OtherMaterialsExportDeliverCancelInsideDTO item in list)
                 {
-                    RequestOtherMaterial request = mapper.Map<RequestOtherMaterial>(item);
+                    RequestOtherMaterial request = _mapper.Map<RequestOtherMaterial>(item);
                     request.RequestId = RequestID;
                     request.CreatedAt = DateTime.Now;
                     request.UpdateAt = DateTime.Now;
@@ -854,7 +854,7 @@ namespace API.Services.Service
                 {
                     foreach (CableCreateUpdateDTO item in DTO.CableRecoveryDTOs)
                     {
-                        Cable cable = mapper.Map<Cable>(DTO);
+                        Cable cable = _mapper.Map<Cable>(DTO);
                         cable.CableId = Guid.NewGuid();
                         cable.CreatorId = CreatorID;
                         cable.CreatedAt = DateTime.Now;
@@ -883,7 +883,7 @@ namespace API.Services.Service
                         // if material not exist
                         if (material == null)
                         {
-                            material = mapper.Map<OtherMaterial>(DTO);
+                            material = _mapper.Map<OtherMaterial>(DTO);
                             material.Quantity = 0;
                             material.CreatedAt = DateTime.Now;
                             material.UpdateAt = DateTime.Now;
@@ -913,7 +913,7 @@ namespace API.Services.Service
                 {
                     foreach (Cable cable in listCable)
                     {
-                        RequestCable request = mapper.Map<RequestCable>(cable);
+                        RequestCable request = _mapper.Map<RequestCable>(cable);
                         request.RequestId = RequestID;
                         request.CreatedAt = DateTime.Now;
                         request.UpdateAt = DateTime.Now;
@@ -1235,7 +1235,7 @@ namespace API.Services.Service
                         // if cable valid
                         if (cable != null && cable.IsExportedToUse == false)
                         {
-                            RequestCable requestCable = mapper.Map<RequestCable>(cable);
+                            RequestCable requestCable = _mapper.Map<RequestCable>(cable);
                             requestCable.RequestId = RequestID;
                             requestCable.CreatedAt = DateTime.Now;
                             requestCable.UpdateAt = DateTime.Now;
@@ -1249,7 +1249,7 @@ namespace API.Services.Service
                 {
                     foreach (OtherMaterialsExportDeliverCancelInsideDTO item in DTO.OtherMaterialsCancelInsideDTOs)
                     {
-                        RequestOtherMaterial requestMaterial = mapper.Map<RequestOtherMaterial>(item);
+                        RequestOtherMaterial requestMaterial = _mapper.Map<RequestOtherMaterial>(item);
                         requestMaterial.RequestId = RequestID;
                         requestMaterial.CreatedAt = DateTime.Now;
                         requestMaterial.UpdateAt = DateTime.Now;
@@ -1273,7 +1273,7 @@ namespace API.Services.Service
             {
                 foreach (CableCancelOutsideDTO DTO in list)
                 {
-                    Cable cable = mapper.Map<Cable>(DTO);
+                    Cable cable = _mapper.Map<Cable>(DTO);
                     cable.CableId = Guid.NewGuid();
                     cable.CreatorId = CreatorID;
                     cable.CreatedAt = DateTime.Now;
@@ -1299,7 +1299,7 @@ namespace API.Services.Service
                     OtherMaterial? material = await daoOtherMaterial.getOtherMaterial(DTO);
                     if (material == null)
                     {
-                        material = mapper.Map<OtherMaterial>(DTO);
+                        material = _mapper.Map<OtherMaterial>(DTO);
                         material.CreatedAt = DateTime.Now;
                         material.UpdateAt = DateTime.Now;
                         material.WarehouseId = null;
@@ -1350,7 +1350,7 @@ namespace API.Services.Service
                 {
                     foreach (Cable item in listCable)
                     {
-                        RequestCable requestCable = mapper.Map<RequestCable>(item);
+                        RequestCable requestCable = _mapper.Map<RequestCable>(item);
                         requestCable.RequestId = RequestID;
                         requestCable.CreatedAt = DateTime.Now;
                         requestCable.UpdateAt = DateTime.Now;
@@ -1437,10 +1437,10 @@ namespace API.Services.Service
                     return new ResponseDTO<RequestDetailDTO?>(null, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
                 }
                 List<RequestCable> requestCables = await daoRequestCable.getList(RequestID);
-                List<RequestCableListDTO> RequestCableDTOs = mapper.Map<List<RequestCableListDTO>>(requestCables);
+                List<RequestCableListDTO> RequestCableDTOs = _mapper.Map<List<RequestCableListDTO>>(requestCables);
                 List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(RequestID);
-                List<RequestOtherMaterialsListDTO> RequestOtherMaterialsDTOs = mapper.Map<List<RequestOtherMaterialsListDTO>>(requestMaterials);
-                RequestDetailDTO data = mapper.Map<RequestDetailDTO>(request);
+                List<RequestOtherMaterialsListDTO> RequestOtherMaterialsDTOs = _mapper.Map<List<RequestOtherMaterialsListDTO>>(requestMaterials);
+                RequestDetailDTO data = _mapper.Map<RequestDetailDTO>(request);
                 data.RequestCableDTOs = RequestCableDTOs;
                 data.RequestOtherMaterialsDTOs = RequestOtherMaterialsDTOs;
                 return new ResponseDTO<RequestDetailDTO?>(data, string.Empty);

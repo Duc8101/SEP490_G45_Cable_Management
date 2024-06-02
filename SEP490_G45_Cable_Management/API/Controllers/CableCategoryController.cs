@@ -1,66 +1,58 @@
-﻿using API.Services.IService;
+﻿using API.Attributes;
+using API.Services.IService;
 using DataAccess.DTO;
 using DataAccess.DTO.CableCategoryDTO;
 using DataAccess.Entity;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
 
 namespace API.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class CableCategoryController : BaseAPIController
     {
-        private readonly ICableCategoryService service;
+        private readonly ICableCategoryService _service;
 
         public CableCategoryController(ICableCategoryService service)
         {
-            this.service = service;
+            _service = service;
         }
 
         [HttpGet("Paged")]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>> List(string? name, [Required] int page = 1)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.ListPaged(name, page);
-            }
-            return new ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<PagedResultDTO<CableCategoryListDTO>?> response = await _service.ListPaged(name, page);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpGet("All")]
-        [Authorize]
         public async Task<ResponseDTO<List<CableCategoryListDTO>?>> List()
         {
-            return await service.ListAll();
+            ResponseDTO<List<CableCategoryListDTO>?> response = await _service.ListAll();
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpPost]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<bool>> Create([Required] CableCategoryCreateUpdateDTO DTO)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.Create(DTO);
-            }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<bool> response = await _service.Create(DTO);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpPut("{CableCategoryID}")]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<bool>> Update([Required] int CableCategoryID, [Required] CableCategoryCreateUpdateDTO DTO)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.Update(CableCategoryID, DTO);
-            }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<bool> response = await _service.Update(CableCategoryID, DTO);
+            Response.StatusCode = response.Code;
+            return response;
         }
     }
 }

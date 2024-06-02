@@ -26,7 +26,7 @@ namespace UnitTests.Tests
             int? RequestCategoryID = null;
             int page = 1;
 
-            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.ROLE_STAFF);
 
             // Act
             var result = await controller.List(name, RequestCategoryID, status, page);
@@ -68,7 +68,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleWithoutID(
                 controller,
                 RoleConst
-                    .STRING_ROLE_STAFF);  // Simulating a user with the staff role but with a null creator ID
+                    .ROLE_STAFF);  // Simulating a user with the staff role but with a null creator ID
 
             // Act
             var result = await controller.Create(requestCreateExportDTO);
@@ -90,7 +90,7 @@ namespace UnitTests.Tests
                 new RequestCreateRecoveryDTO();  // Add relevant data to the DTO if necessary
             TestHelper.SimulateUserWithRoleWithoutID(
                 controller,
-                RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);  // Simulating a user with the warehouse keeper role
+                RoleConst.ROLE_WAREHOUSE_KEEPER);  // Simulating a user with the warehouse keeper role
                                                           // but with a null creator ID
 
             // Act
@@ -113,7 +113,7 @@ namespace UnitTests.Tests
                 new RequestCreateDeliverDTO();  // Add relevant data to the DTO if necessary
             TestHelper.SimulateUserWithRoleWithoutID(
                 controller,
-                RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);  // Simulating a user with the warehouse keeper role
+                RoleConst.ROLE_WAREHOUSE_KEEPER);  // Simulating a user with the warehouse keeper role
                                                           // but with a null creator ID
 
             // Act
@@ -132,7 +132,7 @@ namespace UnitTests.Tests
             // Arrange
             var requestId = Guid.NewGuid();  // Replace with a valid request ID
             TestHelper.SimulateUserWithRoleAndId(
-                controller, RoleConst.STRING_ROLE_STAFF);  // Simulating a user with a role other than admin
+                controller, RoleConst.ROLE_STAFF);  // Simulating a user with a role other than admin
 
             // Act
             var result = await controller.Reject(requestId);
@@ -151,7 +151,7 @@ namespace UnitTests.Tests
             var requestId = Guid.NewGuid();  // Replace with a valid request ID
             TestHelper.SimulateUserWithRoleWithoutID(
                 controller,
-                RoleConst.STRING_ROLE_ADMIN);  // Simulating an admin user with a null Rejector ID
+                RoleConst.ROLE_ADMIN);  // Simulating an admin user with a null Rejector ID
 
             // Act
             var result = await controller.Reject(requestId);
@@ -189,7 +189,7 @@ namespace UnitTests.Tests
             var cancelInsideDTO = new RequestCreateCancelInsideDTO();  // Replace with a valid
                                                                        // RequestCreateCancelInsideDTO object
             TestHelper.SimulateUserWithRoleAndId(
-                controller, RoleConst.STRING_ROLE_LEADER);  // Simulating a user with a role other than
+                controller, RoleConst.ROLE_LEADER);  // Simulating a user with a role other than
                                                             // warehouse keeper or staff
 
             // Act
@@ -209,7 +209,7 @@ namespace UnitTests.Tests
             var cancelInsideDTO = new RequestCreateCancelInsideDTO();  // Replace with a valid
                                                                        // RequestCreateCancelInsideDTO object
             TestHelper.SimulateUserWithRoleWithoutID(
-                controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);  // Simulating a warehousekeeper user
+                controller, RoleConst.ROLE_WAREHOUSE_KEEPER);  // Simulating a warehousekeeper user
 
             // Act
             var result = await controller.Create(cancelInsideDTO);
@@ -229,7 +229,7 @@ namespace UnitTests.Tests
                 new RequestCreateCancelOutsideDTO();  // Replace with a valid RequestCreateCancelOutsideDTO
                                                       // object
             TestHelper.SimulateUserWithRoleAndId(
-                controller, RoleConst.STRING_ROLE_LEADER);  // Simulating a user with a role 
+                controller, RoleConst.ROLE_LEADER);  // Simulating a user with a role 
 
             // Act
             var result = await controller.Create(cancelOutsideDTO);
@@ -249,7 +249,7 @@ namespace UnitTests.Tests
                 new RequestCreateCancelOutsideDTO();  // Replace with a valid RequestCreateCancelOutsideDTO
                                                       // object
             TestHelper.SimulateUserWithRoleWithoutID(
-                controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);  // Simulating a warehousekeeper user
+                controller, RoleConst.ROLE_WAREHOUSE_KEEPER);  // Simulating a warehousekeeper user
 
             // Act
             var result = await controller.Create(cancelOutsideDTO);
@@ -279,7 +279,7 @@ namespace UnitTests.Tests
                 });
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             var expectedResponse =
                 new ResponseDTO<PagedResultDTO<RequestListDTO>?>(resultSample, string.Empty);
@@ -315,7 +315,7 @@ namespace UnitTests.Tests
                 });
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             var expectedResponse =
                 new ResponseDTO<PagedResultDTO<RequestListDTO>?>(resultSample, string.Empty);
@@ -350,7 +350,7 @@ namespace UnitTests.Tests
                 });
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             var expectedResponse =
                 new ResponseDTO<PagedResultDTO<RequestListDTO>?>(resultSample, string.Empty);
@@ -387,7 +387,7 @@ namespace UnitTests.Tests
                 });
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             var expectedResponse =
                 new ResponseDTO<PagedResultDTO<RequestListDTO>?>(resultSample, string.Empty);
@@ -415,7 +415,7 @@ namespace UnitTests.Tests
             int page = 1;
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.List(name, null, status, creatorId, page))
                 .ThrowsAsync(new Exception("Simulated exception"));
@@ -446,7 +446,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestExport(requestCreateExportDTOSample, creatorId))
                 .ThrowsAsync(new Exception("Simulated exception"));
@@ -475,7 +475,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestExport(requestCreateExportDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên yêu cầu không được để trống",
@@ -513,7 +513,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestExport(requestCreateExportDTOSample, creatorId))
                 .ReturnsAsync(
@@ -551,7 +551,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestExport(requestCreateExportDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Sự vụ với mã SampleIssueCode đã được chấp thuận",
@@ -589,7 +589,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             var errorMessage = "Invalid cables detected";
             requestService.Setup(x => x.CreateRequestExport(requestCreateExportDTOSample, creatorId))
@@ -626,7 +626,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             var errorMessage = "Invalid materials detected";
             requestService.Setup(x => x.CreateRequestExport(requestCreateExportDTOSample, creatorId))
@@ -663,7 +663,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             var successMessage = "Tạo yêu cầu thành công";
             requestService.Setup(x => x.CreateRequestExport(requestCreateExportDTOSample, creatorId))
@@ -692,7 +692,7 @@ namespace UnitTests.Tests
                 };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestRecovery(requestCreateRecoveryDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên yêu cầu không được để trống",
@@ -723,7 +723,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestRecovery(requestCreateRecoveryDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Không phải yêu cầu thu hồi",
@@ -754,7 +754,7 @@ namespace UnitTests.Tests
                 };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestRecovery(requestCreateRecoveryDTOSample, creatorId))
                 .ReturnsAsync(
@@ -785,7 +785,7 @@ namespace UnitTests.Tests
                 };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestRecovery(requestCreateRecoveryDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false,
@@ -817,7 +817,7 @@ namespace UnitTests.Tests
                 };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestRecovery(requestCreateRecoveryDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
@@ -846,7 +846,7 @@ namespace UnitTests.Tests
                 };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestRecovery(requestCreateRecoveryDTOSample, creatorId))
                 .ThrowsAsync(new Exception("Simulated exception"));
@@ -870,7 +870,7 @@ namespace UnitTests.Tests
                 };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestDeliver(requestCreateDeliverDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên yêu cầu không được để trống",
@@ -899,7 +899,7 @@ namespace UnitTests.Tests
                 };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestDeliver(requestCreateDeliverDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Không phải yêu cầu chuyển kho",
@@ -928,7 +928,7 @@ namespace UnitTests.Tests
                 };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestDeliver(requestCreateDeliverDTOSample, creatorId))
                 .ReturnsAsync(
@@ -956,7 +956,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             var invalidResponse =
                 new ResponseDTO<bool>(false, "Invalid cable", (int)HttpStatusCode.BadRequest);
@@ -985,7 +985,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             var invalidResponse =
                 new ResponseDTO<bool>(false, "Invalid material", (int)HttpStatusCode.BadRequest);
@@ -1014,7 +1014,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             var successResponse = new ResponseDTO<bool>(true, "Tạo yêu cầu thành công");
             requestService.Setup(x => x.CreateRequestDeliver(requestCreateDeliverDTOSample, creatorId))
@@ -1042,7 +1042,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestDeliver(requestCreateDeliverDTOSample, creatorId))
                 .ThrowsAsync(new Exception("Simulated exception"));
@@ -1061,7 +1061,7 @@ namespace UnitTests.Tests
 
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
-            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
                 .ReturnsAsync(
@@ -1086,7 +1086,7 @@ namespace UnitTests.Tests
 
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
-            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
                 .ReturnsAsync(new ResponseDTO<bool>(false,
@@ -1113,7 +1113,7 @@ namespace UnitTests.Tests
 
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
-            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Request approved successfully"));
@@ -1138,7 +1138,7 @@ namespace UnitTests.Tests
 
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
-            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Request approved successfully"));
@@ -1163,7 +1163,7 @@ namespace UnitTests.Tests
 
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
-            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Request approved successfully"));
@@ -1188,7 +1188,7 @@ namespace UnitTests.Tests
 
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
-            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Request approved successfully"));
@@ -1213,7 +1213,7 @@ namespace UnitTests.Tests
 
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
-            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Request approved successfully"));
@@ -1237,7 +1237,7 @@ namespace UnitTests.Tests
 
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
-            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Request approved successfully"));
@@ -1262,7 +1262,7 @@ namespace UnitTests.Tests
 
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
-            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             var unsupportedRequestCategory = "UnsupportedCategory";
 
@@ -1291,7 +1291,7 @@ namespace UnitTests.Tests
 
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
-            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
                 .ThrowsAsync(new Exception("Simulated exception"));
@@ -1305,7 +1305,7 @@ namespace UnitTests.Tests
         {
             // Arrange
             var requestID = Guid.NewGuid();
-            var rejectorID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var rejectorID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
@@ -1329,7 +1329,7 @@ namespace UnitTests.Tests
         {
             // Arrange
             var requestID = Guid.NewGuid();
-            var rejectorID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var rejectorID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
@@ -1354,7 +1354,7 @@ namespace UnitTests.Tests
         {
             // Arrange
             var requestID = Guid.NewGuid();  // Replace with a valid request ID
-            var rejectorID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var rejectorID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
@@ -1375,7 +1375,7 @@ namespace UnitTests.Tests
         {
             // Arrange
             var requestID = Guid.NewGuid();  // Replace with a valid request ID
-            var rejectorID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            var rejectorID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
@@ -1397,7 +1397,7 @@ namespace UnitTests.Tests
         {
             // Arrange
             var requestID = Guid.NewGuid();  // Replace with a valid request ID
-            var rejectorID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            var rejectorID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
@@ -1422,7 +1422,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên yêu cầu không được để trống",
@@ -1455,7 +1455,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Không phải yêu cầu hủy trong kho",
@@ -1487,7 +1487,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
                 .ReturnsAsync(
@@ -1519,7 +1519,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Sự vụ với mã SampleIssueCode đã được chấp thuận",
@@ -1553,7 +1553,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "One or more cables are invalid",
@@ -1589,7 +1589,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "One or more materials are invalid",
@@ -1621,7 +1621,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
@@ -1652,7 +1652,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
@@ -1682,7 +1682,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
@@ -1713,7 +1713,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
                 .ThrowsAsync(new Exception("Simulated exception"));
@@ -1736,7 +1736,7 @@ namespace UnitTests.Tests
                 };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Tên yêu cầu không được để trống",
@@ -1768,7 +1768,7 @@ namespace UnitTests.Tests
                 };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Không phải yêu cầu hủy ngoài kho",
@@ -1799,7 +1799,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
                 .ReturnsAsync(
@@ -1829,7 +1829,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(
@@ -1864,7 +1864,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
@@ -1892,7 +1892,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
@@ -1920,7 +1920,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
@@ -1949,7 +1949,7 @@ namespace UnitTests.Tests
             };
 
             var creatorId =
-                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER);
+                TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
                 .ThrowsAsync(new Exception("Simulated exception"));
@@ -1965,7 +1965,7 @@ namespace UnitTests.Tests
             // Arrange
             var requestID = Guid.NewGuid();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Delete(requestID))
                 .ReturnsAsync(
@@ -1988,7 +1988,7 @@ namespace UnitTests.Tests
             // Arrange
             var requestID = Guid.NewGuid();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Delete(requestID))
                 .ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
@@ -2009,7 +2009,7 @@ namespace UnitTests.Tests
             // Arrange
             var requestID = Guid.NewGuid();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Delete(requestID))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Sample error message",
@@ -2032,7 +2032,7 @@ namespace UnitTests.Tests
             // Arrange
             var requestID = Guid.NewGuid();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Detail(requestID))
                 .ReturnsAsync(new ResponseDTO<RequestDetailDTO?>(null, "Không tìm thấy yêu cầu",
@@ -2056,7 +2056,7 @@ namespace UnitTests.Tests
             var requestID = Guid.NewGuid();
 
             // Simulate a user with the required role and ID
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             var requestDetailDTO = new RequestDetailDTO
             {
@@ -2084,7 +2084,7 @@ namespace UnitTests.Tests
             var requestID = Guid.NewGuid();
 
             // Simulate a user with the required role and ID
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Detail(requestID)).ThrowsAsync(new Exception("Simulated exception"));
 

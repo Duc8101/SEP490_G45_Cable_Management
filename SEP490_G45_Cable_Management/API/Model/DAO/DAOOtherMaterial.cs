@@ -31,8 +31,7 @@ namespace API.Model.DAO
         public async Task<List<OtherMaterial>> getListPaged(string? filter, int? WareHouseID, Guid? WareHouseKeeperID, int page)
         {
             IQueryable<OtherMaterial> query = getQuery(filter, WareHouseID, WareHouseKeeperID);
-            return await query.OrderByDescending(o => o.UpdateAt).Skip(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE * (page - 1)).Take(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE)
-                .ToListAsync();
+            return await query.OrderByDescending(o => o.UpdateAt).Skip(PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE * (page - 1)).ToListAsync();
         }
         public async Task<List<OtherMaterial>> getListAll(int? WareHouseID)
         {

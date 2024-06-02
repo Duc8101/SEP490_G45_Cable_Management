@@ -1,10 +1,4 @@
 ﻿using DataAccess.DTO.CableDTO;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UnitTests.Tests
 {
@@ -26,7 +20,7 @@ namespace UnitTests.Tests
         {
             // Arrange
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_STAFF);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
             // Act
             var result = await controller.List("filter", 1, true, 1);
 
@@ -41,7 +35,7 @@ namespace UnitTests.Tests
         public async Task List_Returns_Data_When_User_Is_Admin()
         {
             // Arrange
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             var expectedPagedResult = new PagedResultDTO<CableListDTO>(1, 10, 5, new List<CableListDTO>());  // Provide expected paged result here
             cableService.Setup(x => x.ListPaged(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<bool>(), It.IsAny<int>()))
@@ -60,7 +54,7 @@ namespace UnitTests.Tests
         {
             // Arrange
             var user = new ClaimsPrincipal(
-                new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER) }));
+                new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, RoleConst.ROLE_WAREHOUSE_KEEPER) }));
 
             var context = new ControllerContext { HttpContext = new DefaultHttpContext { User = user } };
             controller.ControllerContext = context;
@@ -81,7 +75,7 @@ namespace UnitTests.Tests
         {
             // Arrange
             var user = new ClaimsPrincipal(
-                new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, RoleConst.STRING_ROLE_LEADER) }));
+                new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, RoleConst.ROLE_LEADER) }));
 
             var context = new ControllerContext { HttpContext = new DefaultHttpContext { User = user } };
             controller.ControllerContext = context;
@@ -108,7 +102,7 @@ namespace UnitTests.Tests
             int page = 1;
 
             var user = new ClaimsPrincipal(
-                new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER) }));
+                new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, RoleConst.ROLE_WAREHOUSE_KEEPER) }));
 
             var context = new ControllerContext { HttpContext = new DefaultHttpContext { User = user } };
             controller.ControllerContext = context;
@@ -144,7 +138,7 @@ namespace UnitTests.Tests
    };
 
             var user = new ClaimsPrincipal(
-                new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, RoleConst.STRING_ROLE_WAREHOUSE_KEEPER) }));
+                new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, RoleConst.ROLE_WAREHOUSE_KEEPER) }));
 
             var context = new ControllerContext { HttpContext = new DefaultHttpContext { User = user } };
             controller.ControllerContext = context;
@@ -177,7 +171,7 @@ namespace UnitTests.Tests
             var sampleData = new CableCreateUpdateDTO { };
 
             // Simulate user with admin or warehouse keeper role
-            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.ROLE_ADMIN);
 
             // Act
             var result = await controller.Create(sampleData);
@@ -240,7 +234,7 @@ namespace UnitTests.Tests
             // Simulate user without admin role or specific ID
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
-        new Claim(ClaimTypes.Role, RoleConst.STRING_ROLE_STAFF)
+        new Claim(ClaimTypes.Role, RoleConst.ROLE_STAFF)
 
             }));
 
@@ -280,7 +274,7 @@ namespace UnitTests.Tests
             // Simulate user with admin role and specific ID
             Guid userId = Guid.NewGuid();
             var user = new ClaimsPrincipal(
-                new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, RoleConst.STRING_ROLE_ADMIN), new Claim("UserID", userId.ToString()) }));
+                new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, RoleConst.ROLE_ADMIN), new Claim("UserID", userId.ToString()) }));
 
             var context = new ControllerContext { HttpContext = new DefaultHttpContext { User = user } };
             controller.ControllerContext = context;
@@ -316,7 +310,7 @@ namespace UnitTests.Tests
             };
 
             // Simulate user with admin role and specific ID
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             cableService.Setup(x => x.Update(sampleCableID, sampleData)).ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
 
@@ -336,7 +330,7 @@ namespace UnitTests.Tests
             // Arrange
             Guid cableId = Guid.NewGuid();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_LEADER);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             // Act
             var result = await controller.Delete(cableId);
@@ -354,7 +348,7 @@ namespace UnitTests.Tests
             // Arrange
             var cableId = Guid.NewGuid();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             cableService.Setup(x => x.Delete(cableId)).ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
 
@@ -375,7 +369,7 @@ namespace UnitTests.Tests
             // Arrange
             var cableId = Guid.NewGuid();
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.STRING_ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             cableService.Setup(x => x.Delete(cableId)).ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy cáp", (int)HttpStatusCode.NotFound));
 

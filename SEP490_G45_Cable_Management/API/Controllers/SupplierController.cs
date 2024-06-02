@@ -1,8 +1,8 @@
-﻿using API.Services.IService;
+﻿using API.Attributes;
+using API.Services.IService;
 using DataAccess.DTO;
 using DataAccess.DTO.SupplierDTO;
 using DataAccess.Entity;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -11,75 +11,68 @@ namespace API.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class SupplierController : BaseAPIController
     {
-        private readonly ISupplierService service;
+        private readonly ISupplierService _service;
 
         public SupplierController(ISupplierService service)
         {
-            this.service = service;
+            _service = service;
         }
 
         [HttpGet("Paged")]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Leader, DataAccess.Enum.Role.Warehouse_Keeper)]
         public async Task<ResponseDTO<PagedResultDTO<SupplierListDTO>?>> List(string? name, [Required] int page = 1)
         {
-            // if admin or warehouse or leader
-            if (isAdmin() || isWarehouseKeeper() || isLeader())
-            {
-                return await service.ListPaged(name, page);
-            }
-            return new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(null, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<PagedResultDTO<SupplierListDTO>?> response = await _service.ListPaged(name, page);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpGet("All")]
-        [Authorize]
         public async Task<ResponseDTO<List<SupplierListDTO>?>> List()
         {
-            return await service.ListAll();
+            ResponseDTO<List<SupplierListDTO>?> response = await _service.ListAll();
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpPost]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<bool>> Create([Required] SupplierCreateUpdateDTO DTO)
         {
-            // if admin
-            if (isAdmin())
+            ResponseDTO<bool> response;
+            // get user id
+            Guid? CreatorID = getUserID();
+            // if not found user id
+            if (CreatorID == null)
             {
-                // get user id
-                string? CreatorID = getUserID();
-                // if not found user id
-                if (CreatorID == null)
-                {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra lại thông tin đăng nhập", (int)HttpStatusCode.NotFound);
-                }
-                return await service.Create(DTO, Guid.Parse(CreatorID));
+                response = new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra lại thông tin đăng nhập", (int)HttpStatusCode.NotFound);
             }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            else
+            {
+                response = await _service.Create(DTO, CreatorID.Value);
+            }
+            return response;
         }
 
         [HttpPut("{SupplierID}")]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<bool>> Update([Required] int SupplierID, [Required] SupplierCreateUpdateDTO DTO)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.Update(SupplierID, DTO);
-            }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<bool> response = await _service.Update(SupplierID, DTO);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpDelete("{SupplierID}")]
-        [Authorize]
+        [Role(DataAccess.Enum.Role.Admin)]
         public async Task<ResponseDTO<bool>> Delete([Required] int SupplierID)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.Delete(SupplierID);
-            }
-            return new ResponseDTO<bool>(false, "Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            ResponseDTO<bool> response = await _service.Delete(SupplierID);
+            Response.StatusCode = response.Code;
+            return response;
         }
     }
 }
