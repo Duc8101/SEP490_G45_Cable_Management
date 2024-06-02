@@ -56,8 +56,6 @@ namespace API.Services.Service
             byte[] key = Encoding.UTF8.GetBytes(JWT["Key"]);
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
             SigningCredentials credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            // get all role
-            Dictionary<int, string> dic = RoleConst.getList();
             //  create list claim  to store user's information
             List<Claim> list = new List<Claim>()
             {
