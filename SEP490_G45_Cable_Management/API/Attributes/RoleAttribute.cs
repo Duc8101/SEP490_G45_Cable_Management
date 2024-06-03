@@ -11,7 +11,7 @@ namespace API.Attributes
 {
     public class RoleAttribute : Attribute, IActionFilter
     {
-        public DataAccess.Enum.Role[] Roles { get; set; }
+        private DataAccess.Enum.Role[] Roles { get; set; }
 
         public RoleAttribute(params DataAccess.Enum.Role[] roles)
         {
