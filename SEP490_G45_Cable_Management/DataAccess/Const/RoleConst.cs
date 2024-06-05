@@ -1,6 +1,4 @@
-﻿using DataAccess.Enum;
-
-namespace DataAccess.Const
+﻿namespace DataAccess.Const
 {
     public class RoleConst
     {
