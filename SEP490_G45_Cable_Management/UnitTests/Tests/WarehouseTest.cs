@@ -1,4 +1,6 @@
-﻿using DataAccess.DTO.WarehouseDTO;
+﻿using Common.Const;
+using Common.DTO.WarehouseDTO;
+using Common.Pagination;
 
 namespace UnitTests.Tests
 {
@@ -101,8 +103,8 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             warehouseService.Setup(x => x.ListPaged(name, page))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(
-                    new PagedResultDTO<WarehouseListDTO>(page, expectedWarehouses.Count,
+                .ReturnsAsync(new ResponseDTO<Pagination<WarehouseListDTO>?>(
+                    new Pagination<WarehouseListDTO>(page, expectedWarehouses.Count,
                                                          PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE,
                                                          expectedWarehouses),
                     string.Empty));
@@ -133,8 +135,8 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             warehouseService.Setup(x => x.ListPaged(name, page))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(
-                    new PagedResultDTO<WarehouseListDTO>(page, expectedWarehouses.Count,
+                .ReturnsAsync(new ResponseDTO<Pagination<WarehouseListDTO>?>(
+                    new Pagination<WarehouseListDTO>(page, expectedWarehouses.Count,
                                                          PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE,
                                                          expectedWarehouses),
                     string.Empty));
@@ -166,8 +168,8 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             warehouseService.Setup(x => x.ListPaged(name, page))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(
-                    new PagedResultDTO<WarehouseListDTO>(page, expectedWarehouses.Count,
+                .ReturnsAsync(new ResponseDTO<Pagination<WarehouseListDTO>?>(
+                    new Pagination<WarehouseListDTO>(page, expectedWarehouses.Count,
                                                          PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE,
                                                          expectedWarehouses),
                     string.Empty));

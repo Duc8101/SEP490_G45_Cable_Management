@@ -1,4 +1,4 @@
-﻿using API.Model;
+﻿using DataAccess.DBContext;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace API.Middleware
@@ -26,7 +26,7 @@ namespace API.Middleware
                     var tokenS = handler.ReadJwtToken(token);
                     string UserId = tokenS.Claims.First(t => t.Type == "UserID").Value;
                     Guid userId = Guid.Parse(UserId);
-                    context.Items["user"] = dbContext.Users.Find(userId);
+                    context.Items["user"] = dbContext.Users.SingleOrDefault(u => u.UserId == userId && u.IsDeleted == false);
                 }
                 catch
                 {

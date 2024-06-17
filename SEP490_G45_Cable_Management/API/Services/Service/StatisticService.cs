@@ -1,9 +1,9 @@
-﻿using DataAccess.DTO;
-using DataAccess.DTO.StatisticDTO;
-using DataAccess.Entity;
-using System.Net;
-using API.Model.DAO;
+﻿using System.Net;
 using API.Services.IService;
+using Common.Base;
+using Common.DTO.StatisticDTO;
+using Common.Entity;
+using DataAccess.DAO;
 
 namespace API.Services.Service
 {
@@ -15,7 +15,7 @@ namespace API.Services.Service
         private readonly DAOCable daoCable = new DAOCable();
         private readonly DAORoute daoRoute = new DAORoute();
         private readonly DAONodeMaterialCategory daoNodeCategory = new DAONodeMaterialCategory();
-        public async Task<ResponseDTO<MaterialFluctuationPerYear?>> MaterialFluctuationPerYear(int? MaterialCategoryID, int? WarehouseID, int? year)
+        public async Task<ResponseBase<MaterialFluctuationPerYear?>> MaterialFluctuationPerYear(int? MaterialCategoryID, int? WarehouseID, int? year)
         {
             MaterialFluctuationPerYear data = new MaterialFluctuationPerYear();
             try
@@ -27,7 +27,7 @@ namespace API.Services.Service
                     // if not found
                     if (list.Count == 0)
                     {
-                        return new ResponseDTO<MaterialFluctuationPerYear?>(null, "Không tìm thấy vật liệu", (int)HttpStatusCode.NotFound);
+                        return new ResponseBase<MaterialFluctuationPerYear?>(null, "Không tìm thấy vật liệu", (int)HttpStatusCode.NotFound);
                     }
                     data.MaterialName = list[0].OtherMaterialsCategory.OtherMaterialsCategoryName;
                 }
@@ -44,15 +44,15 @@ namespace API.Services.Service
                 data.QuantityInOctober = await daoTransactionOtherMaterial.getQuantityPerMonth(MaterialCategoryID, WarehouseID, year, 10);
                 data.QuantityInNovember = await daoTransactionOtherMaterial.getQuantityPerMonth(MaterialCategoryID, WarehouseID, year, 11);
                 data.QuantityInDecember = await daoTransactionOtherMaterial.getQuantityPerMonth(MaterialCategoryID, WarehouseID, year, 12);
-                return new ResponseDTO<MaterialFluctuationPerYear?>(data, "");
+                return new ResponseBase<MaterialFluctuationPerYear?>(data, "");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<MaterialFluctuationPerYear?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<MaterialFluctuationPerYear?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
 
         }
-        public async Task<ResponseDTO<CableFluctuationPerYear?>> CableFluctuationPerYear(int? CableCategoryID, int? WarehouseID, int? year)
+        public async Task<ResponseBase<CableFluctuationPerYear?>> CableFluctuationPerYear(int? CableCategoryID, int? WarehouseID, int? year)
         {
             CableFluctuationPerYear data = new CableFluctuationPerYear();
             try
@@ -64,7 +64,7 @@ namespace API.Services.Service
                     // if not found
                     if (cable == null)
                     {
-                        return new ResponseDTO<CableFluctuationPerYear?>(null, "Không tìm thấy cáp", (int)HttpStatusCode.NotFound);
+                        return new ResponseBase<CableFluctuationPerYear?>(null, "Không tìm thấy cáp", (int)HttpStatusCode.NotFound);
                     }
                     data.CableName = cable.CableCategory.CableCategoryName;
                 }
@@ -81,15 +81,15 @@ namespace API.Services.Service
                 data.LengthInOctober = await daoTransactionCable.getLengthPerMonth(CableCategoryID, WarehouseID, year, 10);
                 data.LengthInNovember = await daoTransactionCable.getLengthPerMonth(CableCategoryID, WarehouseID, year, 11);
                 data.LengthInDecember = await daoTransactionCable.getLengthPerMonth(CableCategoryID, WarehouseID, year, 12);
-                return new ResponseDTO<CableFluctuationPerYear?>(data, "");
+                return new ResponseBase<CableFluctuationPerYear?>(data, "");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<CableFluctuationPerYear?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<CableFluctuationPerYear?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
 
         }
-        public async Task<ResponseDTO<List<CableCategoryStatistic>?>> CableCategory(int? WarehouseID)
+        public async Task<ResponseBase<List<CableCategoryStatistic>?>> CableCategory(int? WarehouseID)
         {
             try
             {
@@ -108,14 +108,14 @@ namespace API.Services.Service
                     };
                     result.Add(statistic);
                 }
-                return new ResponseDTO<List<CableCategoryStatistic>?>(result, string.Empty);
+                return new ResponseBase<List<CableCategoryStatistic>?>(result, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<List<CableCategoryStatistic>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<List<CableCategoryStatistic>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<List<OtherMaterialCategoryStatistic>?>> MaterialCategory(int? WarehouseID)
+        public async Task<ResponseBase<List<OtherMaterialCategoryStatistic>?>> MaterialCategory(int? WarehouseID)
         {
             try
             {
@@ -132,21 +132,21 @@ namespace API.Services.Service
                     };
                     result.Add(statistic);
                 }
-                return new ResponseDTO<List<OtherMaterialCategoryStatistic>?>(result, string.Empty);
+                return new ResponseBase<List<OtherMaterialCategoryStatistic>?>(result, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<List<OtherMaterialCategoryStatistic>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<List<OtherMaterialCategoryStatistic>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<List<RouteStatistic>?>> Route(Guid RouteID)
+        public async Task<ResponseBase<List<RouteStatistic>?>> Route(Guid RouteID)
         {
             try
             {
-                DataAccess.Entity.Route? route = await daoRoute.getRoute(RouteID);
+                Common.Entity.Route? route = await daoRoute.getRoute(RouteID);
                 if(route == null)
                 {
-                    return new ResponseDTO<List<RouteStatistic>?>(null, "Không tìm thấy tuyến", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<List<RouteStatistic>?>(null, "Không tìm thấy tuyến", (int)HttpStatusCode.NotFound);
                 }
                 List<RouteStatistic> result = new List<RouteStatistic>();
                 List<OtherMaterialsCategory> listCategory = await daoNodeCategory.getListOtherMaterialCategory(RouteID);
@@ -161,11 +161,11 @@ namespace API.Services.Service
                     };
                     result.Add(statistic);
                 }
-                return new ResponseDTO<List<RouteStatistic>?>(result, string.Empty);
+                return new ResponseBase<List<RouteStatistic>?>(result, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<List<RouteStatistic>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<List<RouteStatistic>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
     }

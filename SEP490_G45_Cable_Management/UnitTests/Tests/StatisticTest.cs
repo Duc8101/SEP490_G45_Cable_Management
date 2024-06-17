@@ -1,5 +1,6 @@
-﻿using DataAccess.DTO.StatisticDTO;
-using DataAccess.Entity;
+﻿using Common.Const;
+using Common.DTO;
+using Common.DTO.StatisticDTO;
 
 namespace UnitTests.Tests
 {

@@ -1,4 +1,6 @@
-﻿using DataAccess.DTO.UserDTO;
+﻿using Common.Const;
+using Common.DTO.UserDTO;
+using Common.Pagination;
 
 namespace UnitTests.Tests
 {
@@ -11,7 +13,6 @@ namespace UnitTests.Tests
         [SetUp]
         public void SetUp()
         {
-            var _mockServiceProvider = new Mock<IServiceProvider>();
             userService = new Mock<IUserService>();
             controller = new UserController(userService.Object);
         }
@@ -530,8 +531,8 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.ListPaged(filter, page))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<UserListDTO>?>(
-                    new PagedResultDTO<UserListDTO>(page, expectedUsers.Count,
+                .ReturnsAsync(new ResponseDTO<Pagination<UserListDTO>?>(
+                    new Pagination<UserListDTO>(page, expectedUsers.Count,
                                                     PageSizeConst.MAX_USER_LIST_IN_PAGE, expectedUsers),
                     string.Empty));
 

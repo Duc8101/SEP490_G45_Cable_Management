@@ -1,13 +1,14 @@
-﻿using API.Model.DAO;
-using API.Model.Util;
-using API.Services.IService;
+﻿using API.Services.IService;
 using AutoMapper;
-using DataAccess.Const;
-using DataAccess.DTO;
-using DataAccess.DTO.CableDTO;
-using DataAccess.DTO.OtherMaterialsDTO;
-using DataAccess.DTO.RequestDTO;
-using DataAccess.Entity;
+using Common.Base;
+using Common.Const;
+using Common.DTO.CableDTO;
+using Common.DTO.OtherMaterialsDTO;
+using Common.DTO.RequestDTO;
+using Common.Entity;
+using Common.Pagination;
+using DataAccess.DAO;
+using DataAccess.Util;
 using System.Net;
 
 namespace API.Services.Service
@@ -30,27 +31,27 @@ namespace API.Services.Service
         {
         }
 
-        public async Task<ResponseDTO<PagedResultDTO<RequestListDTO>?>> List(string? name, int? RequestCategoryID, string? status, Guid? CreatorID, int page)
+        public async Task<ResponseBase<Pagination<RequestListDTO>?>> List(string? name, int? RequestCategoryID, string? status, Guid? CreatorID, int page)
         {
             try
             {
                 List<Request> list = await daoRequest.getListAll(name, RequestCategoryID, status, CreatorID, page);
                 List<RequestListDTO> DTOs = _mapper.Map<List<RequestListDTO>>(list);
                 int RowCount = await daoRequest.getRowCount(name, RequestCategoryID, status, CreatorID);
-                PagedResultDTO<RequestListDTO> result = new PagedResultDTO<RequestListDTO>(page, RowCount, PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, DTOs);
-                return new ResponseDTO<PagedResultDTO<RequestListDTO>?>(result, string.Empty);
+                Pagination<RequestListDTO> result = new Pagination<RequestListDTO>(page, RowCount, PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, DTOs);
+                return new ResponseBase<Pagination<RequestListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<PagedResultDTO<RequestListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<Pagination<RequestListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
         // check cable valid when create request export and deliver
-        private async Task<ResponseDTO<bool>> isCableValidCreateExportDeliver(List<CableExportDeliverDTO> list)
+        private async Task<ResponseBase<bool>> isCableValidCreateExportDeliver(List<CableExportDeliverDTO> list)
         {
             if (list.Count == 0)
             {
-                return new ResponseDTO<bool>(true, string.Empty);
+                return new ResponseBase<bool>(true, string.Empty);
             }
             foreach (CableExportDeliverDTO DTO in list)
             {
@@ -58,27 +59,27 @@ namespace API.Services.Service
                 // if exist cable not found
                 if (cable == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy cáp với ID " + DTO.CableId, (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy cáp với ID " + DTO.CableId, (int)HttpStatusCode.NotFound);
                 }
                 // if invalid start point, end point or deleted
                 if (DTO.StartPoint < cable.StartPoint || DTO.EndPoint > cable.EndPoint || DTO.StartPoint >= DTO.EndPoint || cable.IsDeleted || DTO.StartPoint < 0 || DTO.EndPoint < 0)
                 {
-                    return new ResponseDTO<bool>(false, "Cáp với ID: " + DTO.CableId + " có chỉ số đầu hoặc chỉ số cuối không hợp lệ hoặc đã bị hủy", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Cáp với ID: " + DTO.CableId + " có chỉ số đầu hoặc chỉ số cuối không hợp lệ hoặc đã bị hủy", (int)HttpStatusCode.Conflict);
                 }
                 // if cable in use
                 if (cable.IsExportedToUse)
                 {
-                    return new ResponseDTO<bool>(false, "Cáp với ID: " + DTO.CableId + " đã được sử dụng", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Cáp với ID: " + DTO.CableId + " đã được sử dụng", (int)HttpStatusCode.Conflict);
                 }
             }
-            return new ResponseDTO<bool>(true, string.Empty);
+            return new ResponseBase<bool>(true, string.Empty);
         }
         // check material valid when create request export, deliver,cancel inside
-        private async Task<ResponseDTO<bool>> isMaterialValidCreateExportDeliverCancelInside(List<OtherMaterialsExportDeliverCancelInsideDTO> list)
+        private async Task<ResponseBase<bool>> isMaterialValidCreateExportDeliverCancelInside(List<OtherMaterialsExportDeliverCancelInsideDTO> list)
         {
             if (list.Count == 0)
             {
-                return new ResponseDTO<bool>(true, string.Empty);
+                return new ResponseBase<bool>(true, string.Empty);
             }
             foreach (OtherMaterialsExportDeliverCancelInsideDTO DTO in list)
             {
@@ -86,15 +87,15 @@ namespace API.Services.Service
                 // if not found
                 if (material == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy vật liệu vs ID = " + DTO.OtherMaterialsId, (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy vật liệu vs ID = " + DTO.OtherMaterialsId, (int)HttpStatusCode.NotFound);
                 }
                 // if not enough quantity
                 if (material.Quantity < DTO.Quantity)
                 {
-                    return new ResponseDTO<bool>(false, "Vật liệu vs ID = " + DTO.OtherMaterialsId + " không có đủ số lượng", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Vật liệu vs ID = " + DTO.OtherMaterialsId + " không có đủ số lượng", (int)HttpStatusCode.Conflict);
                 }
             }
-            return new ResponseDTO<bool>(true, string.Empty);
+            return new ResponseBase<bool>(true, string.Empty);
         }
         // add request to db
         private async Task<Guid> CreateRequest(string RequestName, string? content, Guid? IssueID, Guid CreatorID, int RequestCategoryID, int? DeliverWarehouseID)
@@ -159,15 +160,15 @@ namespace API.Services.Service
                 await UserUtil.sendEmail("[FPT TELECOM CABLE MANAGEMENT] Thông báo có yêu cầu mới", body, email);
             }
         }
-        public async Task<ResponseDTO<bool>> CreateRequestExport(RequestCreateExportDTO DTO, Guid CreatorID)
+        public async Task<ResponseBase<bool>> CreateRequestExport(RequestCreateExportDTO DTO, Guid CreatorID)
         {
             if (DTO.RequestName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên yêu cầu không được để trống", (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Tên yêu cầu không được để trống", (int)HttpStatusCode.Conflict);
             }
             if (DTO.RequestCategoryId != RequestCategoryConst.CATEGORY_EXPORT)
             {
-                return new ResponseDTO<bool>(false, "Không phải yêu cầu xuất kho", (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Không phải yêu cầu xuất kho", (int)HttpStatusCode.Conflict);
             }
             try
             {
@@ -175,14 +176,14 @@ namespace API.Services.Service
                 // if not found issue
                 if (issue == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
                 }
                 // if issue done
                 if (issue.Status == IssueConst.STATUS_DONE)
                 {
-                    return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseBase<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int)HttpStatusCode.NotAcceptable);
                 }
-                ResponseDTO<bool> response = await isCableValidCreateExportDeliver(DTO.CableExportDTOs);
+                ResponseBase<bool> response = await isCableValidCreateExportDeliver(DTO.CableExportDTOs);
                 // if cable invalid
                 if (response.Success == false)
                 {
@@ -200,19 +201,19 @@ namespace API.Services.Service
                 await CreateRequestMaterialExportDeliver(DTO.OtherMaterialsExportDTOs, RequestID);
                 // ----------------------------- send email to admin ---------------------------
                 await sendEmailToAdmin(DTO.RequestName.Trim(), "Xuất kho", issue);
-                return new ResponseDTO<bool>(true, "Tạo yêu cầu thành công");
+                return new ResponseBase<bool>(true, "Tạo yêu cầu thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
         // check cable valid when approve request export, deliver, cancel inside
-        private async Task<ResponseDTO<bool>> isCableValidApproveExportDeliverCancelInside(List<RequestCable> list, bool action)
+        private async Task<ResponseBase<bool>> isCableValidApproveExportDeliverCancelInside(List<RequestCable> list, bool action)
         {
             if (list.Count == 0)
             {
-                return new ResponseDTO<bool>(true, string.Empty);
+                return new ResponseBase<bool>(true, string.Empty);
             }
             foreach (RequestCable item in list)
             {
@@ -230,24 +231,24 @@ namespace API.Services.Service
                 if (cable == null || item.StartPoint < cable.StartPoint || item.EndPoint > cable.EndPoint)
                 {
                     string mess = action ? "xuất kho" : "hủy";
-                    return new ResponseDTO<bool>(false, "Không thể " + mess + " " + item.Cable.CableCategory.CableCategoryName + " với ID: " + item.CableId
+                    return new ResponseBase<bool>(false, "Không thể " + mess + " " + item.Cable.CableCategory.CableCategoryName + " với ID: " + item.CableId
                                + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ")", (int)HttpStatusCode.Conflict);
                 }
                 // if cable exported
                 if (cable.IsExportedToUse == true)
                 {
-                    return new ResponseDTO<bool>(false, item.Cable.CableCategory.CableCategoryName + " với ID: " + item.CableId
+                    return new ResponseBase<bool>(false, item.Cable.CableCategory.CableCategoryName + " với ID: " + item.CableId
                         + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ") đã được sử dụng!", (int)HttpStatusCode.Conflict);
                 }
             }
-            return new ResponseDTO<bool>(true, string.Empty);
+            return new ResponseBase<bool>(true, string.Empty);
         }
         // check material valid when approve request export, deliver, cancel inside
-        private async Task<ResponseDTO<bool>> isMaterialValidApproveExportDeliverCancelInside(List<RequestOtherMaterial> list)
+        private async Task<ResponseBase<bool>> isMaterialValidApproveExportDeliverCancelInside(List<RequestOtherMaterial> list)
         {
             if (list.Count == 0)
             {
-                return new ResponseDTO<bool>(true, string.Empty);
+                return new ResponseBase<bool>(true, string.Empty);
             }
             foreach (RequestOtherMaterial item in list)
             {
@@ -255,15 +256,15 @@ namespace API.Services.Service
                 // if not found
                 if (material == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy vật liệu " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName, (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy vật liệu " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName, (int)HttpStatusCode.NotFound);
                 }
                 // if not enough quantity
                 if (material.Quantity < item.Quantity)
                 {
-                    return new ResponseDTO<bool>(false, "Không đủ số lượng " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName, (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Không đủ số lượng " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName, (int)HttpStatusCode.Conflict);
                 }
             }
-            return new ResponseDTO<bool>(true, string.Empty);
+            return new ResponseBase<bool>(true, string.Empty);
         }
         private async Task UpdateRequest(Request request, Guid ID, string status)
         {
@@ -385,12 +386,12 @@ namespace API.Services.Service
             }
 
         }
-        private async Task<ResponseDTO<bool>> ApproveRequestExportDeliverCancelInside(Guid ApproverID, Request request, string ApproverName)
+        private async Task<ResponseBase<bool>> ApproveRequestExportDeliverCancelInside(Guid ApproverID, Request request, string ApproverName)
         {
             List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
             List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(request.RequestId);
             // ------------------------------- check cable valid ------------------------------  
-            ResponseDTO<bool> check = await isCableValidApproveExportDeliverCancelInside(requestCables, true);// true : xuat kho , false:huy
+            ResponseBase<bool> check = await isCableValidApproveExportDeliverCancelInside(requestCables, true);// true : xuat kho , false:huy
             // if exist cable not valid
             if (check.Success == false)
             {
@@ -439,7 +440,7 @@ namespace API.Services.Service
             await UpdateRequest(request, ApproverID, RequestConst.STATUS_APPROVED);
             // ------------------------------- send email --------------------------------
             await sendEmailToCreator(request, ApproverName);
-            return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
+            return new ResponseBase<bool>(true, "Yêu cầu được phê duyệt");
         }
         private async Task<Dictionary<string, object>> ApproveRequestExport(Request request, List<RequestCable> requestCables, List<RequestOtherMaterial> requestMaterials)
         {
@@ -825,15 +826,15 @@ namespace API.Services.Service
             result["listQuantity"] = listQuantity;
             return result;
         }
-        public async Task<ResponseDTO<bool>> CreateRequestRecovery(RequestCreateRecoveryDTO DTO, Guid CreatorID)
+        public async Task<ResponseBase<bool>> CreateRequestRecovery(RequestCreateRecoveryDTO DTO, Guid CreatorID)
         {
             if (DTO.RequestName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên yêu cầu không được để trống", (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Tên yêu cầu không được để trống", (int)HttpStatusCode.Conflict);
             }
             if (DTO.RequestCategoryId != RequestCategoryConst.CATEGORY_RECOVERY)
             {
-                return new ResponseDTO<bool>(false, "Không phải yêu cầu thu hồi", (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Không phải yêu cầu thu hồi", (int)HttpStatusCode.Conflict);
             }
             try
             {
@@ -841,12 +842,12 @@ namespace API.Services.Service
                 // if not found issue
                 if (issue == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
                 }
                 // if issue done
                 if (issue.Status == IssueConst.STATUS_DONE)
                 {
-                    return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseBase<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int)HttpStatusCode.NotAcceptable);
                 }
                 // ------------------------------- create cable --------------------------
                 List<Cable> listCable = new List<Cable>();
@@ -942,65 +943,65 @@ namespace API.Services.Service
                 }
                 // ----------------------------- send email to admin ---------------------------
                 await sendEmailToAdmin(DTO.RequestName.Trim(), "Thu hồi", issue);
-                return new ResponseDTO<bool>(true, "Tạo yêu cầu thành công");
+                return new ResponseBase<bool>(true, "Tạo yêu cầu thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
         // check cable valid when approve request recovery
-        private async Task<ResponseDTO<bool>> isCableValidApproveRecovery(List<RequestCable> list)
+        private async Task<ResponseBase<bool>> isCableValidApproveRecovery(List<RequestCable> list)
         {
             if (list.Count == 0)
             {
-                return new ResponseDTO<bool>(true, string.Empty);
+                return new ResponseBase<bool>(true, string.Empty);
             }
             foreach (RequestCable request in list)
             {
                 Cable? cable = await daoCable.getCable(request.CableId);
                 if (cable == null)
                 {
-                    return new ResponseDTO<bool>(false, request.Cable.CableCategory.CableCategoryName + " với ID: " + request.CableId
+                    return new ResponseBase<bool>(false, request.Cable.CableCategory.CableCategoryName + " với ID: " + request.CableId
                                 + " không tồn tại ", (int)HttpStatusCode.NotFound);
                 }
 
                 if (cable.StartPoint < 0 || cable.EndPoint < 0 || cable.StartPoint >= cable.EndPoint)
                 {
-                    return new ResponseDTO<bool>(false, request.Cable.CableCategory.CableCategoryName + " với ID: " + request.CableId
+                    return new ResponseBase<bool>(false, request.Cable.CableCategory.CableCategoryName + " với ID: " + request.CableId
                                 + " có chỉ số đầu chỉ số cuối không hợp lệ ", (int)HttpStatusCode.Conflict);
                 }
             }
-            return new ResponseDTO<bool>(true, string.Empty);
+            return new ResponseBase<bool>(true, string.Empty);
         }
         // check material valid when approve request recovery
-        private async Task<ResponseDTO<bool>> isMaterialValidApproveRecovery(List<RequestOtherMaterial> list)
+        private async Task<ResponseBase<bool>> isMaterialValidApproveRecovery(List<RequestOtherMaterial> list)
         {
             if (list.Count == 0)
             {
-                return new ResponseDTO<bool>(true, string.Empty);
+                return new ResponseBase<bool>(true, string.Empty);
             }
             foreach (RequestOtherMaterial request in list)
             {
                 if (request.Quantity < 0)
                 {
-                    return new ResponseDTO<bool>(false, "Số lượng không hợp lệ", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Số lượng không hợp lệ", (int)HttpStatusCode.NotFound);
                 }
                 OtherMaterial? material = await daoOtherMaterial.getOtherMaterial(request.OtherMaterialsId);
                 if (material == null)
                 {
-                    return new ResponseDTO<bool>(false, request.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " với ID: " + request.OtherMaterialsId
+                    return new ResponseBase<bool>(false, request.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " với ID: " + request.OtherMaterialsId
                                 + " không tồn tại ", (int)HttpStatusCode.NotFound);
                 }
             }
-            return new ResponseDTO<bool>(true, string.Empty);
+            return new ResponseBase<bool>(true, string.Empty);
         }
-        private async Task<ResponseDTO<bool>> ApproveRequestRecovery(Guid ApproverID, Request request, string ApproverName)
+        private async Task<ResponseBase<bool>> ApproveRequestRecovery(Guid ApproverID, Request request, string ApproverName)
         {
             List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
             List<RequestOtherMaterial> requestMaterials = await daoRequestMaterial.getList(request.RequestId);
             // ------------------------------- check cable valid ------------------------------  
-            ResponseDTO<bool> check = await isCableValidApproveRecovery(requestCables);
+            ResponseBase<bool> check = await isCableValidApproveRecovery(requestCables);
             // if exist cable not valid
             if (check.Success == false)
             {
@@ -1065,20 +1066,20 @@ namespace API.Services.Service
             await CreateTransaction(request, listCableWarehouseID, listCableRecovery, listMaterialWarehouseID, listMaterialIDRecovery, listQuantity, true);
             // ------------------------------- send email ------------------------------
             await sendEmailToCreator(request, ApproverName);
-            return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
+            return new ResponseBase<bool>(true, "Yêu cầu được phê duyệt");
         }
-        public async Task<ResponseDTO<bool>> Approve(Guid RequestID, Guid ApproverID, string ApproverName)
+        public async Task<ResponseBase<bool>> Approve(Guid RequestID, Guid ApproverID, string ApproverName)
         {
             try
             {
                 Request? request = await daoRequest.getRequest(RequestID);
                 if (request == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
                 }
                 if (request.Status != RequestConst.STATUS_PENDING)
                 {
-                    return new ResponseDTO<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
                 }
                 if (request.RequestCategoryId == RequestCategoryConst.CATEGORY_EXPORT || request.RequestCategoryId == RequestCategoryConst.CATEGORY_DELIVER || request.RequestCategoryId == RequestCategoryConst.CATEGORY_CANCEL_INSIDE)
                 {
@@ -1092,53 +1093,53 @@ namespace API.Services.Service
                 {
                     return await ApproveRequestCancelOutside(ApproverID, request, ApproverName);
                 }
-                return new ResponseDTO<bool>(false, "Không hỗ trợ yêu cầu " + request.RequestCategory.RequestCategoryName, (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Không hỗ trợ yêu cầu " + request.RequestCategory.RequestCategoryName, (int)HttpStatusCode.Conflict);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> Reject(Guid RequestID, Guid RejectorID)
+        public async Task<ResponseBase<bool>> Reject(Guid RequestID, Guid RejectorID)
         {
             try
             {
-                DataAccess.Entity.Request? request = await daoRequest.getRequest(RequestID);
+                Request? request = await daoRequest.getRequest(RequestID);
                 if (request == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
                 }
                 if (request.Status != RequestConst.STATUS_PENDING)
                 {
-                    return new ResponseDTO<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
                 }
                 // ------------------- update request ---------------
                 await UpdateRequest(request, RejectorID, RequestConst.STATUS_REJECTED);
-                return new ResponseDTO<bool>(true, string.Empty);
+                return new ResponseBase<bool>(true, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> CreateRequestDeliver(RequestCreateDeliverDTO DTO, Guid CreatorID)
+        public async Task<ResponseBase<bool>> CreateRequestDeliver(RequestCreateDeliverDTO DTO, Guid CreatorID)
         {
             if (DTO.RequestName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên yêu cầu không được để trống", (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Tên yêu cầu không được để trống", (int)HttpStatusCode.Conflict);
             }
             if (DTO.RequestCategoryId != RequestCategoryConst.CATEGORY_DELIVER)
             {
-                return new ResponseDTO<bool>(false, "Không phải yêu cầu chuyển kho", (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Không phải yêu cầu chuyển kho", (int)HttpStatusCode.Conflict);
             }
             try
             {
                 Warehouse? ware = await daoWarehouse.getWarehouse(DTO.DeliverWareHouseID);
                 if (ware == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy kho nhận", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy kho nhận", (int)HttpStatusCode.NotFound);
                 }
-                ResponseDTO<bool> response = await isCableValidCreateExportDeliver(DTO.CableDeliverDTOs);
+                ResponseBase<bool> response = await isCableValidCreateExportDeliver(DTO.CableDeliverDTOs);
                 // if cable invalid
                 if (response.Success == false)
                 {
@@ -1158,18 +1159,18 @@ namespace API.Services.Service
                 await CreateRequestMaterialExportDeliver(DTO.OtherMaterialsDeliverDTOs, RequestID);
                 // ----------------------------- send email to admin ---------------------------
                 await sendEmailToAdmin(DTO.RequestName.Trim(), "Thu hồi", null);
-                return new ResponseDTO<bool>(true, "Tạo yêu cầu thành công");
+                return new ResponseBase<bool>(true, "Tạo yêu cầu thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        private async Task<ResponseDTO<bool>> isCableValidCreateCancelInside(List<CableCancelInsideDTO> list)
+        private async Task<ResponseBase<bool>> isCableValidCreateCancelInside(List<CableCancelInsideDTO> list)
         {
             if (list.Count == 0)
             {
-                return new ResponseDTO<bool>(true, string.Empty);
+                return new ResponseBase<bool>(true, string.Empty);
             }
             foreach (CableCancelInsideDTO DTO in list)
             {
@@ -1177,25 +1178,25 @@ namespace API.Services.Service
                 // if exist cable not found
                 if (cable == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy cáp với ID " + DTO.CableId, (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy cáp với ID " + DTO.CableId, (int)HttpStatusCode.NotFound);
                 }
                 // if cable in use
                 if (cable.IsExportedToUse)
                 {
-                    return new ResponseDTO<bool>(false, "Cáp với ID: " + DTO.CableId + " đã được sử dụng", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Cáp với ID: " + DTO.CableId + " đã được sử dụng", (int)HttpStatusCode.Conflict);
                 }
             }
-            return new ResponseDTO<bool>(true, string.Empty);
+            return new ResponseBase<bool>(true, string.Empty);
         }
-        public async Task<ResponseDTO<bool>> CreateRequestCancelInside(RequestCreateCancelInsideDTO DTO, Guid CreatorID)
+        public async Task<ResponseBase<bool>> CreateRequestCancelInside(RequestCreateCancelInsideDTO DTO, Guid CreatorID)
         {
             if (DTO.RequestName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên yêu cầu không được để trống", (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Tên yêu cầu không được để trống", (int)HttpStatusCode.Conflict);
             }
             if (DTO.RequestCategoryId != RequestCategoryConst.CATEGORY_CANCEL_INSIDE)
             {
-                return new ResponseDTO<bool>(false, "Không phải yêu cầu hủy trong kho", (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Không phải yêu cầu hủy trong kho", (int)HttpStatusCode.Conflict);
             }
             try
             {
@@ -1203,15 +1204,15 @@ namespace API.Services.Service
                 // if not found issue
                 if (issue == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
                 }
                 // if issue done
                 if (issue.Status == IssueConst.STATUS_DONE)
                 {
-                    return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseBase<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int)HttpStatusCode.NotAcceptable);
                 }
                 // ----------------------- check cable valid --------------------------
-                ResponseDTO<bool> check = await isCableValidCreateCancelInside(DTO.CableCancelInsideDTOs);
+                ResponseBase<bool> check = await isCableValidCreateCancelInside(DTO.CableCancelInsideDTOs);
                 // if exist cable invalid
                 if (check.Success == false)
                 {
@@ -1258,11 +1259,11 @@ namespace API.Services.Service
                     }
                 }
                 await sendEmailToAdmin(DTO.RequestName.Trim(), "Hủy trong kho", issue);
-                return new ResponseDTO<bool>(true, "Tạo yêu cầu thành công");
+                return new ResponseBase<bool>(true, "Tạo yêu cầu thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
         // create cable while creating request cancel outside
@@ -1315,15 +1316,15 @@ namespace API.Services.Service
             }
             return result;
         }
-        public async Task<ResponseDTO<bool>> CreateRequestCancelOutside(RequestCreateCancelOutsideDTO DTO, Guid CreatorID)
+        public async Task<ResponseBase<bool>> CreateRequestCancelOutside(RequestCreateCancelOutsideDTO DTO, Guid CreatorID)
         {
             if (DTO.RequestName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên yêu cầu không được để trống", (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Tên yêu cầu không được để trống", (int)HttpStatusCode.Conflict);
             }
             if (DTO.RequestCategoryId != RequestCategoryConst.CATEGORY_CANCEL_OUTSIDE)
             {
-                return new ResponseDTO<bool>(false, "Không phải yêu cầu hủy ngoài kho", (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Không phải yêu cầu hủy ngoài kho", (int)HttpStatusCode.Conflict);
             }
             try
             {
@@ -1331,12 +1332,12 @@ namespace API.Services.Service
                 // if not found issue
                 if (issue == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
                 }
                 // if issue done
                 if (issue.Status == IssueConst.STATUS_DONE)
                 {
-                    return new ResponseDTO<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseBase<bool>(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int)HttpStatusCode.NotAcceptable);
                 }
                 // get list after create cable
                 List<Cable> listCable = await CreateCable(DTO.CableCancelOutsideDTOs, CreatorID);
@@ -1376,14 +1377,14 @@ namespace API.Services.Service
                     }
                 }
                 await sendEmailToAdmin(DTO.RequestName.Trim(), "Hủy ngoài kho", issue);
-                return new ResponseDTO<bool>(true, "Tạo yêu cầu thành công");
+                return new ResponseBase<bool>(true, "Tạo yêu cầu thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        private async Task<ResponseDTO<bool>> ApproveRequestCancelOutside(Guid ApproverID, Request request, string ApproverName)
+        private async Task<ResponseBase<bool>> ApproveRequestCancelOutside(Guid ApproverID, Request request, string ApproverName)
         {
             List<RequestCable> requestCables = await daoRequestCable.getList(request.RequestId);
             if (requestCables.Count > 0)
@@ -1404,37 +1405,37 @@ namespace API.Services.Service
             await UpdateRequest(request, ApproverID, RequestConst.STATUS_APPROVED);
             // ------------------------------- send email --------------------------------
             await sendEmailToCreator(request, ApproverName);
-            return new ResponseDTO<bool>(true, "Yêu cầu được phê duyệt");
+            return new ResponseBase<bool>(true, "Yêu cầu được phê duyệt");
         }
-        public async Task<ResponseDTO<bool>> Delete(Guid RequestID)
+        public async Task<ResponseBase<bool>> Delete(Guid RequestID)
         {
             try
             {
                 Request? request = await daoRequest.getRequest(RequestID);
                 if (request == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
                 }
                 if (!request.Status.Equals(RequestConst.STATUS_PENDING))
                 {
-                    return new ResponseDTO<bool>(false, "Yêu cầu đã được chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Yêu cầu đã được chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
                 }
                 await daoRequest.DeleteRequest(request);
-                return new ResponseDTO<bool>(true, "Xóa thành công");
+                return new ResponseBase<bool>(true, "Xóa thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<RequestDetailDTO?>> Detail(Guid RequestID)
+        public async Task<ResponseBase<RequestDetailDTO?>> Detail(Guid RequestID)
         {
             try
             {
                 Request? request = await daoRequest.getRequest(RequestID);
                 if (request == null)
                 {
-                    return new ResponseDTO<RequestDetailDTO?>(null, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<RequestDetailDTO?>(null, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
                 }
                 List<RequestCable> requestCables = await daoRequestCable.getList(RequestID);
                 List<RequestCableListDTO> RequestCableDTOs = _mapper.Map<List<RequestCableListDTO>>(requestCables);
@@ -1443,11 +1444,11 @@ namespace API.Services.Service
                 RequestDetailDTO data = _mapper.Map<RequestDetailDTO>(request);
                 data.RequestCableDTOs = RequestCableDTOs;
                 data.RequestOtherMaterialsDTOs = RequestOtherMaterialsDTOs;
-                return new ResponseDTO<RequestDetailDTO?>(data, string.Empty);
+                return new ResponseBase<RequestDetailDTO?>(data, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<RequestDetailDTO?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<RequestDetailDTO?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
 

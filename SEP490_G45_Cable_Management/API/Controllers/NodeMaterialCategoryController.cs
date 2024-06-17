@@ -1,7 +1,8 @@
 ﻿using API.Attributes;
 using API.Services.IService;
-using DataAccess.DTO;
-using DataAccess.DTO.NodeMaterialCategoryDTO;
+using Common.Base;
+using Common.DTO.NodeMaterialCategoryDTO;
+using Common.Enum;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -20,10 +21,10 @@ namespace API.Controllers
         }
 
         [HttpPut("{NodeID}")]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<bool>> Update([Required] Guid NodeID, [Required] NodeMaterialCategoryUpdateDTO DTO)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<bool>> Update([Required] Guid NodeID, [Required] NodeMaterialCategoryUpdateDTO DTO)
         {
-            ResponseDTO<bool> response = await _service.Update(NodeID, DTO);
+            ResponseBase<bool> response = await _service.Update(NodeID, DTO);
             Response.StatusCode = response.Code;
             return response;
         }

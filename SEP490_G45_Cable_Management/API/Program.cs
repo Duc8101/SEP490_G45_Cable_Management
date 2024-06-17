@@ -1,9 +1,9 @@
 using API.Middleware;
-using API.Model;
 using API.Provider;
 using API.Services.IService;
 using API.Services.Service;
 using AutoMapper;
+using DataAccess.DBContext;
 using Microsoft.OpenApi.Models;
 
 namespace API

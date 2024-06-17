@@ -1,10 +1,10 @@
-﻿using API.Model.DAO;
-using API.Services.IService;
+﻿using API.Services.IService;
 using AutoMapper;
-using DataAccess.DTO;
-using DataAccess.DTO.NodeDTO;
-using DataAccess.DTO.NodeMaterialCategoryDTO;
-using DataAccess.Entity;
+using Common.Base;
+using Common.DTO.NodeDTO;
+using Common.DTO.NodeMaterialCategoryDTO;
+using Common.Entity;
+using DataAccess.DAO;
 using System.Net;
 
 namespace API.Services.Service
@@ -19,7 +19,7 @@ namespace API.Services.Service
         {
         }
 
-        public async Task<ResponseDTO<List<NodeListDTO>?>> List(Guid RouteID)
+        public async Task<ResponseBase<List<NodeListDTO>?>> List(Guid RouteID)
         {
             try
             {
@@ -31,25 +31,25 @@ namespace API.Services.Service
                     List<NodeMaterialCategoryListDTO> categories = _mapper.Map<List<NodeMaterialCategoryListDTO>>(NodeMaterialCategories);
                     item.NodeMaterialCategoryListDTOs = categories;
                 }
-                return new ResponseDTO<List<NodeListDTO>?>(data, string.Empty);
+                return new ResponseBase<List<NodeListDTO>?>(data, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<List<NodeListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<List<NodeListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> Create(NodeCreateDTO DTO)
+        public async Task<ResponseBase<bool>> Create(NodeCreateDTO DTO)
         {
             if (DTO.RouteId == null)
             {
-                return new ResponseDTO<bool>(false, "Bạn chưa chọn tuyến", (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Bạn chưa chọn tuyến", (int)HttpStatusCode.Conflict);
             }
             try
             {
-                DataAccess.Entity.Route? route = await daoRoute.getRoute(DTO.RouteId.Value);
+                Common.Entity.Route? route = await daoRoute.getRoute(DTO.RouteId.Value);
                 if (route == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy tuyến", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy tuyến", (int)HttpStatusCode.NotFound);
                 }
                 // --------------------------- update list node order by ---------------------------
                 List<Node> list = await daoNode.getListNodeOrderByNumberOrder(DTO.RouteId.Value);
@@ -93,15 +93,15 @@ namespace API.Services.Service
                 node.UpdateAt = DateTime.Now;
                 node.IsDeleted = false;
                 await daoNode.CreateNode(node);
-                return new ResponseDTO<bool>(true, "Thêm thành công");
+                return new ResponseBase<bool>(true, "Thêm thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
 
         }
-        public async Task<ResponseDTO<NodeListDTO?>> Detail(Guid NodeID)
+        public async Task<ResponseBase<NodeListDTO?>> Detail(Guid NodeID)
         {
             try
             {
@@ -109,27 +109,27 @@ namespace API.Services.Service
                 // if not found
                 if (node == null)
                 {
-                    return new ResponseDTO<NodeListDTO?>(null, "Không tìm thấy điểm", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<NodeListDTO?>(null, "Không tìm thấy điểm", (int)HttpStatusCode.NotFound);
                 }
                 List<NodeMaterialCategory> NodeMaterialCategories = await daoCategory.getList(NodeID);
                 List<NodeMaterialCategoryListDTO> list = _mapper.Map<List<NodeMaterialCategoryListDTO>>(NodeMaterialCategories);
                 NodeListDTO DTO = _mapper.Map<NodeListDTO>(node);
                 DTO.NodeMaterialCategoryListDTOs = list;
-                return new ResponseDTO<NodeListDTO?>(DTO, string.Empty);
+                return new ResponseBase<NodeListDTO?>(DTO, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<NodeListDTO?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<NodeListDTO?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> Update(Guid NodeID, NodeUpdateDTO DTO)
+        public async Task<ResponseBase<bool>> Update(Guid NodeID, NodeUpdateDTO DTO)
         {
             try
             {
                 Node? node = await daoNode.getNode(NodeID);
                 if (node == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy điểm", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy điểm", (int)HttpStatusCode.NotFound);
                 }
                 node.Longitude = DTO.Longitude;
                 node.Latitude = DTO.Latitude;
@@ -140,28 +140,28 @@ namespace API.Services.Service
                 node.Note = DTO.Note == null || DTO.Note.Trim().Length == 0 ? null : DTO.Note.Trim();
                 node.Status = DTO.Status == null || DTO.Status.Trim().Length == 0 ? null : DTO.Status.Trim();
                 await daoNode.UpdateNode(node);
-                return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
+                return new ResponseBase<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> Delete(Guid NodeID)
+        public async Task<ResponseBase<bool>> Delete(Guid NodeID)
         {
             try
             {
                 Node? node = await daoNode.getNode(NodeID);
                 if (node == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy điểm", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy điểm", (int)HttpStatusCode.NotFound);
                 }
                 await daoNode.DeleteNode(node);
-                return new ResponseDTO<bool>(true, "Xóa thành công");
+                return new ResponseBase<bool>(true, "Xóa thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
 

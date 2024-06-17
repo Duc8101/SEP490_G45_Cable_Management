@@ -1,7 +1,9 @@
 ﻿using API.Attributes;
 using API.Services.IService;
-using DataAccess.DTO;
-using DataAccess.DTO.CableDTO;
+using Common.Base;
+using Common.DTO.CableDTO;
+using Common.Enum;
+using Common.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -21,31 +23,31 @@ namespace API.Controllers
         }
 
         [HttpGet("Paged")]
-        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Warehouse_Keeper, DataAccess.Enum.Role.Leader)]
-        public async Task<ResponseDTO<PagedResultDTO<CableListDTO>?>> List(string? filter, int? WarehouseID, [Required] bool isExportedToUse = false, [Required] int page = 1)
+        [Role(Role.Admin, Role.Warehouse_Keeper, Role.Leader)]
+        public async Task<ResponseBase<Pagination<CableListDTO>?>> List(string? filter, int? WarehouseID, [Required] bool isExportedToUse = false, [Required] int page = 1)
         {
-            ResponseDTO<PagedResultDTO<CableListDTO>?> response = await _service.ListPaged(filter, WarehouseID, isExportedToUse, page);
+            ResponseBase<Pagination<CableListDTO>?> response = await _service.ListPaged(filter, WarehouseID, isExportedToUse, page);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpGet("All")]
-        public async Task<ResponseDTO<List<CableListDTO>?>> List(int? WarehouseID)
+        public async Task<ResponseBase<List<CableListDTO>?>> List(int? WarehouseID)
         {
-            ResponseDTO<List<CableListDTO>?> response = await _service.ListAll(WarehouseID);
+            ResponseBase<List<CableListDTO>?> response = await _service.ListAll(WarehouseID);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpPost]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<bool>> Create([Required] CableCreateUpdateDTO DTO)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<bool>> Create([Required] CableCreateUpdateDTO DTO)
         {
             Guid? CreatorID = getUserID();
-            ResponseDTO<bool> response;
+            ResponseBase<bool> response;
             if (CreatorID == null)
             {
-                response = new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
+                response = new ResponseBase<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
             }
             else
             {
@@ -56,19 +58,19 @@ namespace API.Controllers
         }
 
         [HttpPut("{CableID}")]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<bool>> Update([Required] Guid CableID, [Required] CableCreateUpdateDTO DTO)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<bool>> Update([Required] Guid CableID, [Required] CableCreateUpdateDTO DTO)
         {
-            ResponseDTO<bool> response = await _service.Update(CableID, DTO);
+            ResponseBase<bool> response = await _service.Update(CableID, DTO);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpDelete("{CableID}")]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<bool>> Delete([Required] Guid CableID)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<bool>> Delete([Required] Guid CableID)
         {
-            ResponseDTO<bool> response = await _service.Delete(CableID);
+            ResponseBase<bool> response = await _service.Delete(CableID);
             Response.StatusCode = response.Code;
             return response;
         }

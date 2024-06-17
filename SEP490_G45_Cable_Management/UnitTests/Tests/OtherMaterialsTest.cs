@@ -1,5 +1,7 @@
-﻿using DataAccess.DTO.OtherMaterialsDTO;
-using DataAccess.Entity;
+﻿using Common.Const;
+using Common.DTO.OtherMaterialsDTO;
+using Common.Entity;
+using Common.Pagination;
 
 namespace UnitTests.Tests
 {
@@ -70,8 +72,8 @@ namespace UnitTests.Tests
 
             otherMaterialsService
               .Setup(x => x.ListPaged(filter, warehouseId, warehouseKeeperId, page))
-              .ReturnsAsync(new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(
-                new PagedResultDTO<OtherMaterialsListDTO>(
+              .ReturnsAsync(new ResponseDTO<Pagination<OtherMaterialsListDTO>?>(
+                new Pagination<OtherMaterialsListDTO>(
                   page,
                   10,
                   PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE,
@@ -100,8 +102,8 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.ListPaged(filter, warehouseId, null, page))
-              .ReturnsAsync(new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(
-                new PagedResultDTO<OtherMaterialsListDTO>(
+              .ReturnsAsync(new ResponseDTO<Pagination<OtherMaterialsListDTO>?>(
+                new Pagination<OtherMaterialsListDTO>(
                   page,
                   10,
                   PageSizeConst.MAX_OTHER_MATERIAL_LIST_IN_PAGE,
@@ -131,7 +133,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(
               controller,
               RoleConst.ROLE_LEADER); // Set a user role that is not admin or
-                                             // warehouse keeper
+                                      // warehouse keeper
 
             // Act
             var result = await controller.Create(otherMaterialsCreateUpdateDTO);
@@ -709,7 +711,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(
               controller,
               RoleConst.ROLE_LEADER); // Assuming the current user is not an admin or
-                                             // warehouse keeper
+                                      // warehouse keeper
 
             // Act
             var result =
@@ -732,7 +734,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(
               controller,
               RoleConst.ROLE_STAFF); // Assuming the current user is not an admin or
-                                            // warehouse keeper
+                                     // warehouse keeper
 
             // Act
             var result = await controller.Delete(otherMaterialsID);

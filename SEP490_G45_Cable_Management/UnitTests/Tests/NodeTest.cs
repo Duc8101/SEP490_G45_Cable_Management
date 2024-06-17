@@ -1,5 +1,7 @@
-﻿using DataAccess.DTO.NodeDTO;
-using DataAccess.DTO.NodeMaterialCategoryDTO;
+﻿using Common.Const;
+using Common.DTO;
+using Common.DTO.NodeDTO;
+using Common.DTO.NodeMaterialCategoryDTO;
 
 namespace UnitTests.Tests
 {
@@ -71,7 +73,7 @@ namespace UnitTests.Tests
             // Arrange
             var sampleData = new NodeCreateDTO { RouteId = null, NumberOrder = 2 };
 
-            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst. ROLE_ADMIN);
+            TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             nodeService.Setup(x => x.Create(sampleData))
                 .ReturnsAsync(new ResponseDTO<bool>(false, "Bạn chưa chọn tuyến", (int)HttpStatusCode.Conflict));

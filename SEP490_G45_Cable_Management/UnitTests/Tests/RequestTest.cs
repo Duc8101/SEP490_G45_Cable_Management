@@ -1,6 +1,9 @@
-﻿using DataAccess.DTO.CableDTO;
-using DataAccess.DTO.OtherMaterialsDTO;
-using DataAccess.DTO.RequestDTO;
+﻿using Common.Base;
+using Common.Const;
+using Common.DTO.CableDTO;
+using Common.DTO.OtherMaterialsDTO;
+using Common.DTO.RequestDTO;
+using Common.Pagination;
 
 namespace UnitTests.Tests
 {
@@ -91,7 +94,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleWithoutID(
                 controller,
                 RoleConst.ROLE_WAREHOUSE_KEEPER);  // Simulating a user with the warehouse keeper role
-                                                          // but with a null creator ID
+                                                   // but with a null creator ID
 
             // Act
             var result = await controller.Create(requestCreateRecoveryDTO);
@@ -114,7 +117,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleWithoutID(
                 controller,
                 RoleConst.ROLE_WAREHOUSE_KEEPER);  // Simulating a user with the warehouse keeper role
-                                                          // but with a null creator ID
+                                                   // but with a null creator ID
 
             // Act
             var result = await controller.Create(requestCreateDeliverDTO);
@@ -190,7 +193,7 @@ namespace UnitTests.Tests
                                                                        // RequestCreateCancelInsideDTO object
             TestHelper.SimulateUserWithRoleAndId(
                 controller, RoleConst.ROLE_LEADER);  // Simulating a user with a role other than
-                                                            // warehouse keeper or staff
+                                                     // warehouse keeper or staff
 
             // Act
             var result = await controller.Create(cancelInsideDTO);
@@ -269,7 +272,7 @@ namespace UnitTests.Tests
             string name = "SampleName";
             string status = "SampleStatus";
             int page = 1;
-            var resultSample = new PagedResultDTO<RequestListDTO>(
+            var resultSample = new Pagination<RequestListDTO>(
                 currentPage: 1, pageSize: PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, rowCount: 10,
                 results: new List<RequestListDTO> {
         new RequestListDTO { RequestId = Guid.NewGuid(), RequestName = "Sample Request",
@@ -282,7 +285,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             var expectedResponse =
-                new ResponseDTO<PagedResultDTO<RequestListDTO>?>(resultSample, string.Empty);
+                new ResponseBase<Pagination<RequestListDTO>?>(resultSample, string.Empty);
 
             requestService.Setup(x => x.List(name, null, status, null, page)).ReturnsAsync(expectedResponse);
 
@@ -305,7 +308,7 @@ namespace UnitTests.Tests
             string name = "SampleName";
             string status = "SampleStatus";
             int page = 1;
-            var resultSample = new PagedResultDTO<RequestListDTO>(
+            var resultSample = new Pagination<RequestListDTO>(
                 currentPage: 1, pageSize: PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, rowCount: 10,
                 results: new List<RequestListDTO> {
         new RequestListDTO { RequestId = Guid.NewGuid(), RequestName = "Sample Request",
@@ -318,7 +321,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             var expectedResponse =
-                new ResponseDTO<PagedResultDTO<RequestListDTO>?>(resultSample, string.Empty);
+                new ResponseBase<Pagination<RequestListDTO>?>(resultSample, string.Empty);
 
             requestService.Setup(x => x.List(name, null, status, null, page)).ReturnsAsync(expectedResponse);
 
@@ -340,7 +343,7 @@ namespace UnitTests.Tests
             string name = "SampleName";
             string status = "SampleStatus";
             int page = 1;
-            var resultSample = new PagedResultDTO<RequestListDTO>(
+            var resultSample = new Pagination<RequestListDTO>(
                 currentPage: 1, pageSize: PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, rowCount: 10,
                 results: new List<RequestListDTO> {
         new RequestListDTO { RequestId = Guid.NewGuid(), RequestName = "Sample Request",
@@ -353,7 +356,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             var expectedResponse =
-                new ResponseDTO<PagedResultDTO<RequestListDTO>?>(resultSample, string.Empty);
+                new ResponseBase<Pagination<RequestListDTO>?>(resultSample, string.Empty);
 
             requestService.Setup(x => x.List(name, null, status, creatorId, page)).ReturnsAsync(expectedResponse);
 
@@ -377,7 +380,7 @@ namespace UnitTests.Tests
             string name = "SampleName";
             string status = "SampleStatus";
             int page = 1;
-            var resultSample = new PagedResultDTO<RequestListDTO>(
+            var resultSample = new Pagination<RequestListDTO>(
                 currentPage: 1, pageSize: PageSizeConst.MAX_REQUEST_LIST_IN_PAGE, rowCount: 10,
                 results: new List<RequestListDTO> {
         new RequestListDTO { RequestId = Guid.NewGuid(), RequestName = "Sample Request",
@@ -390,7 +393,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             var expectedResponse =
-                new ResponseDTO<PagedResultDTO<RequestListDTO>?>(resultSample, string.Empty);
+                new ResponseBase<Pagination<RequestListDTO>?>(resultSample, string.Empty);
 
             requestService.Setup(x => x.List(name, null, status, creatorId, page)).ReturnsAsync(expectedResponse);
 
@@ -478,7 +481,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestExport(requestCreateExportDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Tên yêu cầu không được để trống",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Tên yêu cầu không được để trống",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -517,7 +520,7 @@ namespace UnitTests.Tests
 
             requestService.Setup(x => x.CreateRequestExport(requestCreateExportDTOSample, creatorId))
                 .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound));
+                    new ResponseBase<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Create(requestCreateExportDTOSample);
@@ -554,7 +557,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestExport(requestCreateExportDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Sự vụ với mã SampleIssueCode đã được chấp thuận",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Sự vụ với mã SampleIssueCode đã được chấp thuận",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -593,7 +596,7 @@ namespace UnitTests.Tests
 
             var errorMessage = "Invalid cables detected";
             requestService.Setup(x => x.CreateRequestExport(requestCreateExportDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, errorMessage, (int)HttpStatusCode.Conflict));
+                .ReturnsAsync(new ResponseBase<bool>(false, errorMessage, (int)HttpStatusCode.Conflict));
 
             // Act
             var result = await controller.Create(requestCreateExportDTOSample);
@@ -630,7 +633,7 @@ namespace UnitTests.Tests
 
             var errorMessage = "Invalid materials detected";
             requestService.Setup(x => x.CreateRequestExport(requestCreateExportDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, errorMessage, (int)HttpStatusCode.Conflict));
+                .ReturnsAsync(new ResponseBase<bool>(false, errorMessage, (int)HttpStatusCode.Conflict));
 
             // Act
             var result = await controller.Create(requestCreateExportDTOSample);
@@ -667,7 +670,7 @@ namespace UnitTests.Tests
 
             var successMessage = "Tạo yêu cầu thành công";
             requestService.Setup(x => x.CreateRequestExport(requestCreateExportDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(true, successMessage));
+                .ReturnsAsync(new ResponseBase<bool>(true, successMessage));
 
             // Act
             var result = await controller.Create(requestCreateExportDTOSample);
@@ -695,7 +698,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestRecovery(requestCreateRecoveryDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Tên yêu cầu không được để trống",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Tên yêu cầu không được để trống",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -726,7 +729,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestRecovery(requestCreateRecoveryDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Không phải yêu cầu thu hồi",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Không phải yêu cầu thu hồi",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -758,7 +761,7 @@ namespace UnitTests.Tests
 
             requestService.Setup(x => x.CreateRequestRecovery(requestCreateRecoveryDTOSample, creatorId))
                 .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound));
+                    new ResponseBase<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Create(requestCreateRecoveryDTOSample);
@@ -788,7 +791,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestRecovery(requestCreateRecoveryDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false,
+                .ReturnsAsync(new ResponseBase<bool>(false,
                                                     "Sự vụ với mã <SampleIssueCode> đã được chấp thuận",
                                                     (int)HttpStatusCode.Conflict));
 
@@ -820,7 +823,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestRecovery(requestCreateRecoveryDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Tạo yêu cầu thành công"));
 
             // Act
             var result = await controller.Create(requestCreateRecoveryDTOSample);
@@ -873,7 +876,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestDeliver(requestCreateDeliverDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Tên yêu cầu không được để trống",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Tên yêu cầu không được để trống",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -902,7 +905,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestDeliver(requestCreateDeliverDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Không phải yêu cầu chuyển kho",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Không phải yêu cầu chuyển kho",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -932,7 +935,7 @@ namespace UnitTests.Tests
 
             requestService.Setup(x => x.CreateRequestDeliver(requestCreateDeliverDTOSample, creatorId))
                 .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Không tìm thấy kho nhận", (int)HttpStatusCode.NotFound));
+                    new ResponseBase<bool>(false, "Không tìm thấy kho nhận", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Create(requestCreateDeliverDTOSample);
@@ -959,7 +962,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             var invalidResponse =
-                new ResponseDTO<bool>(false, "Invalid cable", (int)HttpStatusCode.BadRequest);
+                new ResponseBase<bool>(false, "Invalid cable", (int)HttpStatusCode.BadRequest);
             requestService.Setup(x => x.CreateRequestDeliver(requestCreateDeliverDTOSample, creatorId))
                 .ReturnsAsync(invalidResponse);
 
@@ -988,7 +991,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             var invalidResponse =
-                new ResponseDTO<bool>(false, "Invalid material", (int)HttpStatusCode.BadRequest);
+                new ResponseBase<bool>(false, "Invalid material", (int)HttpStatusCode.BadRequest);
             requestService.Setup(x => x.CreateRequestDeliver(requestCreateDeliverDTOSample, creatorId))
                 .ReturnsAsync(invalidResponse);
 
@@ -1016,7 +1019,7 @@ namespace UnitTests.Tests
             var creatorId =
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
-            var successResponse = new ResponseDTO<bool>(true, "Tạo yêu cầu thành công");
+            var successResponse = new ResponseBase<bool>(true, "Tạo yêu cầu thành công");
             requestService.Setup(x => x.CreateRequestDeliver(requestCreateDeliverDTOSample, creatorId))
                 .ReturnsAsync(successResponse);
 
@@ -1065,7 +1068,7 @@ namespace UnitTests.Tests
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
                 .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound));
+                    new ResponseBase<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound));
             // Act
             var result = await controller.Approve(requestID);
 
@@ -1089,7 +1092,7 @@ namespace UnitTests.Tests
             var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
-                .ReturnsAsync(new ResponseDTO<bool>(false,
+                .ReturnsAsync(new ResponseBase<bool>(false,
                                                     "Yêu cầu đã được xác nhận chấp thuận hoặc bị từ chối",
                                                     (int)HttpStatusCode.Conflict));
 
@@ -1116,7 +1119,7 @@ namespace UnitTests.Tests
             var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Request approved successfully"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Request approved successfully"));
 
             // Act
             var result = await controller.Approve(requestID);
@@ -1141,7 +1144,7 @@ namespace UnitTests.Tests
             var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Request approved successfully"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Request approved successfully"));
 
             // Act
             var result = await controller.Approve(requestID);
@@ -1166,7 +1169,7 @@ namespace UnitTests.Tests
             var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Request approved successfully"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Request approved successfully"));
 
             // Act
             var result = await controller.Approve(requestID);
@@ -1191,7 +1194,7 @@ namespace UnitTests.Tests
             var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Request approved successfully"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Request approved successfully"));
 
             // Act
             var result = await controller.Approve(requestID);
@@ -1216,7 +1219,7 @@ namespace UnitTests.Tests
             var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Request approved successfully"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Request approved successfully"));
 
             // Act
             var result = await controller.Approve(requestID);
@@ -1240,7 +1243,7 @@ namespace UnitTests.Tests
             var approverID = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Request approved successfully"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Request approved successfully"));
 
             // Act
             var result = await controller.Approve(requestID);
@@ -1267,7 +1270,7 @@ namespace UnitTests.Tests
             var unsupportedRequestCategory = "UnsupportedCategory";
 
             requestService.Setup(x => x.Approve(requestID, approverID, approverName))
-                .ReturnsAsync(new ResponseDTO<bool>(false,
+                .ReturnsAsync(new ResponseBase<bool>(false,
                                                     $"Không hỗ trợ yêu cầu {unsupportedRequestCategory}",
                                                     (int)HttpStatusCode.Conflict));
 
@@ -1311,7 +1314,7 @@ namespace UnitTests.Tests
 
             requestService.Setup(x => x.Reject(requestID, rejectorID))
                 .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound));
+                    new ResponseBase<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Reject(requestID);
@@ -1334,7 +1337,7 @@ namespace UnitTests.Tests
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
             requestService.Setup(x => x.Reject(requestID, rejectorID))
-                .ReturnsAsync(new ResponseDTO<bool>(false,
+                .ReturnsAsync(new ResponseBase<bool>(false,
                                                     "Yêu cầu đã được xác nhận chấp thuận hoặc bị từ chối",
                                                     (int)HttpStatusCode.Conflict));
 
@@ -1359,7 +1362,7 @@ namespace UnitTests.Tests
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
             requestService.Setup(x => x.Reject(requestID, rejectorID))
-                .ReturnsAsync(new ResponseDTO<bool>(true, string.Empty));
+                .ReturnsAsync(new ResponseBase<bool>(true, string.Empty));
 
             // Act
             var result = await controller.Reject(requestID);
@@ -1380,7 +1383,7 @@ namespace UnitTests.Tests
             var requestCreateDeliverDTOSample = new RequestCreateDeliverDTO();
 
             requestService.Setup(x => x.Reject(requestID, rejectorID))
-                .ReturnsAsync(new ResponseDTO<bool>(true, string.Empty));
+                .ReturnsAsync(new ResponseBase<bool>(true, string.Empty));
 
             // Act
             var result = await controller.Reject(requestID);
@@ -1425,7 +1428,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Tên yêu cầu không được để trống",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Tên yêu cầu không được để trống",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -1458,7 +1461,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Không phải yêu cầu hủy trong kho",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Không phải yêu cầu hủy trong kho",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -1491,7 +1494,7 @@ namespace UnitTests.Tests
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
                 .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound));
+                    new ResponseBase<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Create(requestCreateCancelInsideDTOSample);
@@ -1522,7 +1525,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Sự vụ với mã SampleIssueCode đã được chấp thuận",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Sự vụ với mã SampleIssueCode đã được chấp thuận",
                                                     (int)HttpStatusCode.NotAcceptable));
 
             // Act
@@ -1556,7 +1559,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "One or more cables are invalid",
+                .ReturnsAsync(new ResponseBase<bool>(false, "One or more cables are invalid",
                                                     (int)HttpStatusCode.BadRequest));
 
             // Act
@@ -1592,7 +1595,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "One or more materials are invalid",
+                .ReturnsAsync(new ResponseBase<bool>(false, "One or more materials are invalid",
                                                     (int)HttpStatusCode.BadRequest));
 
             // Act
@@ -1624,7 +1627,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Tạo yêu cầu thành công"));
 
             // Act
             var result = await controller.Create(requestCreateCancelInsideDTOSample);
@@ -1655,7 +1658,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Tạo yêu cầu thành công"));
 
             // Act
             var result = await controller.Create(requestCreateCancelInsideDTOSample);
@@ -1685,7 +1688,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelInside(requestCreateCancelInsideDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Tạo yêu cầu thành công"));
 
             // Act
             var result = await controller.Create(requestCreateCancelInsideDTOSample);
@@ -1739,7 +1742,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Tên yêu cầu không được để trống",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Tên yêu cầu không được để trống",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -1771,7 +1774,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Không phải yêu cầu hủy ngoài kho",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Không phải yêu cầu hủy ngoài kho",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -1803,7 +1806,7 @@ namespace UnitTests.Tests
 
             requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
                 .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound));
+                    new ResponseBase<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Create(requestCreateCancelOutsideDTOSample);
@@ -1832,7 +1835,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(
+                .ReturnsAsync(new ResponseBase<bool>(
                     false,
                     "Sự vụ với mã " + requestCreateCancelOutsideDTOSample.IssueId + " đã được chấp thuận",
                     (int)HttpStatusCode.NotAcceptable));
@@ -1867,7 +1870,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Tạo yêu cầu thành công"));
 
             // Act
             var result = await controller.Create(requestCreateCancelOutsideDTOSample);
@@ -1895,7 +1898,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Tạo yêu cầu thành công"));
 
             // Act
             var result = await controller.Create(requestCreateCancelOutsideDTOSample);
@@ -1923,7 +1926,7 @@ namespace UnitTests.Tests
                 TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             requestService.Setup(x => x.CreateRequestCancelOutside(requestCreateCancelOutsideDTOSample, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo yêu cầu thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Tạo yêu cầu thành công"));
 
             // Act
             var result = await controller.Create(requestCreateCancelOutsideDTOSample);
@@ -1969,7 +1972,7 @@ namespace UnitTests.Tests
 
             requestService.Setup(x => x.Delete(requestID))
                 .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound));
+                    new ResponseBase<bool>(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Delete(requestID);
@@ -1991,7 +1994,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Delete(requestID))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Xóa thành công"));
 
             // Act
             var result = await controller.Delete(requestID);
@@ -2012,7 +2015,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Delete(requestID))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Sample error message",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Sample error message",
                                                     (int)HttpStatusCode.InternalServerError));
 
             // Act
@@ -2035,7 +2038,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             requestService.Setup(x => x.Detail(requestID))
-                .ReturnsAsync(new ResponseDTO<RequestDetailDTO?>(null, "Không tìm thấy yêu cầu",
+                .ReturnsAsync(new ResponseBase<RequestDetailDTO?>(null, "Không tìm thấy yêu cầu",
                                                                  (int)HttpStatusCode.NotFound));
 
             // Act
@@ -2063,7 +2066,7 @@ namespace UnitTests.Tests
                 RequestId = requestID,
             };
             requestService.Setup(x => x.Detail(requestID))
-                .ReturnsAsync(new ResponseDTO<RequestDetailDTO?>(requestDetailDTO, string.Empty));
+                .ReturnsAsync(new ResponseBase<RequestDetailDTO?>(requestDetailDTO, string.Empty));
 
             // Act
             var result = await controller.Detail(requestID);

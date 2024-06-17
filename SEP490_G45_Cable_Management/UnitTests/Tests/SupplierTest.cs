@@ -1,10 +1,6 @@
-﻿using DataAccess.DTO.SupplierDTO;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common.Const;
+using Common.DTO.SupplierDTO;
+using Common.Pagination;
 
 namespace UnitTests.Tests
 {
@@ -126,8 +122,8 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.ListPaged(name, page))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(
-                    new PagedResultDTO<SupplierListDTO>(page, expectedSuppliers.Count,
+                .ReturnsAsync(new ResponseDTO<Pagination<SupplierListDTO>?>(
+                    new Pagination<SupplierListDTO>(page, expectedSuppliers.Count,
                                                         PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE,
                                                         expectedSuppliers),
                     string.Empty));
@@ -158,8 +154,8 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             supplierService.Setup(x => x.ListPaged(name, page))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(
-                    new PagedResultDTO<SupplierListDTO>(page, expectedSuppliers.Count,
+                .ReturnsAsync(new ResponseDTO<Pagination<SupplierListDTO>?>(
+                    new Pagination<SupplierListDTO>(page, expectedSuppliers.Count,
                                                         PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE,
                                                         expectedSuppliers),
                     string.Empty));
@@ -191,8 +187,8 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             supplierService.Setup(x => x.ListPaged(name, page))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<SupplierListDTO>?>(
-                    new PagedResultDTO<SupplierListDTO>(page, expectedSuppliers.Count,
+                .ReturnsAsync(new ResponseDTO<Pagination<SupplierListDTO>?>(
+                    new Pagination<SupplierListDTO>(page, expectedSuppliers.Count,
                                                         PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE,
                                                         expectedSuppliers),
                     string.Empty));

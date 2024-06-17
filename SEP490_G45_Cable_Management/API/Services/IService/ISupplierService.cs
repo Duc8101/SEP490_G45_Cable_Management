@@ -1,14 +1,15 @@
-﻿using DataAccess.DTO.SupplierDTO;
-using DataAccess.DTO;
+﻿using Common.Base;
+using Common.DTO.SupplierDTO;
+using Common.Pagination;
 
 namespace API.Services.IService
 {
     public interface ISupplierService
     {
-        Task<ResponseDTO<PagedResultDTO<SupplierListDTO>?>> ListPaged(string? name, int page);
-        Task<ResponseDTO<List<SupplierListDTO>?>> ListAll();
-        Task<ResponseDTO<bool>> Create(SupplierCreateUpdateDTO DTO, Guid CreatorID);
-        Task<ResponseDTO<bool>> Update(int SupplierID, SupplierCreateUpdateDTO DTO);
-        Task<ResponseDTO<bool>> Delete(int SupplierID);
+        Task<ResponseBase<Pagination<SupplierListDTO>?>> ListPaged(string? name, int page);
+        Task<ResponseBase<List<SupplierListDTO>?>> ListAll();
+        Task<ResponseBase<bool>> Create(SupplierCreateUpdateDTO DTO, Guid CreatorID);
+        Task<ResponseBase<bool>> Update(int SupplierID, SupplierCreateUpdateDTO DTO);
+        Task<ResponseBase<bool>> Delete(int SupplierID);
     }
 }

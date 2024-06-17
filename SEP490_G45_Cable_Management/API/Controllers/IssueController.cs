@@ -1,7 +1,9 @@
 ﻿using API.Attributes;
 using API.Services.IService;
-using DataAccess.DTO;
-using DataAccess.DTO.IssueDTO;
+using Common.Base;
+using Common.DTO.IssueDTO;
+using Common.Enum;
+using Common.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -22,38 +24,38 @@ namespace API.Controllers
 
 
         [HttpGet("Paged/All")]
-        public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List(string? filter, [Required] int page = 1)
+        public async Task<ResponseBase<Pagination<IssueListDTO>?>> List(string? filter, [Required] int page = 1)
         {
-            ResponseDTO<PagedResultDTO<IssueListDTO>?> response = await _service.ListPagedAll(filter, page);
+            ResponseBase<Pagination<IssueListDTO>?> response = await _service.ListPagedAll(filter, page);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpGet("Paged/Doing")]
-        public async Task<ResponseDTO<PagedResultDTO<IssueListDTO>?>> List([Required] int page = 1)
+        public async Task<ResponseBase<Pagination<IssueListDTO>?>> List([Required] int page = 1)
         {
-            ResponseDTO<PagedResultDTO<IssueListDTO>?> response = await _service.ListPagedDoing(page);
+            ResponseBase<Pagination<IssueListDTO>?> response = await _service.ListPagedDoing(page);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpGet("Doing")]
-        public async Task<ResponseDTO<List<IssueListDTO>?>> List()
+        public async Task<ResponseBase<List<IssueListDTO>?>> List()
         {
-            ResponseDTO<List<IssueListDTO>?> response = await _service.ListDoing();
+            ResponseBase<List<IssueListDTO>?> response = await _service.ListDoing();
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpPost]
-        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Staff)]
-        public async Task<ResponseDTO<bool>> Create(IssueCreateDTO DTO)
+        [Role(Role.Admin, Role.Staff)]
+        public async Task<ResponseBase<bool>> Create(IssueCreateDTO DTO)
         {
-            ResponseDTO<bool> response;
+            ResponseBase<bool> response;
             Guid? CreatorID = getUserID();
             if (CreatorID == null)
             {
-                response = new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
+                response = new ResponseBase<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
             }
             else
             {
@@ -64,27 +66,27 @@ namespace API.Controllers
         }
 
         [HttpPut("{IssueID}")]
-        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Staff)]
-        public async Task<ResponseDTO<bool>> Update([Required] Guid IssueID, [Required] IssueUpdateDTO DTO)
+        [Role(Role.Admin, Role.Staff)]
+        public async Task<ResponseBase<bool>> Update([Required] Guid IssueID, [Required] IssueUpdateDTO DTO)
         {
-            ResponseDTO<bool> response = await _service.Update(IssueID, DTO);
+            ResponseBase<bool> response = await _service.Update(IssueID, DTO);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpDelete("{IssueID}")]
-        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Staff)]
-        public async Task<ResponseDTO<bool>> Delete([Required] Guid IssueID)
+        [Role(Role.Admin, Role.Staff)]
+        public async Task<ResponseBase<bool>> Delete([Required] Guid IssueID)
         {
-            ResponseDTO<bool> response = await _service.Delete(IssueID);
+            ResponseBase<bool> response = await _service.Delete(IssueID);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpGet("{IssueID}")]
-        public async Task<ResponseDTO<List<IssueDetailDTO>?>> Detail([Required] Guid IssueID)
+        public async Task<ResponseBase<List<IssueDetailDTO>?>> Detail([Required] Guid IssueID)
         {
-            ResponseDTO<List<IssueDetailDTO>?> response = await _service.Detail(IssueID);
+            ResponseBase<List<IssueDetailDTO>?> response = await _service.Detail(IssueID);
             Response.StatusCode = response.Code;
             return response;
         }

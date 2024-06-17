@@ -1,12 +1,12 @@
-﻿using DataAccess.DTO.WarehouseDTO;
-using DataAccess.DTO;
-using System.ComponentModel;
-using DataAccess.Entity;
-using DataAccess.Const;
-using System.Net;
-using API.Model.DAO;
-using API.Services.IService;
+﻿using API.Services.IService;
 using AutoMapper;
+using Common.Base;
+using Common.Const;
+using Common.DTO.WarehouseDTO;
+using Common.Entity;
+using Common.Pagination;
+using DataAccess.DAO;
+using System.Net;
 
 namespace API.Services.Service
 {
@@ -18,39 +18,39 @@ namespace API.Services.Service
         {
         }
 
-        public async Task<ResponseDTO<PagedResultDTO<WarehouseListDTO>?>> ListPaged(string? name, int page)
+        public async Task<ResponseBase<Pagination<WarehouseListDTO>?>> ListPaged(string? name, int page)
         {
             try
             {
                 List<Warehouse> list = await daoWarehouse.getListPaged(name, page);
                 List<WarehouseListDTO> DTOs = _mapper.Map<List<WarehouseListDTO>>(list);
                 int RowCount = await daoWarehouse.getRowCount(name);
-                PagedResultDTO<WarehouseListDTO> result = new PagedResultDTO<WarehouseListDTO>(page, RowCount, PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE, DTOs);
-                return new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(result, string.Empty);
+                Pagination<WarehouseListDTO> result = new Pagination<WarehouseListDTO>(page, RowCount, PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE, DTOs);
+                return new ResponseBase<Pagination<WarehouseListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<PagedResultDTO<WarehouseListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<Pagination<WarehouseListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
-        }   
-        public async Task<ResponseDTO<List<WarehouseListDTO>?>> ListAll()
+        }
+        public async Task<ResponseBase<List<WarehouseListDTO>?>> ListAll()
         {
             try
             {
                 List<Warehouse> list = await daoWarehouse.getListAll();
                 List<WarehouseListDTO> data = _mapper.Map<List<WarehouseListDTO>>(list);
-                return new ResponseDTO<List<WarehouseListDTO>?>(data, string.Empty);
+                return new ResponseBase<List<WarehouseListDTO>?>(data, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<List<WarehouseListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<List<WarehouseListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> Create(WarehouseCreateUpdateDTO DTO, Guid CreatorID)
+        public async Task<ResponseBase<bool>> Create(WarehouseCreateUpdateDTO DTO, Guid CreatorID)
         {
             if (DTO.WarehouseName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên kho không được để trống", (int)HttpStatusCode.NotAcceptable);
+                return new ResponseBase<bool>(false, "Tên kho không được để trống", (int)HttpStatusCode.NotAcceptable);
             }
             try
             {
@@ -66,14 +66,14 @@ namespace API.Services.Service
                     IsDeleted = false,
                 };
                 await daoWarehouse.CreateWarehouse(ware);
-                return new ResponseDTO<bool>(true, "Tạo thành công");
+                return new ResponseBase<bool>(true, "Tạo thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> Update(int WarehouseID, WarehouseCreateUpdateDTO DTO)
+        public async Task<ResponseBase<bool>> Update(int WarehouseID, WarehouseCreateUpdateDTO DTO)
         {
             try
             {
@@ -81,25 +81,25 @@ namespace API.Services.Service
                 // if not found
                 if (ware == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy kho", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy kho", (int)HttpStatusCode.NotFound);
                 }
                 if (DTO.WarehouseName.Trim().Length == 0)
                 {
-                    return new ResponseDTO<bool>(false, "Tên kho không được để trống", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Tên kho không được để trống", (int)HttpStatusCode.Conflict);
                 }
                 ware.WarehouseName = DTO.WarehouseName.Trim();
                 ware.WarehouseKeeperid = DTO.WarehouseKeeperId;
                 ware.WarehouseAddress = DTO.WarehouseAddress == null || DTO.WarehouseAddress.Trim().Length == 0 ? null : DTO.WarehouseAddress.Trim();
                 ware.UpdateAt = DateTime.Now;
                 await daoWarehouse.UpdateWarehouse(ware);
-                return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
+                return new ResponseBase<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> Delete(int WarehouseID)
+        public async Task<ResponseBase<bool>> Delete(int WarehouseID)
         {
             try
             {
@@ -107,14 +107,14 @@ namespace API.Services.Service
                 // if not found
                 if (ware == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy kho", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy kho", (int)HttpStatusCode.NotFound);
                 }
                 await daoWarehouse.DeleteWarehouse(ware);
-                return new ResponseDTO<bool>(true, "Xóa thành công");
+                return new ResponseBase<bool>(true, "Xóa thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
     }

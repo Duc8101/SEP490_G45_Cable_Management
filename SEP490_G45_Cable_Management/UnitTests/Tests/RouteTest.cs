@@ -1,4 +1,6 @@
-﻿using DataAccess.DTO.RouteDTO;
+﻿using Common.Const;
+using Common.DTO.RouteDTO;
+using Common.Pagination;
 
 namespace UnitTests.Tests
 {
@@ -122,8 +124,8 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             routeService.Setup(x => x.ListPaged(page))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<RouteListDTO>?>(
-                    new PagedResultDTO<RouteListDTO>(page, expectedRowCount,
+                .ReturnsAsync(new ResponseDTO<Pagination<RouteListDTO>?>(
+                    new Pagination<RouteListDTO>(page, expectedRowCount,
                                                      PageSizeConst.MAX_ROUTE_LIST_IN_PAGE, expectedRoutes),
                     string.Empty));
 

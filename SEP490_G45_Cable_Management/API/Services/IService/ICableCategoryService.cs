@@ -1,13 +1,14 @@
-﻿using DataAccess.DTO.CableCategoryDTO;
-using DataAccess.DTO;
+﻿using Common.Base;
+using Common.DTO.CableCategoryDTO;
+using Common.Pagination;
 
 namespace API.Services.IService
 {
     public interface ICableCategoryService
     {
-        Task<ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>> ListPaged(string? name, int page);
-        Task<ResponseDTO<List<CableCategoryListDTO>?>> ListAll();
-        Task<ResponseDTO<bool>> Create(CableCategoryCreateUpdateDTO DTO);
-        Task<ResponseDTO<bool>> Update(int CableCategoryID, CableCategoryCreateUpdateDTO DTO);
+        Task<ResponseBase<Pagination<CableCategoryListDTO>?>> ListPaged(string? name, int page);
+        Task<ResponseBase<List<CableCategoryListDTO>?>> ListAll();
+        Task<ResponseBase<bool>> Create(CableCategoryCreateUpdateDTO DTO);
+        Task<ResponseBase<bool>> Update(int CableCategoryID, CableCategoryCreateUpdateDTO DTO);
     }
 }

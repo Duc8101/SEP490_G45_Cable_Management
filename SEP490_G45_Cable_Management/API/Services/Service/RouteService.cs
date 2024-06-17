@@ -1,14 +1,15 @@
-﻿using API.Model.DAO;
-using API.Services.IService;
+﻿using API.Services.IService;
 using AutoMapper;
-using DataAccess.Const;
-using DataAccess.DTO;
-using DataAccess.DTO.RouteDTO;
+using Common.Base;
+using Common.Const;
+using Common.DTO.RouteDTO;
+using Common.Pagination;
+using DataAccess.DAO;
 using System.Net;
 
 namespace API.Services.Service
 {
-    public class RouteService : BaseService,  IRouteService
+    public class RouteService : BaseService, IRouteService
     {
         private readonly DAORoute daoRoute = new DAORoute();
 
@@ -16,50 +17,50 @@ namespace API.Services.Service
         {
         }
 
-        public async Task<ResponseDTO<List<RouteListDTO>?>> ListAll(string? name)
+        public async Task<ResponseBase<List<RouteListDTO>?>> ListAll(string? name)
         {
             try
             {
-                List<DataAccess.Entity.Route> list = await daoRoute.getListAll(name);
+                List<Common.Entity.Route> list = await daoRoute.getListAll(name);
                 List<RouteListDTO> result = _mapper.Map<List<RouteListDTO>>(list);
-                return new ResponseDTO<List<RouteListDTO>?>(result, string.Empty);
+                return new ResponseBase<List<RouteListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<List<RouteListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<List<RouteListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
 
-        public async Task<ResponseDTO<PagedResultDTO<RouteListDTO>?>> ListPaged(int page)
+        public async Task<ResponseBase<Pagination<RouteListDTO>?>> ListPaged(int page)
         {
             try
             {
-                List<DataAccess.Entity.Route> list = await daoRoute.getListPaged(page);
+                List<Common.Entity.Route> list = await daoRoute.getListPaged(page);
                 List<RouteListDTO> DTOs = _mapper.Map<List<RouteListDTO>>(list);
                 int RowCount = await daoRoute.getRowCount();
-                PagedResultDTO<RouteListDTO> result = new PagedResultDTO<RouteListDTO>(page, RowCount, PageSizeConst.MAX_ROUTE_LIST_IN_PAGE, DTOs);
-                return new ResponseDTO<PagedResultDTO<RouteListDTO>?>(result, string.Empty);
+                Pagination<RouteListDTO> result = new Pagination<RouteListDTO>(page, RowCount, PageSizeConst.MAX_ROUTE_LIST_IN_PAGE, DTOs);
+                return new ResponseBase<Pagination<RouteListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<PagedResultDTO<RouteListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<Pagination<RouteListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
 
-        public async Task<ResponseDTO<bool>> Create(RouteCreateDTO DTO)
+        public async Task<ResponseBase<bool>> Create(RouteCreateDTO DTO)
         {
             if (DTO.RouteName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên tuyến không được để trống", (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Tên tuyến không được để trống", (int)HttpStatusCode.Conflict);
             }
             try
             {
                 // if exist
                 if (await daoRoute.isExist(DTO.RouteName.Trim()))
                 {
-                    return new ResponseDTO<bool>(false, "Tên tuyến đã tồn tại", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Tên tuyến đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
-                DataAccess.Entity.Route route = new DataAccess.Entity.Route()
+                Common.Entity.Route route = new Common.Entity.Route()
                 {
                     RouteId = Guid.NewGuid(),
                     RouteName = DTO.RouteName.Trim(),
@@ -68,30 +69,30 @@ namespace API.Services.Service
                     IsDeleted = false
                 };
                 await daoRoute.CreateRoute(route);
-                return new ResponseDTO<bool>(true, "Tạo thành công");
+                return new ResponseBase<bool>(true, "Tạo thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
 
-        public async Task<ResponseDTO<bool>> Delete(Guid RouteID)
+        public async Task<ResponseBase<bool>> Delete(Guid RouteID)
         {
             try
             {
-                DataAccess.Entity.Route? route = await daoRoute.getRoute(RouteID);
+                Common.Entity.Route? route = await daoRoute.getRoute(RouteID);
                 // if not found
                 if (route == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy tên tuyến", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy tên tuyến", (int)HttpStatusCode.NotFound);
                 }
                 await daoRoute.DeleteRoute(route);
-                return new ResponseDTO<bool>(true, "Xóa thành công");
+                return new ResponseBase<bool>(true, "Xóa thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
     }

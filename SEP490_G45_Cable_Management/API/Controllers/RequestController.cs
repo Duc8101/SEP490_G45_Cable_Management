@@ -1,8 +1,9 @@
 ﻿using API.Attributes;
 using API.Services.IService;
-using DataAccess.DTO;
-using DataAccess.DTO.RequestDTO;
-using DataAccess.Entity;
+using Common.Base;
+using Common.DTO.RequestDTO;
+using Common.Enum;
+using Common.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -22,9 +23,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ResponseDTO<PagedResultDTO<RequestListDTO>?>> List(string? name, int? RequestCategoryID, string? status, [Required] int page = 1)
+        public async Task<ResponseBase<Pagination<RequestListDTO>?>> List(string? name, int? RequestCategoryID, string? status, [Required] int page = 1)
         {
-            ResponseDTO<PagedResultDTO<RequestListDTO>?> response;
+            ResponseBase<Pagination<RequestListDTO>?> response;
             // if admin, leader
             if (isAdmin() || isLeader())
             {
@@ -35,7 +36,7 @@ namespace API.Controllers
                 Guid? CreatorID = getUserID();
                 if (CreatorID == null)
                 {
-                    response = new ResponseDTO<PagedResultDTO<RequestListDTO>?>(null, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
+                    response = new ResponseBase<Pagination<RequestListDTO>?>(null, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
                 }
                 else
                 {
@@ -47,13 +48,13 @@ namespace API.Controllers
         }
 
         [HttpPost("Export")]
-        public async Task<ResponseDTO<bool>> Create([Required] RequestCreateExportDTO DTO)
+        public async Task<ResponseBase<bool>> Create([Required] RequestCreateExportDTO DTO)
         {
-            ResponseDTO<bool> response;
+            ResponseBase<bool> response;
             Guid? CreatorID = getUserID();
             if (CreatorID == null)
             {
-                response = new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
+                response = new ResponseBase<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
             }
             else
             {
@@ -64,13 +65,13 @@ namespace API.Controllers
         }
 
         [HttpPost("Recovery")]
-        public async Task<ResponseDTO<bool>> Create([Required] RequestCreateRecoveryDTO DTO)
+        public async Task<ResponseBase<bool>> Create([Required] RequestCreateRecoveryDTO DTO)
         {
-            ResponseDTO<bool> response;
+            ResponseBase<bool> response;
             Guid? CreatorID = getUserID();
             if (CreatorID == null)
             {
-                response = new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
+                response = new ResponseBase<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
             }
             else
             {
@@ -81,13 +82,13 @@ namespace API.Controllers
         }
 
         [HttpPost("Deliver")]
-        public async Task<ResponseDTO<bool>> Create([Required] RequestCreateDeliverDTO DTO)
+        public async Task<ResponseBase<bool>> Create([Required] RequestCreateDeliverDTO DTO)
         {
-            ResponseDTO<bool> response;
+            ResponseBase<bool> response;
             Guid? CreatorID = getUserID();
             if (CreatorID == null)
             {
-                response = new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
+                response = new ResponseBase<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
             }
             else
             {
@@ -98,20 +99,20 @@ namespace API.Controllers
         }
 
         [HttpPut("{RequestID}")]
-        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Leader)]
-        public async Task<ResponseDTO<bool>> Approve([Required] Guid RequestID)
+        [Role(Role.Admin, Role.Leader)]
+        public async Task<ResponseBase<bool>> Approve([Required] Guid RequestID)
         {
-            ResponseDTO<bool> response;
+            ResponseBase<bool> response;
             Guid? ApproverID = getUserID();
             string? FirstName = getFirstName();
             string? LastName = getLastName();
             if (ApproverID == null)
             {
-                response = new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
+                response = new ResponseBase<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
             }
             else if (FirstName == null || LastName == null)
             {
-                response = new ResponseDTO<bool>(false, "Không tìm thấy tên của bạn. Vui lòng kiểm tra thông tin đăng nhập");
+                response = new ResponseBase<bool>(false, "Không tìm thấy tên của bạn. Vui lòng kiểm tra thông tin đăng nhập");
             }
             else
             {
@@ -122,14 +123,14 @@ namespace API.Controllers
         }
 
         [HttpPut("{RequestID}")]
-        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Leader)]
-        public async Task<ResponseDTO<bool>> Reject([Required] Guid RequestID)
+        [Role(Role.Admin, Role.Leader)]
+        public async Task<ResponseBase<bool>> Reject([Required] Guid RequestID)
         {
-            ResponseDTO<bool> response;
+            ResponseBase<bool> response;
             Guid? RejectorID = getUserID();
             if (RejectorID == null)
             {
-                response = new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
+                response = new ResponseBase<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
             }
             else
             {
@@ -140,14 +141,14 @@ namespace API.Controllers
         }
 
         [HttpPost("Cancel-Inside-Warehouse")]
-        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Staff, DataAccess.Enum.Role.Warehouse_Keeper)]
-        public async Task<ResponseDTO<bool>> Create([Required] RequestCreateCancelInsideDTO DTO)
+        [Role(Role.Admin, Role.Staff, Role.Warehouse_Keeper)]
+        public async Task<ResponseBase<bool>> Create([Required] RequestCreateCancelInsideDTO DTO)
         {
-            ResponseDTO<bool> response;
+            ResponseBase<bool> response;
             Guid? CreatorID = getUserID();
             if (CreatorID == null)
             {
-                response = new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
+                response = new ResponseBase<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
             }
             else
             {
@@ -158,14 +159,14 @@ namespace API.Controllers
         }
 
         [HttpPost("Cancel-Outside-Warehouse")]
-        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Staff, DataAccess.Enum.Role.Warehouse_Keeper)]
-        public async Task<ResponseDTO<bool>> Create([Required] RequestCreateCancelOutsideDTO DTO)
+        [Role(Role.Admin, Role.Staff, Role.Warehouse_Keeper)]
+        public async Task<ResponseBase<bool>> Create([Required] RequestCreateCancelOutsideDTO DTO)
         {
-            ResponseDTO<bool> response;
+            ResponseBase<bool> response;
             Guid? CreatorID = getUserID();
             if (CreatorID == null)
             {
-                response = new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
+                response = new ResponseBase<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập");
             }
             else
             {
@@ -176,17 +177,17 @@ namespace API.Controllers
         }
 
         [HttpDelete("{RequestID}")]
-        public async Task<ResponseDTO<bool>> Delete([Required] Guid RequestID)
+        public async Task<ResponseBase<bool>> Delete([Required] Guid RequestID)
         {
-            ResponseDTO<bool> response = await _service.Delete(RequestID);
+            ResponseBase<bool> response = await _service.Delete(RequestID);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpGet("{RequestID}")]
-        public async Task<ResponseDTO<RequestDetailDTO?>> Detail([Required] Guid RequestID)
+        public async Task<ResponseBase<RequestDetailDTO?>> Detail([Required] Guid RequestID)
         {
-            ResponseDTO<RequestDetailDTO?> response = await _service.Detail(RequestID);
+            ResponseBase<RequestDetailDTO?> response = await _service.Detail(RequestID);
             Response.StatusCode = response.Code;
             return response;
         }

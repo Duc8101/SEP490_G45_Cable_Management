@@ -1,5 +1,6 @@
-﻿using DataAccess.DTO.NodeMaterialCategoryDTO;
-using DataAccess.Entity;
+﻿using Common.Const;
+using Common.DTO;
+using Common.DTO.NodeMaterialCategoryDTO;
 
 namespace UnitTests.Tests
 {

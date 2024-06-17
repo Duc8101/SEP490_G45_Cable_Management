@@ -1,5 +1,6 @@
-﻿using DataAccess.DTO.OtherMaterialsCategoryDTO;
-using Moq;
+﻿using Common.Const;
+using Common.DTO.OtherMaterialsCategoryDTO;
+using Common.Pagination;
 
 namespace UnitTests.Tests
 {
@@ -48,8 +49,8 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsCategoryService.Setup(x => x.ListPaged(null, expectedPage))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>>(
-                    new PagedResultDTO<OtherMaterialsCategoryListDTO>(
+                .ReturnsAsync(new ResponseDTO<Pagination<OtherMaterialsCategoryListDTO>>(
+                    new Pagination<OtherMaterialsCategoryListDTO>(
                         expectedPage, expectedRowCount, PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE, expectedList),
                     string.Empty));
 

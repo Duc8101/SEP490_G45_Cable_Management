@@ -1,5 +1,5 @@
-﻿using DataAccess.DTO;
-using DataAccess.Entity;
+﻿using Common.Base;
+using Common.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
@@ -14,7 +14,7 @@ namespace API.Attributes
             User? user = (User?)context.HttpContext.Items["user"];
             if (user == null)
             {
-                ResponseDTO<object?> result = new ResponseDTO<object?>(null, "Unauthorized", (int)HttpStatusCode.Unauthorized);
+                ResponseBase<object?> result = new ResponseBase<object?>(null, "Unauthorized", (int)HttpStatusCode.Unauthorized);
                 context.Result = new JsonResult(result)
                 {
                     StatusCode = (int)HttpStatusCode.Unauthorized,

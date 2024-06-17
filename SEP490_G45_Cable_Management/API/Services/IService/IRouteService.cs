@@ -1,13 +1,14 @@
-﻿using DataAccess.DTO.RouteDTO;
-using DataAccess.DTO;
+﻿using Common.Base;
+using Common.DTO.RouteDTO;
+using Common.Pagination;
 
 namespace API.Services.IService
 {
     public interface IRouteService
     {
-        Task<ResponseDTO<List<RouteListDTO>?>> ListAll(string? name);
-        Task<ResponseDTO<PagedResultDTO<RouteListDTO>?>> ListPaged(int page);
-        Task<ResponseDTO<bool>> Create(RouteCreateDTO DTO);
-        Task<ResponseDTO<bool>> Delete(Guid RouteID);
+        Task<ResponseBase<List<RouteListDTO>?>> ListAll(string? name);
+        Task<ResponseBase<Pagination<RouteListDTO>?>> ListPaged(int page);
+        Task<ResponseBase<bool>> Create(RouteCreateDTO DTO);
+        Task<ResponseBase<bool>> Delete(Guid RouteID);
     }
 }

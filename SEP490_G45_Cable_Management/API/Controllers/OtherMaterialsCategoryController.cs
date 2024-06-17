@@ -1,7 +1,9 @@
 ﻿using API.Attributes;
 using API.Services.IService;
-using DataAccess.DTO;
-using DataAccess.DTO.OtherMaterialsCategoryDTO;
+using Common.Base;
+using Common.DTO.OtherMaterialsCategoryDTO;
+using Common.Enum;
+using Common.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -20,36 +22,36 @@ namespace API.Controllers
         }
 
         [HttpGet("Paged")]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>> List(string? name, [Required] int page = 1)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<Pagination<OtherMaterialsCategoryListDTO>?>> List(string? name, [Required] int page = 1)
         {
-            ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?> response = await _service.ListPaged(name, page);
+            ResponseBase<Pagination<OtherMaterialsCategoryListDTO>?> response = await _service.ListPaged(name, page);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpGet("All")]
-        public async Task<ResponseDTO<List<OtherMaterialsCategoryListDTO>?>> List()
+        public async Task<ResponseBase<List<OtherMaterialsCategoryListDTO>?>> List()
         {
-            ResponseDTO<List<OtherMaterialsCategoryListDTO>?> response = await _service.ListAll();
+            ResponseBase<List<OtherMaterialsCategoryListDTO>?> response = await _service.ListAll();
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpPost]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<bool>> Create([Required] OtherMaterialsCategoryCreateUpdateDTO DTO)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<bool>> Create([Required] OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
-            ResponseDTO<bool> response = await _service.Create(DTO);
+            ResponseBase<bool> response = await _service.Create(DTO);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpPut("{OtherMaterialsCategoryID}")]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<bool>> Update([Required] int OtherMaterialsCategoryID, [Required] OtherMaterialsCategoryCreateUpdateDTO DTO)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<bool>> Update([Required] int OtherMaterialsCategoryID, [Required] OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
-            ResponseDTO<bool> response = await _service.Update(OtherMaterialsCategoryID, DTO);
+            ResponseBase<bool> response = await _service.Update(OtherMaterialsCategoryID, DTO);
             Response.StatusCode = response.Code;
             return response;
         }

@@ -1,18 +1,18 @@
 ﻿using AutoMapper;
-using DataAccess.DTO.CableCategoryDTO;
-using DataAccess.DTO.CableDTO;
-using DataAccess.DTO.IssueDTO;
-using DataAccess.DTO.NodeDTO;
-using DataAccess.DTO.NodeMaterialCategoryDTO;
-using DataAccess.DTO.OtherMaterialsCategoryDTO;
-using DataAccess.DTO.OtherMaterialsDTO;
-using DataAccess.DTO.RequestDTO;
-using DataAccess.DTO.RouteDTO;
-using DataAccess.DTO.SupplierDTO;
-using DataAccess.DTO.TransactionDTO;
-using DataAccess.DTO.UserDTO;
-using DataAccess.DTO.WarehouseDTO;
-using DataAccess.Entity;
+using Common.DTO.CableCategoryDTO;
+using Common.DTO.CableDTO;
+using Common.DTO.IssueDTO;
+using Common.DTO.NodeDTO;
+using Common.DTO.NodeMaterialCategoryDTO;
+using Common.DTO.OtherMaterialsCategoryDTO;
+using Common.DTO.OtherMaterialsDTO;
+using Common.DTO.RequestDTO;
+using Common.DTO.RouteDTO;
+using Common.DTO.SupplierDTO;
+using Common.DTO.TransactionDTO;
+using Common.DTO.UserDTO;
+using Common.DTO.WarehouseDTO;
+using Common.Entity;
 
 namespace API
 {
@@ -50,7 +50,7 @@ namespace API
             CreateMap<OtherMaterialsCreateUpdateDTO, OtherMaterial>()
                 .ForMember(des => des.Unit, src => src.MapFrom(o => o.Unit.Trim()))
                 .ForMember(des => des.Status, src => src.MapFrom(o => o.Status.Trim()));
-            CreateMap<DataAccess.Entity.Route, RouteListDTO>();
+            CreateMap<Common.Entity.Route, RouteListDTO>();
             CreateMap<Supplier, SupplierListDTO>();
             CreateMap<SupplierCreateUpdateDTO, Supplier>()
                 .ForMember(des => des.SupplierName, src => src.MapFrom(s => s.SupplierName.Trim()))

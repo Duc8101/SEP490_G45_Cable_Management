@@ -1,18 +1,18 @@
-﻿using DataAccess.DTO.UserDTO;
-using DataAccess.DTO;
-using DataAccess.Entity;
+﻿using Common.Base;
+using Common.DTO.UserDTO;
+using Common.Pagination;
 
 namespace API.Services.IService
 {
     public interface IUserService
     {
-        Task<ResponseDTO<TokenDTO?>> Login(LoginDTO DTO);
-        Task<ResponseDTO<bool>> Create(UserCreateDTO DTO);
-        Task<ResponseDTO<bool>> ForgotPassword(ForgotPasswordDTO DTO);
-        Task<ResponseDTO<bool>> ChangePassword(ChangePasswordDTO DTO, string email);
-        Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> ListPaged(string? filter, int page);
-        Task<ResponseDTO<bool>> Update(Guid UserID, UserUpdateDTO DTO);
-        Task<ResponseDTO<bool>> Delete(Guid UserID, Guid UserLoginID);
-        Task<ResponseDTO<List<UserListDTO>?>> ListWarehouseKeeper();
+        Task<ResponseBase<TokenDTO?>> Login(LoginDTO DTO);
+        Task<ResponseBase<bool>> Create(UserCreateDTO DTO);
+        Task<ResponseBase<bool>> ForgotPassword(ForgotPasswordDTO DTO);
+        Task<ResponseBase<bool>> ChangePassword(ChangePasswordDTO DTO, string email);
+        Task<ResponseBase<Pagination<UserListDTO>?>> ListPaged(string? filter, int page);
+        Task<ResponseBase<bool>> Update(Guid UserID, UserUpdateDTO DTO);
+        Task<ResponseBase<bool>> Delete(Guid UserID, Guid UserLoginID);
+        Task<ResponseBase<List<UserListDTO>?>> ListWarehouseKeeper();
     }
 }

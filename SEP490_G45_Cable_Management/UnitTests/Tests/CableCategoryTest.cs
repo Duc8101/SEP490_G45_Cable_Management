@@ -1,4 +1,7 @@
-﻿using DataAccess.DTO.CableCategoryDTO;
+﻿using Common.Base;
+using Common.Const;
+using Common.DTO.CableCategoryDTO;
+using Common.Pagination;
 
 namespace UnitTests.Tests
 {
@@ -28,7 +31,7 @@ namespace UnitTests.Tests
             // Arrange
             string? name = "SampleName";
             int page = 1;
-            var expectedResult = new PagedResultDTO<CableCategoryListDTO>(1, 1, 12, new List<CableCategoryListDTO>());
+            var expectedResult = new Pagination<CableCategoryListDTO>(1, 1, 12, new List<CableCategoryListDTO>());
 
             // Simulate user with admin role
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, "Admin") }));
@@ -37,7 +40,7 @@ namespace UnitTests.Tests
             controller.ControllerContext = context;
 
             cableCategoryService.Setup(x => x.ListPaged(name, page))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<CableCategoryListDTO>>(expectedResult, string.Empty));
+                .ReturnsAsync(new ResponseBase<Pagination<CableCategoryListDTO>>(expectedResult, string.Empty));
 
             // Act
             var result = await controller.List(name, page);
@@ -64,7 +67,7 @@ namespace UnitTests.Tests
             controller.ControllerContext = context;
 
             cableCategoryService.Setup(x => x.ListAll())
-                .ReturnsAsync(new ResponseDTO<List<CableCategoryListDTO>?>(expectedList, string.Empty));
+                .ReturnsAsync(new ResponseBase<List<CableCategoryListDTO>?>(expectedList, string.Empty));
 
             // Act
             var result = await controller.List();
@@ -88,7 +91,7 @@ namespace UnitTests.Tests
             controller.ControllerContext = context;
 
             cableCategoryService.Setup(x => x.Create(sampleData))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Tên cáp không được để trống", (int)HttpStatusCode.Conflict));
+                .ReturnsAsync(new ResponseBase<bool>(false, "Tên cáp không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
             var result = await controller.Create(sampleData);
@@ -111,7 +114,7 @@ namespace UnitTests.Tests
             var context = new ControllerContext { HttpContext = new DefaultHttpContext { User = user } };
             controller.ControllerContext = context;
 
-            cableCategoryService.Setup(x => x.Create(sampleData)).ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
+            cableCategoryService.Setup(x => x.Create(sampleData)).ReturnsAsync(new ResponseBase<bool>(true, "Tạo thành công"));
 
             // Act
             var result = await controller.Create(sampleData);
@@ -161,7 +164,7 @@ namespace UnitTests.Tests
         public async Task UpdateCableCategory_WhenCallByAdmin_RetrieveService()
         {
             controller.ControllerContext.HttpContext = contextMock.Object;
-            cableCategoryService.Setup(x => x.Update(2, modelCU)).ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
+            cableCategoryService.Setup(x => x.Update(2, modelCU)).ReturnsAsync(new ResponseBase<bool>(true, "Chỉnh sửa thành công"));
             var result = await controller.Update(2, modelCU);
             cableCategoryService.Verify(s => s.Update(2, modelCU));
             Assert.NotNull(result);

@@ -1,10 +1,11 @@
-﻿using API.Model.DAO;
-using API.Services.IService;
+﻿using API.Services.IService;
 using AutoMapper;
-using DataAccess.Const;
-using DataAccess.DTO;
-using DataAccess.DTO.TransactionDTO;
-using DataAccess.Entity;
+using Common.Base;
+using Common.Const;
+using Common.DTO.TransactionDTO;
+using Common.Entity;
+using Common.Pagination;
+using DataAccess.DAO;
 using System.Net;
 
 namespace API.Services.Service
@@ -19,29 +20,29 @@ namespace API.Services.Service
         {
         }
 
-        public async Task<ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>> List(string? filter, int? WareHouseID, int page)
+        public async Task<ResponseBase<Pagination<TransactionHistoryDTO>?>> List(string? filter, int? WareHouseID, int page)
         {
             try
             {
                 List<TransactionHistory> list = await daoHistory.getList(filter, WareHouseID, page);
                 List<TransactionHistoryDTO> DTOs = _mapper.Map<List<TransactionHistoryDTO>>(list);
                 int RowCount = await daoHistory.getRowCount(filter, WareHouseID);
-                PagedResultDTO<TransactionHistoryDTO> result = new PagedResultDTO<TransactionHistoryDTO>(page, RowCount, PageSizeConst.MAX_TRANSACTION_LIST_IN_PAGE, DTOs);
-                return new ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>(result, string.Empty);
+                Pagination<TransactionHistoryDTO> result = new Pagination<TransactionHistoryDTO>(page, RowCount, PageSizeConst.MAX_TRANSACTION_LIST_IN_PAGE, DTOs);
+                return new ResponseBase<Pagination<TransactionHistoryDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<Pagination<TransactionHistoryDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<TransactionDetailDTO?>> Detail(Guid TransactionID)
+        public async Task<ResponseBase<TransactionDetailDTO?>> Detail(Guid TransactionID)
         {
             try
             {
                 TransactionHistory? history = await daoHistory.getTransactionHistory(TransactionID);
                 if (history == null)
                 {
-                    return new ResponseDTO<TransactionDetailDTO?>(null, "Không tìm thấy giao dịch", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<TransactionDetailDTO?>(null, "Không tìm thấy giao dịch", (int)HttpStatusCode.NotFound);
                 }
                 List<TransactionCable> listCable = await daoTransactionCable.getList(TransactionID);
                 List<TransactionCableDTO> cableDTOs = _mapper.Map<List<TransactionCableDTO>>(listCable);
@@ -50,11 +51,11 @@ namespace API.Services.Service
                 TransactionDetailDTO data = _mapper.Map<TransactionDetailDTO>(history);
                 data.CableTransactions = cableDTOs;
                 data.MaterialsTransaction = materialDTOs;
-                return new ResponseDTO<TransactionDetailDTO?>(data, "");
+                return new ResponseBase<TransactionDetailDTO?>(data, "");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<TransactionDetailDTO?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<TransactionDetailDTO?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
     }

@@ -1,4 +1,7 @@
-﻿using DataAccess.DTO.IssueDTO;
+﻿using Common.Base;
+using Common.Const;
+using Common.DTO.IssueDTO;
+using Common.Pagination;
 
 namespace UnitTests.Tests
 {
@@ -34,8 +37,8 @@ namespace UnitTests.Tests
             controller.ControllerContext = context;
 
             issueService.Setup(x => x.ListPagedAll(filter, page))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<IssueListDTO>>(
-                    new PagedResultDTO<IssueListDTO>(page, expectedList.Count, expectedList.Count, expectedList), string.Empty));
+                .ReturnsAsync(new ResponseBase<Pagination<IssueListDTO>>(
+                    new Pagination<IssueListDTO>(page, expectedList.Count, expectedList.Count, expectedList), string.Empty));
 
             // Act
             var result = await controller.List(filter, page);
@@ -60,8 +63,8 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             issueService.Setup(x => x.ListPagedDoing(page))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<IssueListDTO>>(
-                    new PagedResultDTO<IssueListDTO>(page, mockRowCount, PageSizeConst.MAX_ISSUE_LIST_IN_PAGE, mockList),
+                .ReturnsAsync(new ResponseBase<Pagination<IssueListDTO>>(
+                    new Pagination<IssueListDTO>(page, mockRowCount, PageSizeConst.MAX_ISSUE_LIST_IN_PAGE, mockList),
                     string.Empty));
 
             // Act
@@ -81,7 +84,7 @@ namespace UnitTests.Tests
             {
             };
 
-            issueService.Setup(x => x.ListDoing()).ReturnsAsync(new ResponseDTO<List<IssueListDTO>>(expectedList, string.Empty));
+            issueService.Setup(x => x.ListDoing()).ReturnsAsync(new ResponseBase<List<IssueListDTO>>(expectedList, string.Empty));
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
@@ -131,7 +134,7 @@ namespace UnitTests.Tests
             Guid CreatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             issueService.Setup(x => x.Create(sampleData, CreatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Tên sự vụ không được để trống", (int)HttpStatusCode.Conflict));
+                .ReturnsAsync(new ResponseBase<bool>(false, "Tên sự vụ không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
             var result = await controller.Create(sampleData);
@@ -159,7 +162,7 @@ namespace UnitTests.Tests
             Guid CreatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             issueService.Setup(x => x.Create(sampleData, CreatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Mã sự vụ không được để trống", (int)HttpStatusCode.Conflict));
+                .ReturnsAsync(new ResponseBase<bool>(false, "Mã sự vụ không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
             var result = await controller.Create(sampleData);
@@ -187,7 +190,7 @@ namespace UnitTests.Tests
             var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             // Setup the necessary mocks
-            issueService.Setup(x => x.Create(sampleData, creatorId)).ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
+            issueService.Setup(x => x.Create(sampleData, creatorId)).ReturnsAsync(new ResponseBase<bool>(true, "Tạo thành công"));
 
             // Act
             var result = await controller.Create(sampleData);
@@ -215,7 +218,7 @@ namespace UnitTests.Tests
             var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             // Setup the necessary mocks
-            issueService.Setup(x => x.Create(sampleData, creatorId)).ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
+            issueService.Setup(x => x.Create(sampleData, creatorId)).ReturnsAsync(new ResponseBase<bool>(true, "Tạo thành công"));
 
             // Act
             var result = await controller.Create(sampleData);
@@ -271,7 +274,7 @@ namespace UnitTests.Tests
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
-            issueService.Setup(x => x.Update(issueId, sampleData)).ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
+            issueService.Setup(x => x.Update(issueId, sampleData)).ReturnsAsync(new ResponseBase<bool>(true, "Chỉnh sửa thành công"));
             // Act
             var result = await controller.Update(issueId, sampleData);
 
@@ -299,7 +302,7 @@ namespace UnitTests.Tests
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
-            issueService.Setup(x => x.Update(issueId, sampleData)).ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
+            issueService.Setup(x => x.Update(issueId, sampleData)).ReturnsAsync(new ResponseBase<bool>(true, "Chỉnh sửa thành công"));
             // Act
             var result = await controller.Update(issueId, sampleData);
 
@@ -329,7 +332,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             issueService.Setup(x => x.Update(issueId, sampleData))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound));
+                .ReturnsAsync(new ResponseBase<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Update(issueId, sampleData);
@@ -360,7 +363,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             issueService.Setup(x => x.Update(issueId, sampleData))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Tên sự vụ không được để trống", (int)HttpStatusCode.Conflict));
+                .ReturnsAsync(new ResponseBase<bool>(false, "Tên sự vụ không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
             var result = await controller.Update(issueId, sampleData);
@@ -390,7 +393,7 @@ namespace UnitTests.Tests
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
             issueService.Setup(x => x.Update(issueId, sampleData))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Mã sự vụ không được để trống", (int)HttpStatusCode.Conflict));
+                .ReturnsAsync(new ResponseBase<bool>(false, "Mã sự vụ không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
             var result = await controller.Update(issueId, sampleData);
@@ -426,7 +429,7 @@ namespace UnitTests.Tests
             // Arrange
             var issueId = Guid.NewGuid();
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
-            issueService.Setup(x => x.Delete(issueId)).ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
+            issueService.Setup(x => x.Delete(issueId)).ReturnsAsync(new ResponseBase<bool>(true, "Xóa thành công"));
 
             // Act
             var result = await controller.Delete(issueId);
@@ -443,7 +446,7 @@ namespace UnitTests.Tests
             // Arrange
             var issueId = Guid.NewGuid();
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
-            issueService.Setup(x => x.Delete(issueId)).ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
+            issueService.Setup(x => x.Delete(issueId)).ReturnsAsync(new ResponseBase<bool>(true, "Xóa thành công"));
 
             // Act
             var result = await controller.Delete(issueId);
@@ -464,7 +467,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             issueService.Setup(x => x.Delete(issueId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound));
+                .ReturnsAsync(new ResponseBase<bool>(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Delete(issueId);
@@ -483,7 +486,7 @@ namespace UnitTests.Tests
             Guid issueId = Guid.NewGuid();
 
 
-            var expertResult = new ResponseDTO<List<IssueDetailDTO>>(null, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
+            var expertResult = new ResponseBase<List<IssueDetailDTO>>(null, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
             issueService.Setup(x => x.Detail(issueId))
                         .ReturnsAsync(expertResult); // Corrected to use ReturnsAsync
 
@@ -510,7 +513,7 @@ namespace UnitTests.Tests
         // Add more IssueDetailDTO items as needed
     };
 
-            var expertResult = new ResponseDTO<List<IssueDetailDTO>>(issueDetails, string.Empty);
+            var expertResult = new ResponseBase<List<IssueDetailDTO>>(issueDetails, string.Empty);
 
             issueService.Setup(x => x.Detail(issueId))
                         .ReturnsAsync(expertResult);

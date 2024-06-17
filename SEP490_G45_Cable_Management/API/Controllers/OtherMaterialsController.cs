@@ -1,7 +1,9 @@
 ﻿using API.Attributes;
 using API.Services.IService;
-using DataAccess.DTO;
-using DataAccess.DTO.OtherMaterialsDTO;
+using Common.Base;
+using Common.DTO.OtherMaterialsDTO;
+using Common.Enum;
+using Common.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -21,10 +23,10 @@ namespace API.Controllers
         }
 
         [HttpGet("Paged")]
-        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Leader, DataAccess.Enum.Role.Warehouse_Keeper)]
-        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>> List(string? filter, int? WareHouseID, [Required] int page = 1)
+        [Role(Role.Admin, Role.Leader, Role.Warehouse_Keeper)]
+        public async Task<ResponseBase<Pagination<OtherMaterialsListDTO>?>> List(string? filter, int? WareHouseID, [Required] int page = 1)
         {
-            ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?> response;
+            ResponseBase<Pagination<OtherMaterialsListDTO>?> response;
             // if admin or leader
             if (isAdmin() || isLeader())
             {
@@ -35,7 +37,7 @@ namespace API.Controllers
                 Guid? WareHouseKeeperID = getUserID();
                 if (WareHouseKeeperID == null)
                 {
-                    response = new ResponseDTO<PagedResultDTO<OtherMaterialsListDTO>?>(null, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
+                    response = new ResponseBase<Pagination<OtherMaterialsListDTO>?>(null, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
                 }
                 else
                 {
@@ -47,36 +49,36 @@ namespace API.Controllers
         }
 
         [HttpGet("All")]
-        public async Task<ResponseDTO<List<OtherMaterialsListDTO>?>> List(int? WareHouseID)
+        public async Task<ResponseBase<List<OtherMaterialsListDTO>?>> List(int? WareHouseID)
         {
-            ResponseDTO<List<OtherMaterialsListDTO>?> response = await _service.ListAll(WareHouseID);
+            ResponseBase<List<OtherMaterialsListDTO>?> response = await _service.ListAll(WareHouseID);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpPost]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<bool>> Create([Required] OtherMaterialsCreateUpdateDTO DTO)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<bool>> Create([Required] OtherMaterialsCreateUpdateDTO DTO)
         {
-            ResponseDTO<bool> response = await _service.Create(DTO);
+            ResponseBase<bool> response = await _service.Create(DTO);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpPut("{OtherMaterialsID}")]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<bool>> Update([Required] int OtherMaterialsID, [Required] OtherMaterialsCreateUpdateDTO DTO)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<bool>> Update([Required] int OtherMaterialsID, [Required] OtherMaterialsCreateUpdateDTO DTO)
         {
-            ResponseDTO<bool> response = await _service.Update(OtherMaterialsID, DTO);
+            ResponseBase<bool> response = await _service.Update(OtherMaterialsID, DTO);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpDelete("{OtherMaterialsID}")]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<bool>> Delete([Required] int OtherMaterialsID)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<bool>> Delete([Required] int OtherMaterialsID)
         {
-            ResponseDTO<bool> response = await _service.Delete(OtherMaterialsID);
+            ResponseBase<bool> response = await _service.Delete(OtherMaterialsID);
             Response.StatusCode = response.Code;
             return response;
         }

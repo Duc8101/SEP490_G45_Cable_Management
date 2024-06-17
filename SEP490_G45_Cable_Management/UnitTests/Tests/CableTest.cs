@@ -1,4 +1,6 @@
-﻿using DataAccess.DTO.CableDTO;
+﻿using Common.Const;
+using Common.DTO.CableDTO;
+using Common.Pagination;
 
 namespace UnitTests.Tests
 {
@@ -37,9 +39,9 @@ namespace UnitTests.Tests
             // Arrange
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
-            var expectedPagedResult = new PagedResultDTO<CableListDTO>(1, 10, 5, new List<CableListDTO>());  // Provide expected paged result here
+            var expectedPagedResult = new Pagination<CableListDTO>(1, 10, 5, new List<CableListDTO>());  // Provide expected paged result here
             cableService.Setup(x => x.ListPaged(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<bool>(), It.IsAny<int>()))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<CableListDTO>?>(expectedPagedResult, string.Empty));
+                .ReturnsAsync(new ResponseDTO<Pagination<CableListDTO>?>(expectedPagedResult, string.Empty));
 
             // Act
             var result = await controller.List("filter", 1, true, 1);
@@ -58,9 +60,9 @@ namespace UnitTests.Tests
 
             var context = new ControllerContext { HttpContext = new DefaultHttpContext { User = user } };
             controller.ControllerContext = context;
-            var expectedPagedResult = new PagedResultDTO<CableListDTO>(1, 10, 5, new List<CableListDTO>());  // Provide expected paged result here
+            var expectedPagedResult = new Pagination<CableListDTO>(1, 10, 5, new List<CableListDTO>());  // Provide expected paged result here
             cableService.Setup(x => x.ListPaged(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<bool>(), It.IsAny<int>()))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<CableListDTO>?>(expectedPagedResult, string.Empty));
+                .ReturnsAsync(new ResponseDTO<Pagination<CableListDTO>?>(expectedPagedResult, string.Empty));
 
             // Act
             var result = await controller.List("filter", 1, true, 1);
@@ -79,9 +81,9 @@ namespace UnitTests.Tests
 
             var context = new ControllerContext { HttpContext = new DefaultHttpContext { User = user } };
             controller.ControllerContext = context;
-            var expectedPagedResult = new PagedResultDTO<CableListDTO>(1, 10, 5, new List<CableListDTO>());  // Provide expected paged result here
+            var expectedPagedResult = new Pagination<CableListDTO>(1, 10, 5, new List<CableListDTO>());  // Provide expected paged result here
             cableService.Setup(x => x.ListPaged(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<bool>(), It.IsAny<int>()))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<CableListDTO>?>(expectedPagedResult, string.Empty));
+                .ReturnsAsync(new ResponseDTO<Pagination<CableListDTO>?>(expectedPagedResult, string.Empty));
 
             // Act
             var result = await controller.List("filter", 1, true, 1);
@@ -107,10 +109,10 @@ namespace UnitTests.Tests
             var context = new ControllerContext { HttpContext = new DefaultHttpContext { User = user } };
             controller.ControllerContext = context;
 
-            var expectedResult = new PagedResultDTO<CableListDTO>(1, 10, 5, new List<CableListDTO>());
+            var expectedResult = new Pagination<CableListDTO>(1, 10, 5, new List<CableListDTO>());
 
             cableService.Setup(x => x.ListPaged(filter, warehouseId, isExportedToUse, page))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<CableListDTO>>(expectedResult, string.Empty));
+                .ReturnsAsync(new ResponseDTO<Pagination<CableListDTO>>(expectedResult, string.Empty));
 
             // Act
             var result = await controller.List(filter, warehouseId, isExportedToUse, page);

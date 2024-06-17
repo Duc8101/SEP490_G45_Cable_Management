@@ -1,11 +1,12 @@
-﻿using API.Model.DAO;
-using API.Model.Util;
-using API.Services.IService;
+﻿using API.Services.IService;
 using AutoMapper;
-using DataAccess.Const;
-using DataAccess.DTO;
-using DataAccess.DTO.UserDTO;
-using DataAccess.Entity;
+using Common.Base;
+using Common.Const;
+using Common.DTO.UserDTO;
+using Common.Entity;
+using Common.Pagination;
+using DataAccess.DAO;
+using DataAccess.Util;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
@@ -22,7 +23,7 @@ namespace API.Services.Service
         {
         }
 
-        public async Task<ResponseDTO<TokenDTO?>> Login(LoginDTO DTO)
+        public async Task<ResponseBase<TokenDTO?>> Login(LoginDTO DTO)
         {
             try
             {
@@ -30,7 +31,7 @@ namespace API.Services.Service
                 // if username or password incorrect
                 if (user == null)
                 {
-                    return new ResponseDTO<TokenDTO?>(null, "Username or password wrong", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<TokenDTO?>(null, "Username or password wrong", (int)HttpStatusCode.Conflict);
                 }
                 string AccessToken = getAccessToken(user);
                 TokenDTO token = new TokenDTO()
@@ -38,11 +39,11 @@ namespace API.Services.Service
                     Access_Token = AccessToken,
                     Role = user.Role.Rolename
                 };
-                return new ResponseDTO<TokenDTO?>(token, string.Empty);
+                return new ResponseBase<TokenDTO?>(token, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<TokenDTO?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<TokenDTO?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
         private string getAccessToken(User user)
@@ -74,22 +75,22 @@ namespace API.Services.Service
             // get access token
             return handler.WriteToken(token);
         }
-        public async Task<ResponseDTO<bool>> Create(UserCreateDTO DTO)
+        public async Task<ResponseBase<bool>> Create(UserCreateDTO DTO)
         {
             if (DTO.FirstName.Trim().Length == 0 || DTO.LastName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên người dùng không được để trống", (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Tên người dùng không được để trống", (int)HttpStatusCode.Conflict);
             }
             if (DTO.Phone.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Số điện thoại không được để trống", (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Số điện thoại không được để trống", (int)HttpStatusCode.Conflict);
             }
             try
             {
                 // if user exist
                 if (await daoUser.isExist(DTO.UserName, DTO.Email))
                 {
-                    return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Email hoặc username đã được sử dụng", (int)HttpStatusCode.Conflict);
                 }
                 string newPw = UserUtil.RandomPassword();
                 string hashPw = UserUtil.HashPassword(newPw);
@@ -101,20 +102,20 @@ namespace API.Services.Service
                 User user = _mapper.Map<User>(DTO);
                 user.UserId = Guid.NewGuid();
                 user.Password = hashPw;
-                user.RoleId = (int)DataAccess.Enum.Role.Staff;
+                user.RoleId = (int)Common.Enum.Role.Staff;
                 user.CreatedAt = DateTime.Now;
                 user.CreatedDate = DateTime.Now;
                 user.UpdateAt = DateTime.Now;
                 user.IsDeleted = false;
                 await daoUser.CreateUser(user);
-                return new ResponseDTO<bool>(true, "Tạo thành công");
+                return new ResponseBase<bool>(true, "Tạo thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> ForgotPassword(ForgotPasswordDTO DTO)
+        public async Task<ResponseBase<bool>> ForgotPassword(ForgotPasswordDTO DTO)
         {
             try
             {
@@ -122,7 +123,7 @@ namespace API.Services.Service
                 // if email not exist
                 if (user == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy email trong hệ thống", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy email trong hệ thống", (int)HttpStatusCode.NotFound);
                 }
                 // get new password
                 string newPw = UserUtil.RandomPassword();
@@ -134,14 +135,14 @@ namespace API.Services.Service
                 // update user
                 user.Password = hashPw;
                 await daoUser.UpdateUser(user);
-                return new ResponseDTO<bool>(true, "Đã đổi mật khẩu thành công. Vui lòng kiểm tra email của bạn");
+                return new ResponseBase<bool>(true, "Đã đổi mật khẩu thành công. Vui lòng kiểm tra email của bạn");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> ChangePassword(ChangePasswordDTO DTO, string email)
+        public async Task<ResponseBase<bool>> ChangePassword(ChangePasswordDTO DTO, string email)
         {
             try
             {
@@ -149,43 +150,43 @@ namespace API.Services.Service
                 // if email not exist
                 if (user == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy thông tin của bạn", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy thông tin của bạn", (int)HttpStatusCode.NotFound);
                 }
                 // if current password not correct
                 if (!user.Password.Equals(UserUtil.HashPassword(DTO.CurrentPassword)))
                 {
-                    return new ResponseDTO<bool>(false, "Mật khẩu hiện tại không chính xác", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Mật khẩu hiện tại không chính xác", (int)HttpStatusCode.Conflict);
                 }
                 // if confirm password not the same as new password
                 if (!DTO.ConfirmPassword.Equals(DTO.NewPassword))
                 {
-                    return new ResponseDTO<bool>(false, "Mật khẩu xác nhận không trùng khớp với mật khẩu mới", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Mật khẩu xác nhận không trùng khớp với mật khẩu mới", (int)HttpStatusCode.Conflict);
                 }
                 user.Password = UserUtil.HashPassword(DTO.NewPassword);
                 await daoUser.UpdateUser(user);
-                return new ResponseDTO<bool>(true, "Đổi mật khẩu thành công");
+                return new ResponseBase<bool>(true, "Đổi mật khẩu thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<PagedResultDTO<UserListDTO>?>> ListPaged(string? filter, int page)
+        public async Task<ResponseBase<Pagination<UserListDTO>?>> ListPaged(string? filter, int page)
         {
             try
             {
                 List<User> list = await daoUser.getList(filter, page);
                 List<UserListDTO> DTOs = _mapper.Map<List<UserListDTO>>(list);
                 int RowCount = await daoUser.getRowCount(filter);
-                PagedResultDTO<UserListDTO> result = new PagedResultDTO<UserListDTO>(page, RowCount, PageSizeConst.MAX_USER_LIST_IN_PAGE, DTOs);
-                return new ResponseDTO<PagedResultDTO<UserListDTO>?>(result, string.Empty);
+                Pagination<UserListDTO> result = new Pagination<UserListDTO>(page, RowCount, PageSizeConst.MAX_USER_LIST_IN_PAGE, DTOs);
+                return new ResponseBase<Pagination<UserListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<PagedResultDTO<UserListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<Pagination<UserListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> Update(Guid UserID, UserUpdateDTO DTO)
+        public async Task<ResponseBase<bool>> Update(Guid UserID, UserUpdateDTO DTO)
         {
             try
             {
@@ -193,20 +194,20 @@ namespace API.Services.Service
                 // if not found
                 if (user == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy người dùng", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy người dùng", (int)HttpStatusCode.NotFound);
                 }
                 // if username or email exist
                 if (await daoUser.isExist(UserID, DTO.UserName, DTO.Email))
                 {
-                    return new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Email hoặc username đã được sử dụng", (int)HttpStatusCode.Conflict);
                 }
                 if (DTO.FirstName.Trim().Length == 0 || DTO.LastName.Trim().Length == 0)
                 {
-                    return new ResponseDTO<bool>(false, "Tên người dùng không được để trống", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Tên người dùng không được để trống", (int)HttpStatusCode.Conflict);
                 }
                 if (DTO.Phone.Trim().Length == 0)
                 {
-                    return new ResponseDTO<bool>(false, "Số điện thoại không được để trống", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Số điện thoại không được để trống", (int)HttpStatusCode.Conflict);
                 }
                 user.Username = DTO.UserName;
                 user.Email = DTO.Email;
@@ -216,14 +217,14 @@ namespace API.Services.Service
                 user.RoleId = DTO.RoleId;
                 user.UpdateAt = DateTime.Now;
                 await daoUser.UpdateUser(user);
-                return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
+                return new ResponseBase<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> Delete(Guid UserID, Guid UserLoginID)
+        public async Task<ResponseBase<bool>> Delete(Guid UserID, Guid UserLoginID)
         {
             try
             {
@@ -231,22 +232,22 @@ namespace API.Services.Service
                 // if not found
                 if (user == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy user", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy user", (int)HttpStatusCode.NotFound);
                 }
                 // if user login's account
                 if (UserID.Equals(UserLoginID))
                 {
-                    return new ResponseDTO<bool>(false, "Bạn không thể xóa tài khoản của mình", (int)HttpStatusCode.NotAcceptable);
+                    return new ResponseBase<bool>(false, "Bạn không thể xóa tài khoản của mình", (int)HttpStatusCode.NotAcceptable);
                 }
                 await daoUser.DeleteUser(user);
-                return new ResponseDTO<bool>(true, "Xóa thành công");
+                return new ResponseBase<bool>(true, "Xóa thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<List<UserListDTO>?>> ListWarehouseKeeper()
+        public async Task<ResponseBase<List<UserListDTO>?>> ListWarehouseKeeper()
         {
             try
             {
@@ -266,11 +267,11 @@ namespace API.Services.Service
                     };
                     result.Add(DTO);
                 }
-                return new ResponseDTO<List<UserListDTO>?>(result, string.Empty);
+                return new ResponseBase<List<UserListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<List<UserListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<List<UserListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
     }

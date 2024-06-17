@@ -1,10 +1,7 @@
-﻿using DataAccess.DTO.TransactionDTO;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common.Base;
+using Common.Const;
+using Common.DTO.TransactionDTO;
+using Common.Pagination;
 
 namespace UnitTests.Tests
 {
@@ -75,8 +72,8 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             transactionService.Setup(x => x.List(filter, warehouseId, page))
-                .ReturnsAsync(new ResponseDTO<PagedResultDTO<TransactionHistoryDTO>?>(
-                    new PagedResultDTO<TransactionHistoryDTO>(page, expectedTransactionHistory.Count,
+                .ReturnsAsync(new ResponseBase<Pagination<TransactionHistoryDTO>?>(
+                    new Pagination<TransactionHistoryDTO>(page, expectedTransactionHistory.Count,
                                                               PageSizeConst.MAX_TRANSACTION_LIST_IN_PAGE,
                                                               expectedTransactionHistory),
                     string.Empty));
@@ -118,7 +115,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             transactionService.Setup(x => x.Detail(transactionId))
-                .ReturnsAsync(new ResponseDTO<TransactionDetailDTO?>(null, "Không tìm thấy giao dịch",
+                .ReturnsAsync(new ResponseBase<TransactionDetailDTO?>(null, "Không tìm thấy giao dịch",
                                                                      (int)HttpStatusCode.NotFound));
 
             // Act & Assert
@@ -157,7 +154,7 @@ namespace UnitTests.Tests
 
             transactionService.Setup(x => x.Detail(transactionId))
                 .ReturnsAsync(
-                    new ResponseDTO<TransactionDetailDTO?>(expectedTransactionDetail, string.Empty));
+                    new ResponseBase<TransactionDetailDTO?>(expectedTransactionDetail, string.Empty));
 
             // Act
             var result = await controller.Detail(transactionId);

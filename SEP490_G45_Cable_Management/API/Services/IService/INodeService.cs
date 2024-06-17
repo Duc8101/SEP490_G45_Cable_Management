@@ -1,14 +1,14 @@
-﻿using DataAccess.DTO.NodeDTO;
-using DataAccess.DTO;
+﻿using Common.Base;
+using Common.DTO.NodeDTO;
 
 namespace API.Services.IService
 {
     public interface INodeService
     {
-        Task<ResponseDTO<List<NodeListDTO>?>> List(Guid RouteID);
-        Task<ResponseDTO<bool>> Create(NodeCreateDTO DTO);
-        Task<ResponseDTO<NodeListDTO?>> Detail(Guid NodeID);
-        Task<ResponseDTO<bool>> Update(Guid NodeID, NodeUpdateDTO DTO);
-        Task<ResponseDTO<bool>> Delete(Guid NodeID);
+        Task<ResponseBase<List<NodeListDTO>?>> List(Guid RouteID);
+        Task<ResponseBase<bool>> Create(NodeCreateDTO DTO);
+        Task<ResponseBase<NodeListDTO?>> Detail(Guid NodeID);
+        Task<ResponseBase<bool>> Update(Guid NodeID, NodeUpdateDTO DTO);
+        Task<ResponseBase<bool>> Delete(Guid NodeID);
     }
 }

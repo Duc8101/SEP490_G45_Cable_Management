@@ -1,10 +1,11 @@
-﻿using API.Model.DAO;
-using API.Services.IService;
+﻿using API.Services.IService;
 using AutoMapper;
-using DataAccess.Const;
-using DataAccess.DTO;
-using DataAccess.DTO.OtherMaterialsCategoryDTO;
-using DataAccess.Entity;
+using Common.Base;
+using Common.Const;
+using Common.DTO.OtherMaterialsCategoryDTO;
+using Common.Entity;
+using Common.Pagination;
+using DataAccess.DAO;
 using System.Net;
 
 namespace API.Services.Service
@@ -17,46 +18,46 @@ namespace API.Services.Service
         {
         }
 
-        public async Task<ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>> ListPaged(string? name, int page)
+        public async Task<ResponseBase<Pagination<OtherMaterialsCategoryListDTO>?>> ListPaged(string? name, int page)
         {
             try
             {
                 List<OtherMaterialsCategory> list = await daoOtherMaterialsCategory.getListPaged(name, page);
                 List<OtherMaterialsCategoryListDTO> DTOs = _mapper.Map<List<OtherMaterialsCategoryListDTO>>(list);
                 int RowCount = await daoOtherMaterialsCategory.getRowCount(name);
-                PagedResultDTO<OtherMaterialsCategoryListDTO> result = new PagedResultDTO<OtherMaterialsCategoryListDTO>(page, RowCount, PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE, DTOs);
-                return new ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>(result, string.Empty);
+                Pagination<OtherMaterialsCategoryListDTO> result = new Pagination<OtherMaterialsCategoryListDTO>(page, RowCount, PageSizeConst.MAX_OTHER_MATERIAL_CATEGORY_LIST_IN_PAGE, DTOs);
+                return new ResponseBase<Pagination<OtherMaterialsCategoryListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<PagedResultDTO<OtherMaterialsCategoryListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<Pagination<OtherMaterialsCategoryListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<List<OtherMaterialsCategoryListDTO>?>> ListAll()
+        public async Task<ResponseBase<List<OtherMaterialsCategoryListDTO>?>> ListAll()
         {
             try
             {
                 List<OtherMaterialsCategory> list = await daoOtherMaterialsCategory.getListAll();
                 List<OtherMaterialsCategoryListDTO> data = _mapper.Map<List<OtherMaterialsCategoryListDTO>>(list);
-                return new ResponseDTO<List<OtherMaterialsCategoryListDTO>?>(data, string.Empty);
+                return new ResponseBase<List<OtherMaterialsCategoryListDTO>?>(data, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<List<OtherMaterialsCategoryListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<List<OtherMaterialsCategoryListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> Create(OtherMaterialsCategoryCreateUpdateDTO DTO)
+        public async Task<ResponseBase<bool>> Create(OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
             if (DTO.OtherMaterialsCategoryName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên vật liệu không được để trống", (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Tên vật liệu không được để trống", (int)HttpStatusCode.Conflict);
             }
             try
             {
                 // if name exist
                 if (await daoOtherMaterialsCategory.isExist(DTO.OtherMaterialsCategoryName.Trim()))
                 {
-                    return new ResponseDTO<bool>(false, "Loại vật liệu này đã tồn tại", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Loại vật liệu này đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
                 OtherMaterialsCategory category = new OtherMaterialsCategory()
                 {
@@ -66,14 +67,14 @@ namespace API.Services.Service
                     IsDeleted = false
                 };
                 await daoOtherMaterialsCategory.CreateOtherMaterialsCategory(category);
-                return new ResponseDTO<bool>(true, "Tạo thành công");
+                return new ResponseBase<bool>(true, "Tạo thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> Update(int OtherMaterialsCategoryID, OtherMaterialsCategoryCreateUpdateDTO DTO)
+        public async Task<ResponseBase<bool>> Update(int OtherMaterialsCategoryID, OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
             try
             {
@@ -81,26 +82,26 @@ namespace API.Services.Service
                 // if not found
                 if (category == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy loại vật liệu này", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy loại vật liệu này", (int)HttpStatusCode.NotFound);
                 }
 
                 if (DTO.OtherMaterialsCategoryName.Trim().Length == 0)
                 {
-                    return new ResponseDTO<bool>(false, "Tên vật liệu không được để trống", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Tên vật liệu không được để trống", (int)HttpStatusCode.Conflict);
                 }
                 // if already exist
                 if (await daoOtherMaterialsCategory.isExist(OtherMaterialsCategoryID, DTO.OtherMaterialsCategoryName.Trim()))
                 {
-                    return new ResponseDTO<bool>(false, "Loại vật liệu này đã tồn tại", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Loại vật liệu này đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
                 category.OtherMaterialsCategoryName = DTO.OtherMaterialsCategoryName.Trim();
                 category.UpdateAt = DateTime.Now;
                 await daoOtherMaterialsCategory.UpdateOtherMaterialsCategory(category);
-                return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
+                return new ResponseBase<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
     }

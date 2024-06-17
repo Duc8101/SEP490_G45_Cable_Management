@@ -47,3 +47,6 @@ D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\obj
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\refint\DataAccess.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\DataAccess.pdb
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\ref\DataAccess.dll
+D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\bin\Debug\net6.0\Common.dll
+D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\bin\Debug\net6.0\Common.pdb
+D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\DataAccess\obj\Debug\net6.0\DataAccess.csproj.Up2Date

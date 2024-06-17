@@ -1,10 +1,10 @@
-﻿using DataAccess.DTO.NodeMaterialCategoryDTO;
-using DataAccess.DTO;
+﻿using Common.Base;
+using Common.DTO.NodeMaterialCategoryDTO;
 
 namespace API.Services.IService
 {
     public interface INodeMaterialCategoryService
     {
-        Task<ResponseDTO<bool>> Update(Guid NodeID, NodeMaterialCategoryUpdateDTO DTO);
+        Task<ResponseBase<bool>> Update(Guid NodeID, NodeMaterialCategoryUpdateDTO DTO);
     }
 }

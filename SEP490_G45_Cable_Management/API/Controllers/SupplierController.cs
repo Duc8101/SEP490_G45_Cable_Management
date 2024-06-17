@@ -1,8 +1,9 @@
 ﻿using API.Attributes;
 using API.Services.IService;
-using DataAccess.DTO;
-using DataAccess.DTO.SupplierDTO;
-using DataAccess.Entity;
+using Common.Base;
+using Common.DTO.SupplierDTO;
+using Common.Enum;
+using Common.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -22,33 +23,33 @@ namespace API.Controllers
         }
 
         [HttpGet("Paged")]
-        [Role(DataAccess.Enum.Role.Admin, DataAccess.Enum.Role.Leader, DataAccess.Enum.Role.Warehouse_Keeper)]
-        public async Task<ResponseDTO<PagedResultDTO<SupplierListDTO>?>> List(string? name, [Required] int page = 1)
+        [Role(Role.Admin, Role.Leader, Role.Warehouse_Keeper)]
+        public async Task<ResponseBase<Pagination<SupplierListDTO>?>> List(string? name, [Required] int page = 1)
         {
-            ResponseDTO<PagedResultDTO<SupplierListDTO>?> response = await _service.ListPaged(name, page);
+            ResponseBase<Pagination<SupplierListDTO>?> response = await _service.ListPaged(name, page);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpGet("All")]
-        public async Task<ResponseDTO<List<SupplierListDTO>?>> List()
+        public async Task<ResponseBase<List<SupplierListDTO>?>> List()
         {
-            ResponseDTO<List<SupplierListDTO>?> response = await _service.ListAll();
+            ResponseBase<List<SupplierListDTO>?> response = await _service.ListAll();
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpPost]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<bool>> Create([Required] SupplierCreateUpdateDTO DTO)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<bool>> Create([Required] SupplierCreateUpdateDTO DTO)
         {
-            ResponseDTO<bool> response;
+            ResponseBase<bool> response;
             // get user id
             Guid? CreatorID = getUserID();
             // if not found user id
             if (CreatorID == null)
             {
-                response = new ResponseDTO<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra lại thông tin đăng nhập", (int)HttpStatusCode.NotFound);
+                response = new ResponseBase<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra lại thông tin đăng nhập", (int)HttpStatusCode.NotFound);
             }
             else
             {
@@ -58,19 +59,19 @@ namespace API.Controllers
         }
 
         [HttpPut("{SupplierID}")]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<bool>> Update([Required] int SupplierID, [Required] SupplierCreateUpdateDTO DTO)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<bool>> Update([Required] int SupplierID, [Required] SupplierCreateUpdateDTO DTO)
         {
-            ResponseDTO<bool> response = await _service.Update(SupplierID, DTO);
+            ResponseBase<bool> response = await _service.Update(SupplierID, DTO);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpDelete("{SupplierID}")]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<bool>> Delete([Required] int SupplierID)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<bool>> Delete([Required] int SupplierID)
         {
-            ResponseDTO<bool> response = await _service.Delete(SupplierID);
+            ResponseBase<bool> response = await _service.Delete(SupplierID);
             Response.StatusCode = response.Code;
             return response;
         }

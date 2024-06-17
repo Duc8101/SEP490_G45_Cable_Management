@@ -1,4 +1,4 @@
-﻿using DataAccess.Entity;
+﻿using Common.Entity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -13,19 +13,19 @@ namespace API.Controllers
         internal bool isAdmin()
         {
             User? user = getUser();
-            return user != null && user.RoleId == (int)DataAccess.Enum.Role.Admin;
+            return user != null && user.RoleId == (int)Common.Enum.Role.Admin;
         }
 
         internal bool isLeader()
         {
             User? user = getUser();
-            return user != null && user.RoleId == (int)DataAccess.Enum.Role.Leader;
+            return user != null && user.RoleId == (int)Common.Enum.Role.Leader;
         }
 
         internal bool isWarehouseKeeper()
         {
             User? user = getUser();
-            return user != null && user.RoleId == (int)DataAccess.Enum.Role.Warehouse_Keeper;
+            return user != null && user.RoleId == (int)Common.Enum.Role.Warehouse_Keeper;
         }
 
         internal Guid? getUserID()

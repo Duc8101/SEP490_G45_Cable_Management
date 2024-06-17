@@ -256,13 +256,11 @@ D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\AWSSDK.Core.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\AWSSDK.SimpleEmail.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\BouncyCastle.Cryptography.dll
-D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Humanizer.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\MailKit.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
-D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll
@@ -312,7 +310,6 @@ D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.AssemblyInfoInputs.cache
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.AssemblyInfo.cs
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.csproj.CoreCompileInputs.cache
-D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.MvcApplicationPartsAssemblyInfo.cs
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.MvcApplicationPartsAssemblyInfo.cache
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.sourcelink.json
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets.build.json
@@ -329,3 +326,5 @@ D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.pdb
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.genruntimeconfig.cache
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\ref\API.dll
+D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Common.dll
+D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Common.pdb

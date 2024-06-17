@@ -1,8 +1,8 @@
-﻿using API.Model.DAO;
-using API.Services.IService;
-using DataAccess.DTO;
-using DataAccess.DTO.NodeMaterialCategoryDTO;
-using DataAccess.Entity;
+﻿using API.Services.IService;
+using Common.Base;
+using Common.DTO.NodeMaterialCategoryDTO;
+using Common.Entity;
+using DataAccess.DAO;
 using System.Net;
 
 namespace API.Services.Service
@@ -11,14 +11,14 @@ namespace API.Services.Service
     {
         private readonly DAONodeMaterialCategory daoMaterial = new DAONodeMaterialCategory();
         private readonly DAONode daoNode = new DAONode();
-        public async Task<ResponseDTO<bool>> Update(Guid NodeID, NodeMaterialCategoryUpdateDTO DTO)
+        public async Task<ResponseBase<bool>> Update(Guid NodeID, NodeMaterialCategoryUpdateDTO DTO)
         {
             try
             {
                 Node? node = await daoNode.getNode(NodeID);
                 if (node == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy điểm" , (int) HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy điểm" , (int) HttpStatusCode.NotFound);
                 }
                 List<NodeMaterialCategory> listUpdate = new List<NodeMaterialCategory>();
                 foreach(MaterialCategoryDTO item in DTO.MaterialCategoryDTOs)
@@ -63,11 +63,11 @@ namespace API.Services.Service
                         }
                     }
                 }        
-                return new ResponseDTO<bool>(true, "Update thành công");
+                return new ResponseBase<bool>(true, "Update thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int) HttpStatusCode.InternalServerError);
             }
         }
     }

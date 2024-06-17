@@ -1,10 +1,11 @@
-﻿using API.Model.DAO;
-using API.Services.IService;
+﻿using API.Services.IService;
 using AutoMapper;
-using DataAccess.Const;
-using DataAccess.DTO;
-using DataAccess.DTO.CableCategoryDTO;
-using DataAccess.Entity;
+using Common.Base;
+using Common.Const;
+using Common.DTO.CableCategoryDTO;
+using Common.Entity;
+using Common.Pagination;
+using DataAccess.DAO;
 using System.Net;
 
 namespace API.Services.Service
@@ -17,49 +18,49 @@ namespace API.Services.Service
         {
         }
 
-        public async Task<ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>> ListPaged(string? name, int page)
+        public async Task<ResponseBase<Pagination<CableCategoryListDTO>?>> ListPaged(string? name, int page)
         {
             try
             {
                 List<CableCategory> list = await daoCableCategory.getListPaged(name, page);
                 List<CableCategoryListDTO> DTOs = _mapper.Map<List<CableCategoryListDTO>>(list);
                 int RowCount = await daoCableCategory.getRowCount(name);
-                PagedResultDTO<CableCategoryListDTO> result = new PagedResultDTO<CableCategoryListDTO>(page, RowCount, PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE, DTOs);
-                return new ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>(result, string.Empty);
+                Pagination<CableCategoryListDTO> result = new Pagination<CableCategoryListDTO>(page, RowCount, PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE, DTOs);
+                return new ResponseBase<Pagination<CableCategoryListDTO>?>(result, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<Pagination<CableCategoryListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
 
         }
 
-        public async Task<ResponseDTO<List<CableCategoryListDTO>?>> ListAll()
+        public async Task<ResponseBase<List<CableCategoryListDTO>?>> ListAll()
         {
             try
             {
                 List<CableCategory> list = await daoCableCategory.getListAll();
                 List<CableCategoryListDTO> data = _mapper.Map<List<CableCategoryListDTO>>(list);
-                return new ResponseDTO<List<CableCategoryListDTO>?>(data, string.Empty);
+                return new ResponseBase<List<CableCategoryListDTO>?>(data, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<List<CableCategoryListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<List<CableCategoryListDTO>?>(null, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
 
-        public async Task<ResponseDTO<bool>> Create(CableCategoryCreateUpdateDTO DTO)
+        public async Task<ResponseBase<bool>> Create(CableCategoryCreateUpdateDTO DTO)
         {
             if (DTO.CableCategoryName.Trim().Length == 0)
             {
-                return new ResponseDTO<bool>(false, "Tên cáp không được để trống", (int)HttpStatusCode.Conflict);
+                return new ResponseBase<bool>(false, "Tên cáp không được để trống", (int)HttpStatusCode.Conflict);
             }
             try
             {
                 // if category already exist
                 if (await daoCableCategory.isExist(DTO.CableCategoryName.Trim()))
                 {
-                    return new ResponseDTO<bool>(false, "Loại cáp này đã tồn tại", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Loại cáp này đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
                 CableCategory cable = new CableCategory()
                 {
@@ -69,14 +70,14 @@ namespace API.Services.Service
                     IsDeleted = false,
                 };
                 await daoCableCategory.CreateCableCategory(cable);
-                return new ResponseDTO<bool>(true, "Tạo thành công");
+                return new ResponseBase<bool>(true, "Tạo thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
         }
-        public async Task<ResponseDTO<bool>> Update(int CableCategoryID, CableCategoryCreateUpdateDTO DTO)
+        public async Task<ResponseBase<bool>> Update(int CableCategoryID, CableCategoryCreateUpdateDTO DTO)
         {
             try
             {
@@ -84,25 +85,25 @@ namespace API.Services.Service
                 // if not found cable
                 if (cable == null)
                 {
-                    return new ResponseDTO<bool>(false, "Không tìm thấy cáp", (int)HttpStatusCode.NotFound);
+                    return new ResponseBase<bool>(false, "Không tìm thấy cáp", (int)HttpStatusCode.NotFound);
                 }
                 if (DTO.CableCategoryName.Trim().Length == 0)
                 {
-                    return new ResponseDTO<bool>(false, "Tên cáp không được để trống", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Tên cáp không được để trống", (int)HttpStatusCode.Conflict);
                 }
                 // if cable already exist
                 if (await daoCableCategory.isExist(CableCategoryID, DTO.CableCategoryName.Trim()))
                 {
-                    return new ResponseDTO<bool>(false, "Loại cáp này đã tồn tại", (int)HttpStatusCode.Conflict);
+                    return new ResponseBase<bool>(false, "Loại cáp này đã tồn tại", (int)HttpStatusCode.Conflict);
                 }
                 cable.CableCategoryName = DTO.CableCategoryName.Trim();
                 cable.UpdateAt = DateTime.Now;
                 await daoCableCategory.UpdateCableCategory(cable);
-                return new ResponseDTO<bool>(true, "Chỉnh sửa thành công");
+                return new ResponseBase<bool>(true, "Chỉnh sửa thành công");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+                return new ResponseBase<bool>(false, ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
             }
 
         }

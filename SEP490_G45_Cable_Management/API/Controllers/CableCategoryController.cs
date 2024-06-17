@@ -1,8 +1,9 @@
 ﻿using API.Attributes;
 using API.Services.IService;
-using DataAccess.DTO;
-using DataAccess.DTO.CableCategoryDTO;
-using DataAccess.Entity;
+using Common.Base;
+using Common.DTO.CableCategoryDTO;
+using Common.Enum;
+using Common.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -21,36 +22,36 @@ namespace API.Controllers
         }
 
         [HttpGet("Paged")]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<PagedResultDTO<CableCategoryListDTO>?>> List(string? name, [Required] int page = 1)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<Pagination<CableCategoryListDTO>?>> List(string? name, [Required] int page = 1)
         {
-            ResponseDTO<PagedResultDTO<CableCategoryListDTO>?> response = await _service.ListPaged(name, page);
+            ResponseBase<Pagination<CableCategoryListDTO>?> response = await _service.ListPaged(name, page);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpGet("All")]
-        public async Task<ResponseDTO<List<CableCategoryListDTO>?>> List()
+        public async Task<ResponseBase<List<CableCategoryListDTO>?>> List()
         {
-            ResponseDTO<List<CableCategoryListDTO>?> response = await _service.ListAll();
+            ResponseBase<List<CableCategoryListDTO>?> response = await _service.ListAll();
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpPost]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<bool>> Create([Required] CableCategoryCreateUpdateDTO DTO)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<bool>> Create([Required] CableCategoryCreateUpdateDTO DTO)
         {
-            ResponseDTO<bool> response = await _service.Create(DTO);
+            ResponseBase<bool> response = await _service.Create(DTO);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpPut("{CableCategoryID}")]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<bool>> Update([Required] int CableCategoryID, [Required] CableCategoryCreateUpdateDTO DTO)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<bool>> Update([Required] int CableCategoryID, [Required] CableCategoryCreateUpdateDTO DTO)
         {
-            ResponseDTO<bool> response = await _service.Update(CableCategoryID, DTO);
+            ResponseBase<bool> response = await _service.Update(CableCategoryID, DTO);
             Response.StatusCode = response.Code;
             return response;
         }

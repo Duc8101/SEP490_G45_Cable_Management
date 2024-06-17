@@ -1,7 +1,9 @@
 ﻿using API.Attributes;
 using API.Services.IService;
-using DataAccess.DTO;
-using DataAccess.DTO.RouteDTO;
+using Common.Base;
+using Common.DTO.RouteDTO;
+using Common.Enum;
+using Common.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -21,36 +23,36 @@ namespace API.Controllers
 
 
         [HttpGet("All")]
-        public async Task<ResponseDTO<List<RouteListDTO>?>> List(string? name)
+        public async Task<ResponseBase<List<RouteListDTO>?>> List(string? name)
         {
-            ResponseDTO<List<RouteListDTO>?> response = await _service.ListAll(name);
+            ResponseBase<List<RouteListDTO>?> response = await _service.ListAll(name);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpGet("Paged")]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<PagedResultDTO<RouteListDTO>?>> List([Required] int page = 1)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<Pagination<RouteListDTO>?>> List([Required] int page = 1)
         {
-            ResponseDTO<PagedResultDTO<RouteListDTO>?> response = await _service.ListPaged(page);
+            ResponseBase<Pagination<RouteListDTO>?> response = await _service.ListPaged(page);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpPost]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<bool>> Create([Required] RouteCreateDTO DTO)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<bool>> Create([Required] RouteCreateDTO DTO)
         {
-            ResponseDTO<bool> response = await _service.Create(DTO);
+            ResponseBase<bool> response = await _service.Create(DTO);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpDelete("{RouteID}")]
-        [Role(DataAccess.Enum.Role.Admin)]
-        public async Task<ResponseDTO<bool>> Delete([Required] Guid RouteID)
+        [Role(Role.Admin)]
+        public async Task<ResponseBase<bool>> Delete([Required] Guid RouteID)
         {
-            ResponseDTO<bool> response = await _service.Delete(RouteID);
+            ResponseBase<bool> response = await _service.Delete(RouteID);
             Response.StatusCode = response.Code;
             return response;
         }

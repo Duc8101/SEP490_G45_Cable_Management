@@ -1,14 +1,14 @@
-﻿using DataAccess.DTO.StatisticDTO;
-using DataAccess.DTO;
+﻿using Common.Base;
+using Common.DTO.StatisticDTO;
 
 namespace API.Services.IService
 {
     public interface IStatisticService
     {
-        Task<ResponseDTO<MaterialFluctuationPerYear?>> MaterialFluctuationPerYear(int? MaterialCategoryID, int? WarehouseID, int? year);
-        Task<ResponseDTO<CableFluctuationPerYear?>> CableFluctuationPerYear(int? CableCategoryID, int? WarehouseID, int? year);
-        Task<ResponseDTO<List<CableCategoryStatistic>?>> CableCategory(int? WarehouseID);
-        Task<ResponseDTO<List<OtherMaterialCategoryStatistic>?>> MaterialCategory(int? WarehouseID);
-        Task<ResponseDTO<List<RouteStatistic>?>> Route(Guid RouteID);
+        Task<ResponseBase<MaterialFluctuationPerYear?>> MaterialFluctuationPerYear(int? MaterialCategoryID, int? WarehouseID, int? year);
+        Task<ResponseBase<CableFluctuationPerYear?>> CableFluctuationPerYear(int? CableCategoryID, int? WarehouseID, int? year);
+        Task<ResponseBase<List<CableCategoryStatistic>?>> CableCategory(int? WarehouseID);
+        Task<ResponseBase<List<OtherMaterialCategoryStatistic>?>> MaterialCategory(int? WarehouseID);
+        Task<ResponseBase<List<RouteStatistic>?>> Route(Guid RouteID);
     }
 }
