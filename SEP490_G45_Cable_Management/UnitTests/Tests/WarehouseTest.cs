@@ -1,4 +1,5 @@
-﻿using Common.Const;
+﻿using Common.Base;
+using Common.Const;
 using Common.DTO.WarehouseDTO;
 using Common.Pagination;
 
@@ -103,7 +104,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             warehouseService.Setup(x => x.ListPaged(name, page))
-                .ReturnsAsync(new ResponseDTO<Pagination<WarehouseListDTO>?>(
+                .ReturnsAsync(new ResponseBase<Pagination<WarehouseListDTO>?>(
                     new Pagination<WarehouseListDTO>(page, expectedWarehouses.Count,
                                                          PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE,
                                                          expectedWarehouses),
@@ -135,7 +136,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             warehouseService.Setup(x => x.ListPaged(name, page))
-                .ReturnsAsync(new ResponseDTO<Pagination<WarehouseListDTO>?>(
+                .ReturnsAsync(new ResponseBase<Pagination<WarehouseListDTO>?>(
                     new Pagination<WarehouseListDTO>(page, expectedWarehouses.Count,
                                                          PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE,
                                                          expectedWarehouses),
@@ -168,7 +169,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             warehouseService.Setup(x => x.ListPaged(name, page))
-                .ReturnsAsync(new ResponseDTO<Pagination<WarehouseListDTO>?>(
+                .ReturnsAsync(new ResponseBase<Pagination<WarehouseListDTO>?>(
                     new Pagination<WarehouseListDTO>(page, expectedWarehouses.Count,
                                                          PageSizeConst.MAX_WAREHOUSE_LIST_IN_PAGE,
                                                          expectedWarehouses),
@@ -214,7 +215,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             warehouseService.Setup(x => x.ListAll())
-                .ReturnsAsync(new ResponseDTO<List<WarehouseListDTO>?>(expectedWarehouses, string.Empty));
+                .ReturnsAsync(new ResponseBase<List<WarehouseListDTO>?>(expectedWarehouses, string.Empty));
 
             // Act
             var result = await controller.List();
@@ -250,7 +251,7 @@ namespace UnitTests.Tests
 
             warehouseService.Setup(x => x.Update(warehouseId, warehouseUpdateDTO))
                 .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Không tìm thấy kho", (int)HttpStatusCode.NotFound));
+                    new ResponseBase<bool>(false, "Không tìm thấy kho", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Update(warehouseId, warehouseUpdateDTO);
@@ -273,7 +274,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             warehouseService.Setup(x => x.Update(warehouseId, warehouseUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Tên kho không được để trống",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Tên kho không được để trống",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -297,7 +298,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             warehouseService.Setup(x => x.Update(warehouseId, warehouseUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Chỉnh sửa thành công"));
 
             // Act
             var result = await controller.Update(warehouseId, warehouseUpdateDTO);
@@ -350,7 +351,7 @@ namespace UnitTests.Tests
 
             warehouseService.Setup(x => x.Delete(warehouseId))
                 .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Không tìm thấy kho", (int)HttpStatusCode.NotFound));
+                    new ResponseBase<bool>(false, "Không tìm thấy kho", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Delete(warehouseId);
@@ -372,7 +373,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             warehouseService.Setup(x => x.Delete(warehouseId))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Xóa thành công"));
 
             // Act
             var result = await controller.Delete(warehouseId);

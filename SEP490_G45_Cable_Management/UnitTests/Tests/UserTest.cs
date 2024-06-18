@@ -1,4 +1,5 @@
-﻿using Common.Const;
+﻿using Common.Base;
+using Common.Const;
 using Common.DTO.UserDTO;
 using Common.Pagination;
 
@@ -94,7 +95,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_STAFF);
 
             userService.Setup(x => x.Delete(userID, It.IsAny<Guid>()))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Bạn không có quyền truy cập",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Bạn không có quyền truy cập",
                                                     (int)HttpStatusCode.Forbidden));
 
             // Act
@@ -150,7 +151,7 @@ namespace UnitTests.Tests
             var loginDTO = new LoginDTO { Username = "sample_username", Password = "sample_password" };
 
             userService.Setup(x => x.Login(loginDTO))
-                .ReturnsAsync(new ResponseDTO<TokenDTO?>(null, "Username or password wrong",
+                .ReturnsAsync(new ResponseBase<TokenDTO?>(null, "Username or password wrong",
                                                          (int)HttpStatusCode.Conflict));
 
             // Act
@@ -172,7 +173,7 @@ namespace UnitTests.Tests
             var expectedToken = new TokenDTO { Access_Token = "sample_access_token", Role = "sample_role" };
 
             userService.Setup(x => x.Login(loginDTO))
-                .ReturnsAsync(new ResponseDTO<TokenDTO?>(expectedToken, string.Empty));
+                .ReturnsAsync(new ResponseBase<TokenDTO?>(expectedToken, string.Empty));
 
             // Act
             var result = await controller.Login(loginDTO);
@@ -208,7 +209,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Create(userCreateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Tên người dùng không được để trống",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Tên người dùng không được để trống",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -231,7 +232,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Create(userCreateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, expectedMessage, (int)HttpStatusCode.Conflict));
+                .ReturnsAsync(new ResponseBase<bool>(false, expectedMessage, (int)HttpStatusCode.Conflict));
 
             // Act
             var result = await controller.Create(userCreateDTO);
@@ -261,7 +262,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Create(userCreateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, expectedMessage, (int)HttpStatusCode.Conflict));
+                .ReturnsAsync(new ResponseBase<bool>(false, expectedMessage, (int)HttpStatusCode.Conflict));
 
             // Act
             var result = await controller.Create(userCreateDTO);
@@ -290,7 +291,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleWithoutID(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Create(userCreateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Tạo thành công"));
 
             // Act
             var result = await controller.Create(userCreateDTO);
@@ -331,7 +332,7 @@ namespace UnitTests.Tests
             var forgotPasswordDTO = new ForgotPasswordDTO { Email = "johndoe@example.com" };
 
             userService.Setup(x => x.ForgotPassword(forgotPasswordDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy email trong hệ thống",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Không tìm thấy email trong hệ thống",
                                                     (int)HttpStatusCode.NotFound));
 
             // Act & Assert
@@ -352,7 +353,7 @@ namespace UnitTests.Tests
             var forgotPasswordDTO = new ForgotPasswordDTO { Email = "johndoe@example.com" };
 
             userService.Setup(x => x.ForgotPassword(forgotPasswordDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(
+                .ReturnsAsync(new ResponseBase<bool>(
                     true, "Đã đổi mật khẩu thành công. Vui lòng kiểm tra email của bạn"));
 
             // Act
@@ -396,7 +397,7 @@ namespace UnitTests.Tests
             var email = TestHelper.SimulateUser(controller, RoleConst.ROLE_LEADER);
 
             userService.Setup(x => x.ChangePassword(changePasswordDTO, email))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy thông tin của bạn",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Không tìm thấy thông tin của bạn",
                                                     (int)HttpStatusCode.NotFound));
 
             // Act
@@ -425,7 +426,7 @@ namespace UnitTests.Tests
             var email = TestHelper.SimulateUser(controller, RoleConst.ROLE_LEADER);
 
             userService.Setup(x => x.ChangePassword(changePasswordDTO, email))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Mật khẩu hiện tại không chính xác",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Mật khẩu hiện tại không chính xác",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -454,7 +455,7 @@ namespace UnitTests.Tests
             var email = TestHelper.SimulateUser(controller, RoleConst.ROLE_LEADER);
 
             userService.Setup(x => x.ChangePassword(changePasswordDTO, email))
-                .ReturnsAsync(new ResponseDTO<bool>(false,
+                .ReturnsAsync(new ResponseBase<bool>(false,
                                                     "Mật khẩu xác nhận không trùng khớp với mật khẩu mới",
                                                     (int)HttpStatusCode.Conflict));
 
@@ -484,7 +485,7 @@ namespace UnitTests.Tests
             var email = TestHelper.SimulateUser(controller, RoleConst.ROLE_LEADER);
 
             userService.Setup(x => x.ChangePassword(changePasswordDTO, email))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Đổi mật khẩu thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Đổi mật khẩu thành công"));
 
             // Act
             var result = await controller.ChangePassword(changePasswordDTO);
@@ -531,7 +532,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.ListPaged(filter, page))
-                .ReturnsAsync(new ResponseDTO<Pagination<UserListDTO>?>(
+                .ReturnsAsync(new ResponseBase<Pagination<UserListDTO>?>(
                     new Pagination<UserListDTO>(page, expectedUsers.Count,
                                                     PageSizeConst.MAX_USER_LIST_IN_PAGE, expectedUsers),
                     string.Empty));
@@ -583,7 +584,7 @@ namespace UnitTests.Tests
 
             userService.Setup(x => x.Update(userId, userUpdateDTO))
                 .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Không tìm thấy người dùng", (int)HttpStatusCode.NotFound));
+                    new ResponseBase<bool>(false, "Không tìm thấy người dùng", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Update(userId, userUpdateDTO);
@@ -615,7 +616,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Update(userId, userUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Email hoặc username đã được sử dụng",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Email hoặc username đã được sử dụng",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -648,7 +649,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Update(userId, userUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Tên người dùng không được để trống",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Tên người dùng không được để trống",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -680,7 +681,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Update(userId, userUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Số điện thoại không được để trống",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Số điện thoại không được để trống",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -713,7 +714,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             userService.Setup(x => x.Update(userId, userUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Chỉnh sửa thành công"));
 
             // Act
             var result = await controller.Update(userId, userUpdateDTO);
@@ -762,7 +763,7 @@ namespace UnitTests.Tests
 
             userService.Setup(x => x.Delete(userId, userLoginId))
                 .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Không tìm thấy user", (int)HttpStatusCode.NotFound));
+                    new ResponseBase<bool>(false, "Không tìm thấy user", (int)HttpStatusCode.NotFound));
 
             // Act & Assert
             var result = await controller.Delete(userId);
@@ -784,7 +785,7 @@ namespace UnitTests.Tests
 
             // Setting up the expected response for the service method call
             userService.Setup(x => x.Delete(userId, userLoginId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Bạn không thể xóa tài khoản của mình",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Bạn không thể xóa tài khoản của mình",
                                                     (int)HttpStatusCode.NotAcceptable));
 
             // Act
@@ -808,7 +809,7 @@ namespace UnitTests.Tests
 
             // Setting up the expected response for the service method call
             userService.Setup(x => x.Delete(userId, userLoginId))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Xóa thành công"));
 
             // Act
             var result = await controller.Delete(userId);
@@ -853,7 +854,7 @@ namespace UnitTests.Tests
 
             // Mocking the list of users returned by the service method
             userService.Setup(x => x.ListWarehouseKeeper())
-                .ReturnsAsync(new ResponseDTO<List<UserListDTO>>(expectedList, string.Empty));
+                .ReturnsAsync(new ResponseBase<List<UserListDTO>>(expectedList, string.Empty));
 
             // Act
             var result = await controller.List();

@@ -1,4 +1,5 @@
-﻿using Common.Const;
+﻿using Common.Base;
+using Common.Const;
 using Common.DTO.OtherMaterialsDTO;
 using Common.Entity;
 using Common.Pagination;
@@ -72,7 +73,7 @@ namespace UnitTests.Tests
 
             otherMaterialsService
               .Setup(x => x.ListPaged(filter, warehouseId, warehouseKeeperId, page))
-              .ReturnsAsync(new ResponseDTO<Pagination<OtherMaterialsListDTO>?>(
+              .ReturnsAsync(new ResponseBase<Pagination<OtherMaterialsListDTO>?>(
                 new Pagination<OtherMaterialsListDTO>(
                   page,
                   10,
@@ -102,7 +103,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.ListPaged(filter, warehouseId, null, page))
-              .ReturnsAsync(new ResponseDTO<Pagination<OtherMaterialsListDTO>?>(
+              .ReturnsAsync(new ResponseBase<Pagination<OtherMaterialsListDTO>?>(
                 new Pagination<OtherMaterialsListDTO>(
                   page,
                   10,
@@ -154,7 +155,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
-              .ReturnsAsync(new ResponseDTO<bool>(
+              .ReturnsAsync(new ResponseBase<bool>(
                 false, "Số lượng không hợp lệ", (int)HttpStatusCode.Conflict));
 
             // Act
@@ -184,7 +185,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
-              .ReturnsAsync(new ResponseDTO<bool>(
+              .ReturnsAsync(new ResponseBase<bool>(
                 false, "Mã hàng không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
@@ -214,7 +215,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
-              .ReturnsAsync(new ResponseDTO<bool>(
+              .ReturnsAsync(new ResponseBase<bool>(
                 false, "Trạng thái không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
@@ -244,7 +245,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
-              .ReturnsAsync(new ResponseDTO<bool>(
+              .ReturnsAsync(new ResponseBase<bool>(
                 false, "Kho không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
@@ -274,7 +275,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
-              .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
+              .ReturnsAsync(new ResponseBase<bool>(true, "Tạo thành công"));
 
             // Act
             var result = await controller.Create(otherMaterialsCreateUpdateDTO);
@@ -307,7 +308,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Create(otherMaterialsCreateUpdateDTO))
-              .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
+              .ReturnsAsync(new ResponseBase<bool>(true, "Tạo thành công"));
 
             // Act
             var result = await controller.Create(otherMaterialsCreateUpdateDTO);
@@ -365,7 +366,7 @@ namespace UnitTests.Tests
 
             otherMaterialsService
               .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
-              .ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
+              .ReturnsAsync(new ResponseBase<bool>(true, "Chỉnh sửa thành công"));
 
             // Act
             var result =
@@ -400,7 +401,7 @@ namespace UnitTests.Tests
 
             otherMaterialsService
               .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
-              .ReturnsAsync(new ResponseDTO<bool>(
+              .ReturnsAsync(new ResponseBase<bool>(
                 false, "Không tìm thấy vật liệu", (int)HttpStatusCode.NotFound));
 
             // Act
@@ -436,7 +437,7 @@ namespace UnitTests.Tests
 
             otherMaterialsService
               .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
-              .ReturnsAsync(new ResponseDTO<bool>(
+              .ReturnsAsync(new ResponseBase<bool>(
                 false, "Mã hàng không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
@@ -472,7 +473,7 @@ namespace UnitTests.Tests
 
             otherMaterialsService
               .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
-              .ReturnsAsync(new ResponseDTO<bool>(
+              .ReturnsAsync(new ResponseBase<bool>(
                 false, "Đơn vị không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
@@ -508,7 +509,7 @@ namespace UnitTests.Tests
 
             otherMaterialsService
               .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
-              .ReturnsAsync(new ResponseDTO<bool>(
+              .ReturnsAsync(new ResponseBase<bool>(
                 false, "Trạng thái không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
@@ -544,7 +545,7 @@ namespace UnitTests.Tests
 
             otherMaterialsService
               .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
-              .ReturnsAsync(new ResponseDTO<bool>(
+              .ReturnsAsync(new ResponseBase<bool>(
                 false, "Kho không được để trống", (int)HttpStatusCode.Conflict));
 
             // Act
@@ -582,7 +583,7 @@ namespace UnitTests.Tests
 
             otherMaterialsService
               .Setup(x => x.Update(otherMaterialsID, otherMaterialsCreateUpdateDTO))
-              .ReturnsAsync(new ResponseDTO<bool>(
+              .ReturnsAsync(new ResponseBase<bool>(
                 false, "Vật liệu đã tồn tại", (int)HttpStatusCode.Conflict));
 
             // Act
@@ -644,7 +645,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Delete(otherMaterialsID))
-              .ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
+              .ReturnsAsync(new ResponseBase<bool>(true, "Xóa thành công"));
 
             // Act
             var result = await controller.Delete(otherMaterialsID);
@@ -667,7 +668,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             otherMaterialsService.Setup(x => x.Delete(otherMaterialsID))
-              .ReturnsAsync(new ResponseDTO<bool>(
+              .ReturnsAsync(new ResponseBase<bool>(
                 false, "Không tìm thấy vật liệu", (int)HttpStatusCode.NotFound));
 
             // Act
@@ -774,7 +775,7 @@ namespace UnitTests.Tests
 };
 
             otherMaterialsService.Setup(x => x.ListAll(warehouseId))
-              .ReturnsAsync(new ResponseDTO<List<OtherMaterialsListDTO>?>(
+              .ReturnsAsync(new ResponseBase<List<OtherMaterialsListDTO>?>(
                 otherMaterialsListDTOs, string.Empty));
 
             // Act

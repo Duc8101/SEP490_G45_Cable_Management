@@ -1,4 +1,5 @@
-﻿using Common.Const;
+﻿using Common.Base;
+using Common.Const;
 using Common.DTO;
 using Common.DTO.NodeMaterialCategoryDTO;
 
@@ -54,7 +55,7 @@ namespace UnitTests.Tests
 
             // Mocking the scenario where getNode returns a valid node
             nodeMaterialCategoryService.Setup(x => x.Update(nodeId, nodeMaterialCategoryUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Update thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Update thành công"));
 
             // Act
             var result = await controller.Update(nodeId, nodeMaterialCategoryUpdateDTO);
@@ -84,7 +85,7 @@ namespace UnitTests.Tests
 
             // Mocking the scenario where getNode returns null
             nodeMaterialCategoryService.Setup(x => x.Update(nodeId, nodeMaterialCategoryUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy điểm", (int)HttpStatusCode.NotFound));
+                .ReturnsAsync(new ResponseBase<bool>(false, "Không tìm thấy điểm", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Update(nodeId, nodeMaterialCategoryUpdateDTO);

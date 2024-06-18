@@ -1,4 +1,5 @@
-﻿using Common.Const;
+﻿using Common.Base;
+using Common.Const;
 using Common.DTO.RouteDTO;
 using Common.Pagination;
 
@@ -81,7 +82,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             routeService.Setup(x => x.ListAll(name))
-                .ReturnsAsync(new ResponseDTO<List<RouteListDTO>?>(expectedRoutes, string.Empty));
+                .ReturnsAsync(new ResponseBase<List<RouteListDTO>?>(expectedRoutes, string.Empty));
 
             // Act
             var result = await controller.List(name);
@@ -124,7 +125,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             routeService.Setup(x => x.ListPaged(page))
-                .ReturnsAsync(new ResponseDTO<Pagination<RouteListDTO>?>(
+                .ReturnsAsync(new ResponseBase<Pagination<RouteListDTO>?>(
                     new Pagination<RouteListDTO>(page, expectedRowCount,
                                                      PageSizeConst.MAX_ROUTE_LIST_IN_PAGE, expectedRoutes),
                     string.Empty));
@@ -165,7 +166,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             routeService.Setup(x => x.Create(routeCreateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Tên tuyến không được để trống",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Tên tuyến không được để trống",
                                                (int)HttpStatusCode.Conflict));
 
             // Act
@@ -186,7 +187,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             routeService.Setup(x => x.Create(routeCreateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Tên tuyến đã tồn tại", (int)HttpStatusCode.Conflict));
+                .ReturnsAsync(new ResponseBase<bool>(false, "Tên tuyến đã tồn tại", (int)HttpStatusCode.Conflict));
 
             // Act
             var result = await controller.Create(routeCreateDTO);
@@ -206,7 +207,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             routeService.Setup(x => x.Create(routeCreateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Tạo thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Tạo thành công"));
 
             // Act
             var result = await controller.Create(routeCreateDTO);
@@ -228,7 +229,7 @@ namespace UnitTests.Tests
 
             routeService.Setup(x => x.Delete(routeID))
                 .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Không tìm thấy tên tuyến", (int)HttpStatusCode.NotFound));
+                    new ResponseBase<bool>(false, "Không tìm thấy tên tuyến", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Delete(routeID);
@@ -248,7 +249,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             routeService.Setup(x => x.Delete(routeID))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Xóa thành công"));
 
             // Act
             var result = await controller.Delete(routeID);

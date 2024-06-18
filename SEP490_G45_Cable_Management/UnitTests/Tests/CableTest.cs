@@ -1,4 +1,5 @@
-﻿using Common.Const;
+﻿using Common.Base;
+using Common.Const;
 using Common.DTO.CableDTO;
 using Common.Pagination;
 
@@ -41,7 +42,7 @@ namespace UnitTests.Tests
 
             var expectedPagedResult = new Pagination<CableListDTO>(1, 10, 5, new List<CableListDTO>());  // Provide expected paged result here
             cableService.Setup(x => x.ListPaged(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<bool>(), It.IsAny<int>()))
-                .ReturnsAsync(new ResponseDTO<Pagination<CableListDTO>?>(expectedPagedResult, string.Empty));
+                .ReturnsAsync(new ResponseBase<Pagination<CableListDTO>?>(expectedPagedResult, string.Empty));
 
             // Act
             var result = await controller.List("filter", 1, true, 1);
@@ -62,7 +63,7 @@ namespace UnitTests.Tests
             controller.ControllerContext = context;
             var expectedPagedResult = new Pagination<CableListDTO>(1, 10, 5, new List<CableListDTO>());  // Provide expected paged result here
             cableService.Setup(x => x.ListPaged(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<bool>(), It.IsAny<int>()))
-                .ReturnsAsync(new ResponseDTO<Pagination<CableListDTO>?>(expectedPagedResult, string.Empty));
+                .ReturnsAsync(new ResponseBase<Pagination<CableListDTO>?>(expectedPagedResult, string.Empty));
 
             // Act
             var result = await controller.List("filter", 1, true, 1);
@@ -83,7 +84,7 @@ namespace UnitTests.Tests
             controller.ControllerContext = context;
             var expectedPagedResult = new Pagination<CableListDTO>(1, 10, 5, new List<CableListDTO>());  // Provide expected paged result here
             cableService.Setup(x => x.ListPaged(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<bool>(), It.IsAny<int>()))
-                .ReturnsAsync(new ResponseDTO<Pagination<CableListDTO>?>(expectedPagedResult, string.Empty));
+                .ReturnsAsync(new ResponseBase<Pagination<CableListDTO>?>(expectedPagedResult, string.Empty));
 
             // Act
             var result = await controller.List("filter", 1, true, 1);
@@ -112,7 +113,7 @@ namespace UnitTests.Tests
             var expectedResult = new Pagination<CableListDTO>(1, 10, 5, new List<CableListDTO>());
 
             cableService.Setup(x => x.ListPaged(filter, warehouseId, isExportedToUse, page))
-                .ReturnsAsync(new ResponseDTO<Pagination<CableListDTO>>(expectedResult, string.Empty));
+                .ReturnsAsync(new ResponseBase<Pagination<CableListDTO>>(expectedResult, string.Empty));
 
             // Act
             var result = await controller.List(filter, warehouseId, isExportedToUse, page);
@@ -145,7 +146,7 @@ namespace UnitTests.Tests
             var context = new ControllerContext { HttpContext = new DefaultHttpContext { User = user } };
             controller.ControllerContext = context;
 
-            cableService.Setup(x => x.ListAll(warehouseId)).ReturnsAsync(new ResponseDTO<List<CableListDTO>>(expectedList, string.Empty));
+            cableService.Setup(x => x.ListAll(warehouseId)).ReturnsAsync(new ResponseBase<List<CableListDTO>>(expectedList, string.Empty));
 
             // Act
             var result = await controller.List(1);
@@ -211,7 +212,7 @@ namespace UnitTests.Tests
 
             // Mock the necessary methods
             cableService.Setup(x => x.Create(sampleData, userId))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Thêm thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Thêm thành công"));
 
             // Act
             var result = await controller.Create(sampleData);
@@ -281,7 +282,7 @@ namespace UnitTests.Tests
             var context = new ControllerContext { HttpContext = new DefaultHttpContext { User = user } };
             controller.ControllerContext = context;
 
-            var expectedResponse = new ResponseDTO<bool>(false, "Không tìm thấy cáp", (int)HttpStatusCode.NotFound);
+            var expectedResponse = new ResponseBase<bool>(false, "Không tìm thấy cáp", (int)HttpStatusCode.NotFound);
             cableService.Setup(x => x.Update(sampleCableID, sampleData)).ReturnsAsync(expectedResponse);
 
             // Act
@@ -314,7 +315,7 @@ namespace UnitTests.Tests
             // Simulate user with admin role and specific ID
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
-            cableService.Setup(x => x.Update(sampleCableID, sampleData)).ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
+            cableService.Setup(x => x.Update(sampleCableID, sampleData)).ReturnsAsync(new ResponseBase<bool>(true, "Chỉnh sửa thành công"));
 
             // Act
             var result = await controller.Update(sampleCableID, sampleData);
@@ -352,7 +353,7 @@ namespace UnitTests.Tests
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
-            cableService.Setup(x => x.Delete(cableId)).ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
+            cableService.Setup(x => x.Delete(cableId)).ReturnsAsync(new ResponseBase<bool>(true, "Xóa thành công"));
 
             // Act
             var result = await controller.Delete(cableId);
@@ -373,7 +374,7 @@ namespace UnitTests.Tests
 
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
-            cableService.Setup(x => x.Delete(cableId)).ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy cáp", (int)HttpStatusCode.NotFound));
+            cableService.Setup(x => x.Delete(cableId)).ReturnsAsync(new ResponseBase<bool>(false, "Không tìm thấy cáp", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Delete(cableId);

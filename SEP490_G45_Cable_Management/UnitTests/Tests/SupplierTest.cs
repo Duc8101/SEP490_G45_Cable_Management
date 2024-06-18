@@ -1,4 +1,5 @@
-﻿using Common.Const;
+﻿using Common.Base;
+using Common.Const;
 using Common.DTO.SupplierDTO;
 using Common.Pagination;
 
@@ -122,7 +123,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.ListPaged(name, page))
-                .ReturnsAsync(new ResponseDTO<Pagination<SupplierListDTO>?>(
+                .ReturnsAsync(new ResponseBase<Pagination<SupplierListDTO>?>(
                     new Pagination<SupplierListDTO>(page, expectedSuppliers.Count,
                                                         PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE,
                                                         expectedSuppliers),
@@ -154,7 +155,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_LEADER);
 
             supplierService.Setup(x => x.ListPaged(name, page))
-                .ReturnsAsync(new ResponseDTO<Pagination<SupplierListDTO>?>(
+                .ReturnsAsync(new ResponseBase<Pagination<SupplierListDTO>?>(
                     new Pagination<SupplierListDTO>(page, expectedSuppliers.Count,
                                                         PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE,
                                                         expectedSuppliers),
@@ -187,7 +188,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_WAREHOUSE_KEEPER);
 
             supplierService.Setup(x => x.ListPaged(name, page))
-                .ReturnsAsync(new ResponseDTO<Pagination<SupplierListDTO>?>(
+                .ReturnsAsync(new ResponseBase<Pagination<SupplierListDTO>?>(
                     new Pagination<SupplierListDTO>(page, expectedSuppliers.Count,
                                                         PageSizeConst.MAX_SUPPLIER_LIST_IN_PAGE,
                                                         expectedSuppliers),
@@ -231,7 +232,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.ListAll())
-                .ReturnsAsync(new ResponseDTO<List<SupplierListDTO>?>(expectedSuppliers, string.Empty));
+                .ReturnsAsync(new ResponseBase<List<SupplierListDTO>?>(expectedSuppliers, string.Empty));
 
             // Act
             var result = await controller.List();
@@ -253,7 +254,7 @@ namespace UnitTests.Tests
             var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Create(supplierCreateDTO, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Tên nhà cung cấp không được để trống",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Tên nhà cung cấp không được để trống",
                                                (int)HttpStatusCode.Conflict));
 
             // Act
@@ -277,7 +278,7 @@ namespace UnitTests.Tests
 
             supplierService.Setup(x => x.Create(supplierCreateDTO, creatorId))
                 .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int)HttpStatusCode.Conflict));
+                    new ResponseBase<bool>(false, "Nhà cung cấp đã tồn tại", (int)HttpStatusCode.Conflict));
 
             // Act
             var result = await controller.Create(supplierCreateDTO);
@@ -299,7 +300,7 @@ namespace UnitTests.Tests
             var creatorId = TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Create(supplierCreateDTO, creatorId))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Thêm thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Thêm thành công"));
 
             // Act
             var result = await controller.Create(supplierCreateDTO);
@@ -338,7 +339,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Update(supplierId, supplierCreateUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy nhà cung cấp",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Không tìm thấy nhà cung cấp",
                                                     (int)HttpStatusCode.NotFound));
 
             // Act
@@ -360,7 +361,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Update(supplierId, supplierCreateUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Tên nhà cung cấp không được để trống",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Tên nhà cung cấp không được để trống",
                                                     (int)HttpStatusCode.Conflict));
 
             // Act
@@ -385,7 +386,7 @@ namespace UnitTests.Tests
 
             supplierService.Setup(x => x.Update(supplierId, supplierCreateUpdateDTO))
                 .ReturnsAsync(
-                    new ResponseDTO<bool>(false, "Nhà cung cấp đã tồn tại", (int)HttpStatusCode.Conflict));
+                    new ResponseBase<bool>(false, "Nhà cung cấp đã tồn tại", (int)HttpStatusCode.Conflict));
 
             // Act
             var result = await controller.Update(supplierId, supplierCreateUpdateDTO);
@@ -408,7 +409,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Update(supplierId, supplierCreateUpdateDTO))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Chỉnh sửa thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Chỉnh sửa thành công"));
 
             // Act
             var result = await controller.Update(supplierId, supplierCreateUpdateDTO);
@@ -464,7 +465,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Delete(supplierId))
-                .ReturnsAsync(new ResponseDTO<bool>(false, "Không tìm thấy nhà cung cấp",
+                .ReturnsAsync(new ResponseBase<bool>(false, "Không tìm thấy nhà cung cấp",
                                                     (int)HttpStatusCode.NotFound));
 
             // Act
@@ -485,7 +486,7 @@ namespace UnitTests.Tests
             TestHelper.SimulateUserWithRoleAndId(controller, RoleConst.ROLE_ADMIN);
 
             supplierService.Setup(x => x.Delete(supplierId))
-                .ReturnsAsync(new ResponseDTO<bool>(true, "Xóa thành công"));
+                .ReturnsAsync(new ResponseBase<bool>(true, "Xóa thành công"));
 
             // Act
             var result = await controller.Delete(supplierId);

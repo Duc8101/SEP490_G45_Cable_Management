@@ -1,4 +1,5 @@
-﻿using Common.Const;
+﻿using Common.Base;
+using Common.Const;
 using Common.DTO;
 using Common.DTO.StatisticDTO;
 
@@ -113,7 +114,7 @@ namespace UnitTests.Tests
                                                  RoleConst.ROLE_ADMIN);  // Simulate an admin
 
             statisticService.Setup(x => x.MaterialFluctuationPerYear(materialCategoryID, warehouseID, year))
-                .ReturnsAsync(new ResponseDTO<MaterialFluctuationPerYear?>(expectedData, ""));
+                .ReturnsAsync(new ResponseBase<MaterialFluctuationPerYear?>(expectedData, ""));
 
             // Act
             var result = await controller.MaterialFluctuationPerYear(materialCategoryID, warehouseID, year);
@@ -144,7 +145,7 @@ namespace UnitTests.Tests
                                                  RoleConst.ROLE_WAREHOUSE_KEEPER);  // Simulate an admin
 
             statisticService.Setup(x => x.MaterialFluctuationPerYear(materialCategoryID, warehouseID, year))
-                .ReturnsAsync(new ResponseDTO<MaterialFluctuationPerYear?>(expectedData, ""));
+                .ReturnsAsync(new ResponseBase<MaterialFluctuationPerYear?>(expectedData, ""));
 
             // Act
             var result = await controller.MaterialFluctuationPerYear(materialCategoryID, warehouseID, year);
@@ -176,7 +177,7 @@ namespace UnitTests.Tests
                                                  RoleConst.ROLE_LEADER);  // Simulate an admin
 
             statisticService.Setup(x => x.MaterialFluctuationPerYear(materialCategoryID, warehouseID, year))
-                .ReturnsAsync(new ResponseDTO<MaterialFluctuationPerYear?>(expectedData, ""));
+                .ReturnsAsync(new ResponseBase<MaterialFluctuationPerYear?>(expectedData, ""));
 
             // Act
             var result = await controller.MaterialFluctuationPerYear(materialCategoryID, warehouseID, year);
@@ -219,7 +220,7 @@ namespace UnitTests.Tests
                                                  RoleConst.ROLE_ADMIN);  // Simulate an admin
 
             statisticService.Setup(x => x.CableFluctuationPerYear(cableCategoryID, warehouseID, year))
-                .ReturnsAsync(new ResponseDTO<CableFluctuationPerYear?>(null, "Không tìm thấy cáp",
+                .ReturnsAsync(new ResponseBase<CableFluctuationPerYear?>(null, "Không tìm thấy cáp",
                                                                         (int)HttpStatusCode.NotFound));
 
             // Act
@@ -252,7 +253,7 @@ namespace UnitTests.Tests
                                                  RoleConst.ROLE_WAREHOUSE_KEEPER);  // Simulate an admin
 
             statisticService.Setup(x => x.CableFluctuationPerYear(cableCategoryID, warehouseID, year))
-                .ReturnsAsync(new ResponseDTO<CableFluctuationPerYear?>(expectedData, string.Empty));
+                .ReturnsAsync(new ResponseBase<CableFluctuationPerYear?>(expectedData, string.Empty));
 
             // Act
             var result = await controller.CableFluctuationPerYear(cableCategoryID, warehouseID, year);
@@ -288,7 +289,7 @@ namespace UnitTests.Tests
                                                  RoleConst.ROLE_LEADER);  // Simulate an admin
 
             statisticService.Setup(x => x.CableFluctuationPerYear(cableCategoryID, warehouseID, year))
-                .ReturnsAsync(new ResponseDTO<CableFluctuationPerYear?>(expectedData, string.Empty));
+                .ReturnsAsync(new ResponseBase<CableFluctuationPerYear?>(expectedData, string.Empty));
 
             // Act
             var result = await controller.CableFluctuationPerYear(cableCategoryID, warehouseID, year);
@@ -344,7 +345,7 @@ namespace UnitTests.Tests
 
             statisticService.Setup(x => x.CableCategory(warehouseID))
                 .ReturnsAsync(
-                    new ResponseDTO<List<CableCategoryStatistic>?>(expectedCableCategories, string.Empty));
+                    new ResponseBase<List<CableCategoryStatistic>?>(expectedCableCategories, string.Empty));
 
             // Act
             var result = await controller.CableCategory(warehouseID);
@@ -375,7 +376,7 @@ namespace UnitTests.Tests
 
             statisticService.Setup(x => x.CableCategory(warehouseID))
                 .ReturnsAsync(
-                    new ResponseDTO<List<CableCategoryStatistic>?>(expectedCableCategories, string.Empty));
+                    new ResponseBase<List<CableCategoryStatistic>?>(expectedCableCategories, string.Empty));
 
             // Act
             var result = await controller.CableCategory(warehouseID);
@@ -406,7 +407,7 @@ namespace UnitTests.Tests
 
             statisticService.Setup(x => x.CableCategory(warehouseID))
                 .ReturnsAsync(
-                    new ResponseDTO<List<CableCategoryStatistic>?>(expectedCableCategories, string.Empty));
+                    new ResponseBase<List<CableCategoryStatistic>?>(expectedCableCategories, string.Empty));
 
             // Act
             var result = await controller.CableCategory(warehouseID);
@@ -452,7 +453,7 @@ namespace UnitTests.Tests
    };
 
             statisticService.Setup(x => x.MaterialCategory(warehouseID))
-                .ReturnsAsync(new ResponseDTO<List<OtherMaterialCategoryStatistic>?>(expectedStatistics,
+                .ReturnsAsync(new ResponseBase<List<OtherMaterialCategoryStatistic>?>(expectedStatistics,
                                                                                       string.Empty));
 
             // Act
@@ -481,7 +482,7 @@ namespace UnitTests.Tests
    };
 
             statisticService.Setup(x => x.MaterialCategory(warehouseID))
-                .ReturnsAsync(new ResponseDTO<List<OtherMaterialCategoryStatistic>?>(expectedStatistics,
+                .ReturnsAsync(new ResponseBase<List<OtherMaterialCategoryStatistic>?>(expectedStatistics,
                                                                                       string.Empty));
 
             // Act
@@ -510,7 +511,7 @@ namespace UnitTests.Tests
    };
 
             statisticService.Setup(x => x.MaterialCategory(warehouseID))
-                .ReturnsAsync(new ResponseDTO<List<OtherMaterialCategoryStatistic>?>(expectedStatistics,
+                .ReturnsAsync(new ResponseBase<List<OtherMaterialCategoryStatistic>?>(expectedStatistics,
                                                                                       string.Empty));
 
             // Act
@@ -544,7 +545,7 @@ namespace UnitTests.Tests
             var routeId = Guid.NewGuid();
 
             statisticService.Setup(x => x.Route(routeId))
-                            .ReturnsAsync(new ResponseDTO<List<RouteStatistic>?>(null, "Không tìm thấy tuyến", (int)HttpStatusCode.NotFound));
+                            .ReturnsAsync(new ResponseBase<List<RouteStatistic>?>(null, "Không tìm thấy tuyến", (int)HttpStatusCode.NotFound));
 
             // Act
             var result = await controller.Route(routeId);
@@ -570,7 +571,7 @@ namespace UnitTests.Tests
     };
 
             statisticService.Setup(x => x.Route(routeId))
-                            .ReturnsAsync(new ResponseDTO<List<RouteStatistic>?>(routeStatistics, string.Empty));
+                            .ReturnsAsync(new ResponseBase<List<RouteStatistic>?>(routeStatistics, string.Empty));
 
             // Act
             var result = await controller.Route(routeId);
