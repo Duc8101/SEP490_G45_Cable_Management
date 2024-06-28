@@ -1,5 +1,5 @@
 ﻿using API.Attributes;
-using API.Services.IService;
+using API.Services.Cables;
 using Common.Base;
 using Common.DTO.CableDTO;
 using Common.Enum;

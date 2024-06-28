@@ -1,5 +1,5 @@
 ﻿using API.Attributes;
-using API.Services.IService;
+using API.Services.Suppliers;
 using Common.Base;
 using Common.DTO.SupplierDTO;
 using Common.Enum;

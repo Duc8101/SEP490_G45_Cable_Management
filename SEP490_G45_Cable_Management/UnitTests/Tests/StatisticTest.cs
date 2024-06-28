@@ -1,4 +1,5 @@
-﻿using Common.Base;
+﻿using API.Services.Statistic;
+using Common.Base;
 using Common.Const;
 using Common.DTO;
 using Common.DTO.StatisticDTO;

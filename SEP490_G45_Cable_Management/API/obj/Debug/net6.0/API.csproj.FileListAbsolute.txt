@@ -328,3 +328,4 @@ D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\ref\API.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Common.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Common.pdb
+D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.MvcApplicationPartsAssemblyInfo.cs

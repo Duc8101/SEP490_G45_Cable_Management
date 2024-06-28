@@ -1,4 +1,4 @@
-﻿using API.Services.IService;
+﻿using API.Services.Warehouses;
 using Common.Base;
 using Common.DTO.WarehouseDTO;
 using Common.Pagination;
