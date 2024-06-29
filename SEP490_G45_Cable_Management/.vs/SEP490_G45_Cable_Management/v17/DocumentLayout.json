@@ -1,12 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{F407D220-34E0-4A4C-B4BD-927CBF27306A}|UnitTests\\UnitTests.csproj|d:\\github\\sep490_g45_cable_management\\sep490_g45_cable_management\\unittests\\tests\\nodematerialcategorytest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F407D220-34E0-4A4C-B4BD-927CBF27306A}|UnitTests\\UnitTests.csproj|solutionrelative:unittests\\tests\\nodematerialcategorytest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -14,24 +9,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "NodeMaterialCategoryTest.cs",
-              "DocumentMoniker": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\UnitTests\\Tests\\NodeMaterialCategoryTest.cs",
-              "RelativeDocumentMoniker": "UnitTests\\Tests\\NodeMaterialCategoryTest.cs",
-              "ToolTip": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\UnitTests\\Tests\\NodeMaterialCategoryTest.cs",
-              "RelativeToolTip": "UnitTests\\Tests\\NodeMaterialCategoryTest.cs",
-              "ViewState": "AQIAABYAAAAAAAAAAAA1wGYAAAAaAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-29T06:08:45.336Z",
-              "EditorCaption": ""
             }
           ]
         }

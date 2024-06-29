@@ -1,8 +1,9 @@
-﻿using API.Services.Warehouses;
+﻿using API.Attributes;
+using API.Services.Warehouses;
 using Common.Base;
 using Common.DTO.WarehouseDTO;
+using Common.Enum;
 using Common.Pagination;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -11,74 +12,68 @@ namespace API.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class WarehouseController : BaseAPIController
     {
-        private readonly IWarehouseService service;
+        private readonly IWarehouseService _service;
 
         public WarehouseController(IWarehouseService service)
         {
-            this.service = service;
+            _service = service;
         }
 
 
         [HttpGet("Paged")]
-        [Authorize]
+        [Role(Role.Admin, Role.Leader, Role.Warehouse_Keeper)]
         public async Task<ResponseBase<Pagination<WarehouseListDTO>?>> List(string? name, [Required] int page = 1)
         {
-            // if admin, warehousekeeper, leader
-            if (isAdmin() || isWarehouseKeeper() || isLeader())
-            {
-                return await service.ListPaged(name, page);
-            }
-            return new ResponseBase<Pagination<WarehouseListDTO>?>(null, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            ResponseBase<Pagination<WarehouseListDTO>?> response = await _service.ListPaged(name, page);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpGet("All")]
-        [Authorize]
         public async Task<ResponseBase<List<WarehouseListDTO>?>> List()
         {
-            return await service.ListAll();
+            ResponseBase<List<WarehouseListDTO>?> response = await _service.ListAll();
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpPost]
-        [Authorize]
+        [Role(Role.Admin)]
         public async Task<ResponseBase<bool>> Create([Required] WarehouseCreateUpdateDTO DTO)
         {
-            // if admin
-            if (isAdmin())
+            Guid? CreatorID = getUserID();
+            ResponseBase<bool> response;
+            if (CreatorID == null)
             {
-                Guid? CreatorID = getUserID();
-                if (CreatorID == null)
-                {
-                    return new ResponseBase<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
-                }
-                return await service.Create(DTO, CreatorID.Value);
+                response = new ResponseBase<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
             }
-            return new ResponseBase<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            else
+            {
+                response = await _service.Create(DTO, CreatorID.Value);
+            }
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpPut("{WarehouseID}")]
-        [Authorize]
+        [Role(Role.Admin)]
         public async Task<ResponseBase<bool>> Update([Required] int WarehouseID, [Required] WarehouseCreateUpdateDTO DTO)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.Update(WarehouseID, DTO);
-            }
-            return new ResponseBase<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            ResponseBase<bool> response = await _service.Update(WarehouseID, DTO);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpDelete("{WarehouseID}")]
-        [Authorize]
+        [Role(Role.Admin)]
         public async Task<ResponseBase<bool>> Delete([Required] int WarehouseID)
         {
-            // if admin
-            if (isAdmin())
-            {
-                return await service.Delete(WarehouseID);
-            }
-            return new ResponseBase<bool>(false, "Bạn không có quyền truy cập trang này", (int)HttpStatusCode.Forbidden);
+            ResponseBase<bool> response = await _service.Delete(WarehouseID);
+            Response.StatusCode = response.Code;
+            return response;
         }
     }
 }

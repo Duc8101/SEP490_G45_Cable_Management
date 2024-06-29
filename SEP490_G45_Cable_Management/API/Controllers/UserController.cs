@@ -86,26 +86,35 @@ namespace API.Controllers
             {
                 response = await _service.Delete(UserID, UserLoginID.Value);
             }
+            Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpPost]
         public async Task<ResponseBase<bool>> ForgotPassword([Required] ForgotPasswordDTO DTO)
         {
-            return await _service.ForgotPassword(DTO);
+            ResponseBase<bool> response = await _service.ForgotPassword(DTO);
+            Response.StatusCode = response.Code;
+            return response;
         }
 
         [HttpPost]
         [Authorize]
         public async Task<ResponseBase<bool>> ChangePassword([Required] ChangePasswordDTO DTO)
         {
+            ResponseBase<bool> response;
             string? email = getEmail();
             // if not found email
             if (email == null)
             {
-                return new ResponseBase<bool>(false, "Không tìm thấy email. Cần xác minh lại thông tin đăng nhập", (int)HttpStatusCode.NotFound);
+                response = new ResponseBase<bool>(false, "Không tìm thấy email. Cần xác minh lại thông tin đăng nhập", (int)HttpStatusCode.NotFound);
             }
-            return await _service.ChangePassword(DTO, email);
+            else
+            {
+                response = await _service.ChangePassword(DTO, email);
+            }
+            Response.StatusCode = response.Code;
+            return response;
         }
     }
 }
