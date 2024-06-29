@@ -967,7 +967,6 @@
           "AutoMapper": "13.0.1",
           "DataAccess": "1.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.22",
-          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.22",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.18.1",
           "Swashbuckle.AspNetCore": "6.5.0"
         },
@@ -975,8 +974,17 @@
           "API.dll": {}
         }
       },
+      "Common/1.0.0": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.22"
+        },
+        "runtime": {
+          "Common.dll": {}
+        }
+      },
       "DataAccess/1.0.0": {
         "dependencies": {
+          "Common": "1.0.0",
           "MailKit": "4.2.0",
           "Microsoft.Extensions.Configuration": "6.0.1",
           "Microsoft.Extensions.Configuration.Json": "6.0.0",
@@ -1548,6 +1556,11 @@
       "hashPath": "system.windows.extensions.4.7.0.nupkg.sha512"
     },
     "API/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Common/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

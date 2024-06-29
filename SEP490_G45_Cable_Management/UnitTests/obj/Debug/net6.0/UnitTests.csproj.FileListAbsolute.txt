@@ -322,3 +322,5 @@ D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\UnitTests\obj\
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\UnitTests\obj\Debug\net6.0\UnitTests.pdb
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\UnitTests\obj\Debug\net6.0\UnitTests.genruntimeconfig.cache
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\UnitTests\obj\Debug\net6.0\ref\UnitTests.dll
+D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\UnitTests\bin\Debug\net6.0\Common.dll
+D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\UnitTests\bin\Debug\net6.0\Common.pdb
