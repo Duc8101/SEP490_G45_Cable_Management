@@ -1,250 +1,3 @@
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\appsettings.Development.json
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\appsettings.json
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.exe
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.deps.json
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.runtimeconfig.json
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.pdb
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Extensions.Configuration.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Identity.Client.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.OpenApi.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Diagnostics.DiagnosticSource.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Drawing.Common.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Runtime.Caching.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Security.Cryptography.ProtectedData.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Security.Permissions.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Windows.Extensions.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\DataAccess.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\DataAccess.pdb
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.csproj.AssemblyReference.cache
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.GeneratedMSBuildEditorConfig.editorconfig
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.AssemblyInfoInputs.cache
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.AssemblyInfo.cs
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.csproj.CoreCompileInputs.cache
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.MvcApplicationPartsAssemblyInfo.cs
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.MvcApplicationPartsAssemblyInfo.cache
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets\msbuild.API.Microsoft.AspNetCore.StaticWebAssets.props
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets\msbuild.build.API.props
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.API.props
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.API.props
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets.pack.json
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets.build.json
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets.development.json
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\scopedcss\bundle\API.styles.css
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.csproj.CopyComplete
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\refint\API.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.pdb
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.genruntimeconfig.cache
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\ref\API.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\BouncyCastle.Cryptography.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\MailKit.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\MimeKit.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Formats.Asn1.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Text.Encoding.CodePages.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Text.Encoding.CodePages.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Humanizer.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\AWSSDK.Core.dll
-D:\SEP490\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\AWSSDK.SimpleEmail.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\appsettings.Development.json
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\appsettings.json
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.exe
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.deps.json
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.runtimeconfig.json
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.pdb
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\AWSSDK.Core.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\AWSSDK.SimpleEmail.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\BouncyCastle.Cryptography.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Humanizer.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\MailKit.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Extensions.Configuration.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Identity.Client.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.OpenApi.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\MimeKit.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Diagnostics.DiagnosticSource.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Drawing.Common.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Formats.Asn1.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Runtime.Caching.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Security.Cryptography.ProtectedData.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Security.Permissions.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Text.Encoding.CodePages.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Windows.Extensions.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Text.Encoding.CodePages.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\DataAccess.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\DataAccess.pdb
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.csproj.AssemblyReference.cache
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.GeneratedMSBuildEditorConfig.editorconfig
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.AssemblyInfoInputs.cache
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.AssemblyInfo.cs
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.csproj.CoreCompileInputs.cache
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.MvcApplicationPartsAssemblyInfo.cs
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.MvcApplicationPartsAssemblyInfo.cache
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets\msbuild.API.Microsoft.AspNetCore.StaticWebAssets.props
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets\msbuild.build.API.props
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.API.props
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.API.props
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets.pack.json
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets.build.json
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets.development.json
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\scopedcss\bundle\API.styles.css
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.csproj.CopyComplete
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\refint\API.dll
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.pdb
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.genruntimeconfig.cache
-D:\.NET Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\ref\API.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\appsettings.Development.json
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\appsettings.json
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.exe
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.deps.json
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.runtimeconfig.json
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.pdb
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\AutoMapper.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\AWSSDK.Core.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\AWSSDK.SimpleEmail.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\BouncyCastle.Cryptography.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Humanizer.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\MailKit.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Extensions.Configuration.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Identity.Client.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.OpenApi.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\MimeKit.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Diagnostics.DiagnosticSource.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Drawing.Common.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Formats.Asn1.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Runtime.Caching.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Security.Cryptography.ProtectedData.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Security.Permissions.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Text.Encoding.CodePages.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Windows.Extensions.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Text.Encoding.CodePages.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\DataAccess.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\DataAccess.pdb
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.csproj.AssemblyReference.cache
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.GeneratedMSBuildEditorConfig.editorconfig
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.AssemblyInfoInputs.cache
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.AssemblyInfo.cs
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.csproj.CoreCompileInputs.cache
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.MvcApplicationPartsAssemblyInfo.cs
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.MvcApplicationPartsAssemblyInfo.cache
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets\msbuild.API.Microsoft.AspNetCore.StaticWebAssets.props
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets\msbuild.build.API.props
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.API.props
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.API.props
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets.pack.json
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets.build.json
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets.development.json
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\scopedcss\bundle\API.styles.css
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.csproj.CopyComplete
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\refint\API.dll
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.pdb
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.genruntimeconfig.cache
-D:\C# Project\SEP490\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\ref\API.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\appsettings.Development.json
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\appsettings.json
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.exe
@@ -253,18 +6,14 @@ D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\API.pdb
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\AutoMapper.dll
-D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\AWSSDK.Core.dll
-D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\AWSSDK.SimpleEmail.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\BouncyCastle.Cryptography.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\MailKit.dll
-D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll
-D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Extensions.Configuration.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.Identity.Client.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
@@ -287,7 +36,6 @@ D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Security.Cryptography.ProtectedData.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Security.Permissions.dll
-D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Text.Encoding.CodePages.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\System.Windows.Extensions.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
@@ -301,15 +49,17 @@ D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
-D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Text.Encoding.CodePages.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
+D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Common.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\DataAccess.dll
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\DataAccess.pdb
+D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Common.pdb
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.csproj.AssemblyReference.cache
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.GeneratedMSBuildEditorConfig.editorconfig
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.AssemblyInfoInputs.cache
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.AssemblyInfo.cs
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.csproj.CoreCompileInputs.cache
+D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.MvcApplicationPartsAssemblyInfo.cs
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.MvcApplicationPartsAssemblyInfo.cache
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.sourcelink.json
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\staticwebassets.build.json
@@ -326,6 +76,5 @@ D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.pdb
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.genruntimeconfig.cache
 D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\ref\API.dll
-D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Common.dll
-D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Common.pdb
-D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\obj\Debug\net6.0\API.MvcApplicationPartsAssemblyInfo.cs
+D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\GitHub\SEP490_G45_Cable_Management\SEP490_G45_Cable_Management\API\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll

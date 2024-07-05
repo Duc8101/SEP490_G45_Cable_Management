@@ -15,7 +15,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -28,20 +28,20 @@
   {
     "ContainingType": "API.Controllers.CableController",
     "Method": "Delete",
-    "RelativePath": "Cable/Delete/{CableID}",
+    "RelativePath": "Cable/Delete/{cableId}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "CableID",
+        "Name": "cableId",
         "Type": "System.Guid",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -60,14 +60,14 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "WarehouseID",
+        "Name": "warehouseId",
         "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Collections.Generic.List\u00601[[Common.DTO.CableDTO.CableListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -91,7 +91,7 @@
         "IsRequired": false
       },
       {
-        "Name": "WarehouseID",
+        "Name": "warehouseId",
         "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
@@ -108,7 +108,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.Pagination.Pagination\u00601[[Common.DTO.CableDTO.CableListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -121,13 +121,13 @@
   {
     "ContainingType": "API.Controllers.CableController",
     "Method": "Update",
-    "RelativePath": "Cable/Update/{CableID}",
+    "RelativePath": "Cable/Update/{cableId}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "CableID",
+        "Name": "cableId",
         "Type": "System.Guid",
         "IsRequired": true
       },
@@ -139,7 +139,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -165,7 +165,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -185,7 +185,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Collections.Generic.List\u00601[[Common.DTO.CableCategoryDTO.CableCategoryListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -216,7 +216,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.Pagination.Pagination\u00601[[Common.DTO.CableCategoryDTO.CableCategoryListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -229,13 +229,13 @@
   {
     "ContainingType": "API.Controllers.CableCategoryController",
     "Method": "Update",
-    "RelativePath": "CableCategory/Update/{CableCategoryID}",
+    "RelativePath": "CableCategory/Update/{CableCategoryId}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "CableCategoryID",
+        "Name": "CableCategoryId",
         "Type": "System.Int32",
         "IsRequired": true
       },
@@ -247,1337 +247,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.IssueController",
-    "Method": "Create",
-    "RelativePath": "Issue/Create",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.IssueDTO.IssueCreateDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.IssueController",
-    "Method": "Delete",
-    "RelativePath": "Issue/Delete/{IssueID}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "IssueID",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.IssueController",
-    "Method": "Detail",
-    "RelativePath": "Issue/Detail/{IssueID}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "IssueID",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Collections.Generic.List\u00601[[Common.DTO.IssueDTO.IssueDetailDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.IssueController",
-    "Method": "List",
-    "RelativePath": "Issue/List/Doing",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Collections.Generic.List\u00601[[Common.DTO.IssueDTO.IssueListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.IssueController",
-    "Method": "List",
-    "RelativePath": "Issue/List/Paged/All",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "filter",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "page",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.Pagination.Pagination\u00601[[Common.DTO.IssueDTO.IssueListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.IssueController",
-    "Method": "List",
-    "RelativePath": "Issue/List/Paged/Doing",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "page",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.Pagination.Pagination\u00601[[Common.DTO.IssueDTO.IssueListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.IssueController",
-    "Method": "Update",
-    "RelativePath": "Issue/Update/{IssueID}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "IssueID",
-        "Type": "System.Guid",
-        "IsRequired": true
-      },
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.IssueDTO.IssueUpdateDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.NodeController",
-    "Method": "Create",
-    "RelativePath": "Node/Create",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.NodeDTO.NodeCreateDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.NodeController",
-    "Method": "Delete",
-    "RelativePath": "Node/Delete/{NodeID}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "NodeID",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.NodeController",
-    "Method": "Detail",
-    "RelativePath": "Node/Detail/{NodeID}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "NodeID",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.DTO.NodeDTO.NodeListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.NodeController",
-    "Method": "List",
-    "RelativePath": "Node/List",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "RouteID",
-        "Type": "System.Guid",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Collections.Generic.List\u00601[[Common.DTO.NodeDTO.NodeListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.NodeController",
-    "Method": "Update",
-    "RelativePath": "Node/Update/{NodeID}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "NodeID",
-        "Type": "System.Guid",
-        "IsRequired": true
-      },
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.NodeDTO.NodeUpdateDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.NodeMaterialCategoryController",
-    "Method": "Update",
-    "RelativePath": "NodeMaterialCategory/Update/{NodeID}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "NodeID",
-        "Type": "System.Guid",
-        "IsRequired": true
-      },
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.NodeMaterialCategoryDTO.NodeMaterialCategoryUpdateDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.OtherMaterialsController",
-    "Method": "Create",
-    "RelativePath": "OtherMaterials/Create",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.OtherMaterialsDTO.OtherMaterialsCreateUpdateDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.OtherMaterialsController",
-    "Method": "Delete",
-    "RelativePath": "OtherMaterials/Delete/{OtherMaterialsID}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "OtherMaterialsID",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.OtherMaterialsController",
-    "Method": "List",
-    "RelativePath": "OtherMaterials/List/All",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "WareHouseID",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Collections.Generic.List\u00601[[Common.DTO.OtherMaterialsDTO.OtherMaterialsListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.OtherMaterialsController",
-    "Method": "List",
-    "RelativePath": "OtherMaterials/List/Paged",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "filter",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "WareHouseID",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "page",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.Pagination.Pagination\u00601[[Common.DTO.OtherMaterialsDTO.OtherMaterialsListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.OtherMaterialsController",
-    "Method": "Update",
-    "RelativePath": "OtherMaterials/Update/{OtherMaterialsID}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "OtherMaterialsID",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.OtherMaterialsDTO.OtherMaterialsCreateUpdateDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.OtherMaterialsCategoryController",
-    "Method": "Create",
-    "RelativePath": "OtherMaterialsCategory/Create",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.OtherMaterialsCategoryDTO.OtherMaterialsCategoryCreateUpdateDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.OtherMaterialsCategoryController",
-    "Method": "List",
-    "RelativePath": "OtherMaterialsCategory/List/All",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Collections.Generic.List\u00601[[Common.DTO.OtherMaterialsCategoryDTO.OtherMaterialsCategoryListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.OtherMaterialsCategoryController",
-    "Method": "List",
-    "RelativePath": "OtherMaterialsCategory/List/Paged",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "name",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "page",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.Pagination.Pagination\u00601[[Common.DTO.OtherMaterialsCategoryDTO.OtherMaterialsCategoryListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.OtherMaterialsCategoryController",
-    "Method": "Update",
-    "RelativePath": "OtherMaterialsCategory/Update/{OtherMaterialsCategoryID}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "OtherMaterialsCategoryID",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.OtherMaterialsCategoryDTO.OtherMaterialsCategoryCreateUpdateDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.RequestController",
-    "Method": "Approve",
-    "RelativePath": "Request/Approve/{RequestID}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "RequestID",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.RequestController",
-    "Method": "Create",
-    "RelativePath": "Request/Create/Cancel-Inside-Warehouse",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.RequestDTO.RequestCreateCancelInsideDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.RequestController",
-    "Method": "Create",
-    "RelativePath": "Request/Create/Cancel-Outside-Warehouse",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.RequestDTO.RequestCreateCancelOutsideDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.RequestController",
-    "Method": "Create",
-    "RelativePath": "Request/Create/Deliver",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.RequestDTO.RequestCreateDeliverDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.RequestController",
-    "Method": "Create",
-    "RelativePath": "Request/Create/Export",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.RequestDTO.RequestCreateExportDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.RequestController",
-    "Method": "Create",
-    "RelativePath": "Request/Create/Recovery",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.RequestDTO.RequestCreateRecoveryDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.RequestController",
-    "Method": "Delete",
-    "RelativePath": "Request/Delete/{RequestID}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "RequestID",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.RequestController",
-    "Method": "Detail",
-    "RelativePath": "Request/Detail/{RequestID}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "RequestID",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.DTO.RequestDTO.RequestDetailDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.RequestController",
-    "Method": "List",
-    "RelativePath": "Request/List",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "name",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "RequestCategoryID",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "status",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "page",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.Pagination.Pagination\u00601[[Common.DTO.RequestDTO.RequestListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.RequestController",
-    "Method": "Reject",
-    "RelativePath": "Request/Reject/{RequestID}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "RequestID",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.RouteController",
-    "Method": "Create",
-    "RelativePath": "Route/Create",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.RouteDTO.RouteCreateDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.RouteController",
-    "Method": "Delete",
-    "RelativePath": "Route/Delete/{RouteID}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "RouteID",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.RouteController",
-    "Method": "List",
-    "RelativePath": "Route/List/All",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "name",
-        "Type": "System.String",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Collections.Generic.List\u00601[[Common.DTO.RouteDTO.RouteListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.RouteController",
-    "Method": "List",
-    "RelativePath": "Route/List/Paged",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "page",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.Pagination.Pagination\u00601[[Common.DTO.RouteDTO.RouteListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.StatisticController",
-    "Method": "CableCategory",
-    "RelativePath": "Statistic/CableCategory",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "WarehouseID",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Collections.Generic.List\u00601[[Common.DTO.StatisticDTO.CableCategoryStatistic, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.StatisticController",
-    "Method": "CableFluctuationPerYear",
-    "RelativePath": "Statistic/CableFluctuationPerYear",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "CableCategoryID",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "WarehouseID",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "year",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.DTO.StatisticDTO.CableFluctuationPerYear, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.StatisticController",
-    "Method": "MaterialCategory",
-    "RelativePath": "Statistic/MaterialCategory",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "WarehouseID",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Collections.Generic.List\u00601[[Common.DTO.StatisticDTO.OtherMaterialCategoryStatistic, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.StatisticController",
-    "Method": "MaterialFluctuationPerYear",
-    "RelativePath": "Statistic/MaterialFluctuationPerYear",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "MaterialCategoryID",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "WarehouseID",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "year",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.DTO.StatisticDTO.MaterialFluctuationPerYear, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.StatisticController",
-    "Method": "Route",
-    "RelativePath": "Statistic/Route",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "RouteID",
-        "Type": "System.Guid",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Collections.Generic.List\u00601[[Common.DTO.StatisticDTO.RouteStatistic, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.SupplierController",
-    "Method": "Create",
-    "RelativePath": "Supplier/Create",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.SupplierDTO.SupplierCreateUpdateDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.SupplierController",
-    "Method": "Delete",
-    "RelativePath": "Supplier/Delete/{SupplierID}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "SupplierID",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.SupplierController",
-    "Method": "List",
-    "RelativePath": "Supplier/List/All",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Collections.Generic.List\u00601[[Common.DTO.SupplierDTO.SupplierListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.SupplierController",
-    "Method": "List",
-    "RelativePath": "Supplier/List/Paged",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "name",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "page",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.Pagination.Pagination\u00601[[Common.DTO.SupplierDTO.SupplierListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.SupplierController",
-    "Method": "Update",
-    "RelativePath": "Supplier/Update/{SupplierID}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "SupplierID",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.SupplierDTO.SupplierCreateUpdateDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.TransactionController",
-    "Method": "Detail",
-    "RelativePath": "Transaction/Detail/{TransactionID}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "TransactionID",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.DTO.TransactionDTO.TransactionDetailDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.TransactionController",
-    "Method": "List",
-    "RelativePath": "Transaction/List",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "filter",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "WareHouseID",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "page",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.Pagination.Pagination\u00601[[Common.DTO.TransactionDTO.TransactionHistoryDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -1603,7 +273,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -1629,7 +299,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -1642,20 +312,20 @@
   {
     "ContainingType": "API.Controllers.UserController",
     "Method": "Delete",
-    "RelativePath": "User/Delete/{UserID}",
+    "RelativePath": "User/Delete/{UserId}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "UserID",
+        "Name": "UserId",
         "Type": "System.Guid",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -1681,7 +351,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -1712,7 +382,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.Pagination.Pagination\u00601[[Common.DTO.UserDTO.UserListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -1732,7 +402,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Collections.Generic.List\u00601[[Common.DTO.UserDTO.UserListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -1758,7 +428,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.DTO.UserDTO.TokenDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -1789,141 +459,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.WarehouseController",
-    "Method": "Create",
-    "RelativePath": "Warehouse/Create",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.WarehouseDTO.WarehouseCreateUpdateDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.WarehouseController",
-    "Method": "Delete",
-    "RelativePath": "Warehouse/Delete/{WarehouseID}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "WarehouseID",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.WarehouseController",
-    "Method": "List",
-    "RelativePath": "Warehouse/List/All",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Collections.Generic.List\u00601[[Common.DTO.WarehouseDTO.WarehouseListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.WarehouseController",
-    "Method": "List",
-    "RelativePath": "Warehouse/List/Paged",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "name",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "page",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[Common.Pagination.Pagination\u00601[[Common.DTO.WarehouseDTO.WarehouseListDTO, Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "API.Controllers.WarehouseController",
-    "Method": "Update",
-    "RelativePath": "Warehouse/Update/{WarehouseID}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "WarehouseID",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "DTO",
-        "Type": "Common.DTO.WarehouseDTO.WarehouseCreateUpdateDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Common.Base.ResponseBase\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "Common.Base.ResponseBase",
         "MediaTypes": [
           "text/plain",
           "application/json",

@@ -1,15 +1,20 @@
-﻿using Common.Const;
-using Common.DTO.CableDTO;
+﻿using Common.DTO.CableDTO;
 using Common.Entity;
+using Common.Enum;
+using DataAccess.DBContext;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.DAO
 {
     public class DAOCable : BaseDAO
     {
-        private IQueryable<Cable> getQuery(string? filter, int? WarehouseID, bool isExportedToUse)
+        public DAOCable(CableManagementContext context) : base(context)
         {
-            IQueryable<Cable> query = context.Cables.Include(c => c.CableCategory).Include(c => c.Supplier).Include(c => c.Warehouse)
+        }
+
+        private IQueryable<Cable> getQuery(string? filter, int? warehouseId, bool isExportedToUse)
+        {
+            IQueryable<Cable> query = _context.Cables.Include(c => c.CableCategory).Include(c => c.Supplier).Include(c => c.Warehouse)
                 .Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == isExportedToUse);
             // if search base on name
             if (filter != null && filter.Trim().Length > 0)
@@ -18,74 +23,75 @@ namespace DataAccess.DAO
                 || c.Code.ToLower().Contains(filter.ToLower().Trim()) || c.Supplier.SupplierName.ToLower().Contains(filter.ToLower().Trim()));
             }
             // if choose warehouse
-            if (WarehouseID.HasValue)
+            if (warehouseId.HasValue)
             {
-                query = query.Where(c => c.WarehouseId == WarehouseID);
+                query = query.Where(c => c.WarehouseId == warehouseId);
             }
             return query;
         }
-        public async Task<List<Cable>> getListPaged(string? filter, int? WarehouseID, bool isExportedToUse, int page)
+        public List<Cable> getListCablePaged(string? filter, int? warehouseId, bool isExportedToUse, int page)
         {
-            IQueryable<Cable> query = getQuery(filter, WarehouseID, isExportedToUse);
-            return await query.OrderByDescending(c => c.UpdateAt).Skip(PageSizeConst.MAX_CABLE_LIST_IN_PAGE * (page - 1))
-                .Take(PageSizeConst.MAX_CABLE_LIST_IN_PAGE).ToListAsync();
+            IQueryable<Cable> query = getQuery(filter, warehouseId, isExportedToUse);
+            return query.OrderByDescending(c => c.UpdateAt).Skip((int) PageSize.Size * (page - 1))
+                .Take((int)PageSize.Size).ToList();
         }
 
-        public async Task<List<Cable>> getListAll(int? WarehouseID)
+        public List<Cable> getListCableAll(int? warehouseId)
         {
-            IQueryable<Cable> query = getQuery(null, WarehouseID, false);
-            return await query.OrderByDescending(c => c.UpdateAt).ToListAsync();
+            IQueryable<Cable> query = getQuery(null, warehouseId, false);
+            return query.OrderByDescending(c => c.UpdateAt).ToList();
         }
 
-        public async Task<int> getRowCount(string? filter, int? WarehouseID, bool isExportedToUse)
+        public int getRowCount(string? filter, int? warehouseId, bool isExportedToUse)
         {
-            IQueryable<Cable> query = getQuery(filter, WarehouseID, isExportedToUse);
-            return await query.CountAsync();
+            IQueryable<Cable> query = getQuery(filter, warehouseId, isExportedToUse);
+            return query.Count();
         }
 
-        public async Task<int> getSum(string? filter, int? WarehouseID, bool isExportedToUse)
+        public int getSum(string? filter, int? warehouseId, bool isExportedToUse)
         {
-            IQueryable<Cable> query = getQuery(filter, WarehouseID, isExportedToUse);
-            return await query.SumAsync(c => c.Length);
+            IQueryable<Cable> query = getQuery(filter, warehouseId, isExportedToUse);
+            return query.Sum(c => c.Length);
         }
 
-        public async Task<bool> isExist(CableCreateUpdateDTO DTO)
+        public bool isExist(CableCreateUpdateDTO DTO)
         {
-            return await context.Cables.AnyAsync(c => c.IsDeleted == false && c.Code == DTO.Code.Trim() && c.Status == DTO.Status.Trim()
+            return _context.Cables.Any(c => c.IsDeleted == false && c.Code == DTO.Code.Trim() && c.Status == DTO.Status.Trim()
             && c.SupplierId == DTO.SupplierId && c.StartPoint == DTO.StartPoint && c.EndPoint == DTO.EndPoint
             && c.YearOfManufacture == DTO.YearOfManufacture);
         }
 
-        public async Task CreateCable(Cable cable)
+        public void CreateCable(Cable cable)
         {
-            await context.Cables.AddAsync(cable);
-            await context.SaveChangesAsync();
+            _context.Cables.Add(cable);
+            Save();
         }
 
-        public async Task<Cable?> getCable(Guid CableID)
+        public Cable? getCable(Guid cableId)
         {
-            return await context.Cables.Include(c => c.CableCategory).SingleOrDefaultAsync(c => c.IsDeleted == false && c.CableId == CableID);
+            return _context.Cables.Include(c => c.CableCategory).SingleOrDefault(c => c.IsDeleted == false 
+            && c.CableId == cableId);
         }
 
-        public async Task<bool> isExist(Guid CableID, CableCreateUpdateDTO DTO)
+        public bool isExist(Guid cableId, CableCreateUpdateDTO DTO)
         {
-            return await context.Cables.AnyAsync(c => c.IsDeleted == false && c.Code == DTO.Code.Trim() && c.Status == DTO.Status.Trim()
+            return _context.Cables.Any(c => c.IsDeleted == false && c.Code == DTO.Code.Trim() && c.Status == DTO.Status.Trim()
             && c.SupplierId == DTO.SupplierId && c.StartPoint == DTO.StartPoint && c.EndPoint == DTO.EndPoint
-            && c.YearOfManufacture == DTO.YearOfManufacture && c.CableId != CableID);
+            && c.YearOfManufacture == DTO.YearOfManufacture && c.CableId != cableId);
         }
 
-        public async Task UpdateCable(Cable cable)
+        public void UpdateCable(Cable cable)
         {
-            context.Cables.Update(cable);
-            await context.SaveChangesAsync();
+            _context.Cables.Update(cable);
+            Save();
         }
 
-        public async Task DeleteCable(Cable cable)
+        public void DeleteCable(Cable cable)
         {
             cable.IsDeleted = true;
-            await UpdateCable(cable);
+            UpdateCable(cable);
         }
-        public async Task<Cable?> getCable(int CableCategoryID)
+/*        public async Task<Cable?> getCable(int CableCategoryID)
         {
             return await context.Cables.Include(c => c.CableCategory).Where(c => c.CableCategoryId == CableCategoryID && c.IsInRequest == false).FirstOrDefaultAsync();
         }
@@ -111,7 +117,7 @@ namespace DataAccess.DAO
         public async Task<Cable?> getCable(Guid CableID, int StartPoint, int EndPoint)
         {
             return await context.Cables.Where(c => c.CableParentId == CableID && c.StartPoint <= StartPoint && c.EndPoint >= EndPoint && c.IsDeleted == false).FirstOrDefaultAsync();
-        }
+        }*/
 
     }
 }

@@ -3,7 +3,7 @@ using API.Services.Users;
 using Common.Base;
 using Common.DTO.UserDTO;
 using Common.Enum;
-using Common.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -23,9 +23,9 @@ namespace API.Controllers
 
 
         [HttpPost]
-        public async Task<ResponseBase<TokenDTO?>> Login([Required] LoginDTO DTO)
+        public ResponseBase Login([Required] LoginDTO DTO)
         {
-            ResponseBase<TokenDTO?> response = await _service.Login(DTO);
+            ResponseBase response = _service.Login(DTO);
             Response.StatusCode = response.Code;
             return response;
         }
@@ -33,9 +33,9 @@ namespace API.Controllers
         [HttpGet("Paged")]
         [Authorize]
         [Role(Role.Admin)]
-        public async Task<ResponseBase<Pagination<UserListDTO>?>> List(string? filter, [Required] int page = 1)
+        public ResponseBase List(string? filter, [Required] int page = 1)
         {
-            ResponseBase<Pagination<UserListDTO>?> response = await _service.ListPaged(filter, page);
+            ResponseBase response = _service.ListUserPaged(filter, page);
             Response.StatusCode = response.Code;
             return response;
         }
@@ -43,9 +43,9 @@ namespace API.Controllers
         [HttpGet("WarehouseKeeper")]
         [Authorize]
         [Role(Role.Admin)]
-        public async Task<ResponseBase<List<UserListDTO>?>> List()
+        public ResponseBase List()
         {
-            ResponseBase<List<UserListDTO>?> response = await _service.ListWarehouseKeeper();
+            ResponseBase response = _service.ListWarehouseKeeper();
             Response.StatusCode = response.Code;
             return response;
         }
@@ -53,9 +53,9 @@ namespace API.Controllers
         [HttpPost]
         [Authorize]
         [Role(Role.Admin)]
-        public async Task<ResponseBase<bool>> Create([Required] UserCreateDTO DTO)
+        public async Task<ResponseBase> Create([Required] UserCreateDTO DTO)
         {
-            ResponseBase<bool> response = await _service.Create(DTO);
+            ResponseBase response = await _service.Create(DTO);
             Response.StatusCode = response.Code;
             return response;
         }
@@ -63,55 +63,55 @@ namespace API.Controllers
         [HttpPut("{UserID}")]
         [Authorize]
         [Role(Role.Admin)]
-        public async Task<ResponseBase<bool>> Update([Required] Guid UserID, [Required] UserUpdateDTO DTO)
+        public ResponseBase Update([Required] Guid UserID, [Required] UserUpdateDTO DTO)
         {
-            ResponseBase<bool> response = await _service.Update(UserID, DTO);
+            ResponseBase response = _service.Update(UserID, DTO);
             Response.StatusCode = response.Code;
             return response;
         }
 
-        [HttpDelete("{UserID}")]
+        [HttpDelete("{UserId}")]
         [Authorize]
         [Role(Role.Admin)]
-        public async Task<ResponseBase<bool>> Delete([Required] Guid UserID)
+        public ResponseBase Delete([Required] Guid UserId)
         {
-            ResponseBase<bool> response;
-            Guid? UserLoginID = getUserID();
+            ResponseBase response;
+            Guid? UserLoginId = getUserId();
             // if not found
-            if (UserLoginID == null)
+            if (UserLoginId== null)
             {
-                response = new ResponseBase<bool>(false, "Không tìm thấy ID", (int)HttpStatusCode.NotFound);
+                response = new ResponseBase("Không tìm thấy ID", (int)HttpStatusCode.NotFound);
             }
             else
             {
-                response = await _service.Delete(UserID, UserLoginID.Value);
+                response = _service.Delete(UserId, UserLoginId.Value);
             }
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpPost]
-        public async Task<ResponseBase<bool>> ForgotPassword([Required] ForgotPasswordDTO DTO)
+        public async Task<ResponseBase> ForgotPassword([Required] ForgotPasswordDTO DTO)
         {
-            ResponseBase<bool> response = await _service.ForgotPassword(DTO);
+            ResponseBase response = await _service.ForgotPassword(DTO);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<ResponseBase<bool>> ChangePassword([Required] ChangePasswordDTO DTO)
+        public ResponseBase ChangePassword([Required] ChangePasswordDTO DTO)
         {
-            ResponseBase<bool> response;
+            ResponseBase response;
             string? email = getEmail();
             // if not found email
             if (email == null)
             {
-                response = new ResponseBase<bool>(false, "Không tìm thấy email. Cần xác minh lại thông tin đăng nhập", (int)HttpStatusCode.NotFound);
+                response = new ResponseBase(false, "Không tìm thấy email. Cần xác minh lại thông tin đăng nhập", (int)HttpStatusCode.NotFound);
             }
             else
             {
-                response = await _service.ChangePassword(DTO, email);
+                response = _service.ChangePassword(DTO, email);
             }
             Response.StatusCode = response.Code;
             return response;

@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net6.0": {
-      "BouncyCastle.Cryptography/2.2.1": {
+      "BouncyCastle.Cryptography/2.4.0": {
         "type": "package",
         "compile": {
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
@@ -15,10 +15,10 @@
           }
         }
       },
-      "MailKit/4.2.0": {
+      "MailKit/4.7.0": {
         "type": "package",
         "dependencies": {
-          "MimeKit": "4.2.0"
+          "MimeKit": "4.7.0"
         },
         "compile": {
           "lib/net6.0/MailKit.dll": {
@@ -40,7 +40,7 @@
           "lib/netcoreapp2.0/_._": {}
         }
       },
-      "Microsoft.Data.SqlClient/2.1.4": {
+      "Microsoft.Data.SqlClient/2.1.7": {
         "type": "package",
         "dependencies": {
           "Microsoft.Data.SqlClient.SNI.runtime": "2.1.1",
@@ -96,11 +96,11 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore/6.0.22": {
+      "Microsoft.EntityFrameworkCore/6.0.31": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Abstractions": "6.0.22",
-          "Microsoft.EntityFrameworkCore.Analyzers": "6.0.22",
+          "Microsoft.EntityFrameworkCore.Abstractions": "6.0.31",
+          "Microsoft.EntityFrameworkCore.Analyzers": "6.0.31",
           "Microsoft.Extensions.Caching.Memory": "6.0.1",
           "Microsoft.Extensions.DependencyInjection": "6.0.1",
           "Microsoft.Extensions.Logging": "6.0.0",
@@ -121,7 +121,7 @@
           "buildTransitive/net6.0/Microsoft.EntityFrameworkCore.props": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Abstractions/6.0.22": {
+      "Microsoft.EntityFrameworkCore.Abstractions/6.0.31": {
         "type": "package",
         "compile": {
           "lib/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll": {
@@ -134,7 +134,7 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore.Analyzers/6.0.22": {
+      "Microsoft.EntityFrameworkCore.Analyzers/6.0.31": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/_._": {}
@@ -143,10 +143,10 @@
           "lib/netstandard2.0/_._": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Relational/6.0.22": {
+      "Microsoft.EntityFrameworkCore.Relational/6.0.31": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore": "6.0.22",
+          "Microsoft.EntityFrameworkCore": "6.0.31",
           "Microsoft.Extensions.Configuration.Abstractions": "6.0.0"
         },
         "compile": {
@@ -160,11 +160,11 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore.SqlServer/6.0.22": {
+      "Microsoft.EntityFrameworkCore.SqlServer/6.0.31": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Data.SqlClient": "2.1.4",
-          "Microsoft.EntityFrameworkCore.Relational": "6.0.22"
+          "Microsoft.Data.SqlClient": "2.1.7",
+          "Microsoft.EntityFrameworkCore.Relational": "6.0.31"
         },
         "compile": {
           "lib/net6.0/Microsoft.EntityFrameworkCore.SqlServer.dll": {
@@ -213,7 +213,7 @@
           }
         }
       },
-      "Microsoft.Extensions.Configuration/6.0.1": {
+      "Microsoft.Extensions.Configuration/6.0.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Configuration.Abstractions": "6.0.0",
@@ -602,13 +602,11 @@
           }
         }
       },
-      "MimeKit/4.2.0": {
+      "MimeKit/4.7.0": {
         "type": "package",
         "dependencies": {
-          "BouncyCastle.Cryptography": "2.2.1",
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0",
-          "System.Security.Cryptography.Pkcs": "7.0.2",
-          "System.Text.Encoding.CodePages": "7.0.0"
+          "BouncyCastle.Cryptography": "2.4.0",
+          "System.Security.Cryptography.Pkcs": "8.0.0"
         },
         "compile": {
           "lib/net6.0/MimeKit.dll": {
@@ -701,7 +699,7 @@
           }
         }
       },
-      "System.Formats.Asn1/7.0.0": {
+      "System.Formats.Asn1/8.0.0": {
         "type": "package",
         "compile": {
           "lib/net6.0/System.Formats.Asn1.dll": {
@@ -812,10 +810,10 @@
           }
         }
       },
-      "System.Security.Cryptography.Pkcs/7.0.2": {
+      "System.Security.Cryptography.Pkcs/8.0.0": {
         "type": "package",
         "dependencies": {
-          "System.Formats.Asn1": "7.0.0"
+          "System.Formats.Asn1": "8.0.0"
         },
         "compile": {
           "lib/net6.0/System.Security.Cryptography.Pkcs.dll": {
@@ -896,26 +894,23 @@
           }
         }
       },
-      "System.Text.Encoding.CodePages/7.0.0": {
+      "System.Text.Encoding.CodePages/4.7.0": {
         "type": "package",
         "dependencies": {
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+          "Microsoft.NETCore.Platforms": "3.1.0"
         },
         "compile": {
-          "lib/net6.0/System.Text.Encoding.CodePages.dll": {
+          "lib/netstandard2.0/_._": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net6.0/System.Text.Encoding.CodePages.dll": {
+          "lib/netstandard2.0/System.Text.Encoding.CodePages.dll": {
             "related": ".xml"
           }
         },
-        "build": {
-          "buildTransitive/net6.0/_._": {}
-        },
         "runtimeTargets": {
-          "runtimes/win/lib/net6.0/System.Text.Encoding.CodePages.dll": {
+          "runtimes/win/lib/netcoreapp2.0/System.Text.Encoding.CodePages.dll": {
             "assetType": "runtime",
             "rid": "win"
           }
@@ -992,7 +987,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.22"
+          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.31"
         },
         "compile": {
           "bin/placeholder/Common.dll": {}
@@ -1004,16 +999,16 @@
     }
   },
   "libraries": {
-    "BouncyCastle.Cryptography/2.2.1": {
-      "sha512": "A6Zr52zVqJKt18ZBsTnX0qhG0kwIQftVAjLmszmkiR/trSp8H+xj1gUOzk7XHwaKgyREMSV1v9XaKrBUeIOdvQ==",
+    "BouncyCastle.Cryptography/2.4.0": {
+      "sha512": "SwXsAV3sMvAU/Nn31pbjhWurYSjJ+/giI/0n6tCrYoupEK34iIHCuk3STAd9fx8yudM85KkLSVdn951vTng/vQ==",
       "type": "package",
-      "path": "bouncycastle.cryptography/2.2.1",
+      "path": "bouncycastle.cryptography/2.4.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.md",
         "README.md",
-        "bouncycastle.cryptography.2.2.1.nupkg.sha512",
+        "bouncycastle.cryptography.2.4.0.nupkg.sha512",
         "bouncycastle.cryptography.nuspec",
         "lib/net461/BouncyCastle.Cryptography.dll",
         "lib/net461/BouncyCastle.Cryptography.xml",
@@ -1024,13 +1019,16 @@
         "packageIcon.png"
       ]
     },
-    "MailKit/4.2.0": {
-      "sha512": "NXm66YkEHyLXSyH1Ga/dUS8SB0vYTlGESUluLULa7pG0/eK8c/R9JzMyH0KbKQsgpLGwbji9quAlrcUOL0OjPA==",
+    "MailKit/4.7.0": {
+      "sha512": "NHTD7QXeDwhgwl+l7jM/Ys8qs43r1J6zQ0PvuSBVTj3P2omWibkt+TZquXWmQeqEyAaYtVGOHUhTEhlaT63QDA==",
       "type": "package",
-      "path": "mailkit/4.2.0",
+      "path": "mailkit/4.7.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "docs/ExchangeOAuth2.md",
+        "docs/FAQ.md",
+        "docs/GMailOAuth2.md",
         "docs/README.md",
         "icons/mailkit-50.png",
         "lib/net462/MailKit.dll",
@@ -1049,6 +1047,10 @@
         "lib/net6.0/MailKit.dll.config",
         "lib/net6.0/MailKit.pdb",
         "lib/net6.0/MailKit.xml",
+        "lib/net8.0/MailKit.dll",
+        "lib/net8.0/MailKit.dll.config",
+        "lib/net8.0/MailKit.pdb",
+        "lib/net8.0/MailKit.xml",
         "lib/netstandard2.0/MailKit.dll",
         "lib/netstandard2.0/MailKit.dll.config",
         "lib/netstandard2.0/MailKit.pdb",
@@ -1057,7 +1059,7 @@
         "lib/netstandard2.1/MailKit.dll.config",
         "lib/netstandard2.1/MailKit.pdb",
         "lib/netstandard2.1/MailKit.xml",
-        "mailkit.4.2.0.nupkg.sha512",
+        "mailkit.4.7.0.nupkg.sha512",
         "mailkit.nuspec"
       ]
     },
@@ -1129,10 +1131,10 @@
         "version.txt"
       ]
     },
-    "Microsoft.Data.SqlClient/2.1.4": {
-      "sha512": "cDcKBTKILdRuAzJjbgXwGcUQXzMue+SG02kD4tZTXXfoz4ALrGLpCnA5k9khw3fnAMlMnRzLIGuvRdJurqmESA==",
+    "Microsoft.Data.SqlClient/2.1.7": {
+      "sha512": "dSdlcXPszeOjjDX9a0buMFgYqKrI5bTxdSgX3JyCa+OL80NUstJSxOJr0j9oOn8mpP5PgWeRC2bVf/Zf2Cjv+g==",
       "type": "package",
-      "path": "microsoft.data.sqlclient/2.1.4",
+      "path": "microsoft.data.sqlclient/2.1.7",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1162,7 +1164,7 @@
         "lib/netstandard2.1/Microsoft.Data.SqlClient.dll",
         "lib/netstandard2.1/Microsoft.Data.SqlClient.pdb",
         "lib/netstandard2.1/Microsoft.Data.SqlClient.xml",
-        "microsoft.data.sqlclient.2.1.4.nupkg.sha512",
+        "microsoft.data.sqlclient.2.1.7.nupkg.sha512",
         "microsoft.data.sqlclient.nuspec",
         "ref/net46/Microsoft.Data.SqlClient.dll",
         "ref/net46/Microsoft.Data.SqlClient.pdb",
@@ -1216,10 +1218,10 @@
         "runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll"
       ]
     },
-    "Microsoft.EntityFrameworkCore/6.0.22": {
-      "sha512": "vNe+y8ZsEf1CsfmfYttfKAz/IgCCtphgguvao0HWNJNdjZf9cabD288nZJ17b/WaQMWXhLwYAsofk8vNVkfTOA==",
+    "Microsoft.EntityFrameworkCore/6.0.31": {
+      "sha512": "E/6vnatnSzUhSPi/xI5PNZa6/6sb1XasGXojPgfGvdeWdOB8jPgRCXR6dZmqGI1W76WsqgDIgvByMNHrdrrCSg==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore/6.0.22",
+      "path": "microsoft.entityframeworkcore/6.0.31",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1227,63 +1229,63 @@
         "buildTransitive/net6.0/Microsoft.EntityFrameworkCore.props",
         "lib/net6.0/Microsoft.EntityFrameworkCore.dll",
         "lib/net6.0/Microsoft.EntityFrameworkCore.xml",
-        "microsoft.entityframeworkcore.6.0.22.nupkg.sha512",
+        "microsoft.entityframeworkcore.6.0.31.nupkg.sha512",
         "microsoft.entityframeworkcore.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Abstractions/6.0.22": {
-      "sha512": "3ycEYrtWoa4kv5mUECU2LNBbWiYh345b1uQLvg4pHCEICXoJZ8Sfu/2yGloKiMNgMdDc02gFYCRHxsqQNZpnWA==",
+    "Microsoft.EntityFrameworkCore.Abstractions/6.0.31": {
+      "sha512": "8AdITHMZ7eTEAsND9lK3aJYjDRPnrzKYqRzTbPslTlkz3hf0xheMZKT+bZj6TCNoo6If06yBOtSwnuAdApkCtA==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.abstractions/6.0.22",
+      "path": "microsoft.entityframeworkcore.abstractions/6.0.31",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Abstractions.xml",
-        "microsoft.entityframeworkcore.abstractions.6.0.22.nupkg.sha512",
+        "microsoft.entityframeworkcore.abstractions.6.0.31.nupkg.sha512",
         "microsoft.entityframeworkcore.abstractions.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Analyzers/6.0.22": {
-      "sha512": "82SZfdrLe7bdDB8/3INV0UULvlUzsdHkrEYylDCrzFXRWHXG9eO5jJQjRHU8j9XkGIN+MSPgIlczBnqeDvB36A==",
+    "Microsoft.EntityFrameworkCore.Analyzers/6.0.31": {
+      "sha512": "1v9d0P316ZrESIyijs724db34T9LDnA8ug8MwnvsIohd8y+xIXpkLsG9oDzH0MAitLGkTF9Jaas3EKx0lOyMJg==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.analyzers/6.0.22",
+      "path": "microsoft.entityframeworkcore.analyzers/6.0.31",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "analyzers/dotnet/cs/Microsoft.EntityFrameworkCore.Analyzers.dll",
         "lib/netstandard2.0/_._",
-        "microsoft.entityframeworkcore.analyzers.6.0.22.nupkg.sha512",
+        "microsoft.entityframeworkcore.analyzers.6.0.31.nupkg.sha512",
         "microsoft.entityframeworkcore.analyzers.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Relational/6.0.22": {
-      "sha512": "W7yfdEbEuS1OPPxU0EOA6haqI4uvzs7OwHKh81DiJFn3NFNP2ztSovkOzBDhTwHX0j+OySsAj3BEJhuzTVYIVw==",
+    "Microsoft.EntityFrameworkCore.Relational/6.0.31": {
+      "sha512": "vx4vzTs0h7yaBjjyCS8VAd95Mplq3bwLVoQGdWDxbWXsrNDsESjsgaeXTTY7FEavsYcen7q312jLizWAdAfl/w==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.relational/6.0.22",
+      "path": "microsoft.entityframeworkcore.relational/6.0.31",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Relational.dll",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Relational.xml",
-        "microsoft.entityframeworkcore.relational.6.0.22.nupkg.sha512",
+        "microsoft.entityframeworkcore.relational.6.0.31.nupkg.sha512",
         "microsoft.entityframeworkcore.relational.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.SqlServer/6.0.22": {
-      "sha512": "+VUSyTY4VUcJiBtnViaxgXuFCnIh0P8zZzXdKGISN8TpyDGEcYlZuKd3LWRcFBRnm7NwTZgfhGvmgouLAx63sg==",
+    "Microsoft.EntityFrameworkCore.SqlServer/6.0.31": {
+      "sha512": "OysGn6n0UonjIzUVq6v21gSPtOqHZEAZes61TC71oIZrKPXvNEjlY5FNCQlzz97Fe8RGuy6sBSgZKBGvFrC72A==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.sqlserver/6.0.22",
+      "path": "microsoft.entityframeworkcore.sqlserver/6.0.31",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "lib/net6.0/Microsoft.EntityFrameworkCore.SqlServer.dll",
         "lib/net6.0/Microsoft.EntityFrameworkCore.SqlServer.xml",
-        "microsoft.entityframeworkcore.sqlserver.6.0.22.nupkg.sha512",
+        "microsoft.entityframeworkcore.sqlserver.6.0.31.nupkg.sha512",
         "microsoft.entityframeworkcore.sqlserver.nuspec"
       ]
     },
@@ -1325,10 +1327,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.Configuration/6.0.1": {
-      "sha512": "BUyFU9t+HzlSE7ri4B+AQN2BgTgHv/uM82s5ZkgU1BApyzWzIl48nDsG5wR1t0pniNuuyTBzG3qCW8152/NtSw==",
+    "Microsoft.Extensions.Configuration/6.0.0": {
+      "sha512": "tq2wXyh3fL17EMF2bXgRhU7JrbO3on93MRKYxzz4JzzvuGSA1l0W3GI9/tl8EO89TH+KWEymP7bcFway6z9fXg==",
       "type": "package",
-      "path": "microsoft.extensions.configuration/6.0.1",
+      "path": "microsoft.extensions.configuration/6.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1339,7 +1341,7 @@
         "lib/net461/Microsoft.Extensions.Configuration.xml",
         "lib/netstandard2.0/Microsoft.Extensions.Configuration.dll",
         "lib/netstandard2.0/Microsoft.Extensions.Configuration.xml",
-        "microsoft.extensions.configuration.6.0.1.nupkg.sha512",
+        "microsoft.extensions.configuration.6.0.0.nupkg.sha512",
         "microsoft.extensions.configuration.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -1867,13 +1869,14 @@
         "version.txt"
       ]
     },
-    "MimeKit/4.2.0": {
-      "sha512": "HlfWiJ6t40r8u/rCK2p/8dm1ILiWw4XHucm2HImDYIFS3uZe7IKZyaCDafEoZR7VG7AW1JQxNPQCAxmAnJfRvA==",
+    "MimeKit/4.7.0": {
+      "sha512": "VDqnKACvUiNo5eQshOqB1XzmQROkCSJRkmPu6zj/JqKIn3PID2TtnWGHN5YjkhlLIB7x8MwkXYG6iPLDfiYdcQ==",
       "type": "package",
-      "path": "mimekit/4.2.0",
+      "path": "mimekit/4.7.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "docs/FAQ.md",
         "docs/README.md",
         "icons/mimekit-50.png",
         "lib/net462/MimeKit.dll",
@@ -1892,6 +1895,10 @@
         "lib/net6.0/MimeKit.dll.config",
         "lib/net6.0/MimeKit.pdb",
         "lib/net6.0/MimeKit.xml",
+        "lib/net8.0/MimeKit.dll",
+        "lib/net8.0/MimeKit.dll.config",
+        "lib/net8.0/MimeKit.pdb",
+        "lib/net8.0/MimeKit.xml",
         "lib/netstandard2.0/MimeKit.dll",
         "lib/netstandard2.0/MimeKit.dll.config",
         "lib/netstandard2.0/MimeKit.pdb",
@@ -1900,7 +1907,7 @@
         "lib/netstandard2.1/MimeKit.dll.config",
         "lib/netstandard2.1/MimeKit.pdb",
         "lib/netstandard2.1/MimeKit.xml",
-        "mimekit.4.2.0.nupkg.sha512",
+        "mimekit.4.7.0.nupkg.sha512",
         "mimekit.nuspec"
       ]
     },
@@ -2014,10 +2021,10 @@
         "version.txt"
       ]
     },
-    "System.Formats.Asn1/7.0.0": {
-      "sha512": "+nfpV0afLmvJW8+pLlHxRjz3oZJw4fkyU9MMEaMhCsHi/SN9bGF9q79ROubDiwTiCHezmK0uCWkPP7tGFP/4yg==",
+    "System.Formats.Asn1/8.0.0": {
+      "sha512": "AJukBuLoe3QeAF+mfaRKQb2dgyrvt340iMBHYv+VdBzCUM06IxGlvl0o/uPOS7lHnXPN6u8fFRHSHudx5aTi8w==",
       "type": "package",
-      "path": "system.formats.asn1/7.0.0",
+      "path": "system.formats.asn1/8.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2034,9 +2041,11 @@
         "lib/net6.0/System.Formats.Asn1.xml",
         "lib/net7.0/System.Formats.Asn1.dll",
         "lib/net7.0/System.Formats.Asn1.xml",
+        "lib/net8.0/System.Formats.Asn1.dll",
+        "lib/net8.0/System.Formats.Asn1.xml",
         "lib/netstandard2.0/System.Formats.Asn1.dll",
         "lib/netstandard2.0/System.Formats.Asn1.xml",
-        "system.formats.asn1.7.0.0.nupkg.sha512",
+        "system.formats.asn1.8.0.0.nupkg.sha512",
         "system.formats.asn1.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -2228,10 +2237,10 @@
         "version.txt"
       ]
     },
-    "System.Security.Cryptography.Pkcs/7.0.2": {
-      "sha512": "xhFNJOcQSWhpiVGLLBQYoxAltQSQVycMkwaX1z7I7oEdT9Wr0HzSM1yeAbfoHaERIYd5s6EpLSOLs2qMchSKlA==",
+    "System.Security.Cryptography.Pkcs/8.0.0": {
+      "sha512": "ULmp3xoOwNYjOYp4JZ2NK/6NdTgiN1GQXzVVN1njQ7LOZ0d0B9vyMnhyqbIi9Qw4JXj1JgCsitkTShboHRx7Eg==",
       "type": "package",
-      "path": "system.security.cryptography.pkcs/7.0.2",
+      "path": "system.security.cryptography.pkcs/8.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2248,6 +2257,8 @@
         "lib/net6.0/System.Security.Cryptography.Pkcs.xml",
         "lib/net7.0/System.Security.Cryptography.Pkcs.dll",
         "lib/net7.0/System.Security.Cryptography.Pkcs.xml",
+        "lib/net8.0/System.Security.Cryptography.Pkcs.dll",
+        "lib/net8.0/System.Security.Cryptography.Pkcs.xml",
         "lib/netstandard2.0/System.Security.Cryptography.Pkcs.dll",
         "lib/netstandard2.0/System.Security.Cryptography.Pkcs.xml",
         "lib/netstandard2.1/System.Security.Cryptography.Pkcs.dll",
@@ -2256,7 +2267,9 @@
         "runtimes/win/lib/net6.0/System.Security.Cryptography.Pkcs.xml",
         "runtimes/win/lib/net7.0/System.Security.Cryptography.Pkcs.dll",
         "runtimes/win/lib/net7.0/System.Security.Cryptography.Pkcs.xml",
-        "system.security.cryptography.pkcs.7.0.2.nupkg.sha512",
+        "runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.dll",
+        "runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.xml",
+        "system.security.cryptography.pkcs.8.0.0.nupkg.sha512",
         "system.security.cryptography.pkcs.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -2387,41 +2400,44 @@
         "version.txt"
       ]
     },
-    "System.Text.Encoding.CodePages/7.0.0": {
-      "sha512": "LSyCblMpvOe0N3E+8e0skHcrIhgV2huaNcjUUEa8hRtgEAm36aGkRoC8Jxlb6Ra6GSfF29ftduPNywin8XolzQ==",
+    "System.Text.Encoding.CodePages/4.7.0": {
+      "sha512": "aeu4FlaUTemuT1qOd1MyU4T516QR4Fy+9yDbwWMPHOHy7U8FD6SgTzdZFO7gHcfAPHtECqInbwklVvUK4RHcNg==",
       "type": "package",
-      "path": "system.text.encoding.codepages/7.0.0",
+      "path": "system.text.encoding.codepages/4.7.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "Icon.png",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
-        "buildTransitive/net461/System.Text.Encoding.CodePages.targets",
-        "buildTransitive/net462/_._",
-        "buildTransitive/net6.0/_._",
-        "buildTransitive/netcoreapp2.0/System.Text.Encoding.CodePages.targets",
         "lib/MonoAndroid10/_._",
         "lib/MonoTouch10/_._",
-        "lib/net462/System.Text.Encoding.CodePages.dll",
-        "lib/net462/System.Text.Encoding.CodePages.xml",
-        "lib/net6.0/System.Text.Encoding.CodePages.dll",
-        "lib/net6.0/System.Text.Encoding.CodePages.xml",
-        "lib/net7.0/System.Text.Encoding.CodePages.dll",
-        "lib/net7.0/System.Text.Encoding.CodePages.xml",
+        "lib/net46/System.Text.Encoding.CodePages.dll",
+        "lib/net461/System.Text.Encoding.CodePages.dll",
+        "lib/net461/System.Text.Encoding.CodePages.xml",
+        "lib/netstandard1.3/System.Text.Encoding.CodePages.dll",
         "lib/netstandard2.0/System.Text.Encoding.CodePages.dll",
         "lib/netstandard2.0/System.Text.Encoding.CodePages.xml",
         "lib/xamarinios10/_._",
         "lib/xamarinmac20/_._",
         "lib/xamarintvos10/_._",
         "lib/xamarinwatchos10/_._",
-        "runtimes/win/lib/net6.0/System.Text.Encoding.CodePages.dll",
-        "runtimes/win/lib/net6.0/System.Text.Encoding.CodePages.xml",
-        "runtimes/win/lib/net7.0/System.Text.Encoding.CodePages.dll",
-        "runtimes/win/lib/net7.0/System.Text.Encoding.CodePages.xml",
-        "system.text.encoding.codepages.7.0.0.nupkg.sha512",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "ref/xamarintvos10/_._",
+        "ref/xamarinwatchos10/_._",
+        "runtimes/win/lib/net461/System.Text.Encoding.CodePages.dll",
+        "runtimes/win/lib/net461/System.Text.Encoding.CodePages.xml",
+        "runtimes/win/lib/netcoreapp2.0/System.Text.Encoding.CodePages.dll",
+        "runtimes/win/lib/netcoreapp2.0/System.Text.Encoding.CodePages.xml",
+        "runtimes/win/lib/netstandard1.3/System.Text.Encoding.CodePages.dll",
+        "runtimes/win/lib/netstandard2.0/System.Text.Encoding.CodePages.dll",
+        "runtimes/win/lib/netstandard2.0/System.Text.Encoding.CodePages.xml",
+        "system.text.encoding.codepages.4.7.0.nupkg.sha512",
         "system.text.encoding.codepages.nuspec",
-        "useSharedDesignerContext.txt"
+        "useSharedDesignerContext.txt",
+        "version.txt"
       ]
     },
     "System.Text.Encodings.Web/6.0.0": {
@@ -2535,10 +2551,9 @@
   "projectFileDependencyGroups": {
     "net6.0": [
       "Common >= 1.0.0",
-      "MailKit >= 4.2.0",
-      "Microsoft.Extensions.Configuration >= 6.0.1",
+      "MailKit >= 4.7.0",
       "Microsoft.Extensions.Configuration.Json >= 6.0.0",
-      "MimeKit >= 4.2.0"
+      "MimeKit >= 4.7.0"
     ]
   },
   "packageFolders": {
@@ -2591,11 +2606,7 @@
         "dependencies": {
           "MailKit": {
             "target": "Package",
-            "version": "[4.2.0, )"
-          },
-          "Microsoft.Extensions.Configuration": {
-            "target": "Package",
-            "version": "[6.0.1, )"
+            "version": "[4.7.0, )"
           },
           "Microsoft.Extensions.Configuration.Json": {
             "target": "Package",
@@ -2603,7 +2614,7 @@
           },
           "MimeKit": {
             "target": "Package",
-            "version": "[4.2.0, )"
+            "version": "[4.7.0, )"
           }
         },
         "imports": [

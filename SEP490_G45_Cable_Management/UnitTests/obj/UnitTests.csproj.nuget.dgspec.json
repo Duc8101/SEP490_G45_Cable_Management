@@ -49,25 +49,17 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
-            "AWSSDK.SimpleEmail": {
-              "target": "Package",
-              "version": "[3.7.300.12, )"
-            },
             "AutoMapper": {
               "target": "Package",
               "version": "[13.0.1, )"
             },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
-              "version": "[6.0.22, )"
-            },
-            "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
-              "target": "Package",
-              "version": "[1.18.1, )"
+              "version": "[6.0.31, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.5.0, )"
+              "version": "[6.6.2, )"
             }
           },
           "imports": [
@@ -156,11 +148,11 @@
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[6.0.22, )"
+              "version": "[6.0.31, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[6.0.22, )"
+              "version": "[6.0.31, )"
             }
           },
           "imports": [
@@ -244,11 +236,7 @@
           "dependencies": {
             "MailKit": {
               "target": "Package",
-              "version": "[4.2.0, )"
-            },
-            "Microsoft.Extensions.Configuration": {
-              "target": "Package",
-              "version": "[6.0.1, )"
+              "version": "[4.7.0, )"
             },
             "Microsoft.Extensions.Configuration.Json": {
               "target": "Package",
@@ -256,7 +244,7 @@
             },
             "MimeKit": {
               "target": "Package",
-              "version": "[4.2.0, )"
+              "version": "[4.7.0, )"
             }
           },
           "imports": [
@@ -340,11 +328,11 @@
           "dependencies": {
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
-              "version": "[17.5.0, )"
+              "version": "[17.1.0, )"
             },
             "Moq": {
               "target": "Package",
-              "version": "[4.20.69, )"
+              "version": "[4.20.70, )"
             },
             "NUnit": {
               "target": "Package",
@@ -352,15 +340,15 @@
             },
             "NUnit.Analyzers": {
               "target": "Package",
-              "version": "[3.6.1, )"
+              "version": "[3.3.0, )"
             },
             "NUnit3TestAdapter": {
               "target": "Package",
-              "version": "[4.4.2, )"
+              "version": "[4.2.1, )"
             },
             "coverlet.collector": {
               "target": "Package",
-              "version": "[3.2.0, )"
+              "version": "[3.1.2, )"
             }
           },
           "imports": [

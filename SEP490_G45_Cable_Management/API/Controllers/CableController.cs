@@ -3,7 +3,7 @@ using API.Services.Cables;
 using Common.Base;
 using Common.DTO.CableDTO;
 using Common.Enum;
-using Common.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -24,53 +24,53 @@ namespace API.Controllers
 
         [HttpGet("Paged")]
         [Role(Role.Admin, Role.Warehouse_Keeper, Role.Leader)]
-        public async Task<ResponseBase<Pagination<CableListDTO>?>> List(string? filter, int? WarehouseID, [Required] bool isExportedToUse = false, [Required] int page = 1)
+        public ResponseBase List(string? filter, int? warehouseId, [Required] bool isExportedToUse = false, [Required] int page = 1)
         {
-            ResponseBase<Pagination<CableListDTO>?> response = await _service.ListPaged(filter, WarehouseID, isExportedToUse, page);
+            ResponseBase response = _service.ListPaged(filter, warehouseId, isExportedToUse, page);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpGet("All")]
-        public async Task<ResponseBase<List<CableListDTO>?>> List(int? WarehouseID)
+        public ResponseBase List(int? warehouseId)
         {
-            ResponseBase<List<CableListDTO>?> response = await _service.ListAll(WarehouseID);
+            ResponseBase response = _service.ListAll(warehouseId);
             Response.StatusCode = response.Code;
             return response;
         }
 
         [HttpPost]
         [Role(Role.Admin)]
-        public async Task<ResponseBase<bool>> Create([Required] CableCreateUpdateDTO DTO)
+        public ResponseBase Create([Required] CableCreateUpdateDTO DTO)
         {
-            Guid? CreatorID = getUserID();
-            ResponseBase<bool> response;
-            if (CreatorID == null)
+            Guid? creatorId = getUserId();
+            ResponseBase response;
+            if (creatorId == null)
             {
-                response = new ResponseBase<bool>(false, "Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
+                response = new ResponseBase("Không tìm thấy ID của bạn. Vui lòng kiểm tra thông tin đăng nhập", (int)HttpStatusCode.NotFound);
             }
             else
             {
-                response = await _service.Create(DTO, CreatorID.Value);
+                response = _service.Create(DTO, creatorId.Value);
             }
             Response.StatusCode = response.Code;
             return response;
         }
 
-        [HttpPut("{CableID}")]
+        [HttpPut("{cableId}")]
         [Role(Role.Admin)]
-        public async Task<ResponseBase<bool>> Update([Required] Guid CableID, [Required] CableCreateUpdateDTO DTO)
+        public ResponseBase Update([Required] Guid cableId, [Required] CableCreateUpdateDTO DTO)
         {
-            ResponseBase<bool> response = await _service.Update(CableID, DTO);
+            ResponseBase response = _service.Update(cableId, DTO);
             Response.StatusCode = response.Code;
             return response;
         }
 
-        [HttpDelete("{CableID}")]
+        [HttpDelete("{cableId}")]
         [Role(Role.Admin)]
-        public async Task<ResponseBase<bool>> Delete([Required] Guid CableID)
+        public ResponseBase Delete([Required] Guid cableId)
         {
-            ResponseBase<bool> response = await _service.Delete(CableID);
+            ResponseBase response = _service.Delete(cableId);
             Response.StatusCode = response.Code;
             return response;
         }

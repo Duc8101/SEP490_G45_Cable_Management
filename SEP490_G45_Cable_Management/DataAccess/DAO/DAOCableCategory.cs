@@ -1,57 +1,68 @@
-﻿using Common.Const;
-using Common.Entity;
-using Microsoft.EntityFrameworkCore;
+﻿using Common.Entity;
+using Common.Enum;
+using DataAccess.DBContext;
 
 namespace DataAccess.DAO
 {
     public class DAOCableCategory : BaseDAO
     {
+        public DAOCableCategory(CableManagementContext context) : base(context)
+        {
+        }
+
         private IQueryable<CableCategory> getQuery(string? name)
         {
-            IQueryable<CableCategory> query = context.CableCategories;
+            IQueryable<CableCategory> query = _context.CableCategories;
             if (name != null && name.Trim().Length > 0)
             {
                 query = query.Where(c => c.CableCategoryName.ToLower().Contains(name.Trim().ToLower()));
             }
             return query;
         }
-        public async Task<List<CableCategory>> getListPaged(string? name, int page)
+
+        public List<CableCategory> getListCableCategoryPaged(string? name, int page)
         {
             IQueryable<CableCategory> query = getQuery(name);
-            return await query.OrderByDescending(c => c.UpdateAt).Skip(PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE * (page - 1))
-                .Take(PageSizeConst.MAX_CABLE_CATEGORY_LIST_IN_PAGE).ToListAsync();
+            return query.OrderByDescending(c => c.UpdateAt).Skip((int)PageSize.Size * (page - 1))
+                .Take((int)PageSize.Size).ToList();
         }
-        public async Task<int> getRowCount(string? name)
+
+        public int getRowCount(string? name)
         {
             IQueryable<CableCategory> query = getQuery(name);
-            return await query.CountAsync();
+            return query.Count();
         }
-        public async Task<List<CableCategory>> getListAll()
+
+        public List<CableCategory> getListCableCategoryAll()
         {
-            IQueryable<CableCategory> query = getQuery(null);
-            return await query.OrderByDescending(c => c.UpdateAt).ToListAsync();
+            return _context.CableCategories.OrderByDescending(c => c.UpdateAt).ToList();
         }
-        public async Task CreateCableCategory(CableCategory cable)
+
+        public bool isExist(string name)
         {
-            await context.CableCategories.AddAsync(cable);
-            await context.SaveChangesAsync();
+            return _context.CableCategories.Any(c => c.CableCategoryName == name.Trim());
         }
-        public async Task<bool> isExist(string name)
+
+        public void CreateCableCategory(CableCategory obj)
         {
-            return await context.CableCategories.AnyAsync(c => c.CableCategoryName == name.Trim());
+            _context.CableCategories.Add(obj);
+            Save();
         }
-        public async Task<CableCategory?> getCableCategory(int ID)
+
+        public CableCategory? getCableCategory(int id)
         {
-            return await context.CableCategories.SingleOrDefaultAsync(c => c.CableCategoryId == ID);
+            return _context.CableCategories.Find(id);
         }
-        public async Task<bool> isExist(int ID, string name)
+        public bool isExist(int id, string name)
         {
-            return await context.CableCategories.AnyAsync(c => c.CableCategoryName == name.Trim() && c.CableCategoryId != ID);
+            return _context.CableCategories.Any(c => c.CableCategoryName == name.Trim() && c.CableCategoryId != id);
         }
-        public async Task UpdateCableCategory(CableCategory cable)
+
+        public void UpdateCableCategory(CableCategory obj)
         {
-            context.CableCategories.Update(cable);
-            await context.SaveChangesAsync();
+            _context.CableCategories.Update(obj);
+            Save();
         }
+
     }
 }

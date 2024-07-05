@@ -1,6 +1,9 @@
 using API.Middleware;
 using API.Provider;
 using API.Services.CableCategories;
+using API.Services.Users;
+
+/*
 using API.Services.Cables;
 using API.Services.Issues;
 using API.Services.NodeMaterialCategories;
@@ -13,10 +16,15 @@ using API.Services.Statistic;
 using API.Services.Suppliers;
 using API.Services.Transaction;
 using API.Services.Users;
-using API.Services.Warehouses;
+using API.Services.Warehouses;*/
 using AutoMapper;
+using DataAccess.Configuration;
+using DataAccess.DAO;
 using DataAccess.DBContext;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 
 namespace API
 {
@@ -25,7 +33,7 @@ namespace API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            ConfigData.LoadAll();
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -33,16 +41,16 @@ namespace API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
-                c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
-                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+                    Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
-                    In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                    In = ParameterLocation.Header,
                     Description = "Here Enter JWT Token with Bearer format: Bearer[space][token]"
                 });
-                c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
@@ -58,21 +66,21 @@ namespace API
                 });
             }
            );
-            /* builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-             {
-                 options.RequireHttpsMetadata = false;
-                 options.SaveToken = true;
-                 options.TokenValidationParameters = new TokenValidationParameters()
-                 {
-                     ValidateIssuer = true,
-                     ValidateAudience = true,
-                     ValidateLifetime = true,
-                     ValidateIssuerSigningKey = true,
-                     ValidAudience = builder.Configuration["Jwt:Audience"],
-                     ValidIssuer = builder.Configuration["Jwt:Issuer"],
-                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-                 };
-             });*/
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidAudience = ConfigData.JwtAudience,
+                    ValidIssuer = ConfigData.JwtIssuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ConfigData.JwtKey))
+                };
+            });
             builder.Services.AddCors(o => o.AddPolicy("AllowOrigin", builder =>
             {
                 builder.AllowAnyOrigin()
@@ -85,22 +93,27 @@ namespace API
                 cfg.AddProfile(new MappingProfile());
             });
             // ----------------------- register db context -----------------------
-            builder.Services.AddDbContext<CableManagementContext>(/*options => options.UseSqlServer(connection),*/ ServiceLifetime.Scoped);
+            builder.Services.AddDbContext<CableManagementContext>(/*options => options.UseSqlServer(ConfigData.SqlConnection), */ServiceLifetime.Scoped);
+            // ----------------------- register DAO -----------------------
+            builder.Services.AddTransient<DAOCableCategory>();
+            builder.Services.AddTransient<DAOUser>();
             // ----------------------- register service -----------------------
             builder.Services.AddScoped<ICableCategoryService, CableCategoryService>();
-            builder.Services.AddScoped<ICableService, CableService>();
-            builder.Services.AddScoped<IIssueService, IssueService>();
-            builder.Services.AddScoped<INodeMaterialCategoryService, NodeMaterialCategoryService>();
-            builder.Services.AddScoped<INodeService, NodeService>();
-            builder.Services.AddScoped<IOtherMaterialsCategoryService, OtherMaterialsCategoryService>();
-            builder.Services.AddScoped<IOtherMaterialsService, OtherMaterialsService>();
-            builder.Services.AddScoped<IRequestService, RequestService>();
-            builder.Services.AddScoped<IRouteService, RouteService>();
-            builder.Services.AddScoped<IStatisticService, StatisticService>();
-            builder.Services.AddScoped<ISupplierService, SupplierService>();
-            builder.Services.AddScoped<ITransactionService, TransactionService>();
             builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IWarehouseService, WarehouseService>();
+            /*          
+                        builder.Services.AddScoped<ICableService, CableService>();
+                        builder.Services.AddScoped<IIssueService, IssueService>();
+                        builder.Services.AddScoped<INodeMaterialCategoryService, NodeMaterialCategoryService>();
+                        builder.Services.AddScoped<INodeService, NodeService>();
+                        builder.Services.AddScoped<IOtherMaterialsCategoryService, OtherMaterialsCategoryService>();
+                        builder.Services.AddScoped<IOtherMaterialsService, OtherMaterialsService>();
+                        builder.Services.AddScoped<IRequestService, RequestService>();
+                        builder.Services.AddScoped<IRouteService, RouteService>();
+                        builder.Services.AddScoped<IStatisticService, StatisticService>();
+                        builder.Services.AddScoped<ISupplierService, SupplierService>();
+                        builder.Services.AddScoped<ITransactionService, TransactionService>();
+                        
+                        builder.Services.AddScoped<IWarehouseService, WarehouseService>();*/
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             var app = builder.Build();
             StaticServiceProvider.Provider = app.Services;
@@ -109,7 +122,7 @@ namespace API
             {
 
             }
-            app.UseMiddleware<JwtMiddleware>();
+            app.UseMiddleware<UnauthorizedMiddleware>();
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseHttpsRedirection();

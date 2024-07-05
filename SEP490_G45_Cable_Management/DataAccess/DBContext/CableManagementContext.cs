@@ -1,6 +1,6 @@
 ﻿using Common.Entity;
+using DataAccess.Configuration;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace DataAccess.DBContext
 {
@@ -41,11 +41,7 @@ namespace DataAccess.DBContext
         {
             if (!optionsBuilder.IsConfigured)
             {
-                ConfigurationBuilder builder = new ConfigurationBuilder();
-                IConfigurationRoot config = builder.SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json", true, true).Build();
-                string connect = config.GetConnectionString("DefaultConnection");
-                optionsBuilder.UseSqlServer(connect);
+                optionsBuilder.UseSqlServer(ConfigData.SqlConnection);
             }
         }
 
