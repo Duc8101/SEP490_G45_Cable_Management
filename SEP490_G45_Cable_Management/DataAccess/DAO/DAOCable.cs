@@ -29,14 +29,14 @@ namespace DataAccess.DAO
             }
             return query;
         }
-        public List<Cable> getListCablePaged(string? filter, int? warehouseId, bool isExportedToUse, int page)
+        public List<Cable> getListCable(string? filter, int? warehouseId, bool isExportedToUse, int page)
         {
             IQueryable<Cable> query = getQuery(filter, warehouseId, isExportedToUse);
             return query.OrderByDescending(c => c.UpdateAt).Skip((int) PageSize.Size * (page - 1))
                 .Take((int)PageSize.Size).ToList();
         }
 
-        public List<Cable> getListCableAll(int? warehouseId)
+        public List<Cable> getListCable(int? warehouseId)
         {
             IQueryable<Cable> query = getQuery(null, warehouseId, false);
             return query.OrderByDescending(c => c.UpdateAt).ToList();
@@ -91,33 +91,28 @@ namespace DataAccess.DAO
             cable.IsDeleted = true;
             UpdateCable(cable);
         }
-/*        public async Task<Cable?> getCable(int CableCategoryID)
+
+        public Cable? getCable(int cableCategoryId)
         {
-            return await context.Cables.Include(c => c.CableCategory).Where(c => c.CableCategoryId == CableCategoryID && c.IsInRequest == false).FirstOrDefaultAsync();
+            return _context.Cables.Include(c => c.CableCategory).FirstOrDefault(c => c.CableCategoryId == cableCategoryId && c.IsInRequest == false);
         }
 
-        public async Task<List<CableCategory>> getListCategory(int? WarehouseID)
+        public List<CableCategory> getListCableCategory(int? warehouseId)
         {
-            IQueryable<Cable> query = getQuery(null, WarehouseID, false);
-            List<CableCategory> result = await query.Select(c => c.CableCategory).Distinct().ToListAsync();
-            return result;
+            IQueryable<Cable> query = getQuery(null, warehouseId, false);
+            return query.Select(c => c.CableCategory).Distinct().ToList();
         }
 
-        public async Task<int> getSum(int CategoryID, int? WarehouseID)
+        public int getSum(int cableCategoryId, int? warehouseId)
         {
-            IQueryable<Cable> query = getQuery(null, WarehouseID, false).Where(c => c.CableCategoryId == CategoryID);
-            List<Cable> list = await query.ToListAsync();
-            int sum = 0;
-            foreach (Cable cable in list)
-            {
-                sum = sum + cable.Length;
-            }
-            return sum;
+            IQueryable<Cable> query = getQuery(null, warehouseId, false).Where(c => c.CableCategoryId == cableCategoryId);
+            return query.Sum(c => c.Length);
         }
-        public async Task<Cable?> getCable(Guid CableID, int StartPoint, int EndPoint)
+
+        public Cable? getCable(Guid cableId, int startPoint, int endPoint)
         {
-            return await context.Cables.Where(c => c.CableParentId == CableID && c.StartPoint <= StartPoint && c.EndPoint >= EndPoint && c.IsDeleted == false).FirstOrDefaultAsync();
-        }*/
+            return _context.Cables.FirstOrDefault(c => c.CableParentId == cableId && c.StartPoint <= startPoint && c.EndPoint >= endPoint && c.IsDeleted == false);
+        }
 
     }
 }

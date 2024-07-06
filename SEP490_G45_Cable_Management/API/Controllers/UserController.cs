@@ -98,7 +98,7 @@ namespace API.Controllers
             return response;
         }
 
-        [HttpPost]
+        [HttpPut]
         [Authorize]
         public ResponseBase ChangePassword([Required] ChangePasswordDTO DTO)
         {

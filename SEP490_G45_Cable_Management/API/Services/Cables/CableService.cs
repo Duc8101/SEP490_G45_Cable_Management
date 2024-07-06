@@ -70,7 +70,7 @@ namespace API.Services.Cables
         {
             try
             {
-                List<Cable> list = _daoCable.getListCableAll(warehouseId);
+                List<Cable> list = _daoCable.getListCable(warehouseId);
                 List<CableListDTO> data = _mapper.Map<List<CableListDTO>>(list);
                 return new ResponseBase(data);
             }
@@ -84,7 +84,7 @@ namespace API.Services.Cables
         {
             try
             {
-                List<Cable> list = _daoCable.getListCablePaged(filter, warehouseId, isExportedToUse, page);
+                List<Cable> list = _daoCable.getListCable(filter, warehouseId, isExportedToUse, page);
                 List<CableListDTO> DTOs = _mapper.Map<List<CableListDTO>>(list);
                 int rowCount = _daoCable.getRowCount(filter, warehouseId, isExportedToUse);
                 int sum = _daoCable.getSum(filter, warehouseId, isExportedToUse);

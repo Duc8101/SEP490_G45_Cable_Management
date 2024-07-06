@@ -1,21 +1,19 @@
 using API.Middleware;
 using API.Provider;
 using API.Services.CableCategories;
-using API.Services.Users;
-
-/*
 using API.Services.Cables;
 using API.Services.Issues;
 using API.Services.NodeMaterialCategories;
 using API.Services.Nodes;
 using API.Services.OtherMaterials;
 using API.Services.OtherMaterialsCategories;
-using API.Services.Requests;
 using API.Services.Routes;
 using API.Services.Statistic;
+using API.Services.Users;
+/*
+using API.Services.Requests;
 using API.Services.Suppliers;
 using API.Services.Transaction;
-using API.Services.Users;
 using API.Services.Warehouses;*/
 using AutoMapper;
 using DataAccess.Configuration;
@@ -97,24 +95,38 @@ namespace API
             // ----------------------- register DAO -----------------------
             builder.Services.AddTransient<DAOCableCategory>();
             builder.Services.AddTransient<DAOUser>();
+            builder.Services.AddTransient<DAOCable>();
+            builder.Services.AddTransient<DAOIssue>();
+            builder.Services.AddTransient<DAONodeMaterialCategory>();
+            builder.Services.AddTransient<DAONode>();
+            builder.Services.AddTransient<DAOOtherMaterialsCategory>();
+            builder.Services.AddTransient<DAOOtherMaterial>();
+            builder.Services.AddTransient<DAOTransactionOtherMaterial>();
+            builder.Services.AddTransient<DAOTransactionCable>();
+            builder.Services.AddTransient<DAORoute>();
+            builder.Services.AddTransient<DAOTransactionHistory>();
+            builder.Services.AddTransient<DAORequest>();
+            builder.Services.AddTransient<DAORequestCable>();
+            builder.Services.AddTransient<DAORequestOtherMaterial>();
             // ----------------------- register service -----------------------
             builder.Services.AddScoped<ICableCategoryService, CableCategoryService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<ICableService, CableService>();
+            builder.Services.AddScoped<IIssueService, IssueService>();
+            builder.Services.AddScoped<INodeMaterialCategoryService, NodeMaterialCategoryService>();
+            builder.Services.AddScoped<INodeService, NodeService>();
+            builder.Services.AddScoped<IOtherMaterialsCategoryService, OtherMaterialsCategoryService>();
+            builder.Services.AddScoped<IOtherMaterialsService, OtherMaterialsService>();
+            builder.Services.AddScoped<IRouteService, RouteService>();
+            builder.Services.AddScoped<IStatisticService, StatisticService>();
             /*          
-                        builder.Services.AddScoped<ICableService, CableService>();
-                        builder.Services.AddScoped<IIssueService, IssueService>();
-                        builder.Services.AddScoped<INodeMaterialCategoryService, NodeMaterialCategoryService>();
-                        builder.Services.AddScoped<INodeService, NodeService>();
-                        builder.Services.AddScoped<IOtherMaterialsCategoryService, OtherMaterialsCategoryService>();
-                        builder.Services.AddScoped<IOtherMaterialsService, OtherMaterialsService>();
                         builder.Services.AddScoped<IRequestService, RequestService>();
-                        builder.Services.AddScoped<IRouteService, RouteService>();
-                        builder.Services.AddScoped<IStatisticService, StatisticService>();
+                        
                         builder.Services.AddScoped<ISupplierService, SupplierService>();
                         builder.Services.AddScoped<ITransactionService, TransactionService>();
                         
                         builder.Services.AddScoped<IWarehouseService, WarehouseService>();*/
-            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            builder.Services.AddHttpContextAccessor();
             var app = builder.Build();
             StaticServiceProvider.Provider = app.Services;
             // Configure the HTTP request pipeline.
