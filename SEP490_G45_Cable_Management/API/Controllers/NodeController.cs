@@ -30,7 +30,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Role(Role.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase Create([Required] NodeCreateDTO DTO)
         {
             ResponseBase response = _service.Create(DTO);
@@ -47,7 +47,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{nodeId}")]
-        [Role(Role.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase Update([Required] Guid nodeId, [Required] NodeUpdateDTO DTO)
         {
             ResponseBase response = _service.Update(nodeId, DTO);
@@ -56,7 +56,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{nodeId}")]
-        [Role(Role.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase Delete([Required] Guid nodeId)
         {
             ResponseBase response = _service.Delete(nodeId);

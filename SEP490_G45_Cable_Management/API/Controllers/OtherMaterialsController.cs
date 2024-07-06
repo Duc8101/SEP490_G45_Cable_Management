@@ -23,7 +23,7 @@ namespace API.Controllers
         }
 
         [HttpGet("Paged")]
-        [Role(Role.Admin, Role.Leader, Role.Warehouse_Keeper)]
+        [Role(Roles.Admin, Roles.Leader, Roles.Warehouse_Keeper)]
         public ResponseBase List(string? filter, int? WareHouseID, [Required] int page = 1)
         {
             ResponseBase response;
@@ -57,7 +57,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Role(Role.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase Create([Required] OtherMaterialsCreateUpdateDTO DTO)
         {
             ResponseBase response = _service.Create(DTO);
@@ -66,7 +66,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{otherMaterialsId}")]
-        [Role(Role.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase Update([Required] int otherMaterialsId, [Required] OtherMaterialsCreateUpdateDTO DTO)
         {
             ResponseBase response = _service.Update(otherMaterialsId, DTO);
@@ -75,7 +75,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{otherMaterialsId}")]
-        [Role(Role.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase Delete([Required] int otherMaterialsId)
         {
             ResponseBase response = _service.Delete(otherMaterialsId);

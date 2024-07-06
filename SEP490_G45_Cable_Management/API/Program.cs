@@ -9,12 +9,11 @@ using API.Services.OtherMaterials;
 using API.Services.OtherMaterialsCategories;
 using API.Services.Routes;
 using API.Services.Statistic;
-using API.Services.Users;
-/*
-using API.Services.Requests;
 using API.Services.Suppliers;
 using API.Services.Transaction;
-using API.Services.Warehouses;*/
+using API.Services.Users;
+using API.Services.Warehouses;
+/*using API.Services.Requests;*/
 using AutoMapper;
 using DataAccess.Configuration;
 using DataAccess.DAO;
@@ -108,6 +107,8 @@ namespace API
             builder.Services.AddTransient<DAORequest>();
             builder.Services.AddTransient<DAORequestCable>();
             builder.Services.AddTransient<DAORequestOtherMaterial>();
+            builder.Services.AddTransient<DAOSupplier>();
+            builder.Services.AddTransient<DAOWarehouse>();
             // ----------------------- register service -----------------------
             builder.Services.AddScoped<ICableCategoryService, CableCategoryService>();
             builder.Services.AddScoped<IUserService, UserService>();
@@ -119,13 +120,10 @@ namespace API
             builder.Services.AddScoped<IOtherMaterialsService, OtherMaterialsService>();
             builder.Services.AddScoped<IRouteService, RouteService>();
             builder.Services.AddScoped<IStatisticService, StatisticService>();
-            /*          
-                        builder.Services.AddScoped<IRequestService, RequestService>();
-                        
-                        builder.Services.AddScoped<ISupplierService, SupplierService>();
-                        builder.Services.AddScoped<ITransactionService, TransactionService>();
-                        
-                        builder.Services.AddScoped<IWarehouseService, WarehouseService>();*/
+            builder.Services.AddScoped<ISupplierService, SupplierService>();
+            builder.Services.AddScoped<ITransactionService, TransactionService>();
+            builder.Services.AddScoped<IWarehouseService, WarehouseService>();
+            /*builder.Services.AddScoped<IRequestService, RequestService>();*/
             builder.Services.AddHttpContextAccessor();
             var app = builder.Build();
             StaticServiceProvider.Provider = app.Services;

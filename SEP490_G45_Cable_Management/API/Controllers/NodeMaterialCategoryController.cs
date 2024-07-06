@@ -12,7 +12,7 @@ namespace API.Controllers
     [Route("[controller]/[action]")]
     [ApiController]
     [Authorize]
-    [Role(Role.Admin)]
+    [Role(Roles.Admin)]
     public class NodeMaterialCategoryController : BaseAPIController
     {
         private readonly INodeMaterialCategoryService _service;

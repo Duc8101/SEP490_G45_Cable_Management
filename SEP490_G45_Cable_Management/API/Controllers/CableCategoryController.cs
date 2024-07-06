@@ -22,7 +22,7 @@ namespace API.Controllers
         }
 
         [HttpGet("Paged")]
-        [Role(Role.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase List(string? name, [Required] int page = 1)
         {
             ResponseBase response = _service.ListPaged(name, page);
@@ -39,7 +39,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Role(Role.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase Create([Required] CableCategoryCreateUpdateDTO DTO)
         {
             ResponseBase response = _service.Create(DTO);
@@ -48,7 +48,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{cableCategoryId}")]
-        [Role(Role.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase Update([Required] int cableCategoryId, [Required] CableCategoryCreateUpdateDTO DTO)
         {
             ResponseBase response = _service.Update(cableCategoryId, DTO);

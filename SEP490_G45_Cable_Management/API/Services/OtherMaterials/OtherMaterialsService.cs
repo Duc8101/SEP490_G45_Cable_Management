@@ -118,7 +118,7 @@ namespace API.Services.OtherMaterials
                 {
                     CurrentPage = page,
                     RowCount = rowCount,
-                    Data = DTOs,
+                    List = DTOs,
                     Sum = sum
                 };
                 return new ResponseBase(data);

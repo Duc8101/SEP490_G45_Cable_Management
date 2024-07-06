@@ -71,7 +71,7 @@ namespace API.Services.OtherMaterialsCategories
                 {
                     CurrentPage = page,
                     RowCount = rowCount,
-                    Data = DTOs
+                    List = DTOs
                 };
                 return new ResponseBase(data);
             }

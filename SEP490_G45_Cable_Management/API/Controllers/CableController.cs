@@ -23,7 +23,7 @@ namespace API.Controllers
         }
 
         [HttpGet("Paged")]
-        [Role(Role.Admin, Role.Warehouse_Keeper, Role.Leader)]
+        [Role(Roles.Admin, Roles.Warehouse_Keeper, Roles.Leader)]
         public ResponseBase List(string? filter, int? warehouseId, [Required] bool isExportedToUse = false, [Required] int page = 1)
         {
             ResponseBase response = _service.ListPaged(filter, warehouseId, isExportedToUse, page);
@@ -40,7 +40,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Role(Role.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase Create([Required] CableCreateUpdateDTO DTO)
         {
             Guid? creatorId = getUserId();
@@ -58,7 +58,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{cableId}")]
-        [Role(Role.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase Update([Required] Guid cableId, [Required] CableCreateUpdateDTO DTO)
         {
             ResponseBase response = _service.Update(cableId, DTO);
@@ -67,7 +67,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{cableId}")]
-        [Role(Role.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase Delete([Required] Guid cableId)
         {
             ResponseBase response = _service.Delete(cableId);

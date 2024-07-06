@@ -1,4 +1,4 @@
-﻿using Common.Entity;
+﻿using Common.Enum;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -15,19 +15,19 @@ namespace API.Controllers
         internal bool isAdmin()
         {
             Claim? claim = getClaim(ClaimTypes.Role);
-            return claim != null && claim.Value == Common.Enum.Role.Admin.ToString();
+            return claim != null && claim.Value == Roles.Admin.ToString();
         }
 
         internal bool isLeader()
         {
             Claim? claim = getClaim(ClaimTypes.Role);
-            return claim != null && claim.Value == Common.Enum.Role.Leader.ToString();
+            return claim != null && claim.Value == Roles.Leader.ToString();
         }
 
         internal bool isWarehouseKeeper()
         {
             Claim? claim = getClaim(ClaimTypes.Role);
-            return claim != null && claim.Value == Common.Enum.Role.Warehouse_Keeper.ToString();
+            return claim != null && claim.Value == Roles.Warehouse_Keeper.ToString();
         }
 
         internal Guid? getUserId()

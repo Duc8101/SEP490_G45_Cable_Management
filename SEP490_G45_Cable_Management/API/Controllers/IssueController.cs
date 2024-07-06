@@ -48,7 +48,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Role(Role.Admin, Role.Staff)]
+        [Role(Roles.Admin, Roles.Staff)]
         public ResponseBase Create(IssueCreateDTO DTO)
         {
             ResponseBase response;
@@ -66,7 +66,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{issueId}")]
-        [Role(Role.Admin, Role.Staff)]
+        [Role(Roles.Admin, Roles.Staff)]
         public ResponseBase Update([Required] Guid issueId, [Required] IssueUpdateDTO DTO)
         {
             ResponseBase response = _service.Update(issueId, DTO);
@@ -75,7 +75,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{issueId}")]
-        [Role(Role.Admin, Role.Staff)]
+        [Role(Roles.Admin, Roles.Staff)]
         public ResponseBase Delete([Required] Guid issueId)
         {
             ResponseBase response = _service.Delete(issueId);

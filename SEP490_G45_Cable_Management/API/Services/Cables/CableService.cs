@@ -92,7 +92,7 @@ namespace API.Services.Cables
                 {
                     CurrentPage = page,
                     RowCount = rowCount,
-                    Data = DTOs,
+                    List = DTOs,
                     Sum = sum
                 };
                 return new ResponseBase(result);

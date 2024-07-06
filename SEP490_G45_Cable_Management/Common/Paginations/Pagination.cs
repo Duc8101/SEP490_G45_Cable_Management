@@ -9,8 +9,8 @@ namespace Common.Paginations
         // number of all rows
         public int RowCount { get; set; }
 
-        public List<T> Data { get; set; } = new List<T>();
-        public int PageCount
+        public List<T> List { get; set; } = new List<T>();
+        public int NumberPage
         {
             get => (int)Math.Ceiling((double)RowCount / (int)PageSize.Size);
         }

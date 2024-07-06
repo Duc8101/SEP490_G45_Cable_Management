@@ -69,7 +69,7 @@ namespace API.Services.CableCategories
                 int rowCount = _daoCableCategory.getRowCount(name);
                 Pagination<CableCategoryListDTO> result = new Pagination<CableCategoryListDTO>
                 {
-                    Data = DTOs,
+                    List = DTOs,
                     CurrentPage = page,
                     RowCount = rowCount
                 };

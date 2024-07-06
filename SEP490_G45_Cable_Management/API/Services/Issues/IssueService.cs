@@ -132,7 +132,7 @@ namespace API.Services.Issues
                 Pagination<IssueListDTO> data = new Pagination<IssueListDTO>()
                 {
                     CurrentPage = page,
-                    Data = DTOs,
+                    List = DTOs,
                     RowCount = rowCount
                 };
                 return new ResponseBase(data);
@@ -153,7 +153,7 @@ namespace API.Services.Issues
                 Pagination<IssueListDTO> data = new Pagination<IssueListDTO>()
                 {
                     CurrentPage = page,
-                    Data = DTOs,
+                    List = DTOs,
                     RowCount = rowCount
                 };
                 return new ResponseBase(data);

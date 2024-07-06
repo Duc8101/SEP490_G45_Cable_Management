@@ -91,7 +91,7 @@ namespace API.Services.Routes
                 {
                     RowCount = rowCount,
                     CurrentPage = page,
-                    Data = DTOs
+                    List = DTOs
                 };
                 return new ResponseBase(data);
             }

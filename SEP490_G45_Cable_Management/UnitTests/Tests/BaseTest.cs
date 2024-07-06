@@ -27,7 +27,7 @@ namespace UnitTests.Tests
             return handler;
         }
 
-        internal string SimulateToken(Common.Enum.Role role)
+        internal string SimulateToken(Common.Enum.Roles role)
         {
             User user = new User()
             {

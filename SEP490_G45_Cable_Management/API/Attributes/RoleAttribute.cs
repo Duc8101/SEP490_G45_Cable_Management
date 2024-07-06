@@ -11,9 +11,9 @@ namespace API.Attributes
 {
     public class RoleAttribute : Attribute, IActionFilter
     {
-        private Common.Enum.Role[] Roles { get;  }
+        private Common.Enum.Roles[] Roles { get;  }
 
-        public RoleAttribute(params Common.Enum.Role[] roles)
+        public RoleAttribute(params Common.Enum.Roles[] roles)
         {
             Roles = roles;
         }
@@ -53,7 +53,7 @@ namespace API.Attributes
                         StatusCode = (int)HttpStatusCode.NotFound,
                     };
                 }
-                else if (!Roles.Contains((Common.Enum.Role)user.RoleId))
+                else if (!Roles.Contains((Common.Enum.Roles)user.RoleId))
                 {
                     ResponseBase result = new ResponseBase("Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
                     context.Result = new JsonResult(result)

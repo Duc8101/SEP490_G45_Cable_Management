@@ -69,7 +69,7 @@ namespace API.Services.Users
                 User user = _mapper.Map<User>(DTO);
                 user.UserId = Guid.NewGuid();
                 user.Password = hashPw;
-                user.RoleId = (int)Common.Enum.Role.Staff;
+                user.RoleId = (int)Common.Enum.Roles.Staff;
                 user.CreatedAt = DateTime.Now;
                 user.CreatedDate = DateTime.Now;
                 user.UpdateAt = DateTime.Now;
@@ -151,7 +151,7 @@ namespace API.Services.Users
                 Pagination<UserListDTO> result = new Pagination<UserListDTO>()
                 {
                     CurrentPage = page,
-                    Data = DTOs,
+                    List = DTOs,
                     RowCount = rowCount
                 };
                 return new ResponseBase(result);
