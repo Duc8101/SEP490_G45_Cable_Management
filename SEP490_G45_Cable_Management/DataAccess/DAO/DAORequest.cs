@@ -33,7 +33,7 @@ namespace DataAccess.DAO
             }
             return query;
         }
-        public List<Request> getListRequestAll(string? name, int? requestCategoryId, string? status, Guid? creatorId, int page)
+        public List<Request> getListRequest(string? name, int? requestCategoryId, string? status, Guid? creatorId, int page)
         {
             IQueryable<Request> query = getQuery(name, requestCategoryId, status, creatorId);
             return query.OrderBy(r => r.Status == RequestConst.STATUS_PENDING ? 0 : 1).ThenByDescending(r => r.UpdateAt)

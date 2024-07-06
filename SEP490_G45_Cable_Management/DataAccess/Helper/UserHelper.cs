@@ -119,13 +119,13 @@ namespace DataAccess.Helper
                             "<p>Không nên chia sẻ mật khẩu của bạn với người khác.</p>";
             return body;
         }
-        public static string BodyEmailForAdminReceiveRequest(string RequestName, string RequestCategoryName, Issue? issue)
+        public static string BodyEmailForAdminReceiveRequest(string requestName, string requestCategoryName, string? issueCode)
         {
-            string body = "<h1>Yêu cầu với tên \"" + RequestName + "\"</h1>\n" +
-                            "<p>Loại yêu cầu: " + RequestCategoryName + "</p>\n";
-            if (issue != null)
+            string body = "<h1>Yêu cầu với tên \"" + requestName + "\"</h1>\n" +
+                            "<p>Loại yêu cầu: " + requestCategoryName + "</p>\n";
+            if (issueCode != null)
             {
-                body = body + "<p>Mã sụ vụ: " + issue.IssueCode + "</p>\n";
+                body = body + "<p>Mã sụ vụ: " + issueCode + "</p>\n";
             }
             body = body + "<p>Vui lòng kiểm tra chi tiết yêu cầu</p>\n";
             return body;

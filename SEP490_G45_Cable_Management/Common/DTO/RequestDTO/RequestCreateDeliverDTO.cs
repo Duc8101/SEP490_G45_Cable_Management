@@ -15,7 +15,7 @@ namespace Common.DTO.RequestDTO
             CableDeliverDTOs = new List<CableExportDeliverDTO>();
             OtherMaterialsDeliverDTOs = new List<OtherMaterialsExportDeliverCancelInsideDTO>();
         }
-        public int DeliverWareHouseID { get; set; }
+        public int DeliverWareHouseId { get; set; }
         public List<CableExportDeliverDTO> CableDeliverDTOs { get; set; }
 
         public List<OtherMaterialsExportDeliverCancelInsideDTO> OtherMaterialsDeliverDTOs { get; set; }
