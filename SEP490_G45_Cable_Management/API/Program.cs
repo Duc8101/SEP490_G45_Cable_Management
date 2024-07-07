@@ -7,13 +7,13 @@ using API.Services.NodeMaterialCategories;
 using API.Services.Nodes;
 using API.Services.OtherMaterials;
 using API.Services.OtherMaterialsCategories;
+using API.Services.Requests;
 using API.Services.Routes;
 using API.Services.Statistic;
 using API.Services.Suppliers;
 using API.Services.Transaction;
 using API.Services.Users;
 using API.Services.Warehouses;
-/*using API.Services.Requests;*/
 using AutoMapper;
 using DataAccess.Configuration;
 using DataAccess.DAO;
@@ -123,7 +123,7 @@ namespace API
             builder.Services.AddScoped<ISupplierService, SupplierService>();
             builder.Services.AddScoped<ITransactionService, TransactionService>();
             builder.Services.AddScoped<IWarehouseService, WarehouseService>();
-            /*builder.Services.AddScoped<IRequestService, RequestService>();*/
+            builder.Services.AddScoped<IRequestService, RequestService>();
             builder.Services.AddHttpContextAccessor();
             var app = builder.Build();
             StaticServiceProvider.Provider = app.Services;

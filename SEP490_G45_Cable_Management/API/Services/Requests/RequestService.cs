@@ -2,6 +2,8 @@
 using AutoMapper;
 using Common.Base;
 using Common.Const;
+using Common.DTO.CableDTO;
+using Common.DTO.OtherMaterialsDTO;
 using Common.DTO.RequestDTO;
 using Common.Entity;
 using Common.Enum;
@@ -36,19 +38,205 @@ namespace API.Services.Requests
             _daoWarehouse = daoWarehouse;
         }
 
-        public Task<ResponseBase> Approve(Guid requestId, Guid approverId, string approverName)
+        public async Task<ResponseBase> Approve(Guid requestId, Guid approverId, string approverName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Request? request = _daoRequest.getRequest(requestId);
+                if (request == null)
+                {
+                    return new ResponseBase(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
+                }
+                if (request.Status != RequestConst.STATUS_PENDING)
+                {
+                    return new ResponseBase(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
+                }
+                if (request.RequestCategoryId == (int) RequestCategories.Export || request.RequestCategoryId == (int)RequestCategories.Deliver 
+                    || request.RequestCategoryId == (int)RequestCategories.Cancel_Inside)
+                {
+                   // return await ApproveRequestExportDeliverCancelInside(approverId, request, approverName);
+                }
+                if (request.RequestCategoryId == (int)RequestCategories.Recovery)
+                {
+                   // return await ApproveRequestRecovery(approverId, request, approverName);
+                }
+                if (request.RequestCategoryId == (int)RequestCategories.Cancel_Outside)
+                {
+                    //return await ApproveRequestCancelOutside(approverId, request, approverName);
+                }
+                return new ResponseBase(false, "Không hỗ trợ yêu cầu " + request.RequestCategory.RequestCategoryName, (int)HttpStatusCode.Conflict);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseBase(ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+            }
         }
 
-        public Task<ResponseBase> CreateRequestCancelInside(RequestCreateCancelInsideDTO DTO, Guid creatorId)
+        public async Task<ResponseBase> CreateRequestCancelInside(RequestCreateCancelInsideDTO DTO, Guid creatorId)
         {
-            throw new NotImplementedException();
+            ResponseBase response = RequestHelper.CheckRequestNameAndRequestCategoryValidWhenCreateRequest(DTO.RequestName, DTO.RequestCategoryId, RequestCategories.Cancel_Inside);
+            if (response.Success == false)
+            {
+                return response;
+            }
+            try
+            {
+                response = RequestHelper.CheckIssueValidWhenCreateRequest(_daoIssue, DTO.IssueId);
+                if (response.Success == false)
+                {
+                    return response;
+                }
+                string issueCode = response.Message;
+                // ----------------------- check cable valid --------------------------
+                response = RequestHelper.CheckCableValidCreateCancelInside(_daoCable, DTO.CableCancelInsideDTOs);
+                // if exist cable invalid
+                if (response.Success == false)
+                {
+                    return response;
+                }
+                // ----------------------- check material valid --------------------------
+                response = RequestHelper.CheckMaterialValidCreateExportDeliverCancelInside(_daoOtherMaterial, DTO.OtherMaterialsCancelInsideDTOs);
+                // if exist material invalid
+                if (response.Success == false)
+                {
+                    return response;
+                }
+                //----------------------------- create request --------------------------------
+                Guid requestId = RequestHelper.CreateRequest(_daoRequest, DTO.RequestName.Trim(), DTO.Content, DTO.IssueId, creatorId, DTO.RequestCategoryId, null);
+                //----------------------------- create request cable --------------------------------
+                if (DTO.CableCancelInsideDTOs.Count > 0)
+                {
+                    foreach (CableCancelInsideDTO item in DTO.CableCancelInsideDTOs)
+                    {
+                        Cable? cable = _daoCable.getCable(item.CableId);
+                        RequestCable requestCable = _mapper.Map<RequestCable>(cable);
+                        requestCable.RequestId = requestId;
+                        requestCable.CreatedAt = DateTime.Now;
+                        requestCable.UpdateAt = DateTime.Now;
+                        requestCable.IsDeleted = false;
+                        _daoRequestCable.CreateRequestCable(requestCable);
+                    }
+                }
+                //----------------------------- create request material --------------------------------
+                if (DTO.OtherMaterialsCancelInsideDTOs.Count > 0)
+                {
+                    foreach (OtherMaterialsExportDeliverCancelInsideDTO item in DTO.OtherMaterialsCancelInsideDTOs)
+                    {
+                        RequestOtherMaterial requestMaterial = _mapper.Map<RequestOtherMaterial>(item);
+                        requestMaterial.RequestId = requestId;
+                        requestMaterial.CreatedAt = DateTime.Now;
+                        requestMaterial.UpdateAt = DateTime.Now;
+                        requestMaterial.IsDeleted = false;
+                        _daoRequestOtherMaterial.CreateRequestOtherMaterial(requestMaterial);
+                    }
+                }
+                await RequestHelper.sendEmailToAdmin(_daoUser, DTO.RequestName.Trim(), RequestCategories.Cancel_Inside.ToString(), issueCode);
+                return new ResponseBase(true, "Tạo yêu cầu thành công");
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseBase(ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+            }
         }
 
-        public Task<ResponseBase> CreateRequestCancelOutside(RequestCreateCancelOutsideDTO DTO, Guid creatorId)
+        public async Task<ResponseBase> CreateRequestCancelOutside(RequestCreateCancelOutsideDTO DTO, Guid creatorId)
         {
-            throw new NotImplementedException();
+            ResponseBase response = RequestHelper.CheckRequestNameAndRequestCategoryValidWhenCreateRequest(DTO.RequestName, DTO.RequestCategoryId, RequestCategories.Cancel_Outside);
+            if (response.Success == false)
+            {
+                return response;
+            }
+            try
+            {
+                response = RequestHelper.CheckIssueValidWhenCreateRequest(_daoIssue, DTO.IssueId);
+                if (response.Success == false)
+                {
+                    return response;
+                }
+                string issueCode = response.Message;
+                // ------------------------- create cable ------------------------------
+                List<Cable> listCable = new List<Cable>();
+                if (DTO.CableCancelOutsideDTOs.Count > 0)
+                {
+                    foreach (CableCancelOutsideDTO item in DTO.CableCancelOutsideDTOs)
+                    {
+                        Cable cable = _mapper.Map<Cable>(item);
+                        cable.CableId = Guid.NewGuid();
+                        cable.CreatorId = creatorId;
+                        cable.CreatedAt = DateTime.Now;
+                        cable.UpdateAt = DateTime.Now;
+                        cable.IsDeleted = false;
+                        cable.IsExportedToUse = false;
+                        cable.IsInRequest = true;
+                        cable.WarehouseId = null;
+                        _daoCable.CreateCable(cable);
+                        listCable.Add(cable);
+                    }
+                }
+                //-------------------- create other material---------------------------
+                Dictionary<int, int> dic = new Dictionary<int, int>();
+                if (DTO.OtherMaterialsCancelOutsideDTOs.Count > 0)
+                {
+                    foreach (OtherMaterialsCancelOutsideDTO item in DTO.OtherMaterialsCancelOutsideDTOs)
+                    {
+                        OtherMaterial? material = _daoOtherMaterial.getOtherMaterial(item);
+                        if (material == null)
+                        {
+                            material = _mapper.Map<OtherMaterial>(DTO);
+                            material.CreatedAt = DateTime.Now;
+                            material.UpdateAt = DateTime.Now;
+                            material.WarehouseId = null;
+                            material.IsDeleted = true;
+                            _daoOtherMaterial.CreateOtherMaterial(material);
+                            dic[material.OtherMaterialsId] = item.Quantity;
+                        }
+                        else
+                        {
+                            dic[material.OtherMaterialsId] = item.Quantity;
+                        }
+                    }
+                }
+                // --------------------------- create request ------------------------------------
+                Guid requestId = RequestHelper.CreateRequest(_daoRequest, DTO.RequestName.Trim(), DTO.Content, DTO.IssueId, creatorId, DTO.RequestCategoryId, null);
+                // --------------------------- create request cable ------------------------------------
+                if (listCable.Count > 0)
+                {
+                    foreach (Cable item in listCable)
+                    {
+                        RequestCable requestCable = _mapper.Map<RequestCable>(item);
+                        requestCable.RequestId = requestId;
+                        requestCable.CreatedAt = DateTime.Now;
+                        requestCable.UpdateAt = DateTime.Now;
+                        requestCable.IsDeleted = false;
+                        _daoRequestCable.CreateRequestCable(requestCable);
+                    }
+                }
+                // --------------------------- create request material ------------------------------------
+                if (dic.Count > 0)
+                {
+                    foreach (int otherMaterialId in dic.Keys)
+                    {
+                        RequestOtherMaterial requestMaterial = new RequestOtherMaterial()
+                        {
+                            RequestId = requestId,
+                            OtherMaterialsId = otherMaterialId,
+                            Quantity = dic[otherMaterialId],
+                            CreatedAt = DateTime.Now,
+                            UpdateAt = DateTime.Now,
+                            IsDeleted = false
+                        };
+                        _daoRequestOtherMaterial.CreateRequestOtherMaterial(requestMaterial);
+                    }
+                }
+                await RequestHelper.sendEmailToAdmin(_daoUser, DTO.RequestName.Trim(), RequestCategories.Cancel_Outside.ToString(), issueCode);
+                return new ResponseBase(true, "Tạo yêu cầu thành công");
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseBase(ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ResponseBase> CreateRequestDeliver(RequestCreateDeliverDTO DTO, Guid creatorId)
@@ -58,7 +246,6 @@ namespace API.Services.Requests
             {
                 return response;
             }
-
             try
             {
                 Warehouse? ware = _daoWarehouse.getWarehouse(DTO.DeliverWareHouseId);
@@ -130,9 +317,122 @@ namespace API.Services.Requests
             }
         }
 
-        public Task<ResponseBase> CreateRequestRecovery(RequestCreateRecoveryDTO DTO, Guid creatorId)
+        public async Task<ResponseBase> CreateRequestRecovery(RequestCreateRecoveryDTO DTO, Guid creatorId)
         {
-            throw new NotImplementedException();
+            ResponseBase response = RequestHelper.CheckRequestNameAndRequestCategoryValidWhenCreateRequest(DTO.RequestName, DTO.RequestCategoryId, RequestCategories.Recovery);
+            if (response.Success == false)
+            {
+                return response;
+            }
+            try
+            {
+                response = RequestHelper.CheckIssueValidWhenCreateRequest(_daoIssue, DTO.IssueId);
+                if (response.Success == false)
+                {
+                    return response;
+                }
+                string issueCode = response.Message;
+                // ------------------------------- create cable --------------------------
+                List<Cable> listCable = new List<Cable>();
+                if (DTO.CableRecoveryDTOs.Count > 0)
+                {
+                    foreach (CableCreateUpdateDTO item in DTO.CableRecoveryDTOs)
+                    {
+                        Cable cable = _mapper.Map<Cable>(DTO);
+                        cable.CableId = Guid.NewGuid();
+                        cable.CreatorId = creatorId;
+                        cable.CreatedAt = DateTime.Now;
+                        cable.UpdateAt = DateTime.Now;
+                        cable.IsDeleted = false;
+                        cable.IsExportedToUse = false;
+                        cable.IsInRequest = true;
+                        _daoCable.CreateCable(cable);
+                        listCable.Add(cable);
+                    }
+                }
+                // ------------------------------- create material --------------------------
+                // list warehouse
+                List<int?> listWarehouseId = new List<int?>();
+                // list quantity
+                List<int> listQuantity = new List<int>();
+                // list material id
+                List<int> listOtherMaterialId = new List<int>();
+                // list status
+                List<string?> listStatus = new List<string?>();
+                if (DTO.OtherMaterialsRecoveryDTOs.Count > 0)
+                {
+                    foreach (OtherMaterialsRecoveryDTO item in DTO.OtherMaterialsRecoveryDTOs)
+                    {
+                        OtherMaterial? material = _daoOtherMaterial.getOtherMaterial(item);
+                        // if material not exist
+                        if (material == null)
+                        {
+                            material = _mapper.Map<OtherMaterial>(DTO);
+                            material.Quantity = 0;
+                            material.CreatedAt = DateTime.Now;
+                            material.UpdateAt = DateTime.Now;
+                            material.IsDeleted = false;
+                            _daoOtherMaterial.CreateOtherMaterial(material);
+                            listWarehouseId.Add(item.WarehouseId);
+                            listQuantity.Add(item.Quantity);
+                            listOtherMaterialId.Add(material.OtherMaterialsId);
+                            listStatus.Add(item.Status.Trim());
+                        }
+                        else
+                        {
+                            listWarehouseId.Add(item.WarehouseId);
+                            listQuantity.Add(item.Quantity);
+                            listOtherMaterialId.Add(material.OtherMaterialsId);
+                            listStatus.Add(null);
+                            // update material
+                            material.UpdateAt = DateTime.Now;
+                            _daoOtherMaterial.UpdateOtherMaterial(material);
+                        }
+                    }
+                }
+                //----------------------------- create request --------------------------------
+                Guid requestId = RequestHelper.CreateRequest(_daoRequest, DTO.RequestName.Trim(), DTO.Content, DTO.IssueId, creatorId, DTO.RequestCategoryId, null);
+                //----------------------------- create request cable --------------------------------
+                if (listCable.Count > 0)
+                {
+                    foreach (Cable cable in listCable)
+                    {
+                        RequestCable request = _mapper.Map<RequestCable>(cable);
+                        request.RequestId = requestId;
+                        request.CreatedAt = DateTime.Now;
+                        request.UpdateAt = DateTime.Now;
+                        request.IsDeleted = false;
+                        _daoRequestCable.CreateRequestCable(request);
+                    }
+                }
+                //----------------------------- create request material --------------------------------
+                if (listOtherMaterialId.Count > 0)
+                {
+                    for (int i = 0; i < listOtherMaterialId.Count; i++)
+                    {
+                        RequestOtherMaterial request = new RequestOtherMaterial()
+                        {
+                            RequestId = requestId,
+                            OtherMaterialsId = listOtherMaterialId[i],
+                            Quantity = listQuantity[i],
+                            CreatedAt = DateTime.Now,
+                            UpdateAt = DateTime.Now,
+                            IsDeleted = false,
+                            RecoveryDestWarehouseId = listWarehouseId[i],
+                            Status = listStatus[i]
+                        };
+                        _daoRequestOtherMaterial.CreateRequestOtherMaterial(request);
+                    }
+                }
+                // ----------------------------- send email to admin ---------------------------
+                await RequestHelper.sendEmailToAdmin(_daoUser, DTO.RequestName.Trim(), RequestCategories.Recovery.ToString(), issueCode);
+                return new ResponseBase(true, "Tạo yêu cầu thành công");
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseBase(ex.Message + " " + ex, (int)HttpStatusCode.InternalServerError);
+            }
         }
 
         public ResponseBase Delete(Guid requestId)
