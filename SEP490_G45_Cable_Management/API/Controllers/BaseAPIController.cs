@@ -30,6 +30,12 @@ namespace API.Controllers
             return claim != null && claim.Value == Roles.Warehouse_Keeper.ToString();
         }
 
+        internal bool isStaff()
+        {
+            Claim? claim = getClaim(ClaimTypes.Role);
+            return claim != null && claim.Value == Roles.Staff.ToString();
+        }
+
         internal Guid? getUserId()
         {
             Claim? claim = getClaim("id");

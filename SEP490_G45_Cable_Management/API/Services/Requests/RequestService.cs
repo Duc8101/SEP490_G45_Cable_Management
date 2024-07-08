@@ -24,9 +24,13 @@ namespace API.Services.Requests
         private readonly DAORequestOtherMaterial _daoRequestOtherMaterial;
         private readonly DAOUser _daoUser;
         private readonly DAOWarehouse _daoWarehouse;
+        private readonly DAOTransactionHistory _daoHistory;
+        private readonly DAOTransactionCable _daoTransactionCable;
+        private readonly DAOTransactionOtherMaterial _daoTransactionOtherMaterial;
         public RequestService(IMapper mapper, DAORequest daoRequest, DAOIssue daoIssue, DAOCable daoCable
             , DAOOtherMaterial daoOtherMaterial, DAORequestCable daoRequestCable, DAORequestOtherMaterial daoRequestOtherMaterial
-            , DAOUser daoUser, DAOWarehouse daoWarehouse) : base(mapper)
+            , DAOUser daoUser, DAOWarehouse daoWarehouse, DAOTransactionHistory daoHistory, DAOTransactionCable daoTransactionCable
+            , DAOTransactionOtherMaterial daoTransactionOtherMaterial) : base(mapper)
         {
             _daoRequest = daoRequest;
             _daoIssue = daoIssue;
@@ -36,6 +40,9 @@ namespace API.Services.Requests
             _daoRequestOtherMaterial = daoRequestOtherMaterial;
             _daoUser = daoUser;
             _daoWarehouse = daoWarehouse;
+            _daoHistory = daoHistory;
+            _daoTransactionCable = daoTransactionCable;
+            _daoTransactionOtherMaterial = daoTransactionOtherMaterial;
         }
 
         public async Task<ResponseBase> Approve(Guid requestId, Guid approverId, string approverName)
@@ -51,18 +58,23 @@ namespace API.Services.Requests
                 {
                     return new ResponseBase(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
                 }
-                if (request.RequestCategoryId == (int) RequestCategories.Export || request.RequestCategoryId == (int)RequestCategories.Deliver 
+                if (request.RequestCategoryId == (int)RequestCategories.Export || request.RequestCategoryId == (int)RequestCategories.Deliver
                     || request.RequestCategoryId == (int)RequestCategories.Cancel_Inside)
                 {
-                   // return await ApproveRequestExportDeliverCancelInside(approverId, request, approverName);
+                    return await RequestHelper.ApproveRequestExportDeliverCancelInside(_daoRequestCable, _daoRequestOtherMaterial
+                        , _daoRequest, _daoCable, approverId, _daoOtherMaterial, _daoHistory, _daoTransactionCable
+                        , _daoTransactionOtherMaterial, request, approverName);
                 }
                 if (request.RequestCategoryId == (int)RequestCategories.Recovery)
                 {
-                   // return await ApproveRequestRecovery(approverId, request, approverName);
+                    return await RequestHelper.ApproveRequestRecovery(_daoHistory, _daoTransactionCable, _daoTransactionOtherMaterial
+                        , _daoRequestCable, _daoRequestOtherMaterial, _daoCable, _daoOtherMaterial
+                        , _daoRequest, approverId, request, approverName);
                 }
                 if (request.RequestCategoryId == (int)RequestCategories.Cancel_Outside)
                 {
-                    //return await ApproveRequestCancelOutside(approverId, request, approverName);
+                    return await RequestHelper.ApproveRequestCancelOutside(_daoRequestCable, _daoRequest
+                        , _daoRequestOtherMaterial, approverId, request, approverName);
                 }
                 return new ResponseBase(false, "Không hỗ trợ yêu cầu " + request.RequestCategory.RequestCategoryName, (int)HttpStatusCode.Conflict);
             }
@@ -95,7 +107,7 @@ namespace API.Services.Requests
                     return response;
                 }
                 // ----------------------- check material valid --------------------------
-                response = RequestHelper.CheckMaterialValidCreateExportDeliverCancelInside(_daoOtherMaterial, DTO.OtherMaterialsCancelInsideDTOs);
+                response = RequestHelper.CheckOtherMaterialValidCreateExportDeliverCancelInside(_daoOtherMaterial, DTO.OtherMaterialsCancelInsideDTOs);
                 // if exist material invalid
                 if (response.Success == false)
                 {
@@ -258,7 +270,7 @@ namespace API.Services.Requests
                 {
                     return response;
                 }
-                response = RequestHelper.CheckMaterialValidCreateExportDeliverCancelInside(_daoOtherMaterial, DTO.OtherMaterialsDeliverDTOs);
+                response = RequestHelper.CheckOtherMaterialValidCreateExportDeliverCancelInside(_daoOtherMaterial, DTO.OtherMaterialsDeliverDTOs);
                 if (response.Success == false)
                 {
                     return response;
@@ -298,7 +310,7 @@ namespace API.Services.Requests
                 {
                     return response;
                 }
-                response = RequestHelper.CheckMaterialValidCreateExportDeliverCancelInside(_daoOtherMaterial, DTO.OtherMaterialsExportDTOs);
+                response = RequestHelper.CheckOtherMaterialValidCreateExportDeliverCancelInside(_daoOtherMaterial, DTO.OtherMaterialsExportDTOs);
                 if (response.Success == false)
                 {
                     return response;

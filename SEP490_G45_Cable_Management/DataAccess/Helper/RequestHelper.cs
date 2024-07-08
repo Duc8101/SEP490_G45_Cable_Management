@@ -69,7 +69,7 @@ namespace DataAccess.Helper
             return new ResponseBase(true);
         }
 
-        public static ResponseBase CheckMaterialValidCreateExportDeliverCancelInside(DAOOtherMaterial daoOtherMaterial
+        public static ResponseBase CheckOtherMaterialValidCreateExportDeliverCancelInside(DAOOtherMaterial daoOtherMaterial
             , List<OtherMaterialsExportDeliverCancelInsideDTO> list)
         {
             if (list.Count == 0)
@@ -214,16 +214,16 @@ namespace DataAccess.Helper
             , DAOTransactionOtherMaterial daoTransactionOtherMaterial, Request request, List<int> listCableWarehouseId
             , List<Cable> listCable, List<int> listOtherMaterialWarehouseId, List<int> listOtherMaterialId, List<int> listOtherMaterialQuantity, bool? action)
         {
-            string CategoryName;
+            string categoryName;
             int? fromWarehouseId = null;
             int? toWarehouseId = null;
             if (action == null)
             {
-                CategoryName = TransactionCategoryConst.CATEGORY_CANCEL;
+                categoryName = TransactionCategoryConst.CATEGORY_CANCEL;
             }
             else
             {
-                CategoryName = action == true ? TransactionCategoryConst.CATEGORY_IMPORT : TransactionCategoryConst.CATEGORY_EXPORT;
+                categoryName = action == true ? TransactionCategoryConst.CATEGORY_IMPORT : TransactionCategoryConst.CATEGORY_EXPORT;
             }
             // if transaction export and request deliver
             if (action == false && request.RequestCategoryId == (int)RequestCategories.Deliver)
@@ -267,7 +267,7 @@ namespace DataAccess.Helper
                 TransactionHistory history = new TransactionHistory()
                 {
                     TransactionId = Guid.NewGuid(),
-                    TransactionCategoryName = CategoryName,
+                    TransactionCategoryName = categoryName,
                     CreatedDate = DateTime.Now,
                     CreatedAt = DateTime.Now,
                     UpdateAt = DateTime.Now,
@@ -335,7 +335,7 @@ namespace DataAccess.Helper
                 return response;
             }
             // ------------------------------- check material valid ------------------------------
-            response = CheckMaterialValidApproveExportDeliverCancelInside(daoOtherMaterial, requestMaterials);
+            response = CheckOtherMaterialValidApproveExportDeliverCancelInside(daoOtherMaterial, requestMaterials);
             // if exist material not valid
             if (response.Success == false)
             {
@@ -344,7 +344,8 @@ namespace DataAccess.Helper
             // if request export
             if (request.RequestCategoryId == (int)RequestCategories.Export)
             {
-                Dictionary<string, object> result = ApproveRequestExport(daoCable, daoOtherMaterial,request, requestCables, requestMaterials);
+                Dictionary<string, object> result = ApproveRequestExport(daoCable, daoOtherMaterial, request
+                    , requestCables, requestMaterials);
                 List<Cable> listCableExported = (List<Cable>)result["listCableExported"];
                 List<int> listCableWarehouseId = (List<int>)result["listCableWarehouseId"];
                 List<int> listOtherMaterialWarehouseId = (List<int>)result["listOtherMaterialWarehouseId"];
@@ -357,7 +358,9 @@ namespace DataAccess.Helper
             }
             else if (request.RequestCategoryId == (int)RequestCategories.Deliver)
             {
-/*                Dictionary<string, object> result = ApproveRequestDeliver(request, requestCables, requestMaterials);
+                Dictionary<string, object> result = ApproveRequestDeliver(daoHistory, daoTransactionCable
+                    , daoTransactionOtherMaterial, daoCable, daoOtherMaterial, request, requestCables
+                    , requestMaterials);
                 List<Cable> listCableDeliver = (List<Cable>)result["listCableDeliver"];
                 List<int> listCableWarehouseId = (List<int>)result["listCableWarehouseId"];
                 List<int> listOtherMaterialWarehouseId = (List<int>)result["listOtherMaterialWarehouseId"];
@@ -366,10 +369,10 @@ namespace DataAccess.Helper
                 CreateTransaction(daoHistory, daoTransactionCable, daoTransactionOtherMaterial, request
                     , listCableWarehouseId, listCableDeliver, listOtherMaterialWarehouseId, listOtherMaterialIdDeliver
                     , listOtherMaterialQuantity, true);
-*/            }
+            }
             else
             {
-/*                Dictionary<string, object> result = ApproveRequestCancelInside(requestCables, requestMaterials);
+                Dictionary<string, object> result = ApproveRequestCancelInside(daoCable, daoOtherMaterial, requestCables, requestMaterials);
                 List<Cable> listCableCancelInside = (List<Cable>)result["listCableCancelInside"];
                 List<int> listCableWarehouseId = (List<int>)result["listCableWarehouseId"];
                 List<int> listOtherMaterialWarehouseId = (List<int>)result["listOtherMaterialWarehouseId"];
@@ -378,7 +381,8 @@ namespace DataAccess.Helper
                 CreateTransaction(daoHistory, daoTransactionCable, daoTransactionOtherMaterial, request
                     , listCableWarehouseId, listCableCancelInside, listOtherMaterialWarehouseId, listOtherMaterialIdCancelInside
                     , listOtherMaterialQuantity, null);
-*/            }
+
+            }
             // ------------------------------- update request approved --------------------------------
             UpdateRequest(daoRequest, request, approverId, RequestConst.STATUS_APPROVED);
             // ------------------------------- send email --------------------------------
@@ -421,7 +425,7 @@ namespace DataAccess.Helper
             return new ResponseBase(true);
         }
 
-        private static ResponseBase CheckMaterialValidApproveExportDeliverCancelInside(DAOOtherMaterial daoOtherMaterial, List<RequestOtherMaterial> list)
+        private static ResponseBase CheckOtherMaterialValidApproveExportDeliverCancelInside(DAOOtherMaterial daoOtherMaterial, List<RequestOtherMaterial> list)
         {
             if (list.Count == 0)
             {
@@ -884,6 +888,419 @@ namespace DataAccess.Helper
             return result;
         }
 
+        private static Dictionary<string, object> ApproveRequestDeliver(DAOTransactionHistory daoHistory, DAOTransactionCable daoTransactionCable
+            , DAOTransactionOtherMaterial daoTransactionOtherMaterial, DAOCable daoCable, DAOOtherMaterial daoOtherMaterial
+            , Request request, List<RequestCable> requestCables, List<RequestOtherMaterial> requestMaterials)
+        {
+            Dictionary<string, object> result = new Dictionary<string, object>();
+            // list cable
+            List<Cable> listCableDeliver = new List<Cable>();
+            List<int> listCableWarehouseId = new List<int>();
+            // list material
+            List<int> listOtherMaterialWarehouseId = new List<int>();
+            List<int> listOtherMaterialIdDeliver = new List<int>();
+            List<int> listOtherMaterialQuantity = new List<int>();
+            //-------------------- create transaction export first, then create transaction import -------------------
+            if (requestCables.Count > 0)
+            {
+                foreach (RequestCable item in requestCables)
+                {
+                    if (item.Cable.WarehouseId.HasValue)
+                    {
+                        Cable cable = new Cable()
+                        {
+                            CableId = item.CableId,
+                            StartPoint = item.StartPoint,
+                            EndPoint = item.EndPoint,
+                            Length = item.Length,
+                        };
+                        listCableDeliver.Add(cable);
+                        listCableWarehouseId.Add(item.Cable.WarehouseId.Value);
+                    }
+                }
+            }
+            if (requestMaterials.Count > 0)
+            {
+                foreach (RequestOtherMaterial item in requestMaterials)
+                {
+                    if (item.OtherMaterials.WarehouseId.HasValue)
+                    {
+                        listOtherMaterialIdDeliver.Add(item.OtherMaterialsId);
+                        listOtherMaterialWarehouseId.Add(item.OtherMaterials.WarehouseId.Value);
+                        listOtherMaterialQuantity.Add(item.Quantity);
+                    }
+                }
+            }
+            CreateTransaction(daoHistory, daoTransactionCable, daoTransactionOtherMaterial, request, listCableWarehouseId, listCableDeliver, listOtherMaterialWarehouseId, listOtherMaterialIdDeliver, listOtherMaterialQuantity, false);
+            // ------------------------------- request cable ------------------------------
+            listCableDeliver = new List<Cable>();
+            listCableWarehouseId = new List<int>();
+            if (requestCables.Count > 0)
+            {
+                foreach (RequestCable item in requestCables)
+                {
+                    Cable? cable;
+                    if (item.Cable.IsDeleted)
+                    {
+                        cable = daoCable.getCable(item.CableId, item.StartPoint, item.EndPoint);
+                    }
+                    else
+                    {
+                        cable = item.Cable;
+                    }
+                    // if cable valid
+                    if (cable != null)
+                    {
+                        if (item.StartPoint == cable.StartPoint && item.EndPoint == cable.EndPoint)
+                        {
+                            Cable? update = daoCable.getCable(cable.CableId);
+                            if (update != null)
+                            {
+                                if (request.DeliverWarehouseId.HasValue)
+                                {
+                                    listCableWarehouseId.Add(request.DeliverWarehouseId.Value);
+                                    listCableDeliver.Add(update);
+                                }
+                                // update cable
+                                update.WarehouseId = request.DeliverWarehouseId;
+                                update.UpdateAt = DateTime.Now;
+                                daoCable.UpdateCable(update);
+                            }
+                        }
+                        else
+                        {
+                            List<Cable> listCut = getListCableCut(item.StartPoint, item.EndPoint, cable, request.DeliverWarehouseId);
+                            foreach (Cable cut in listCut)
+                            {
+                                // if cable deliver
+                                if (cut.WarehouseId == request.DeliverWarehouseId)
+                                {
+                                    // if warehouse deliver not null
+                                    if (request.DeliverWarehouseId.HasValue)
+                                    {
+                                        listCableWarehouseId.Add(request.DeliverWarehouseId.Value);
+                                        listCableDeliver.Add(cut);
+                                    }
+                                    daoCable.CreateCable(cut);
+                                }
+                                else
+                                {
+                                    daoCable.CreateCable(cut);
+                                }
+                            }
+                            // delete cable parent
+                            Cable? cableParent = daoCable.getCable(cable.CableId);
+                            if (cableParent != null)
+                            {
+                                daoCable.DeleteCable(cableParent);
+                            }
+                        }
+
+                    }
+                }
+
+            }
+            // ------------------------------- request material ------------------------------
+            listOtherMaterialWarehouseId = new List<int>();
+            listOtherMaterialIdDeliver = new List<int>();
+            listOtherMaterialQuantity = new List<int>();
+            if (requestMaterials.Count > 0)
+            {
+                foreach (RequestOtherMaterial item in requestMaterials)
+                {
+                    // update quantity
+                    item.OtherMaterials.Quantity = item.OtherMaterials.Quantity - item.Quantity;
+                    item.OtherMaterials.UpdateAt = DateTime.Now;
+                    daoOtherMaterial.Save();
+                    // check material exist in deliver warehouse
+                    OtherMaterial? material = daoOtherMaterial.getOtherMaterial(request.DeliverWarehouseId, item.OtherMaterials.Code, item.OtherMaterials.Status, item.OtherMaterials.Unit);
+                    // if material not exist in deliver warehouse
+                    if (material == null)
+                    {
+                        // create new other material in deliver warehouse
+                        material = new OtherMaterial()
+                        {
+                            OtherMaterialsCategoryId = item.OtherMaterials.OtherMaterialsCategoryId,
+                            Code = item.OtherMaterials.Code,
+                            Unit = item.OtherMaterials.Unit,
+                            Quantity = item.Quantity,
+                            WarehouseId = request.DeliverWarehouseId,
+                            Status = item.OtherMaterials.Status,
+                            SupplierId = item.OtherMaterials.SupplierId
+                        };
+                        // create material
+                        daoOtherMaterial.CreateOtherMaterial(material);
+                        if (request.DeliverWarehouseId.HasValue)
+                        {
+                            listOtherMaterialIdDeliver.Add(material.OtherMaterialsId);
+                            listOtherMaterialQuantity.Add(item.Quantity);
+                            listOtherMaterialWarehouseId.Add(request.DeliverWarehouseId.Value);
+                        }
+                    }
+                    else
+                    {
+                        if (request.DeliverWarehouseId.HasValue)
+                        {
+                            listOtherMaterialIdDeliver.Add(item.OtherMaterialsId);
+                            listOtherMaterialQuantity.Add(item.Quantity);
+                            listOtherMaterialWarehouseId.Add(request.DeliverWarehouseId.Value);
+                        }
+                        // update material quantity
+                        material.Quantity = material.Quantity + item.Quantity;
+                        material.UpdateAt = DateTime.Now;
+                        daoOtherMaterial.UpdateOtherMaterial(material);
+                    }
+                }
+            }
+            result["listCableDeliver"] = listCableDeliver;
+            result["listCableWarehouseId"] = listCableWarehouseId;
+            result["listOtherMaterialWarehouseId"] = listOtherMaterialWarehouseId;
+            result["listOtherMaterialIdDeliver"] = listOtherMaterialIdDeliver;
+            result["listOtherMaterialQuantity"] = listOtherMaterialQuantity;
+            return result;
+        }
+
+        private static Dictionary<string, object> ApproveRequestCancelInside(DAOCable daoCable, DAOOtherMaterial daoOtherMaterial
+            , List<RequestCable> requestCables, List<RequestOtherMaterial> requestMaterials)
+        {
+            Dictionary<string, object> result = new Dictionary<string, object>();
+            // list cable
+            List<Cable> listCableCancelInside = new List<Cable>();
+            List<int> listCableWarehouseId = new List<int>();
+            // list material
+            List<int> listOtherMaterialWarehouseId = new List<int>();
+            List<int> listOtherMaterialIdCancelInside = new List<int>();
+            List<int> listOtherMaterialQuantity = new List<int>();
+            if (requestCables.Count > 0)
+            {
+                foreach (RequestCable item in requestCables)
+                {
+                    Cable? cable;
+                    if (item.Cable.IsDeleted)
+                    {
+                        cable = daoCable.getCable(item.CableId, item.StartPoint, item.EndPoint);
+                    }
+                    else
+                    {
+                        cable = item.Cable;
+                    }
+                    // if cable valid
+                    if (cable != null)
+                    {
+                        if (item.StartPoint == cable.StartPoint && item.EndPoint == cable.EndPoint)
+                        {
+                            Cable? update = daoCable.getCable(cable.CableId);
+                            if (update != null)
+                            {
+                                if (update.WarehouseId.HasValue)
+                                {
+                                    listCableWarehouseId.Add(update.WarehouseId.Value);
+                                    listCableCancelInside.Add(update);
+                                }
+                                // update cable
+                                update.IsDeleted = true;
+                                update.UpdateAt = DateTime.Now;
+                                daoCable.UpdateCable(update);
+                            }
+                        }
+                        else
+                        {
+                            List<Cable> listCut = getListCableCut(item.StartPoint, item.EndPoint, cable);
+                            foreach (Cable cut in listCut)
+                            {
+                                // if cable cancel
+                                if (cut.IsDeleted)
+                                {
+                                    // if warehouse cancel not null
+                                    if (cut.WarehouseId.HasValue)
+                                    {
+                                        listCableWarehouseId.Add(cut.WarehouseId.Value);
+                                        listCableCancelInside.Add(cut);
+                                    }
+                                    daoCable.CreateCable(cut);
+                                }
+                                else
+                                {
+                                    daoCable.CreateCable(cut);
+                                }
+                            }
+                            // delete cable parent
+                            Cable? cableParent = daoCable.getCable(cable.CableId);
+                            if (cableParent != null)
+                            {
+                                daoCable.DeleteCable(cableParent);
+                            }
+                        }
+
+                    }
+                }
+
+            }
+
+            if (requestMaterials.Count > 0)
+            {
+                foreach (RequestOtherMaterial item in requestMaterials)
+                {
+                    if (item.OtherMaterials.WarehouseId.HasValue)
+                    {
+                        listOtherMaterialWarehouseId.Add(item.OtherMaterials.WarehouseId.Value);
+                        listOtherMaterialIdCancelInside.Add(item.OtherMaterialsId);
+                        listOtherMaterialQuantity.Add(item.Quantity);
+                    }
+                    // update material quantity
+                    item.OtherMaterials.Quantity = item.OtherMaterials.Quantity - item.Quantity;
+                    item.OtherMaterials.UpdateAt = DateTime.Now;
+                    daoOtherMaterial.Save();
+                }
+            }
+
+            result["listCableCancelInside"] = listCableCancelInside;
+            result["listCableWarehouseId"] = listCableWarehouseId;
+            result["listOtherMaterialWarehouseId"] = listOtherMaterialWarehouseId;
+            result["listOtherMaterialIdCancelInside"] = listOtherMaterialIdCancelInside;
+            result["listOtherMaterialQuantity"] = listOtherMaterialQuantity;
+            return result;
+        }
+
+        private static ResponseBase CheckCableValidApproveRecovery(DAOCable daoCable, List<RequestCable> list)
+        {
+            if (list.Count == 0)
+            {
+                return new ResponseBase(true);
+            }
+            foreach (RequestCable request in list)
+            {
+                Cable? cable = daoCable.getCable(request.CableId);
+                if (cable == null)
+                {
+                    return new ResponseBase(false, request.Cable.CableCategory.CableCategoryName + " với ID: " + request.CableId
+                                + " không tồn tại ", (int)HttpStatusCode.NotFound);
+                }
+
+                if (cable.StartPoint < 0 || cable.EndPoint < 0 || cable.StartPoint >= cable.EndPoint)
+                {
+                    return new ResponseBase(false, request.Cable.CableCategory.CableCategoryName + " với ID: " + request.CableId
+                                + " có chỉ số đầu chỉ số cuối không hợp lệ ", (int)HttpStatusCode.Conflict);
+                }
+            }
+            return new ResponseBase(true);
+        }
+        // check material valid when approve request recovery
+        private static ResponseBase CheckOtherMaterialValidApproveRecovery(DAOOtherMaterial daoOtherMaterial
+            , List<RequestOtherMaterial> list)
+        {
+            if (list.Count == 0)
+            {
+                return new ResponseBase(true);
+            }
+            foreach (RequestOtherMaterial request in list)
+            {
+                if (request.Quantity < 0)
+                {
+                    return new ResponseBase(false, "Số lượng không hợp lệ", (int)HttpStatusCode.NotFound);
+                }
+                OtherMaterial? material = daoOtherMaterial.getOtherMaterial(request.OtherMaterialsId);
+                if (material == null)
+                {
+                    return new ResponseBase(false, request.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " với ID: " + request.OtherMaterialsId
+                                + " không tồn tại ", (int)HttpStatusCode.NotFound);
+                }
+            }
+            return new ResponseBase(true);
+        }
+
+        public static async Task<ResponseBase> ApproveRequestRecovery(DAOTransactionHistory daoHistory, DAOTransactionCable daoTransactionCable
+            , DAOTransactionOtherMaterial daoTransactionOtherMaterial, DAORequestCable daoRequestCable, DAORequestOtherMaterial daoRequestOtherMaterial
+            , DAOCable daoCable, DAOOtherMaterial daoOtherMaterial, DAORequest daoRequest, Guid approverId, Request request
+            , string approverName)
+        {
+            List<RequestCable> requestCables = daoRequestCable.getListRequestCable(request.RequestId);
+            List<RequestOtherMaterial> requestMaterials = daoRequestOtherMaterial.getListRequestOtherMaterial(request.RequestId);
+            // ------------------------------- check cable valid ------------------------------  
+            ResponseBase response = CheckCableValidApproveRecovery(daoCable, requestCables);
+            // if exist cable not valid
+            if (response.Success == false)
+            {
+                return response;
+            }
+            // ------------------------------- check material valid ------------------------------
+            response = CheckOtherMaterialValidApproveRecovery(daoOtherMaterial, requestMaterials);
+            // if exist material not valid
+            if (response.Success == false)
+            {
+                return response;
+            }
+            // ------------------------------- request cable ------------------------------
+            List<Cable> listCableRecovery = new List<Cable>();
+            List<int> listCableWarehouseId = new List<int>();
+            if (requestCables.Count > 0)
+            {
+                foreach (RequestCable item in requestCables)
+                {
+                    if (item.RecoveryDestWarehouseId.HasValue)
+                    {
+                        listCableRecovery.Add(item.Cable);
+                        listCableWarehouseId.Add(item.RecoveryDestWarehouseId.Value);
+                    }
+                    // update cable
+                    item.Cable.IsInRequest = false;
+                    item.Cable.UpdateAt = DateTime.Now;
+                    daoRequestCable.Save();
+                }
+            }
+            // ------------------------------- request material ------------------------------
+            List<int> listOtherMaterialWarehouseId = new List<int>();
+            List<int> listOtherMaterialIdRecovery = new List<int>();
+            List<int> listOtherMaterialQuantity = new List<int>();
+            if (requestMaterials.Count > 0)
+            {
+                foreach (RequestOtherMaterial item in requestMaterials)
+                {
+                    if (item.RecoveryDestWarehouseId.HasValue)
+                    {
+                        listOtherMaterialIdRecovery.Add(item.OtherMaterialsId);
+                        listOtherMaterialWarehouseId.Add(item.RecoveryDestWarehouseId.Value);
+                        listOtherMaterialQuantity.Add(item.Quantity);
+                    }
+                    // update material
+                    item.OtherMaterials.Quantity = item.OtherMaterials.Quantity + item.Quantity;
+                    item.OtherMaterials.UpdateAt = DateTime.Now;
+                    daoRequestOtherMaterial.Save();
+                }
+            }
+            // ------------------------------- update request approved --------------------------------
+            UpdateRequest(daoRequest, request, approverId, RequestConst.STATUS_APPROVED);
+            // ------------------------------- create transaction ------------------------------
+            CreateTransaction(daoHistory, daoTransactionCable, daoTransactionOtherMaterial, request, listCableWarehouseId, listCableRecovery, listOtherMaterialWarehouseId
+                , listOtherMaterialIdRecovery, listOtherMaterialQuantity, true);
+            // ------------------------------- send email ------------------------------
+            await sendEmailToCreator(daoRequestCable, daoRequestOtherMaterial, request, approverName);
+            return new ResponseBase(true, "Yêu cầu được phê duyệt");
+        }
+
+        public static async Task<ResponseBase> ApproveRequestCancelOutside(DAORequestCable daoRequestCable, DAORequest daoRequest
+            , DAORequestOtherMaterial daoRequestOtherMaterial, Guid approverId, Request request, string approverName)
+        {
+            List<RequestCable> requestCables = daoRequestCable.getListRequestCable(request.RequestId);
+            if (requestCables.Count > 0)
+            {
+                foreach (RequestCable item in requestCables)
+                {
+                    if (item.Cable.IsInRequest == true)
+                    {
+                        item.Cable.IsInRequest = false;
+                        item.Cable.IsDeleted = true;
+                        item.Cable.UpdateAt = DateTime.Now;
+                        daoRequestCable.Save();
+                    }
+                }
+            }
+            // -------------------------------update request approved --------------------------------
+            UpdateRequest(daoRequest, request, approverId, RequestConst.STATUS_APPROVED);
+            // ------------------------------- send email --------------------------------
+            await sendEmailToCreator(daoRequestCable, daoRequestOtherMaterial, request, approverName);
+            return new ResponseBase(true, "Yêu cầu được phê duyệt");
+        }
 
     }
 }
