@@ -4,23 +4,13 @@ namespace DataAccess.Configuration
 {
     public class ConfigData
     {
-        public static string SqlConnection { get; set; } = string.Empty;
-        public static string JwtKey { get; set; } = string.Empty;
-        public static string JwtIssuer { get; set; } = string.Empty;
-        public static string JwtAudience { get; set; } = string.Empty;
-        public static string MailHost { get; set; } = string.Empty;
-        public static string MailUser { get; set; } = string.Empty;
-        public static string MailPassword { get; set; } = string.Empty;
-        public static void LoadAll()
-        {
-            SqlConnection = getConfigValue("ConnectionStrings:DefaultConnection");
-            JwtKey = getConfigValue("Jwt:Key");
-            JwtIssuer = getConfigValue("Jwt:Issuer");
-            JwtAudience = getConfigValue("Jwt:Audience");
-            MailHost = getConfigValue("MailAddress:Host");
-            MailUser = getConfigValue("MailAddress:Username");
-            MailPassword = getConfigValue("MailAddress:Password");
-        }
+        public static string SqlConnection { get; } = getConfigValue("ConnectionStrings:DefaultConnection");
+        public static string JwtKey { get; } = getConfigValue("Jwt:Key");
+        public static string JwtIssuer { get; } = getConfigValue("Jwt:Issuer");
+        public static string JwtAudience { get; } = getConfigValue("Jwt:Audience");
+        public static string MailHost { get; } = getConfigValue("MailAddress:Host");
+        public static string MailUser { get; } = getConfigValue("MailAddress:Username");
+        public static string MailPassword { get; } = getConfigValue("MailAddress:Password");
 
         private static string getConfigValue(string configPath)
         {

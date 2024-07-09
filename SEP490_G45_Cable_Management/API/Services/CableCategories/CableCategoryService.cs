@@ -81,11 +81,11 @@ namespace API.Services.CableCategories
             }
         }
 
-        public ResponseBase Update(int CableCategoryId, CableCategoryCreateUpdateDTO DTO)
+        public ResponseBase Update(int cableCategoryId, CableCategoryCreateUpdateDTO DTO)
         {
             try
             {
-                CableCategory? cable = _daoCableCategory.getCableCategory(CableCategoryId);
+                CableCategory? cable = _daoCableCategory.getCableCategory(cableCategoryId);
                 // if not found cable
                 if (cable == null)
                 {
@@ -96,7 +96,7 @@ namespace API.Services.CableCategories
                     return new ResponseBase(false, "Tên cáp không được để trống", (int)HttpStatusCode.Conflict);
                 }
                 // if cable already exist
-                if (_daoCableCategory.isExist(CableCategoryId, DTO.CableCategoryName.Trim()))
+                if (_daoCableCategory.isExist(cableCategoryId, DTO.CableCategoryName.Trim()))
                 {
                     return new ResponseBase(false, "Loại cáp này đã tồn tại", (int)HttpStatusCode.Conflict);
                 }

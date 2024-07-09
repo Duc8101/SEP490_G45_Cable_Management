@@ -1,4 +1,5 @@
-﻿using Common.DTO.CableCategoryDTO;
+﻿using API.Services.CableCategories;
+using Common.DTO.CableCategoryDTO;
 using Common.Paginations;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -8,10 +9,13 @@ namespace UnitTests.Tests
     [TestFixture]
     public class CableCategoryTest : BaseTest
     {
+        private CableCategoryController controller;
+        private Mock<ICableCategoryService> service;
         [SetUp]
         public void SetUp()
         {
-
+            service = new Mock<ICableCategoryService>();
+            controller = new CableCategoryController(service.Object);
         }
 
         [Test]
@@ -102,10 +106,10 @@ namespace UnitTests.Tests
         [Test]
         public async Task ListAll_WhenAdmin_ReturnsList()
         {
-            List<CableCategoryListDTO> expectedData = new List<CableCategoryListDTO> 
-            { 
+            List<CableCategoryListDTO> expectedData = new List<CableCategoryListDTO>
+            {
                 new CableCategoryListDTO { CableCategoryId = 1, CableCategoryName = "Category 1" },
-                new CableCategoryListDTO { CableCategoryId = 2, CableCategoryName = "Category 2" } 
+                new CableCategoryListDTO { CableCategoryId = 2, CableCategoryName = "Category 2" }
             };
             ResponseBase expectedResult = new ResponseBase(expectedData);
             string expectedContent = JsonSerializer.Serialize(expectedResult);
@@ -158,146 +162,143 @@ namespace UnitTests.Tests
             await ListAll_ReturnsUnauthorized("Invalid token");
         }
 
+        [Test]
+        public void ListAll_WhenExceptionThrown_ReturnsErrorResponse()
+        {
+            // Arrange
+            var expectedExceptionMessage = "Simulated exception message";
 
-        /*        [Test]
-                public void ListAll_WhenUserHasPermission_ReturnsListOfCableCategory()
-                {
-                    // Arrange
-                    var expectedData = new List<CableCategoryListDTO>
-                    {
-                        new CableCategoryListDTO { CableCategoryId = 1, CableCategoryName = "Category 1" },
-                        new CableCategoryListDTO { CableCategoryId = 2, CableCategoryName = "Category 2" }
-                    };
+            // Mock the ListAll method to throw an exception
+            service.Setup(x => x.ListAll()).Throws(new Exception(expectedExceptionMessage));
+            // Act and Assert
+            var exception = Assert.Throws<Exception>(() => controller.List());
 
-                    // Simulate user with admin role
-                    var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, Role.Admin.ToString()) }));
+            // Verify that the exception has the expected message
+            Assert.That(exception.Message, Is.EqualTo(expectedExceptionMessage));
+        }
 
-                    var context = new ControllerContext
-                    {
-                        HttpContext = new DefaultHttpContext
-                        {
-                            User = user
-                        }
-                    };
-                    controller.ControllerContext = context;
+        private async Task Create_ReturnsUnauthorized(string? token)
+        {
+            CableCategoryCreateUpdateDTO DTO = new CableCategoryCreateUpdateDTO();
+            ResponseBase expectedResult = new ResponseBase("Unauthorized", (int)HttpStatusCode.Unauthorized);
+            string content = JsonSerializer.Serialize(expectedResult);
+            var handler = getHttpMessageHandler(HttpStatusCode.Unauthorized, content);
+            HttpClient client = new HttpClient(handler.Object);
+            if (token != null)
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+            string url = "https://localhost:7107/CableCategory/Create";
+            HttpResponseMessage response = await Post<CableCategoryCreateUpdateDTO?>(client, url, DTO);
+            // Assert
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+            string data = await response.Content.ReadAsStringAsync();
+            ResponseBase<bool?>? trueResult = JsonSerializer.Deserialize<ResponseBase<bool?>>(data);
+            Assert.NotNull(trueResult);
+            Assert.IsFalse(trueResult.Success);
+            Assert.That(trueResult.Message, Is.EqualTo(expectedResult.Message));
+        }
 
-                    service.Setup(x => x.ListAll())
-                        .Returns(new ResponseBase(expectedData));
+        [Test]
+        public async Task Create_WhenNoLogin_ReturnsUnauthorized()
+        {
+            await Create_ReturnsUnauthorized(null);
+        }
 
-                    // Act
-                    var result = controller.List();
+        [Test]
+        public async Task Create_WhenInvalidToken_ReturnsUnauthorized()
+        {
+            await Create_ReturnsUnauthorized("Invalid token");
+        }
 
-                    // Assert
-                    Assert.IsNotNull(result);
-                    Assert.IsNotNull(result.Data);
-                    Assert.That(((List<CableCategoryListDTO>)result.Data).Count, Is.EqualTo(expectedData.Count));
-                }
+        [Test]
+        public async Task Create_NotAdmin_ReturnForbidden()
+        {
+            CableCategoryCreateUpdateDTO DTO = new CableCategoryCreateUpdateDTO();
+            ResponseBase result = new ResponseBase("Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+            string content = JsonSerializer.Serialize(result);
+            var handler = getHttpMessageHandler(HttpStatusCode.Forbidden, content);
+            HttpClient client = new HttpClient(handler.Object);
+            string token = SimulateToken(Roles.Staff);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            string url = "https://localhost:7107/CableCategory/Create";
+            HttpResponseMessage response = await Post<CableCategoryCreateUpdateDTO?>(client, url, DTO);
+            // Assert
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+        }
 
-                [Test]
-                public void ListAll_WhenExceptionThrown_ReturnsErrorResponse()
-                {
-                    // Arrange
-                    var expectedExceptionMessage = "Simulated exception message";
 
-                    // Mock the ListAll method to throw an exception
-                    service.Setup(x => x.ListAll()).Throws(new Exception(expectedExceptionMessage));
-                    // Act and Assert
-                    var exception = Assert.Throws<Exception>(() => controller.List());
+        [Test]
+        public async Task Create_WhenAdmin_ReturnSuccess()
+        {
+            CableCategoryCreateUpdateDTO DTO = new CableCategoryCreateUpdateDTO()
+            {
+                CableCategoryName = "New name",
+            };
+            ResponseBase expectedResult = new ResponseBase(true, "Tạo thành công");
+            string content = JsonSerializer.Serialize(expectedResult);
+            var handler = getHttpMessageHandler(HttpStatusCode.OK, content);
+            HttpClient client = new HttpClient(handler.Object);
+            string token = SimulateToken(Roles.Admin);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            string url = "https://localhost:7107/CableCategory/Create";
+            HttpResponseMessage response = await Post<CableCategoryCreateUpdateDTO?>(client, url, DTO);
+            string data = await response.Content.ReadAsStringAsync();
+            ResponseBase<bool?>? trueResult = JsonSerializer.Deserialize<ResponseBase<bool?>>(data);
+            // Assert
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            Assert.NotNull(trueResult);
+            Assert.That(trueResult.Message, Is.EqualTo(expectedResult.Message));
+            Assert.IsTrue(trueResult.Success);
+        }
 
-                    // Verify that the exception has the expected message
-                    Assert.That(exception.Message, Is.EqualTo(expectedExceptionMessage));
-                }
+        [Test]
+        public void Create_WhenCableCategoryNameIsEmpty_ReturnsConflictResponse()
+        {
+            // Arrange
+            var sampleData = new CableCategoryCreateUpdateDTO
+            {
+                CableCategoryName = ""
+            };
 
-                [Test]
-                public void Create_WhenCableCategoryNameIsEmpty_ReturnsConflictResponse()
-                {
-                    // Arrange
-                    var sampleData = new CableCategoryCreateUpdateDTO
-                    {
-                        CableCategoryName = ""
-                    };
-                    // Simulate user with admin role
-                    var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
-                    {
-                        new Claim(ClaimTypes.Role, Role.Admin.ToString())
-                    }));
+            var context = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext { }
+            };
+            controller.ControllerContext = context;
 
-                    var context = new ControllerContext
-                    {
-                        HttpContext = new DefaultHttpContext { User = user }
-                    };
-                    controller.ControllerContext = context;
+            service.Setup(x => x.Create(sampleData))
+                .Returns(new ResponseBase("Tên cáp không được để trống", (int)HttpStatusCode.Conflict));
 
-                    service.Setup(x => x.Create(sampleData))
-                        .Returns(new ResponseBase("Tên cáp không được để trống", (int)HttpStatusCode.Conflict));
+            // Act
+            var result = controller.Create(sampleData);
 
-                    // Act
-                    var result = controller.Create(sampleData);
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.Success);
+            Assert.That(result.Message, Is.EqualTo("Tên cáp không được để trống"));
+            Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Conflict));
+        }
 
-                    // Assert
-                    Assert.IsNotNull(result);
-                    Assert.IsFalse(result.Success);
-                    Assert.That(result.Message, Is.EqualTo("Tên cáp không được để trống"));
-                    Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Conflict));
-                }
+        [Test]
+        public void Create_WhenExceptionThrown_ReturnsErrorResponse()
+        {
+            // Arrange
+            var sampleData = new CableCategoryCreateUpdateDTO
+            {
+                CableCategoryName = "hfdsfhdsfhus"
+            };
+            // Arrange
+            var expectedExceptionMessage = "Simulated exception message";
 
-                [Test]
-                public void Create_WhenCableCategoryCreated_ReturnsSuccessResponse()
-                {
-                    // Arrange
-                    var sampleData = new CableCategoryCreateUpdateDTO
-                    {
-                        CableCategoryName = "Sample Cable Category Name"
-                    };
-                    // Simulate user with admin role
-                    var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
-                    {
-                        new Claim(ClaimTypes.Role, Role.Admin.ToString())
-                    }));
+            // Mock the ListAll method to throw an exception
+            service.Setup(x => x.Create(sampleData)).Throws(new Exception(expectedExceptionMessage));
+            // Act and Assert
+            var exception = Assert.Throws<Exception>(() => controller.Create(sampleData));
 
-                    var context = new ControllerContext
-                    {
-                        HttpContext = new DefaultHttpContext { User = user }
-                    };
-                    controller.ControllerContext = context;
-                    service.Setup(x => x.Create(sampleData))
-                        .Returns(new ResponseBase(true, "Tạo thành công"));
-                    // Act
-                    var result = controller.Create(sampleData);
-                    // Assert
-                    Assert.IsNotNull(result);
-                    Assert.IsTrue(result.Success);
-                    Assert.That(result.Message, Is.EqualTo("Tạo thành công"));
-                    *//*Assert.AreEqual((int)HttpStatusCode.OK, result.Code);*//*
-                }
+            // Verify that the exception has the expected message
+            Assert.That(exception.Message, Is.EqualTo(expectedExceptionMessage));
+        }
 
-                [Test]
-                public void Create_WhenCallNotByAdmin_ReturnsForbiddenResponse()
-                {
-                    // Arrange
-                    var sampleData = new CableCategoryCreateUpdateDTO
-                    {
-                        CableCategoryName = "Sample Cable Category Name"
-                    };
-                    // Simulate user with staff role
-                    var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
-                    {
-                        new Claim(ClaimTypes.Role, Role.Staff.ToString())
-                    }));
-
-                    var context = new ControllerContext
-                    {
-                        HttpContext = new DefaultHttpContext { User = user }
-                    };
-                    controller.ControllerContext = context;
-                    // Act
-                    var result = controller.Create(sampleData);
-                    // Assert
-                    Assert.IsNotNull(result);
-                    Assert.IsFalse(result.Success);
-                    Assert.That(result.Message, Is.EqualTo("Bạn không có quyền truy cập"));
-                    Assert.That(result.Code, Is.EqualTo((int)HttpStatusCode.Forbidden));
-                }
-        */
     }
 }

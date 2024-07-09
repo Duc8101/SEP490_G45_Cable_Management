@@ -8,6 +8,6 @@ namespace API.Services.CableCategories
         ResponseBase ListPaged(string? name, int page);
         ResponseBase ListAll();
         ResponseBase Create(CableCategoryCreateUpdateDTO DTO);
-        ResponseBase Update(int CableCategoryId, CableCategoryCreateUpdateDTO DTO);
+        ResponseBase Update(int cableCategoryId, CableCategoryCreateUpdateDTO DTO);
     }
 }

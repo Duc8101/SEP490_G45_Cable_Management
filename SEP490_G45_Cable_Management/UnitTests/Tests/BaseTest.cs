@@ -4,6 +4,7 @@ using Moq.Protected;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 namespace UnitTests.Tests
 {
@@ -27,7 +28,7 @@ namespace UnitTests.Tests
             return handler;
         }
 
-        internal string SimulateToken(Common.Enum.Roles role)
+        internal string SimulateToken(Roles role)
         {
             User user = new User()
             {
@@ -79,6 +80,14 @@ namespace UnitTests.Tests
             url = url + param;
             return await client.GetAsync(url);
         }
+
+        internal async Task<HttpResponseMessage> Post<T>(HttpClient client, string url, T obj)
+        {
+            string body = JsonSerializer.Serialize(obj);
+            StringContent content = new StringContent(body, Encoding.UTF8, "application/json");
+            return await client.PostAsync(url, content);
+        }
+
 
     }
 }
