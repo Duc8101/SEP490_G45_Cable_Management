@@ -42,12 +42,12 @@ namespace DataAccess.DAO
             IQueryable<TransactionOtherMaterial> query = getQuery(otherMaterialCategoryId, warehouseId, year);
             // get sum quantity of transaction import per month
             int sumIncrease = query.Where(t => t.Transaction.CreatedAt.Month == month
-            && t.Transaction.TransactionCategoryName == TransactionCategoryConst.CATEGORY_IMPORT)
+            && t.Transaction.TransactionCategoryName == TransactionCategoryConst.Import)
                 .Sum(t => t.Quantity);
             // get sum quantity of transaction export and cancel per month
             int sumDecrease = query.Where(t => t.Transaction.CreatedAt.Month == month
-            && (t.Transaction.TransactionCategoryName == TransactionCategoryConst.CATEGORY_EXPORT
-            || t.Transaction.TransactionCategoryName == TransactionCategoryConst.CATEGORY_CANCEL))
+            && (t.Transaction.TransactionCategoryName == TransactionCategoryConst.Export
+            || t.Transaction.TransactionCategoryName == TransactionCategoryConst.Cancel))
                 .Sum(t => t.Quantity);
             return sumIncrease - sumDecrease;
         }

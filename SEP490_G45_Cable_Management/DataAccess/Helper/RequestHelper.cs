@@ -3,7 +3,6 @@ using Common.Const;
 using Common.DTO.CableDTO;
 using Common.DTO.OtherMaterialsDTO;
 using Common.Entity;
-using Common.Enum;
 using DataAccess.DAO;
 using System.Net;
 
@@ -12,7 +11,7 @@ namespace DataAccess.Helper
     public class RequestHelper
     {
         public static ResponseBase CheckRequestNameAndRequestCategoryValidWhenCreateRequest(string requestName
-            , int requestCategoryId, RequestCategories category)
+            , int requestCategoryId, RequestCategoryConst category)
         {
             if (requestName.Trim().Length == 0)
             {
@@ -34,7 +33,7 @@ namespace DataAccess.Helper
                 return new ResponseBase(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
             }
             // if issue done
-            if (issue.Status == IssueConst.STATUS_DONE)
+            if (issue.Status == IssueConst.Done)
             {
                 return new ResponseBase(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int)HttpStatusCode.Conflict);
             }
@@ -107,7 +106,7 @@ namespace DataAccess.Helper
                 UpdateAt = DateTime.Now,
                 IsDeleted = false,
                 RequestCategoryId = requestCategoryId,
-                Status = RequestConst.STATUS_PENDING,
+                Status = RequestConst.Pending,
                 DeliverWarehouseId = deliverWarehouseId
             };
             daoRequest.CreateRequest(request);
@@ -219,19 +218,19 @@ namespace DataAccess.Helper
             int? toWarehouseId = null;
             if (action == null)
             {
-                categoryName = TransactionCategoryConst.CATEGORY_CANCEL;
+                categoryName = TransactionCategoryConst.Cancel;
             }
             else
             {
-                categoryName = action == true ? TransactionCategoryConst.CATEGORY_IMPORT : TransactionCategoryConst.CATEGORY_EXPORT;
+                categoryName = action == true ? TransactionCategoryConst.Import : TransactionCategoryConst.Export;
             }
             // if transaction export and request deliver
-            if (action == false && request.RequestCategoryId == (int)RequestCategories.Deliver)
+            if (action == false && request.RequestCategoryId == (int)RequestCategoryConst.Deliver)
             {
                 toWarehouseId = request.DeliverWarehouseId;
                 // if transaction import and request deliver
             }
-            else if (action == true && request.RequestCategoryId == (int)RequestCategories.Deliver)
+            else if (action == true && request.RequestCategoryId == (int)RequestCategoryConst.Deliver)
             {
                 fromWarehouseId = request.DeliverWarehouseId;
             }
@@ -342,7 +341,7 @@ namespace DataAccess.Helper
                 return response;
             }
             // if request export
-            if (request.RequestCategoryId == (int)RequestCategories.Export)
+            if (request.RequestCategoryId == (int)RequestCategoryConst.Export)
             {
                 Dictionary<string, object> result = ApproveRequestExport(daoCable, daoOtherMaterial, request
                     , requestCables, requestMaterials);
@@ -356,7 +355,7 @@ namespace DataAccess.Helper
                     , false);
                 // if request deliver
             }
-            else if (request.RequestCategoryId == (int)RequestCategories.Deliver)
+            else if (request.RequestCategoryId == (int)RequestCategoryConst.Deliver)
             {
                 Dictionary<string, object> result = ApproveRequestDeliver(daoHistory, daoTransactionCable
                     , daoTransactionOtherMaterial, daoCable, daoOtherMaterial, request, requestCables
@@ -384,7 +383,7 @@ namespace DataAccess.Helper
 
             }
             // ------------------------------- update request approved --------------------------------
-            UpdateRequest(daoRequest, request, approverId, RequestConst.STATUS_APPROVED);
+            UpdateRequest(daoRequest, request, approverId, RequestConst.Approved);
             // ------------------------------- send email --------------------------------
             await sendEmailToCreator(daoRequestCable, daoRequestOtherMaterial, request, approverName);
             return new ResponseBase(true, "Yêu cầu được phê duyệt");
@@ -1269,7 +1268,7 @@ namespace DataAccess.Helper
                 }
             }
             // ------------------------------- update request approved --------------------------------
-            UpdateRequest(daoRequest, request, approverId, RequestConst.STATUS_APPROVED);
+            UpdateRequest(daoRequest, request, approverId, RequestConst.Approved);
             // ------------------------------- create transaction ------------------------------
             CreateTransaction(daoHistory, daoTransactionCable, daoTransactionOtherMaterial, request, listCableWarehouseId, listCableRecovery, listOtherMaterialWarehouseId
                 , listOtherMaterialIdRecovery, listOtherMaterialQuantity, true);
@@ -1296,7 +1295,7 @@ namespace DataAccess.Helper
                 }
             }
             // -------------------------------update request approved --------------------------------
-            UpdateRequest(daoRequest, request, approverId, RequestConst.STATUS_APPROVED);
+            UpdateRequest(daoRequest, request, approverId, RequestConst.Approved);
             // ------------------------------- send email --------------------------------
             await sendEmailToCreator(daoRequestCable, daoRequestOtherMaterial, request, approverName);
             return new ResponseBase(true, "Yêu cầu được phê duyệt");

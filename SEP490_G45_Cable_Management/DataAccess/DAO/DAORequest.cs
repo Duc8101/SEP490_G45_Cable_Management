@@ -1,6 +1,5 @@
 ﻿using Common.Const;
 using Common.Entity;
-using Common.Enum;
 using DataAccess.DBContext;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,7 +35,7 @@ namespace DataAccess.DAO
         public List<Request> getListRequest(string? name, int? requestCategoryId, string? status, Guid? creatorId, int page)
         {
             IQueryable<Request> query = getQuery(name, requestCategoryId, status, creatorId);
-            return query.OrderBy(r => r.Status == RequestConst.STATUS_PENDING ? 0 : 1).ThenByDescending(r => r.UpdateAt)
+            return query.OrderBy(r => r.Status == RequestConst.Pending ? 0 : 1).ThenByDescending(r => r.UpdateAt)
                 .Skip((int)PageSize.Size * (page - 1)).Take((int)PageSize.Size).ToList();
         }
 

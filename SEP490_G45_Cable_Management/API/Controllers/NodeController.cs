@@ -1,8 +1,8 @@
 ﻿using API.Attributes;
 using API.Services.Nodes;
 using Common.Base;
+using Common.Const;
 using Common.DTO.NodeDTO;
-using Common.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -30,7 +30,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase Create([Required] NodeCreateDTO DTO)
         {
             ResponseBase response = _service.Create(DTO);
@@ -47,7 +47,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{nodeId}")]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase Update([Required] Guid nodeId, [Required] NodeUpdateDTO DTO)
         {
             ResponseBase response = _service.Update(nodeId, DTO);
@@ -56,7 +56,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{nodeId}")]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase Delete([Required] Guid nodeId)
         {
             ResponseBase response = _service.Delete(nodeId);

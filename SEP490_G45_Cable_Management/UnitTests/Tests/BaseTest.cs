@@ -1,4 +1,5 @@
-﻿using Common.Entity;
+﻿using Common.Const;
+using Common.Entity;
 using Microsoft.IdentityModel.Tokens;
 using Moq.Protected;
 using System.IdentityModel.Tokens.Jwt;
@@ -28,7 +29,7 @@ namespace UnitTests.Tests
             return handler;
         }
 
-        internal string SimulateToken(Roles role)
+        internal string SimulateToken(RoleConst role)
         {
             User user = new User()
             {

@@ -1,7 +1,7 @@
 ﻿using API.Attributes;
 using API.Services.Statistic;
 using Common.Base;
-using Common.Enum;
+using Common.Const;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -21,7 +21,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Role(Roles.Admin, Roles.Leader, Roles.Warehouse_Keeper)]
+        [Role(RoleConst.Admin, RoleConst.Leader, RoleConst.Warehouse_Keeper)]
         public ResponseBase MaterialFluctuationPerYear(int? otherMaterialCategoryId, int? warehouseId, int? year)
         {
             ResponseBase response = _service.MaterialFluctuationPerYear(otherMaterialCategoryId, warehouseId, year);
@@ -30,7 +30,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Role(Roles.Admin, Roles.Leader, Roles.Warehouse_Keeper)]
+        [Role(RoleConst.Admin, RoleConst.Leader, RoleConst.Warehouse_Keeper)]
         public ResponseBase CableFluctuationPerYear(int? cableCategoryId, int? warehouseId, int? year)
         {
             ResponseBase response = _service.CableFluctuationPerYear(cableCategoryId, warehouseId, year);
@@ -39,7 +39,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Role(Roles.Admin, Roles.Leader, Roles.Warehouse_Keeper)]
+        [Role(RoleConst.Admin, RoleConst.Leader, RoleConst.Warehouse_Keeper)]
         public ResponseBase CableCategory(int? warehouseId)
         {
             ResponseBase response = _service.CableCategory(warehouseId);
@@ -48,7 +48,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Role(Roles.Admin, Roles.Leader, Roles.Warehouse_Keeper)]
+        [Role(RoleConst.Admin, RoleConst.Leader, RoleConst.Warehouse_Keeper)]
         public ResponseBase MaterialCategory(int? warehouseId)
         {
             ResponseBase response = _service.MaterialCategory(warehouseId);

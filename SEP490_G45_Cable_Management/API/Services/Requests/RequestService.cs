@@ -6,7 +6,6 @@ using Common.DTO.CableDTO;
 using Common.DTO.OtherMaterialsDTO;
 using Common.DTO.RequestDTO;
 using Common.Entity;
-using Common.Enum;
 using Common.Paginations;
 using DataAccess.DAO;
 using DataAccess.Helper;
@@ -54,24 +53,24 @@ namespace API.Services.Requests
                 {
                     return new ResponseBase(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
                 }
-                if (request.Status != RequestConst.STATUS_PENDING)
+                if (request.Status != RequestConst.Pending)
                 {
                     return new ResponseBase(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
                 }
-                if (request.RequestCategoryId == (int)RequestCategories.Export || request.RequestCategoryId == (int)RequestCategories.Deliver
-                    || request.RequestCategoryId == (int)RequestCategories.Cancel_Inside)
+                if (request.RequestCategoryId == (int)RequestCategoryConst.Export || request.RequestCategoryId == (int)RequestCategoryConst.Deliver
+                    || request.RequestCategoryId == (int)RequestCategoryConst.Cancel_Inside)
                 {
                     return await RequestHelper.ApproveRequestExportDeliverCancelInside(_daoRequestCable, _daoRequestOtherMaterial
                         , _daoRequest, _daoCable, approverId, _daoOtherMaterial, _daoHistory, _daoTransactionCable
                         , _daoTransactionOtherMaterial, request, approverName);
                 }
-                if (request.RequestCategoryId == (int)RequestCategories.Recovery)
+                if (request.RequestCategoryId == (int)RequestCategoryConst.Recovery)
                 {
                     return await RequestHelper.ApproveRequestRecovery(_daoHistory, _daoTransactionCable, _daoTransactionOtherMaterial
                         , _daoRequestCable, _daoRequestOtherMaterial, _daoCable, _daoOtherMaterial
                         , _daoRequest, approverId, request, approverName);
                 }
-                if (request.RequestCategoryId == (int)RequestCategories.Cancel_Outside)
+                if (request.RequestCategoryId == (int)RequestCategoryConst.Cancel_Outside)
                 {
                     return await RequestHelper.ApproveRequestCancelOutside(_daoRequestCable, _daoRequest
                         , _daoRequestOtherMaterial, approverId, request, approverName);
@@ -86,7 +85,7 @@ namespace API.Services.Requests
 
         public async Task<ResponseBase> CreateRequestCancelInside(RequestCreateCancelInsideDTO DTO, Guid creatorId)
         {
-            ResponseBase response = RequestHelper.CheckRequestNameAndRequestCategoryValidWhenCreateRequest(DTO.RequestName, DTO.RequestCategoryId, RequestCategories.Cancel_Inside);
+            ResponseBase response = RequestHelper.CheckRequestNameAndRequestCategoryValidWhenCreateRequest(DTO.RequestName, DTO.RequestCategoryId, RequestCategoryConst.Cancel_Inside);
             if (response.Success == false)
             {
                 return response;
@@ -142,7 +141,7 @@ namespace API.Services.Requests
                         _daoRequestOtherMaterial.CreateRequestOtherMaterial(requestMaterial);
                     }
                 }
-                await RequestHelper.sendEmailToAdmin(_daoUser, DTO.RequestName.Trim(), RequestCategories.Cancel_Inside.ToString(), issueCode);
+                await RequestHelper.sendEmailToAdmin(_daoUser, DTO.RequestName.Trim(), RequestCategoryConst.Cancel_Inside.ToString(), issueCode);
                 return new ResponseBase(true, "Tạo yêu cầu thành công");
 
             }
@@ -154,7 +153,7 @@ namespace API.Services.Requests
 
         public async Task<ResponseBase> CreateRequestCancelOutside(RequestCreateCancelOutsideDTO DTO, Guid creatorId)
         {
-            ResponseBase response = RequestHelper.CheckRequestNameAndRequestCategoryValidWhenCreateRequest(DTO.RequestName, DTO.RequestCategoryId, RequestCategories.Cancel_Outside);
+            ResponseBase response = RequestHelper.CheckRequestNameAndRequestCategoryValidWhenCreateRequest(DTO.RequestName, DTO.RequestCategoryId, RequestCategoryConst.Cancel_Outside);
             if (response.Success == false)
             {
                 return response;
@@ -241,7 +240,7 @@ namespace API.Services.Requests
                         _daoRequestOtherMaterial.CreateRequestOtherMaterial(requestMaterial);
                     }
                 }
-                await RequestHelper.sendEmailToAdmin(_daoUser, DTO.RequestName.Trim(), RequestCategories.Cancel_Outside.ToString(), issueCode);
+                await RequestHelper.sendEmailToAdmin(_daoUser, DTO.RequestName.Trim(), RequestCategoryConst.Cancel_Outside.ToString(), issueCode);
                 return new ResponseBase(true, "Tạo yêu cầu thành công");
 
             }
@@ -253,7 +252,7 @@ namespace API.Services.Requests
 
         public async Task<ResponseBase> CreateRequestDeliver(RequestCreateDeliverDTO DTO, Guid creatorId)
         {
-            ResponseBase response = RequestHelper.CheckRequestNameAndRequestCategoryValidWhenCreateRequest(DTO.RequestName, DTO.RequestCategoryId, RequestCategories.Deliver);
+            ResponseBase response = RequestHelper.CheckRequestNameAndRequestCategoryValidWhenCreateRequest(DTO.RequestName, DTO.RequestCategoryId, RequestCategoryConst.Deliver);
             if (response.Success == false)
             {
                 return response;
@@ -280,7 +279,7 @@ namespace API.Services.Requests
                 RequestHelper.CreateRequestCableExportDeliver(_daoRequestCable, DTO.CableDeliverDTOs, requestId);
                 RequestHelper.CreateRequestMaterialExportDeliver(_daoRequestOtherMaterial, DTO.OtherMaterialsDeliverDTOs, requestId);
                 // ----------------------------- send email to admin ---------------------------
-                await RequestHelper.sendEmailToAdmin(_daoUser, DTO.RequestName.Trim(), RequestCategories.Deliver.ToString(), null);
+                await RequestHelper.sendEmailToAdmin(_daoUser, DTO.RequestName.Trim(), RequestCategoryConst.Deliver.ToString(), null);
                 return new ResponseBase(true, "Tạo yêu cầu thành công");
             }
             catch (Exception ex)
@@ -292,7 +291,7 @@ namespace API.Services.Requests
 
         public async Task<ResponseBase> CreateRequestExport(RequestCreateExportDTO DTO, Guid creatorId)
         {
-            ResponseBase response = RequestHelper.CheckRequestNameAndRequestCategoryValidWhenCreateRequest(DTO.RequestName, DTO.RequestCategoryId, RequestCategories.Export);
+            ResponseBase response = RequestHelper.CheckRequestNameAndRequestCategoryValidWhenCreateRequest(DTO.RequestName, DTO.RequestCategoryId, RequestCategoryConst.Export);
             if (response.Success == false)
             {
                 return response;
@@ -320,7 +319,7 @@ namespace API.Services.Requests
                 RequestHelper.CreateRequestCableExportDeliver(_daoRequestCable, DTO.CableExportDTOs, requestId);
                 RequestHelper.CreateRequestMaterialExportDeliver(_daoRequestOtherMaterial, DTO.OtherMaterialsExportDTOs, requestId);
                 // ----------------------------- send email to admin ---------------------------
-                await RequestHelper.sendEmailToAdmin(_daoUser, DTO.RequestName.Trim(), RequestCategories.Export.ToString(), issueCode);
+                await RequestHelper.sendEmailToAdmin(_daoUser, DTO.RequestName.Trim(), RequestCategoryConst.Export.ToString(), issueCode);
                 return new ResponseBase(true, "Tạo yêu cầu thành công");
             }
             catch (Exception ex)
@@ -331,7 +330,7 @@ namespace API.Services.Requests
 
         public async Task<ResponseBase> CreateRequestRecovery(RequestCreateRecoveryDTO DTO, Guid creatorId)
         {
-            ResponseBase response = RequestHelper.CheckRequestNameAndRequestCategoryValidWhenCreateRequest(DTO.RequestName, DTO.RequestCategoryId, RequestCategories.Recovery);
+            ResponseBase response = RequestHelper.CheckRequestNameAndRequestCategoryValidWhenCreateRequest(DTO.RequestName, DTO.RequestCategoryId, RequestCategoryConst.Recovery);
             if (response.Success == false)
             {
                 return response;
@@ -437,7 +436,7 @@ namespace API.Services.Requests
                     }
                 }
                 // ----------------------------- send email to admin ---------------------------
-                await RequestHelper.sendEmailToAdmin(_daoUser, DTO.RequestName.Trim(), RequestCategories.Recovery.ToString(), issueCode);
+                await RequestHelper.sendEmailToAdmin(_daoUser, DTO.RequestName.Trim(), RequestCategoryConst.Recovery.ToString(), issueCode);
                 return new ResponseBase(true, "Tạo yêu cầu thành công");
 
             }
@@ -456,7 +455,7 @@ namespace API.Services.Requests
                 {
                     return new ResponseBase(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
                 }
-                if (!request.Status.Equals(RequestConst.STATUS_PENDING))
+                if (!request.Status.Equals(RequestConst.Pending))
                 {
                     return new ResponseBase(false, "Yêu cầu đã được chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
                 }
@@ -523,12 +522,12 @@ namespace API.Services.Requests
                 {
                     return new ResponseBase(false, "Không tìm thấy yêu cầu", (int)HttpStatusCode.NotFound);
                 }
-                if (request.Status != RequestConst.STATUS_PENDING)
+                if (request.Status != RequestConst.Pending)
                 {
                     return new ResponseBase(false, "Yêu cầu đã được xác nhận chấp thuận hoặc bị từ chối", (int)HttpStatusCode.Conflict);
                 }
                 // ------------------- update request ---------------
-                RequestHelper.UpdateRequest(_daoRequest, request, rejectorId, RequestConst.STATUS_REJECTED);
+                RequestHelper.UpdateRequest(_daoRequest, request, rejectorId, RequestConst.Rejected);
                 return new ResponseBase(true);
             }
             catch (Exception ex)

@@ -1,4 +1,4 @@
-﻿using Common.Enum;
+﻿using Common.Const;
 
 namespace Common.Paginations
 {

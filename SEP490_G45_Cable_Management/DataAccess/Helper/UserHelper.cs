@@ -1,5 +1,5 @@
-﻿using Common.Entity;
-using Common.Enum;
+﻿using Common.Const;
+using Common.Entity;
 using DataAccess.Configuration;
 using DataAccess.DAO;
 using MailKit.Net.Smtp;
@@ -154,23 +154,23 @@ namespace DataAccess.Helper
                 {
                     if (item.RecoveryDestWarehouse != null)
                     {
-                        if (request.RequestCategoryId == (int)RequestCategories.Export || request.RequestCategoryId == (int)RequestCategories.Deliver)
+                        if (request.RequestCategoryId == (int)RequestCategoryConst.Export || request.RequestCategoryId == (int)RequestCategoryConst.Deliver)
                         {
                             builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " xuất từ kho " + item.RecoveryDestWarehouse.WarehouseName
                                 + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
                         }
-                        else if (request.RequestCategoryId == (int)RequestCategories.Recovery)
+                        else if (request.RequestCategoryId == (int)RequestCategoryConst.Recovery)
                         {
                             builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " được thu hồi về kho " + item.RecoveryDestWarehouse.WarehouseName
                                 + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
                         }
-                        else if (request.RequestCategoryId == (int)RequestCategories.Cancel_Inside)
+                        else if (request.RequestCategoryId == (int)RequestCategoryConst.Cancel_Inside)
                         {
                             builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName + " được hủy trong kho " + item.RecoveryDestWarehouse.WarehouseName
                                 + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
                         }
                     }
-                    else if (request.RequestCategoryId == (int)RequestCategories.Cancel_Outside)
+                    else if (request.RequestCategoryId == (int)RequestCategoryConst.Cancel_Outside)
                     {
                         builder.AppendLine("<p> - " + item.Cable.CableCategory.CableCategoryName
                            + " (chỉ số đầu: " + item.StartPoint + ", chỉ số cuối: " + item.EndPoint + ", độ dài: " + item.Length + ")</p>");
@@ -184,23 +184,23 @@ namespace DataAccess.Helper
                 {
                     if (item.RecoveryDestWarehouse != null)
                     {
-                        if (request.RequestCategoryId == (int)RequestCategories.Export || request.RequestCategoryId == (int)RequestCategories.Deliver)
+                        if (request.RequestCategoryId == (int)RequestCategoryConst.Export || request.RequestCategoryId == (int)RequestCategoryConst.Deliver)
                         {
                             builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " xuất từ trong kho " +
                                 item.RecoveryDestWarehouse.WarehouseName + ", số lượng: " + item.Quantity + "</p>");
                         }
-                        else if (request.RequestCategoryId == (int)RequestCategories.Recovery)
+                        else if (request.RequestCategoryId == (int)RequestCategoryConst.Recovery)
                         {
                             builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " được thu hồi về kho " +
                                 item.RecoveryDestWarehouse.WarehouseName + ", số lượng: " + item.Quantity + "</p>");
                         }
-                        else if (request.RequestCategoryId == (int)RequestCategories.Cancel_Inside)
+                        else if (request.RequestCategoryId == (int)RequestCategoryConst.Cancel_Inside)
                         {
                             builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + " được hủy trong kho " +
                                 item.RecoveryDestWarehouse.WarehouseName + ", số lượng: " + item.Quantity + "</p>");
                         }
                     }
-                    else if (request.RequestCategoryId == (int)RequestCategories.Cancel_Outside)
+                    else if (request.RequestCategoryId == (int)RequestCategoryConst.Cancel_Outside)
                     {
                         builder.AppendLine("<p> - " + item.OtherMaterials.OtherMaterialsCategory.OtherMaterialsCategoryName + ", số lượng: " + item.Quantity + "</p>");
                     }

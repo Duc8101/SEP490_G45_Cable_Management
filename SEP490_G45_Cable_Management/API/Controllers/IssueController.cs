@@ -1,8 +1,8 @@
 ﻿using API.Attributes;
 using API.Services.Issues;
 using Common.Base;
+using Common.Const;
 using Common.DTO.IssueDTO;
-using Common.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -48,7 +48,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Role(Roles.Admin, Roles.Staff)]
+        [Role(RoleConst.Admin, RoleConst.Staff)]
         public ResponseBase Create(IssueCreateDTO DTO)
         {
             ResponseBase response;
@@ -66,7 +66,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{issueId}")]
-        [Role(Roles.Admin, Roles.Staff)]
+        [Role(RoleConst.Admin, RoleConst.Staff)]
         public ResponseBase Update([Required] Guid issueId, [Required] IssueUpdateDTO DTO)
         {
             ResponseBase response = _service.Update(issueId, DTO);
@@ -75,7 +75,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{issueId}")]
-        [Role(Roles.Admin, Roles.Staff)]
+        [Role(RoleConst.Admin, RoleConst.Staff)]
         public ResponseBase Delete([Required] Guid issueId)
         {
             ResponseBase response = _service.Delete(issueId);

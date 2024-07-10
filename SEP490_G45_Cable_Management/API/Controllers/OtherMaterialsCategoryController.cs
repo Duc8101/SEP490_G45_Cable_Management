@@ -1,8 +1,8 @@
 ﻿using API.Attributes;
 using API.Services.OtherMaterialsCategories;
 using Common.Base;
+using Common.Const;
 using Common.DTO.OtherMaterialsCategoryDTO;
-using Common.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -22,7 +22,7 @@ namespace API.Controllers
         }
 
         [HttpGet("Paged")]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase List(string? name, [Required] int page = 1)
         {
             ResponseBase response = _service.ListPaged(name, page);
@@ -39,7 +39,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase Create([Required] OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
             ResponseBase response = _service.Create(DTO);
@@ -48,7 +48,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{otherMaterialsCategoryId}")]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase Update([Required] int otherMaterialsCategoryId, [Required] OtherMaterialsCategoryCreateUpdateDTO DTO)
         {
             ResponseBase response = _service.Update(otherMaterialsCategoryId, DTO);

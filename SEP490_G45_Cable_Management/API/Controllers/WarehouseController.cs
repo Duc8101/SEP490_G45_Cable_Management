@@ -1,9 +1,9 @@
 ﻿using API.Attributes;
 using API.Services.Warehouses;
 using Common.Base;
+using Common.Const;
 using Common.DTO.WarehouseDTO;
 using Common.Entity;
-using Common.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -25,7 +25,7 @@ namespace API.Controllers
 
 
         [HttpGet("Paged")]
-        [Role(Roles.Admin, Roles.Leader, Roles.Warehouse_Keeper)]
+        [Role(RoleConst.Admin, RoleConst.Leader, RoleConst.Warehouse_Keeper)]
         public ResponseBase List(string? name, [Required] int page = 1)
         {
             ResponseBase response = _service.ListPaged(name, page);
@@ -42,7 +42,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase Create([Required] WarehouseCreateUpdateDTO DTO)
         {
             Guid? creatorId = getUserId();
@@ -60,7 +60,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{warehouseId}")]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase Update([Required] int warehouseId, [Required] WarehouseCreateUpdateDTO DTO)
         {
             ResponseBase response = _service.Update(warehouseId, DTO);
@@ -69,7 +69,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{warehouseId}")]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase Delete([Required] int warehouseId)
         {
             ResponseBase response = _service.Delete(warehouseId);

@@ -1,6 +1,5 @@
 ﻿using Common.Const;
 using Common.Entity;
-using Common.Enum;
 using DataAccess.DBContext;
 using Microsoft.EntityFrameworkCore;
 

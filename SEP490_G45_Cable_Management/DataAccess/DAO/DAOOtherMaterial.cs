@@ -1,6 +1,6 @@
-﻿using Common.DTO.OtherMaterialsDTO;
+﻿using Common.Const;
+using Common.DTO.OtherMaterialsDTO;
 using Common.Entity;
-using Common.Enum;
 using DataAccess.DBContext;
 using Microsoft.EntityFrameworkCore;
 

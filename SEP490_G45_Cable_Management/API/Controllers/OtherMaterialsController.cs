@@ -1,8 +1,8 @@
 ﻿using API.Attributes;
 using API.Services.OtherMaterials;
 using Common.Base;
+using Common.Const;
 using Common.DTO.OtherMaterialsDTO;
-using Common.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -23,7 +23,7 @@ namespace API.Controllers
         }
 
         [HttpGet("Paged")]
-        [Role(Roles.Admin, Roles.Leader, Roles.Warehouse_Keeper)]
+        [Role(RoleConst.Admin, RoleConst.Leader, RoleConst.Warehouse_Keeper)]
         public ResponseBase List(string? filter, int? WareHouseID, [Required] int page = 1)
         {
             ResponseBase response;
@@ -57,7 +57,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase Create([Required] OtherMaterialsCreateUpdateDTO DTO)
         {
             ResponseBase response = _service.Create(DTO);
@@ -66,7 +66,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{otherMaterialsId}")]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase Update([Required] int otherMaterialsId, [Required] OtherMaterialsCreateUpdateDTO DTO)
         {
             ResponseBase response = _service.Update(otherMaterialsId, DTO);
@@ -75,7 +75,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{otherMaterialsId}")]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase Delete([Required] int otherMaterialsId)
         {
             ResponseBase response = _service.Delete(otherMaterialsId);

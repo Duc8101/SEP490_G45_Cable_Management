@@ -41,11 +41,11 @@ namespace DataAccess.DAO
         {
             IQueryable<TransactionCable> query = getQuery(cableCategoryId, warehouseId, year);
             int sumIncrease = query.Where(t => t.Transaction.CreatedAt.Month == month
-            && t.Transaction.TransactionCategoryName == TransactionCategoryConst.CATEGORY_IMPORT)
+            && t.Transaction.TransactionCategoryName == TransactionCategoryConst.Import)
                 .Sum(t => t.Length);
             int sumDecrease = query.Where(t => t.Transaction.CreatedAt.Month == month
-           && (t.Transaction.TransactionCategoryName == TransactionCategoryConst.CATEGORY_EXPORT
-           || t.Transaction.TransactionCategoryName == TransactionCategoryConst.CATEGORY_CANCEL))
+           && (t.Transaction.TransactionCategoryName == TransactionCategoryConst.Export
+           || t.Transaction.TransactionCategoryName == TransactionCategoryConst.Cancel))
                .Sum(t => t.Length);
             return sumIncrease - sumDecrease;
         }

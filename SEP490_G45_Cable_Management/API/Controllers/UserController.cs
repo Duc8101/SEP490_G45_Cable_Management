@@ -1,8 +1,8 @@
 ﻿using API.Attributes;
 using API.Services.Users;
 using Common.Base;
+using Common.Const;
 using Common.DTO.UserDTO;
-using Common.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -32,7 +32,7 @@ namespace API.Controllers
 
         [HttpGet("Paged")]
         [Authorize]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase List(string? filter, [Required] int page = 1)
         {
             ResponseBase response = _service.ListUserPaged(filter, page);
@@ -42,7 +42,7 @@ namespace API.Controllers
 
         [HttpGet("WarehouseKeeper")]
         [Authorize]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase List()
         {
             ResponseBase response = _service.ListWarehouseKeeper();
@@ -52,7 +52,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public async Task<ResponseBase> Create([Required] UserCreateDTO DTO)
         {
             ResponseBase response = await _service.Create(DTO);
@@ -62,7 +62,7 @@ namespace API.Controllers
 
         [HttpPut("{UserID}")]
         [Authorize]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase Update([Required] Guid UserID, [Required] UserUpdateDTO DTO)
         {
             ResponseBase response = _service.Update(UserID, DTO);
@@ -72,7 +72,7 @@ namespace API.Controllers
 
         [HttpDelete("{UserId}")]
         [Authorize]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase Delete([Required] Guid UserId)
         {
             ResponseBase response;

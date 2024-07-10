@@ -1,6 +1,5 @@
 ﻿using Common.Const;
 using Common.Entity;
-using Common.Enum;
 using DataAccess.DBContext;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,7 +32,7 @@ namespace DataAccess.DAO
         public List<Issue> getListIssuePagedStatusDoing(int page)
         {
             IQueryable<Issue> query = getQuery(null);
-            return query.OrderByDescending(i => i.Status).ThenByDescending(i => i.UpdateAt).Where(i => i.Status == IssueConst.STATUS_DOING)
+            return query.OrderByDescending(i => i.Status).ThenByDescending(i => i.UpdateAt).Where(i => i.Status == IssueConst.Doing)
                 .Skip((int)PageSize.Size * (page - 1) * (page - 1)).Take((int)PageSize.Size * (page - 1)).ToList();
         }
 
@@ -46,13 +45,13 @@ namespace DataAccess.DAO
         public int getRowCount()
         {
             IQueryable<Issue> query = getQuery(null);
-            return query.Where(i => i.Status == IssueConst.STATUS_DOING).Count();
+            return query.Where(i => i.Status == IssueConst.Doing).Count();
         }
 
         public List<Issue> getListIssueAllStatusDoing()
         {
             IQueryable<Issue> query = getQuery(null);
-            return query.OrderByDescending(i => i.Status).ThenByDescending(i => i.UpdateAt).Where(i => i.Status == IssueConst.STATUS_DOING)
+            return query.OrderByDescending(i => i.Status).ThenByDescending(i => i.UpdateAt).Where(i => i.Status == IssueConst.Doing)
                 .ToList();
         }
 

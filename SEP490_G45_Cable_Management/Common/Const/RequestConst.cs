@@ -1,15 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Common.Const
+﻿namespace Common.Const
 {
     public class RequestConst
     {
-        public const string STATUS_PENDING = "Pending";
-        public const string STATUS_APPROVED = "Approved";
-        public const string STATUS_REJECTED = "Rejected";
+
+        public static string Pending
+        {
+            get => "Pending";
+        }
+
+        public static string Approved
+        {
+            get => "Approved";
+        }
+
+        public static string Rejected
+        {
+            get => "Pending";
+        }
     }
 }

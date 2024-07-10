@@ -39,7 +39,7 @@ namespace API.Services.Issues
             issue.CreatedAt = DateTime.Now;
             issue.UpdateAt = DateTime.Now;
             issue.CreatorId = creatorId;
-            issue.Status = IssueConst.STATUS_DOING;
+            issue.Status = IssueConst.Doing;
             issue.IsDeleted = false;
             try
             {
@@ -182,7 +182,7 @@ namespace API.Services.Issues
                 {
                     return new ResponseBase(false, "Mã sự vụ không được để trống", (int)HttpStatusCode.Conflict);
                 }
-                if (issue.Status == IssueConst.STATUS_DONE)
+                if (issue.Status == IssueConst.Done)
                 {
                     return new ResponseBase(false, "Sự vụ đã được xử lý", (int)HttpStatusCode.Conflict);
                 }

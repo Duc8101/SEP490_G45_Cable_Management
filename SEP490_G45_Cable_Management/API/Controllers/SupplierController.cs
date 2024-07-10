@@ -1,8 +1,8 @@
 ﻿using API.Attributes;
 using API.Services.Suppliers;
 using Common.Base;
+using Common.Const;
 using Common.DTO.SupplierDTO;
-using Common.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -23,7 +23,7 @@ namespace API.Controllers
         }
 
         [HttpGet("Paged")]
-        [Role(Roles.Admin, Roles.Leader, Roles.Warehouse_Keeper)]
+        [Role(RoleConst.Admin, RoleConst.Leader, RoleConst.Warehouse_Keeper)]
         public ResponseBase List(string? name, [Required] int page = 1)
         {
             ResponseBase response = _service.ListPaged(name, page);
@@ -40,7 +40,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase Create([Required] SupplierCreateUpdateDTO DTO)
         {
             ResponseBase response;
@@ -59,7 +59,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{supplierId}")]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase Update([Required] int supplierId, [Required] SupplierCreateUpdateDTO DTO)
         {
             ResponseBase response = _service.Update(supplierId, DTO);
@@ -68,7 +68,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{supplierId}")]
-        [Role(Roles.Admin)]
+        [Role(RoleConst.Admin)]
         public ResponseBase Delete([Required] int supplierId)
         {
             ResponseBase response = _service.Delete(supplierId);
