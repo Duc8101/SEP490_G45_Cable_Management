@@ -4,11 +4,11 @@ namespace Common.Base
 {
     public class ResponseBase<T>
     {
-        public bool Success { get; set; }
-        public int Code { get; set; }
-        public string Message { get; set; } = string.Empty;
+        public bool Success { get; }
+        public int Code { get; } = (int)HttpStatusCode.OK;
+        public string Message { get; } = string.Empty;
 
-        public T? Data { get; set; }
+        public T? Data { get; }
 
         public ResponseBase()
         {
