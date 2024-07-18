@@ -43,27 +43,27 @@ namespace DataAccess.Helper
         {
             // using SHA256 for hash password
             byte[] hashPw = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(password));
-            string result = "";
+            StringBuilder builder = new StringBuilder();
             for (int i = 0; i < hashPw.Length; i++)
             {
                 // convert into hexadecimal
-                result = result + hashPw[i].ToString("x2");
+                builder.Append(hashPw[i].ToString("x2"));
             }
-            return result;
+            return builder.ToString();
         }
         public static string RandomPassword()
         {
             Random random = new Random();
             // password contain both alphabets and numbers
             string format = "abcdefghijklmnopqrstuvwxyz0123456789QWERTYUIOPASDFGHJKLZXCVBNM";
-            string result = "";
+            StringBuilder builder = new StringBuilder();
             for (int i = 0; i < MAX_SIZE; i++)
             {
                 // get random index character
                 int index = random.Next(format.Length);
-                result = result + format[index];
+                builder.Append(format[index]);
             }
-            return result;
+            return builder.ToString();
         }
         public static string BodyEmailForRegister(string password)
         {
