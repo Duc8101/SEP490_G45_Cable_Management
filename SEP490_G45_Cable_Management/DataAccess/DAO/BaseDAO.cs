@@ -4,7 +4,7 @@ namespace DataAccess.DAO
 {
     public class BaseDAO
     {
-        internal readonly CableManagementContext _context;
+        private protected readonly CableManagementContext _context;
         public BaseDAO(CableManagementContext context)
         {
             _context = context;
