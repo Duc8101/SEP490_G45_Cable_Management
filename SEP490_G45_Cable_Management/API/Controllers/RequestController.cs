@@ -1,8 +1,8 @@
 ﻿using API.Attributes;
 using API.Services.Requests;
 using Common.Base;
-using Common.Const;
 using Common.DTO.RequestDTO;
+using Common.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -99,7 +99,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{requestId}")]
-        [Role(RoleConst.Admin, RoleConst.Leader)]
+        [Role(Roles.Admin, Roles.Leader)]
         public async Task<ResponseBase> Approve([Required] Guid requestId)
         {
             ResponseBase response;
@@ -123,7 +123,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{requestId}")]
-        [Role(RoleConst.Admin, RoleConst.Leader)]
+        [Role(Roles.Admin, Roles.Leader)]
         public ResponseBase Reject([Required] Guid requestId)
         {
             ResponseBase response;

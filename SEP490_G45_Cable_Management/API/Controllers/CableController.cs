@@ -1,8 +1,8 @@
 ﻿using API.Attributes;
 using API.Services.Cables;
 using Common.Base;
-using Common.Const;
 using Common.DTO.CableDTO;
+using Common.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -23,7 +23,7 @@ namespace API.Controllers
         }
 
         [HttpGet("Paged")]
-        [Role(RoleConst.Admin, RoleConst.Warehouse_Keeper, RoleConst.Leader)]
+        [Role(Roles.Admin, Roles.Warehouse_Keeper, Roles.Leader)]
         public ResponseBase List(string? filter, int? warehouseId, [Required] bool isExportedToUse = false, [Required] int page = 1)
         {
             ResponseBase response = _service.ListPaged(filter, warehouseId, isExportedToUse, page);
@@ -40,7 +40,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Role(RoleConst.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase Create([Required] CableCreateUpdateDTO DTO)
         {
             Guid? creatorId = getUserId();
@@ -58,7 +58,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{cableId}")]
-        [Role(RoleConst.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase Update([Required] Guid cableId, [Required] CableCreateUpdateDTO DTO)
         {
             ResponseBase response = _service.Update(cableId, DTO);
@@ -67,7 +67,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{cableId}")]
-        [Role(RoleConst.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase Delete([Required] Guid cableId)
         {
             ResponseBase response = _service.Delete(cableId);

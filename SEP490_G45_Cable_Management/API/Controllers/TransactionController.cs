@@ -1,7 +1,7 @@
 ﻿using API.Attributes;
 using API.Services.Transaction;
 using Common.Base;
-using Common.Const;
+using Common.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +11,7 @@ namespace API.Controllers
     [Route("[controller]/[action]")]
     [ApiController]
     [Authorize]
-    [Role(RoleConst.Admin)]
+    [Role(Roles.Admin)]
     public class TransactionController : BaseAPIController
     {
         private readonly ITransactionService _service;

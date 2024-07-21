@@ -1,6 +1,6 @@
 ﻿using API.Services.CableCategories;
-using Common.Const;
 using Common.DTO.CableCategoryDTO;
+using Common.Enums;
 using Common.Paginations;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -36,7 +36,7 @@ namespace UnitTests.Tests
             string expectedContent = JsonSerializer.Serialize(expectedResult);
             var handler = getHttpMessageHandler(HttpStatusCode.OK, expectedContent);
             HttpClient client = new HttpClient(handler.Object);
-            string token = SimulateToken(RoleConst.Admin);
+            string token = SimulateToken(Roles.Admin);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             string url = "https://localhost:7107/CableCategory/List/Paged";
             HttpResponseMessage response = await Get(client, url, new KeyValuePair<string, object>("name", name),
@@ -94,7 +94,7 @@ namespace UnitTests.Tests
             string content = JsonSerializer.Serialize(result);
             var handler = getHttpMessageHandler(HttpStatusCode.Forbidden, content);
             HttpClient client = new HttpClient(handler.Object);
-            string token = SimulateToken(RoleConst.Leader);
+            string token = SimulateToken(Roles.Leader);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             string url = "https://localhost:7107/CableCategory/List/Paged";
             HttpResponseMessage response = await Get(client, url, new KeyValuePair<string, object>("page", 1));
@@ -116,7 +116,7 @@ namespace UnitTests.Tests
             string expectedContent = JsonSerializer.Serialize(expectedResult);
             var handler = getHttpMessageHandler(HttpStatusCode.OK, expectedContent);
             HttpClient client = new HttpClient(handler.Object);
-            string token = SimulateToken(RoleConst.Admin);
+            string token = SimulateToken(Roles.Admin);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             string url = "https://localhost:7107/CableCategory/List/All";
             HttpResponseMessage response = await Get(client, url);
@@ -220,7 +220,7 @@ namespace UnitTests.Tests
             string content = JsonSerializer.Serialize(result);
             var handler = getHttpMessageHandler(HttpStatusCode.Forbidden, content);
             HttpClient client = new HttpClient(handler.Object);
-            string token = SimulateToken(RoleConst.Staff);
+            string token = SimulateToken(Roles.Staff);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             string url = "https://localhost:7107/CableCategory/Create";
             HttpResponseMessage response = await Post<CableCategoryCreateUpdateDTO?>(client, url, DTO);
@@ -240,7 +240,7 @@ namespace UnitTests.Tests
             string content = JsonSerializer.Serialize(expectedResult);
             var handler = getHttpMessageHandler(HttpStatusCode.OK, content);
             HttpClient client = new HttpClient(handler.Object);
-            string token = SimulateToken(RoleConst.Admin);
+            string token = SimulateToken(Roles.Admin);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             string url = "https://localhost:7107/CableCategory/Create";
             HttpResponseMessage response = await Post<CableCategoryCreateUpdateDTO?>(client, url, DTO);

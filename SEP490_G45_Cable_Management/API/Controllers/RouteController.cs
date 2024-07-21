@@ -1,8 +1,8 @@
 ﻿using API.Attributes;
 using API.Services.Routes;
 using Common.Base;
-using Common.Const;
 using Common.DTO.RouteDTO;
+using Common.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -31,7 +31,7 @@ namespace API.Controllers
         }
 
         [HttpGet("Paged")]
-        [Role(RoleConst.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase List([Required] int page = 1)
         {
             ResponseBase response = _service.ListPaged(page);
@@ -40,7 +40,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Role(RoleConst.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase Create([Required] RouteCreateDTO DTO)
         {
             ResponseBase response = _service.Create(DTO);
@@ -49,7 +49,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{routeId}")]
-        [Role(RoleConst.Admin)]
+        [Role(Roles.Admin)]
         public ResponseBase Delete([Required] Guid routeId)
         {
             ResponseBase response = _service.Delete(routeId);

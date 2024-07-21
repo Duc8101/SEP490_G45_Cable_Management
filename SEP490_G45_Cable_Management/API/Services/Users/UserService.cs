@@ -1,9 +1,9 @@
 ﻿using API.Services.Base;
 using AutoMapper;
 using Common.Base;
-using Common.Const;
 using Common.DTO.UserDTO;
 using Common.Entity;
+using Common.Enums;
 using Common.Paginations;
 using DataAccess.DAO;
 using DataAccess.Helper;
@@ -70,7 +70,7 @@ namespace API.Services.Users
                 User user = _mapper.Map<User>(DTO);
                 user.UserId = Guid.NewGuid();
                 user.Password = hashPw;
-                user.RoleId = (int)RoleConst.Staff;
+                user.RoleId = (int)Roles.Staff;
                 user.CreatedAt = DateTime.Now;
                 user.CreatedDate = DateTime.Now;
                 user.UpdateAt = DateTime.Now;

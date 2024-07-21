@@ -1,5 +1,6 @@
-﻿using Common.Const;
-using Common.Entity;
+﻿using Common.Entity;
+using Common.Enums;
+using DataAccess.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Moq.Protected;
 using System.IdentityModel.Tokens.Jwt;
@@ -29,7 +30,7 @@ namespace UnitTests.Tests
             return handler;
         }
 
-        internal string SimulateToken(RoleConst role)
+        internal string SimulateToken(Roles role)
         {
             User user = new User()
             {
@@ -48,7 +49,7 @@ namespace UnitTests.Tests
             {
                 new Claim("id", user.UserId.ToString()),
                 new Claim(ClaimTypes.Email , user.Email),
-                new Claim(ClaimTypes.Role, role.ToString()),
+                new Claim(ClaimTypes.Role, role.getDescription()),
                 new Claim("FirstName", user.Firstname),
                 new Claim("LastName", user.Lastname),
             };

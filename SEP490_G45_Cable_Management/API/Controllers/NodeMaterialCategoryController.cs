@@ -1,8 +1,8 @@
 ﻿using API.Attributes;
 using API.Services.NodeMaterialCategories;
 using Common.Base;
-using Common.Const;
 using Common.DTO.NodeMaterialCategoryDTO;
+using Common.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -12,7 +12,7 @@ namespace API.Controllers
     [Route("[controller]/[action]")]
     [ApiController]
     [Authorize]
-    [Role(RoleConst.Admin)]
+    [Role(Roles.Admin)]
     public class NodeMaterialCategoryController : BaseAPIController
     {
         private readonly INodeMaterialCategoryService _service;

@@ -1642,13 +1642,13 @@
   {
     "ContainingType": "API.Controllers.UserController",
     "Method": "Delete",
-    "RelativePath": "User/Delete/{UserId}",
+    "RelativePath": "User/Delete/{userId}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "UserId",
+        "Name": "userId",
         "Type": "System.Guid",
         "IsRequired": true
       }
@@ -1730,7 +1730,17 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "Common.Base.ResponseBase",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "API.Controllers.UserController",
@@ -1761,13 +1771,13 @@
   {
     "ContainingType": "API.Controllers.UserController",
     "Method": "Update",
-    "RelativePath": "User/Update/{UserID}",
+    "RelativePath": "User/Update/{userId}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "UserID",
+        "Name": "userId",
         "Type": "System.Guid",
         "IsRequired": true
       },

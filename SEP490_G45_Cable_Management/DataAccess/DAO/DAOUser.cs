@@ -1,6 +1,6 @@
-﻿using Common.Const;
-using Common.DTO.UserDTO;
+﻿using Common.DTO.UserDTO;
 using Common.Entity;
+using Common.Enums;
 using DataAccess.DBContext;
 using DataAccess.Helper;
 using Microsoft.EntityFrameworkCore;
@@ -89,13 +89,13 @@ namespace DataAccess.DAO
         public List<User> getListWarehouseKeeper()
         {
             IQueryable<User> query = getQuery(null);
-            return query.OrderByDescending(u => u.UpdateAt).Where(u => u.RoleId == (int)RoleConst.Warehouse_Keeper)
+            return query.OrderByDescending(u => u.UpdateAt).Where(u => u.RoleId == (int)Roles.Warehouse_Keeper)
                 .ToList();
         }
 
         public List<string> getEmailAdmins()
         {
-            return _context.Users.Where(u => u.RoleId == (int)RoleConst.Admin && u.IsDeleted == false)
+            return _context.Users.Where(u => u.RoleId == (int)Roles.Admin && u.IsDeleted == false)
                 .Select(u => u.Email).ToList();
         }
 

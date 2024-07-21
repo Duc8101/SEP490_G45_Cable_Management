@@ -1,6 +1,7 @@
-﻿using Common.Const;
-using Common.Entity;
+﻿using Common.Entity;
+using Common.Enums;
 using DataAccess.DBContext;
+using DataAccess.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.DAO
@@ -41,11 +42,11 @@ namespace DataAccess.DAO
         {
             IQueryable<TransactionCable> query = getQuery(cableCategoryId, warehouseId, year);
             int sumIncrease = query.Where(t => t.Transaction.CreatedAt.Month == month
-            && t.Transaction.TransactionCategoryName == TransactionCategoryConst.Import)
+            && t.Transaction.TransactionCategoryName == TransactionCategories.Import.getDescription())
                 .Sum(t => t.Length);
             int sumDecrease = query.Where(t => t.Transaction.CreatedAt.Month == month
-           && (t.Transaction.TransactionCategoryName == TransactionCategoryConst.Export
-           || t.Transaction.TransactionCategoryName == TransactionCategoryConst.Cancel))
+           && (t.Transaction.TransactionCategoryName == TransactionCategories.Export.getDescription()
+           || t.Transaction.TransactionCategoryName == TransactionCategories.Cancel.getDescription()))
                .Sum(t => t.Length);
             return sumIncrease - sumDecrease;
         }

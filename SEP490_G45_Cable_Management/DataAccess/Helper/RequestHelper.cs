@@ -1,9 +1,10 @@
 ﻿using Common.Base;
-using Common.Const;
 using Common.DTO.CableDTO;
 using Common.DTO.OtherMaterialsDTO;
 using Common.Entity;
+using Common.Enums;
 using DataAccess.DAO;
+using DataAccess.Extensions;
 using System.Net;
 
 namespace DataAccess.Helper
@@ -11,7 +12,7 @@ namespace DataAccess.Helper
     public class RequestHelper
     {
         public static ResponseBase CheckRequestNameAndRequestCategoryValidWhenCreateRequest(string requestName
-            , int requestCategoryId, RequestCategoryConst category)
+            , int requestCategoryId, RequestCategories category)
         {
             if (requestName.Trim().Length == 0)
             {
@@ -19,7 +20,7 @@ namespace DataAccess.Helper
             }
             if (requestCategoryId != (int)category)
             {
-                return new ResponseBase(false, "Không phải yêu cầu " + category.ToString().ToLower(), (int)HttpStatusCode.Conflict);
+                return new ResponseBase(false, "Không phải yêu cầu " + category.getDescription().ToLower(), (int)HttpStatusCode.Conflict);
             }
             return new ResponseBase(true);
         }
@@ -33,7 +34,7 @@ namespace DataAccess.Helper
                 return new ResponseBase(false, "Không tìm thấy sự vụ", (int)HttpStatusCode.NotFound);
             }
             // if issue done
-            if (issue.Status == IssueConst.Done)
+            if (issue.Status == IssueStatus.Done.getDescription())
             {
                 return new ResponseBase(false, "Sự vụ với mã " + issue.IssueCode + " đã được chấp thuận", (int)HttpStatusCode.Conflict);
             }
@@ -106,7 +107,7 @@ namespace DataAccess.Helper
                 UpdateAt = DateTime.Now,
                 IsDeleted = false,
                 RequestCategoryId = requestCategoryId,
-                Status = RequestConst.Pending,
+                Status = RequestStatus.Pending.ToString(),
                 DeliverWarehouseId = deliverWarehouseId
             };
             daoRequest.CreateRequest(request);
@@ -218,19 +219,19 @@ namespace DataAccess.Helper
             int? toWarehouseId = null;
             if (action == null)
             {
-                categoryName = TransactionCategoryConst.Cancel;
+                categoryName = TransactionCategories.Cancel.getDescription();
             }
             else
             {
-                categoryName = action == true ? TransactionCategoryConst.Import : TransactionCategoryConst.Export;
+                categoryName = action == true ? TransactionCategories.Import.getDescription() : TransactionCategories.Export.getDescription();
             }
             // if transaction export and request deliver
-            if (action == false && request.RequestCategoryId == (int)RequestCategoryConst.Deliver)
+            if (action == false && request.RequestCategoryId == (int)RequestCategories.Deliver)
             {
                 toWarehouseId = request.DeliverWarehouseId;
                 // if transaction import and request deliver
             }
-            else if (action == true && request.RequestCategoryId == (int)RequestCategoryConst.Deliver)
+            else if (action == true && request.RequestCategoryId == (int)RequestCategories.Deliver)
             {
                 fromWarehouseId = request.DeliverWarehouseId;
             }
@@ -341,7 +342,7 @@ namespace DataAccess.Helper
                 return response;
             }
             // if request export
-            if (request.RequestCategoryId == (int)RequestCategoryConst.Export)
+            if (request.RequestCategoryId == (int)RequestCategories.Export)
             {
                 Dictionary<string, object> result = ApproveRequestExport(daoCable, daoOtherMaterial, request
                     , requestCables, requestMaterials);
@@ -355,7 +356,7 @@ namespace DataAccess.Helper
                     , false);
                 // if request deliver
             }
-            else if (request.RequestCategoryId == (int)RequestCategoryConst.Deliver)
+            else if (request.RequestCategoryId == (int)RequestCategories.Deliver)
             {
                 Dictionary<string, object> result = ApproveRequestDeliver(daoHistory, daoTransactionCable
                     , daoTransactionOtherMaterial, daoCable, daoOtherMaterial, request, requestCables
@@ -383,7 +384,7 @@ namespace DataAccess.Helper
 
             }
             // ------------------------------- update request approved --------------------------------
-            UpdateRequest(daoRequest, request, approverId, RequestConst.Approved);
+            UpdateRequest(daoRequest, request, approverId, RequestStatus.Approved.ToString());
             // ------------------------------- send email --------------------------------
             await sendEmailToCreator(daoRequestCable, daoRequestOtherMaterial, request, approverName);
             return new ResponseBase(true, "Yêu cầu được phê duyệt");
@@ -1268,7 +1269,7 @@ namespace DataAccess.Helper
                 }
             }
             // ------------------------------- update request approved --------------------------------
-            UpdateRequest(daoRequest, request, approverId, RequestConst.Approved);
+            UpdateRequest(daoRequest, request, approverId, RequestStatus.Approved.ToString());
             // ------------------------------- create transaction ------------------------------
             CreateTransaction(daoHistory, daoTransactionCable, daoTransactionOtherMaterial, request, listCableWarehouseId, listCableRecovery, listOtherMaterialWarehouseId
                 , listOtherMaterialIdRecovery, listOtherMaterialQuantity, true);
@@ -1295,7 +1296,7 @@ namespace DataAccess.Helper
                 }
             }
             // -------------------------------update request approved --------------------------------
-            UpdateRequest(daoRequest, request, approverId, RequestConst.Approved);
+            UpdateRequest(daoRequest, request, approverId, RequestStatus.Approved.ToString());
             // ------------------------------- send email --------------------------------
             await sendEmailToCreator(daoRequestCable, daoRequestOtherMaterial, request, approverName);
             return new ResponseBase(true, "Yêu cầu được phê duyệt");

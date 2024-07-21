@@ -1,6 +1,6 @@
-﻿using Common.Const;
-using Common.DTO.CableDTO;
+﻿using Common.DTO.CableDTO;
 using Common.Entity;
+using Common.Enums;
 using DataAccess.DBContext;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,4 +1,5 @@
-﻿using Common.Const;
+﻿using Common.Enums;
+using DataAccess.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -12,51 +13,51 @@ namespace API.Controllers
             return User.Claims.Where(c => c.Type == type).FirstOrDefault();
         }
 
-        internal bool isAdmin()
+        private protected bool isAdmin()
         {
             Claim? claim = getClaim(ClaimTypes.Role);
-            return claim != null && claim.Value == RoleConst.Admin.ToString();
+            return claim != null && claim.Value == Roles.Admin.getDescription();
         }
 
-        internal bool isLeader()
+        private protected bool isLeader()
         {
             Claim? claim = getClaim(ClaimTypes.Role);
-            return claim != null && claim.Value == RoleConst.Leader.ToString();
+            return claim != null && claim.Value == Roles.Leader.getDescription();
         }
 
-        internal bool isWarehouseKeeper()
+        private protected bool isWarehouseKeeper()
         {
             Claim? claim = getClaim(ClaimTypes.Role);
-            return claim != null && claim.Value == RoleConst.Warehouse_Keeper.ToString();
+            return claim != null && claim.Value == Roles.Warehouse_Keeper.getDescription();
         }
 
-        internal bool isStaff()
+        private protected bool isStaff()
         {
             Claim? claim = getClaim(ClaimTypes.Role);
-            return claim != null && claim.Value == RoleConst.Staff.ToString();
+            return claim != null && claim.Value == Roles.Staff.getDescription();
         }
 
-        internal Guid? getUserId()
+        private protected Guid? getUserId()
         {
             Claim? claim = getClaim("id");
             return claim == null ? null : Guid.Parse(claim.Value);
         }
 
-        internal string? getEmail()
+        private protected string? getEmail()
         {
             Claim? claim = getClaim(ClaimTypes.Email);
-            return claim == null ? null : claim.Value;
+            return claim?.Value;
         }
 
-        internal string? getFirstName()
+        private protected string? getFirstName()
         {
             Claim? claim = getClaim("FirstName");
-            return claim == null ? null : claim.Value;
+            return claim?.Value;
         }
-        internal string? getLastName()
+        private protected string? getLastName()
         {
             Claim? claim = getClaim("LastName");
-            return claim == null ? null : claim.Value;
+            return claim?.Value;
         }
     }
 }

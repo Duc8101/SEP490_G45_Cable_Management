@@ -1,12 +1,13 @@
 ﻿using API.Services.Base;
 using AutoMapper;
 using Common.Base;
-using Common.Const;
 using Common.DTO.IssueDTO;
 using Common.DTO.RequestDTO;
 using Common.Entity;
+using Common.Enums;
 using Common.Paginations;
 using DataAccess.DAO;
+using DataAccess.Extensions;
 using System.Net;
 
 namespace API.Services.Issues
@@ -39,7 +40,7 @@ namespace API.Services.Issues
             issue.CreatedAt = DateTime.Now;
             issue.UpdateAt = DateTime.Now;
             issue.CreatorId = creatorId;
-            issue.Status = IssueConst.Doing;
+            issue.Status = IssueStatus.Doing.getDescription();
             issue.IsDeleted = false;
             try
             {
@@ -182,7 +183,7 @@ namespace API.Services.Issues
                 {
                     return new ResponseBase(false, "Mã sự vụ không được để trống", (int)HttpStatusCode.Conflict);
                 }
-                if (issue.Status == IssueConst.Done)
+                if (issue.Status == IssueStatus.Done.getDescription())
                 {
                     return new ResponseBase(false, "Sự vụ đã được xử lý", (int)HttpStatusCode.Conflict);
                 }

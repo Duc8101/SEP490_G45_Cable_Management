@@ -1,5 +1,5 @@
-﻿using Common.Const;
-using Common.Entity;
+﻿using Common.Entity;
+using Common.Enums;
 using DataAccess.DBContext;
 
 namespace DataAccess.DAO

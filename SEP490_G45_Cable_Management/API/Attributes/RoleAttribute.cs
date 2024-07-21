@@ -1,7 +1,7 @@
 ﻿using API.Provider;
 using Common.Base;
-using Common.Const;
 using Common.Entity;
+using Common.Enums;
 using DataAccess.DAO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -12,9 +12,9 @@ namespace API.Attributes
 {
     public class RoleAttribute : Attribute, IActionFilter
     {
-        private RoleConst[] Roles { get; }
+        public Roles[] Roles { get; }
 
-        public RoleAttribute(params RoleConst[] roles)
+        public RoleAttribute(params Roles[] roles)
         {
             Roles = roles;
         }
@@ -54,7 +54,7 @@ namespace API.Attributes
                         StatusCode = (int)HttpStatusCode.NotFound,
                     };
                 }
-                else if (!Roles.Contains((RoleConst)user.RoleId))
+                else if (!Roles.Contains((Roles)user.RoleId))
                 {
                     ResponseBase result = new ResponseBase("Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
                     context.Result = new JsonResult(result)
