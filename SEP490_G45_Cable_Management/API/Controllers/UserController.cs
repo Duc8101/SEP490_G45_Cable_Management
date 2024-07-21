@@ -60,31 +60,31 @@ namespace API.Controllers
             return response;
         }
 
-        [HttpPut("{UserID}")]
+        [HttpPut("{userId}")]
         [Authorize]
         [Role(RoleConst.Admin)]
-        public ResponseBase Update([Required] Guid UserID, [Required] UserUpdateDTO DTO)
+        public ResponseBase Update([Required] Guid userId, [Required] UserUpdateDTO DTO)
         {
-            ResponseBase response = _service.Update(UserID, DTO);
+            ResponseBase response = _service.Update(userId, DTO);
             Response.StatusCode = response.Code;
             return response;
         }
 
-        [HttpDelete("{UserId}")]
+        [HttpDelete("{userId}")]
         [Authorize]
         [Role(RoleConst.Admin)]
-        public ResponseBase Delete([Required] Guid UserId)
+        public ResponseBase Delete([Required] Guid userId)
         {
             ResponseBase response;
-            Guid? UserLoginId = getUserId();
+            Guid? userLoginId = getUserId();
             // if not found
-            if (UserLoginId== null)
+            if (userLoginId == null)
             {
-                response = new ResponseBase("Không tìm thấy ID", (int)HttpStatusCode.NotFound);
+                response = new ResponseBase("Không tìm thấy Id", (int)HttpStatusCode.NotFound);
             }
             else
             {
-                response = _service.Delete(UserId, UserLoginId.Value);
+                response = _service.Delete(userId, userLoginId.Value);
             }
             Response.StatusCode = response.Code;
             return response;
