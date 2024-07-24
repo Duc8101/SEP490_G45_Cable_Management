@@ -63,19 +63,19 @@ namespace UnitTests.Tests
 
         internal async Task<HttpResponseMessage> Get(HttpClient client, string url, params KeyValuePair<string, object>[] parameters)
         {
-            string param = "";
+            StringBuilder param = new StringBuilder();
             if (parameters.Length > 0)
             {
-                param = "?";
+                param.Append("?");
                 for (int i = 0; i < parameters.Length; i++)
                 {
                     if (i == 0)
                     {
-                        param = param + parameters[i].Key + "=" + parameters[i].Value;
+                        param.Append(parameters[i].Key + "=" + parameters[i].Value);
                     }
                     else
                     {
-                        param = param + "&" + parameters[i].Key + "=" + parameters[i].Value;
+                        param.Append("&" + parameters[i].Key + "=" + parameters[i].Value);
                     }
                 }
             }

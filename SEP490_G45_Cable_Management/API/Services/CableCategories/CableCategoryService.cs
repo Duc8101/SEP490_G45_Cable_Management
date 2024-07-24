@@ -67,13 +67,13 @@ namespace API.Services.CableCategories
                 List<CableCategory> list = _daoCableCategory.getListCableCategoryPaged(name, page);
                 List<CableCategoryListDTO> DTOs = _mapper.Map<List<CableCategoryListDTO>>(list);
                 int rowCount = _daoCableCategory.getRowCount(name);
-                Pagination<CableCategoryListDTO> result = new Pagination<CableCategoryListDTO>
+                Pagination<CableCategoryListDTO> data = new Pagination<CableCategoryListDTO>
                 {
                     List = DTOs,
                     CurrentPage = page,
                     RowCount = rowCount
                 };
-                return new ResponseBase(result);
+                return new ResponseBase(data);
             }
             catch (Exception ex)
             {

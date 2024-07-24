@@ -14,6 +14,7 @@ namespace Common.Base
         {
 
         }
+
         public ResponseBase(T data, string message, int code)
         {
             Data = data;

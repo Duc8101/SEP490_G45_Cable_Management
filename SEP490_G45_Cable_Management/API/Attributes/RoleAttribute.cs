@@ -26,8 +26,8 @@ namespace API.Attributes
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            var accessor = StaticServiceProvider.Provider.GetService<IHttpContextAccessor>();
-            var daoUser = accessor?.HttpContext?.RequestServices.GetService<DAOUser>();
+            var accessor = StaticServiceProvider.Provider.GetRequiredService<IHttpContextAccessor>();
+            var daoUser = accessor.HttpContext?.RequestServices.GetService<DAOUser>();
             if (daoUser == null)
             {
                 ResponseBase result = new ResponseBase("Không lấy dc giá trị DAOUser", (int)HttpStatusCode.InternalServerError);
