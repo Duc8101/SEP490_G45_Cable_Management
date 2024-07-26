@@ -1,5 +1,4 @@
 using API.Middleware;
-using API.Provider;
 using API.Services.CableCategories;
 using API.Services.Cables;
 using API.Services.Issues;
@@ -123,9 +122,7 @@ namespace API
             builder.Services.AddScoped<ITransactionService, TransactionService>();
             builder.Services.AddScoped<IWarehouseService, WarehouseService>();
             builder.Services.AddScoped<IRequestService, RequestService>();
-            builder.Services.AddHttpContextAccessor();
             var app = builder.Build();
-            StaticServiceProvider.Provider = app.Services;
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

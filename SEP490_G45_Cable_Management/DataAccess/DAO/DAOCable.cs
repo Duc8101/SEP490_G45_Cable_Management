@@ -12,7 +12,7 @@ namespace DataAccess.DAO
         {
         }
 
-        private IQueryable<Cable> getQuery(string? filter, int? warehouseId, bool isExportedToUse)
+        private IQueryable<Cable> getQuery(string? filter, int? warehouseId, int? cableCategoryId, bool isExportedToUse)
         {
             IQueryable<Cable> query = _context.Cables.Include(c => c.CableCategory).Include(c => c.Supplier).Include(c => c.Warehouse)
                 .Where(c => c.IsDeleted == false && c.IsInRequest == false && c.IsExportedToUse == isExportedToUse);
@@ -27,30 +27,35 @@ namespace DataAccess.DAO
             {
                 query = query.Where(c => c.WarehouseId == warehouseId);
             }
+            // if choose cable category
+            if (cableCategoryId.HasValue)
+            {
+                query = query.Where(c => c.CableCategoryId == cableCategoryId);
+            }
             return query;
         }
         public List<Cable> getListCable(string? filter, int? warehouseId, bool isExportedToUse, int page)
         {
-            IQueryable<Cable> query = getQuery(filter, warehouseId, isExportedToUse);
-            return query.OrderByDescending(c => c.UpdateAt).Skip((int) PageSize.Size * (page - 1))
+            IQueryable<Cable> query = getQuery(filter, warehouseId, null, isExportedToUse);
+            return query.OrderByDescending(c => c.UpdateAt).Skip((int)PageSize.Size * (page - 1))
                 .Take((int)PageSize.Size).ToList();
         }
 
         public List<Cable> getListCable(int? warehouseId)
         {
-            IQueryable<Cable> query = getQuery(null, warehouseId, false);
+            IQueryable<Cable> query = getQuery(null, warehouseId, null, false);
             return query.OrderByDescending(c => c.UpdateAt).ToList();
         }
 
         public int getRowCount(string? filter, int? warehouseId, bool isExportedToUse)
         {
-            IQueryable<Cable> query = getQuery(filter, warehouseId, isExportedToUse);
+            IQueryable<Cable> query = getQuery(filter, warehouseId, null, isExportedToUse);
             return query.Count();
         }
 
         public int getSum(string? filter, int? warehouseId, bool isExportedToUse)
         {
-            IQueryable<Cable> query = getQuery(filter, warehouseId, isExportedToUse);
+            IQueryable<Cable> query = getQuery(filter, warehouseId, null, isExportedToUse);
             return query.Sum(c => c.Length);
         }
 
@@ -69,7 +74,7 @@ namespace DataAccess.DAO
 
         public Cable? getCable(Guid cableId)
         {
-            return _context.Cables.Include(c => c.CableCategory).SingleOrDefault(c => c.IsDeleted == false 
+            return _context.Cables.Include(c => c.CableCategory).SingleOrDefault(c => c.IsDeleted == false
             && c.CableId == cableId);
         }
 
@@ -99,13 +104,13 @@ namespace DataAccess.DAO
 
         public List<CableCategory> getListCableCategory(int? warehouseId)
         {
-            IQueryable<Cable> query = getQuery(null, warehouseId, false);
+            IQueryable<Cable> query = getQuery(null, warehouseId, null, false);
             return query.Select(c => c.CableCategory).Distinct().ToList();
         }
 
         public int getSum(int cableCategoryId, int? warehouseId)
         {
-            IQueryable<Cable> query = getQuery(null, warehouseId, false).Where(c => c.CableCategoryId == cableCategoryId);
+            IQueryable<Cable> query = getQuery(null, warehouseId, cableCategoryId, false);
             return query.Sum(c => c.Length);
         }
 

@@ -1,5 +1,4 @@
-﻿using API.Provider;
-using Common.Base;
+﻿using Common.Base;
 using Common.Entity;
 using Common.Enums;
 using DataAccess.DAO;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Security.Claims;
 
 namespace API.Attributes
 {
@@ -26,25 +26,24 @@ namespace API.Attributes
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            var accessor = StaticServiceProvider.Provider.GetRequiredService<IHttpContextAccessor>();
-            var daoUser = accessor.HttpContext?.RequestServices.GetService<DAOUser>();
-            if (daoUser == null)
+            DAOUser daoUser = context.HttpContext.RequestServices.GetRequiredService<DAOUser>();
+            // ------------------ get token ----------------------------------------
+            string? token = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            // ------------------ get information user from token ------------------
+            var handler = new JwtSecurityTokenHandler();
+            var security = handler.ReadJwtToken(token);
+            Claim? claim = security.Claims.FirstOrDefault(t => t.Type == "id");
+            if (claim == null)
             {
-                ResponseBase result = new ResponseBase("Không lấy dc giá trị DAOUser", (int)HttpStatusCode.InternalServerError);
+                ResponseBase result = new ResponseBase("Not found user id based on token. Please check information!!", (int)HttpStatusCode.NotFound);
                 context.Result = new JsonResult(result)
                 {
-                    StatusCode = (int)HttpStatusCode.InternalServerError,
+                    StatusCode = (int)HttpStatusCode.NotFound,
                 };
             }
             else
             {
-                // ------------------ get token ----------------------------------------
-                string? token = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-                // ------------------ get information user from token ------------------
-                var handler = new JwtSecurityTokenHandler();
-                var tokenS = handler.ReadJwtToken(token);
-                string UserId = tokenS.Claims.First(t => t.Type == "id").Value;
-                Guid userId = Guid.Parse(UserId);
+                Guid userId = Guid.Parse(claim.Value);
                 User? user = daoUser.getUser(userId);
                 if (user == null)
                 {

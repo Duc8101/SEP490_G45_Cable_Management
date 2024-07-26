@@ -1,5 +1,6 @@
 ﻿using Common.Entity;
 using Common.Enums;
+using DataAccess.Configuration;
 using DataAccess.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Moq.Protected;
@@ -12,7 +13,7 @@ namespace UnitTests.Tests
 {
     public class BaseTest
     {
-        internal Mock<HttpMessageHandler> getHttpMessageHandler(HttpStatusCode code, string content)
+        private protected Mock<HttpMessageHandler> getHttpMessageHandler(string content)
         {
             var handler = new Mock<HttpMessageHandler>();
             handler
@@ -24,13 +25,34 @@ namespace UnitTests.Tests
                )
                .ReturnsAsync(new HttpResponseMessage
                {
-                   StatusCode = code,
-                   Content = new StringContent(content)
+                  // Content = new StringContent(content)
                });
             return handler;
         }
 
-        internal string SimulateToken(Roles role)
+        private protected ClaimsPrincipal SimulateUser(Roles role)
+        {
+            User user = new User()
+            {
+                UserId = Guid.NewGuid(),
+                RoleId = (int)role,
+                Firstname = "First",
+                Lastname = "Last",
+                Email = "emailsample@gmail.com"
+            };
+            //  create list claim  to store user's information
+            List<Claim> list = new List<Claim>()
+            {
+                new Claim("id", user.UserId.ToString()),
+                new Claim(ClaimTypes.Email , user.Email),
+                new Claim(ClaimTypes.Role, role.getDescription()),
+                new Claim("FirstName", user.Firstname),
+                new Claim("LastName", user.Lastname),
+            };
+            return new ClaimsPrincipal(new ClaimsIdentity(list));
+        }
+
+        private protected string SimulateToken(Roles role)
         {
             User user = new User()
             {
@@ -41,7 +63,7 @@ namespace UnitTests.Tests
                 Email = "emailsample@gmail.com"
             };
             // get credential
-            byte[] key = Encoding.UTF8.GetBytes("Yh2k7QSu4l8CZg5p6X3Pna9L0Miy4D3Bvt0JVr87UcOj69Kqw5R2Nmf4FWs03Hdx");
+            byte[] key = Encoding.UTF8.GetBytes(ConfigData.JwtKey);
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
             SigningCredentials credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             //  create list claim  to store user's information
@@ -53,15 +75,15 @@ namespace UnitTests.Tests
                 new Claim("FirstName", user.Firstname),
                 new Claim("LastName", user.Lastname),
             };
-            JwtSecurityToken token = new JwtSecurityToken("JWTAuthenticationServer",
-                "JWTServicePostmanClient", list, expires: DateTime.Now.AddDays(1),
+            JwtSecurityToken token = new JwtSecurityToken(ConfigData.JwtIssuer,
+                ConfigData.JwtAudience, list, expires: DateTime.Now.AddDays(1),
                 signingCredentials: credentials);
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
             // get access token
             return handler.WriteToken(token);
         }
 
-        internal async Task<HttpResponseMessage> Get(HttpClient client, string url, params KeyValuePair<string, object>[] parameters)
+        private protected async Task<HttpResponseMessage> Get(HttpClient client, string url, params KeyValuePair<string, object>[] parameters)
         {
             StringBuilder param = new StringBuilder();
             if (parameters.Length > 0)
@@ -83,7 +105,7 @@ namespace UnitTests.Tests
             return await client.GetAsync(url);
         }
 
-        internal async Task<HttpResponseMessage> Post<T>(HttpClient client, string url, T obj)
+        private protected async Task<HttpResponseMessage> Post<T>(HttpClient client, string url, T obj)
         {
             string body = JsonSerializer.Serialize(obj);
             StringContent content = new StringContent(body, Encoding.UTF8, "application/json");
