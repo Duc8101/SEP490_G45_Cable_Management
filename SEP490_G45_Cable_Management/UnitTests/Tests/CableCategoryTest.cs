@@ -8,17 +8,18 @@ namespace UnitTests.Tests
     public class CableCategoryTest : BaseTest
     {
         private CableCategoryController controller;
-        private Mock<ICableCategoryService> service;
+        private Mock<ICableCategoryService> mockService;
         private ControllerContext context;
         [SetUp]
         public void SetUp()
         {
-            service = new Mock<ICableCategoryService>();
-            controller = new CableCategoryController(service.Object);
+            mockService = new Mock<ICableCategoryService>();
+            controller = new CableCategoryController(mockService.Object);
             context = new ControllerContext()
             {
                 HttpContext = new DefaultHttpContext()
             };
+            controller.ControllerContext = context;
         }
 
         [Test]
@@ -32,11 +33,24 @@ namespace UnitTests.Tests
                 CurrentPage = page,
                 List = new List<CableCategoryListDTO>()
             };
-            controller.ControllerContext = context;
             ResponseBase expectedResult = new ResponseBase(expectedData);
-            service.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
+            mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
             ResponseBase trueResult = controller.List(name, page);
-            Assert.That(trueResult.Data, Is.EqualTo(expectedResult.Data));
+            Assert.That(trueResult, Is.EqualTo(expectedResult));
+        }
+
+        [Test]
+        public void ListAll_WhenAdmin_ReturnsList()
+        {
+            List<CableCategoryListDTO> expectedData = new List<CableCategoryListDTO>
+            {
+                 new CableCategoryListDTO { CableCategoryId = 1, CableCategoryName = "Category 1" },
+                 new CableCategoryListDTO { CableCategoryId = 2, CableCategoryName = "Category 2" }
+            };
+            ResponseBase expectedResult = new ResponseBase(expectedData);
+            mockService.Setup(s => s.ListAll()).Returns(expectedResult);
+            ResponseBase trueResult = controller.List();
+            Assert.That(trueResult, Is.EqualTo(expectedResult));
         }
 
 

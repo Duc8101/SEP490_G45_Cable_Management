@@ -30,7 +30,7 @@ namespace DataAccess.DAO
                 .Take((int)PageSize.Size).ToList();
         }
 
-        public List<Issue> getListIssuePagedStatusDoing(int page)
+        public List<Issue> getListIssueStatusDoing(int page)
         {
             IQueryable<Issue> query = getQuery(null);
             return query.OrderByDescending(i => i.Status).ThenByDescending(i => i.UpdateAt).Where(i => i.Status == IssueStatus.Doing.getDescription())
@@ -49,7 +49,7 @@ namespace DataAccess.DAO
             return query.Where(i => i.Status == IssueStatus.Doing.getDescription()).Count();
         }
 
-        public List<Issue> getListIssueAllStatusDoing()
+        public List<Issue> getListIssueStatusDoing()
         {
             IQueryable<Issue> query = getQuery(null);
             return query.OrderByDescending(i => i.Status).ThenByDescending(i => i.UpdateAt).Where(i => i.Status == IssueStatus.Doing.getDescription())

@@ -20,7 +20,7 @@ namespace DataAccess.DAO
             return query;
         }
 
-        public List<CableCategory> getListCableCategoryPaged(string? name, int page)
+        public List<CableCategory> getListCableCategory(string? name, int page)
         {
             IQueryable<CableCategory> query = getQuery(name);
             return query.OrderByDescending(c => c.UpdateAt).Skip((int)PageSize.Size * (page - 1))
@@ -33,7 +33,7 @@ namespace DataAccess.DAO
             return query.Count();
         }
 
-        public List<CableCategory> getListCableCategoryAll()
+        public List<CableCategory> getListCableCategory()
         {
             return _context.CableCategories.OrderByDescending(c => c.UpdateAt).ToList();
         }

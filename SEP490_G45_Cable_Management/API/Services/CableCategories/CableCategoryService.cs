@@ -50,7 +50,7 @@ namespace API.Services.CableCategories
         {
             try
             {
-                List<CableCategory> list = _daoCableCategory.getListCableCategoryAll();
+                List<CableCategory> list = _daoCableCategory.getListCableCategory();
                 List<CableCategoryListDTO> data = _mapper.Map<List<CableCategoryListDTO>>(list);
                 return new ResponseBase(data);
             }
@@ -64,7 +64,7 @@ namespace API.Services.CableCategories
         {
             try
             {
-                List<CableCategory> list = _daoCableCategory.getListCableCategoryPaged(name, page);
+                List<CableCategory> list = _daoCableCategory.getListCableCategory(name, page);
                 List<CableCategoryListDTO> DTOs = _mapper.Map<List<CableCategoryListDTO>>(list);
                 int rowCount = _daoCableCategory.getRowCount(name);
                 Pagination<CableCategoryListDTO> data = new Pagination<CableCategoryListDTO>

@@ -113,7 +113,7 @@ namespace API.Services.Issues
         {
             try
             {
-                List<Issue> list = _daoIssue.getListIssueAllStatusDoing();
+                List<Issue> list = _daoIssue.getListIssueStatusDoing();
                 List<IssueListDTO> data = _mapper.Map<List<IssueListDTO>>(list);
                 return new ResponseBase(data);
             }
@@ -148,7 +148,7 @@ namespace API.Services.Issues
         {
             try
             {
-                List<Issue> list = _daoIssue.getListIssuePagedStatusDoing(page);
+                List<Issue> list = _daoIssue.getListIssueStatusDoing(page);
                 List<IssueListDTO> DTOs = _mapper.Map<List<IssueListDTO>>(list);
                 int rowCount = _daoIssue.getRowCount();
                 Pagination<IssueListDTO> data = new Pagination<IssueListDTO>()

@@ -1,16 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{DE1611B3-C1CA-4BB9-ADD1-F6CE67B6D49E}|UnitTests\\UnitTests.csproj|d:\\github\\sep490_g45_cable_management\\sep490_g45_cable_management\\unittests\\tests\\cablecategorytest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE1611B3-C1CA-4BB9-ADD1-F6CE67B6D49E}|UnitTests\\UnitTests.csproj|solutionrelative:unittests\\tests\\cablecategorytest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{71FD99E1-22A3-4349-80C1-4F7A9298C3A6}|API\\API.csproj|d:\\github\\sep490_g45_cable_management\\sep490_g45_cable_management\\api\\controllers\\cablecategorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{71FD99E1-22A3-4349-80C1-4F7A9298C3A6}|API\\API.csproj|solutionrelative:api\\controllers\\cablecategorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -18,37 +9,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "CableCategoryController.cs",
-              "DocumentMoniker": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\API\\Controllers\\CableCategoryController.cs",
-              "RelativeDocumentMoniker": "API\\Controllers\\CableCategoryController.cs",
-              "ToolTip": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\API\\Controllers\\CableCategoryController.cs",
-              "RelativeToolTip": "API\\Controllers\\CableCategoryController.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAAABwAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-26T09:34:31.616Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "CableCategoryTest.cs",
-              "DocumentMoniker": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\UnitTests\\Tests\\CableCategoryTest.cs",
-              "RelativeDocumentMoniker": "UnitTests\\Tests\\CableCategoryTest.cs",
-              "ToolTip": "D:\\GitHub\\SEP490_G45_Cable_Management\\SEP490_G45_Cable_Management\\UnitTests\\Tests\\CableCategoryTest.cs",
-              "RelativeToolTip": "UnitTests\\Tests\\CableCategoryTest.cs",
-              "ViewState": "AQIAACcAAAAAAAAAAAAYwB8AAAAjAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-26T09:30:18.922Z",
-              "EditorCaption": ""
             }
           ]
         }

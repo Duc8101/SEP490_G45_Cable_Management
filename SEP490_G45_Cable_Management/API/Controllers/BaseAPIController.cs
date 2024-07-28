@@ -54,6 +54,7 @@ namespace API.Controllers
             Claim? claim = getClaim("FirstName");
             return claim?.Value;
         }
+
         private protected string? getLastName()
         {
             Claim? claim = getClaim("LastName");
