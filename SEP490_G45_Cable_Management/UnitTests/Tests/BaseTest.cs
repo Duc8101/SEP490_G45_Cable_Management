@@ -1,7 +1,11 @@
-﻿using Common.Entity;
+﻿using API;
+using AutoMapper;
+using Common.Entity;
 using Common.Enums;
 using DataAccess.Configuration;
+using DataAccess.DBContext;
 using DataAccess.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Moq.Protected;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,6 +17,20 @@ namespace UnitTests.Tests
 {
     public class BaseTest
     {
+        private protected Mock<CableManagementContext> mockDbContext;
+        private protected IMapper mapper;
+
+        [SetUp]
+        public virtual void SetUp()
+        {
+            mockDbContext = new Mock<CableManagementContext>();
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new MappingProfile());
+            });
+            mapper = config.CreateMapper();
+        }
+
         private protected Mock<HttpMessageHandler> getHttpMessageHandler(string content)
         {
             var handler = new Mock<HttpMessageHandler>();

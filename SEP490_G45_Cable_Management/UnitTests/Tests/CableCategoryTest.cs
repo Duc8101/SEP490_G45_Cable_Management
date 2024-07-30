@@ -1,43 +1,105 @@
 ﻿using API.Services.CableCategories;
 using Common.DTO.CableCategoryDTO;
+using Common.Entity;
 using Common.Paginations;
+using DataAccess.DAO;
+using Microsoft.EntityFrameworkCore;
 
 namespace UnitTests.Tests
 {
     [TestFixture]
     public class CableCategoryTest : BaseTest
     {
-        private CableCategoryController controller;
+        private Mock<DbSet<CableCategory>> mockDbSet;
         private Mock<ICableCategoryService> mockService;
-        private ControllerContext context;
+        private CableCategoryController controller;
+        private ControllerContext controllerContext;
+
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
+            base.SetUp();
+            mockDbSet = new Mock<DbSet<CableCategory>>();
             mockService = new Mock<ICableCategoryService>();
             controller = new CableCategoryController(mockService.Object);
-            context = new ControllerContext()
+            controllerContext = new ControllerContext()
             {
                 HttpContext = new DefaultHttpContext()
             };
-            controller.ControllerContext = context;
+            controller.ControllerContext = controllerContext;
         }
 
-        [Test]
-        public void ListPaged_ReturnsPagination()
+        private void SetMockQueryCableCategory()
         {
+            List<CableCategory> cableCategories = new List<CableCategory>()
+            {
+                 new CableCategory(){ CableCategoryId = 1, CableCategoryName = "Category 1" , CreatedAt = DateTime.Now, UpdateAt = DateTime.Now,IsDeleted = false},
+                 new CableCategory(){ CableCategoryId = 2, CableCategoryName = "Category 2" , CreatedAt = DateTime.Now, UpdateAt = DateTime.Now,IsDeleted = false}
+            };
+            mockDbSet.As<IQueryable<CableCategory>>().Setup(c => c.Expression).Returns(cableCategories.AsQueryable().Expression);
+            mockDbSet.As<IQueryable<CableCategory>>().Setup(c => c.Provider).Returns(cableCategories.AsQueryable().Provider);
+            mockDbSet.As<IQueryable<CableCategory>>().Setup(c => c.ElementType).Returns(cableCategories.AsQueryable().ElementType);
+            mockDbContext.Setup(m => m.CableCategories).Returns(mockDbSet.Object);
+        }
+
+        /*
+         * Input name not exist => return response success: 
+         * success : true, code : 200 , message : empty
+         * rowCount : 0, list : empty, currentPage : page
+         
+         */
+        [Test]
+        public void ListPaged_InputNameNotExist_ReturnsResponseSuccess()
+        {
+            // arrange
             string? name = "SampleName";
             int page = 1;
-            Pagination<CableCategoryListDTO> expectedData = new Pagination<CableCategoryListDTO>()
-            {
-                RowCount = 0,
-                CurrentPage = page,
-                List = new List<CableCategoryListDTO>()
-            };
-            ResponseBase expectedResult = new ResponseBase(expectedData);
+            SetMockQueryCableCategory();
+            DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
+            CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
+            ResponseBase expectedResult = service.ListPaged(name, page);
             mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
+            // act
             ResponseBase trueResult = controller.List(name, page);
-            Assert.That(trueResult, Is.EqualTo(expectedResult));
+            // assert
+            Assert.That(trueResult.Code, Is.EqualTo((int)HttpStatusCode.OK));
+            Assert.IsTrue(trueResult.Success);
+            Pagination<CableCategoryListDTO>? trueData = (Pagination<CableCategoryListDTO>?)trueResult.Data;
+            Assert.IsNotNull(trueData);
+            Assert.That(trueData.RowCount, Is.EqualTo(0));
+            Assert.That(trueData.List.Count, Is.EqualTo(0));
+            Assert.That(trueData.CurrentPage, Is.EqualTo(page));
         }
+
+        /*
+            * Input name null or empty => return response success: 
+            * success : true, code : 200 , message : empty
+            * rowCount : row of currentPage, list : all cable category, currentPage : page
+        */
+
+        [TestCase(null)]
+        [TestCase("    ")]
+        public void ListPaged_InputNameEmptyOrNull_ReturnsResponseSuccess(string? name)
+        {
+            // arrange
+            int page = 1;
+            SetMockQueryCableCategory();
+            DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
+            CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
+            ResponseBase expectedResult = service.ListPaged(name, page);
+            mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
+            // act
+            ResponseBase trueResult = controller.List(name, page);
+            // assert
+            Assert.That(trueResult.Code, Is.EqualTo((int)HttpStatusCode.OK));
+            Assert.IsTrue(trueResult.Success);
+            Pagination<CableCategoryListDTO>? trueData = (Pagination<CableCategoryListDTO>?)trueResult.Data;
+            Assert.IsNotNull(trueData);
+            Assert.That(trueData.RowCount, Is.EqualTo(0));
+            Assert.That(trueData.CurrentPage, Is.EqualTo(page));
+            Assert.That(trueData.List.Count, Is.EqualTo(0));
+        }
+
 
         [Test]
         public void ListAll_WhenAdmin_ReturnsList()
