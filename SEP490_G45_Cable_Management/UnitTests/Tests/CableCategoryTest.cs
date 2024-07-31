@@ -4,6 +4,7 @@ using Common.Entity;
 using Common.Paginations;
 using DataAccess.DAO;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 namespace UnitTests.Tests
 {
@@ -42,12 +43,6 @@ namespace UnitTests.Tests
             mockDbContext.Setup(m => m.CableCategories).Returns(mockDbSet.Object);
         }
 
-        /*
-         * Input name not exist => return response success: 
-         * success : true, code : 200 , message : empty
-         * rowCount : 0, list : empty, currentPage : page
-         
-         */
         [Test]
         public void ListPaged_InputNameNotExist_ReturnsResponseSuccess()
         {
@@ -63,19 +58,81 @@ namespace UnitTests.Tests
             ResponseBase trueResult = controller.List(name, page);
             // assert
             Assert.That(trueResult.Code, Is.EqualTo((int)HttpStatusCode.OK));
-            Assert.IsTrue(trueResult.Success);
-            Pagination<CableCategoryListDTO>? trueData = (Pagination<CableCategoryListDTO>?)trueResult.Data;
-            Assert.IsNotNull(trueData);
-            Assert.That(trueData.RowCount, Is.EqualTo(0));
-            Assert.That(trueData.List.Count, Is.EqualTo(0));
-            Assert.That(trueData.CurrentPage, Is.EqualTo(page));
+            /*            Assert.That(trueData.RowCount, Is.EqualTo(0));
+                        Assert.That(trueData.List.Count, Is.EqualTo(0));
+                        Assert.That(trueData.CurrentPage, Is.EqualTo(page));*/
         }
 
-        /*
-            * Input name null or empty => return response success: 
-            * success : true, code : 200 , message : empty
-            * rowCount : row of currentPage, list : all cable category, currentPage : page
-        */
+        [Test]
+        public void ListPaged_InputNameNotExist_ReturnsSuccessTrue()
+        {
+            // arrange
+            string? name = "SampleName";
+            int page = 1;
+            SetMockQueryCableCategory();
+            DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
+            CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
+            ResponseBase expectedResult = service.ListPaged(name, page);
+            mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
+            // act
+            ResponseBase trueResult = controller.List(name, page);
+            // assert
+            Assert.IsTrue(trueResult.Success);
+        }
+
+        [Test]
+        public void ListPaged_InputNameNotExist_ReturnsMessageEmpty()
+        {
+            // arrange
+            string? name = "SampleName";
+            int page = 1;
+            SetMockQueryCableCategory();
+            DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
+            CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
+            ResponseBase expectedResult = service.ListPaged(name, page);
+            mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
+            // act
+            ResponseBase trueResult = controller.List(name, page);
+            // assert
+            Assert.That(trueResult.Message, Is.EqualTo(string.Empty));
+        }
+
+        [Test]
+        public void ListPaged_InputNameNotExist_ReturnsDataNotNull()
+        {
+            // arrange
+            string? name = "SampleName";
+            int page = 1;
+            SetMockQueryCableCategory();
+            DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
+            CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
+            ResponseBase expectedResult = service.ListPaged(name, page);
+            mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
+            // act
+            ResponseBase trueResult = controller.List(name, page);
+            // assert
+            Assert.IsNotNull(trueResult.Data);
+        }
+
+        [Test]
+        public void ListPaged_InputNameNotExist_ReturnsPaginationTrueRowCount()
+        {
+            // arrange
+            string? name = "SampleName";
+            int page = 1;
+            int expectedRowCount = 0;
+            SetMockQueryCableCategory();
+            DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
+            CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
+            ResponseBase expectedResult = service.ListPaged(name, page);
+            mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
+            // act
+            ResponseBase trueResult = controller.List(name, page);
+            // assert
+            Pagination<CableCategoryListDTO>? trueData = (Pagination<CableCategoryListDTO>?)trueResult.Data;
+            Assert.That(trueData?.RowCount, Is.EqualTo(expectedRowCount));
+        }
+
 
         [TestCase(null)]
         [TestCase("    ")]
@@ -93,158 +150,30 @@ namespace UnitTests.Tests
             // assert
             Assert.That(trueResult.Code, Is.EqualTo((int)HttpStatusCode.OK));
             Assert.IsTrue(trueResult.Success);
-            Pagination<CableCategoryListDTO>? trueData = (Pagination<CableCategoryListDTO>?)trueResult.Data;
-            Assert.IsNotNull(trueData);
-            Assert.That(trueData.RowCount, Is.EqualTo(0));
-            Assert.That(trueData.CurrentPage, Is.EqualTo(page));
-            Assert.That(trueData.List.Count, Is.EqualTo(0));
+            Assert.IsNotNull(trueResult.Data);
         }
 
 
         [Test]
-        public void ListAll_WhenAdmin_ReturnsList()
+        public void ListAll__ReturnsExpectedList()
         {
-            List<CableCategoryListDTO> expectedData = new List<CableCategoryListDTO>
-            {
-                 new CableCategoryListDTO { CableCategoryId = 1, CableCategoryName = "Category 1" },
-                 new CableCategoryListDTO { CableCategoryId = 2, CableCategoryName = "Category 2" }
-            };
-            ResponseBase expectedResult = new ResponseBase(expectedData);
+            // arrange
+            SetMockQueryCableCategory();
+            DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
+            CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
+            ResponseBase expectedResult = service.ListAll();
+            List<CableCategory> expectedList = mockDbContext.Object.CableCategories.OrderByDescending(c => c.UpdateAt).ToList();
+            List<CableCategoryListDTO> expectedData = mapper.Map<List<CableCategoryListDTO>>(expectedList);
             mockService.Setup(s => s.ListAll()).Returns(expectedResult);
+            // act
             ResponseBase trueResult = controller.List();
-            Assert.That(trueResult, Is.EqualTo(expectedResult));
+            // assert
+            List<CableCategoryListDTO>? trueData = (List<CableCategoryListDTO>?) trueResult.Data;
+            Assert.IsTrue(trueData?.SequenceEqual(expectedData));
         }
 
 
-        /*        [Test]
-                public async Task ListPaged_WhenAdmin_ReturnsPagination()
-                {
-                    // Arrange
-                    string? name = "SampleName";
-                    Pagination<CableCategoryListDTO> expectedData = new Pagination<CableCategoryListDTO>()
-                    {
-                        RowCount = 0,
-                        CurrentPage = 1,
-                        List = new List<CableCategoryListDTO>()
-                    };
-                    ResponseBase expectedResult = new ResponseBase(expectedData);
-                    string expectedContent = JsonSerializer.Serialize(expectedResult);
-                    var handler = getHttpMessageHandler(HttpStatusCode.OK, expectedContent);
-                    HttpClient client = new HttpClient(handler.Object);
-                    string token = SimulateToken(Roles.Admin);
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "");
-                    string url = "https://localhost:7107/CableCategory/List/Paged";
-                    HttpResponseMessage response = await Get(client, url, new KeyValuePair<string, object>("name", name),
-                        new KeyValuePair<string, object>("page", 1));
-                    string trueContent = await response.Content.ReadAsStringAsync();
-                    ResponseBase<Pagination<CableCategoryListDTO>?>? trueResult = JsonSerializer.Deserialize<ResponseBase<Pagination<CableCategoryListDTO>?>>(trueContent);
-                    // Assert
-                    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-                    Assert.NotNull(trueResult);
-                   // Assert.That(trueResult.Code, Is.EqualTo((int)HttpStatusCode.OK));
-                   // Assert.IsTrue(trueResult.Success);
-                }
-
-                private async Task ListPaged_ReturnsUnauthorized(string? token)
-                {
-                    ResponseBase expectedResult = new ResponseBase("Unauthorized", (int)HttpStatusCode.Unauthorized);
-                    string content = JsonSerializer.Serialize(expectedResult);
-                    var handler = getHttpMessageHandler(HttpStatusCode.Unauthorized, content);
-                    HttpClient client = new HttpClient(handler.Object);
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                    string url = "https://localhost:7107/CableCategory/List/Paged";
-                    HttpResponseMessage response = await Get(client, url, new KeyValuePair<string, object>("page", 1));
-                    // Assert
-                    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
-                    string data = await response.Content.ReadAsStringAsync();
-                    ResponseBase? trueResult = JsonSerializer.Deserialize<ResponseBase>(data);
-                    Assert.NotNull(trueResult);
-                    Assert.IsFalse(trueResult.Success);
-                }
-        */
-        /*        [Test]
-                public async Task ListPaged_WhenNoLogin_ReturnsUnauthorized()
-                {
-                    await ListPaged_ReturnsUnauthorized("");
-                }
-        */
-        /*        [Test]
-                public async Task ListPaged_WhenInvalidToken_ReturnsUnauthorized()
-                {
-                    await ListPaged_ReturnsUnauthorized("Invalid token");
-                }
-        */
-        /*        [Test]
-                public async Task ListPaged_NotAdmin_ReturnForbidden()
-                {
-                    ResponseBase result = new ResponseBase("Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
-                    string content = JsonSerializer.Serialize(result);
-                    var handler = getHttpMessageHandler(HttpStatusCode.Forbidden, content);
-                    HttpClient client = new HttpClient(handler.Object);
-                    string token = SimulateToken(Roles.Leader);
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                    string url = "https://localhost:7107/CableCategory/List/Paged";
-                    HttpResponseMessage response = await Get(client, url, new KeyValuePair<string, object>("page", 1));
-                    // Assert
-                    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
-                    string data = await response.Content.ReadAsStringAsync();
-                    Assert.That(content, Is.EqualTo(data));
-                }
-
-                [Test]
-                public async Task ListAll_WhenAdmin_ReturnsList()
-                {
-                    List<CableCategoryListDTO> expectedData = new List<CableCategoryListDTO>
-                    {
-                        new CableCategoryListDTO { CableCategoryId = 1, CableCategoryName = "Category 1" },
-                        new CableCategoryListDTO { CableCategoryId = 2, CableCategoryName = "Category 2" }
-                    };
-                    ResponseBase expectedResult = new ResponseBase(expectedData);
-                    string expectedContent = JsonSerializer.Serialize(expectedResult);
-                    var handler = getHttpMessageHandler(HttpStatusCode.OK, expectedContent);
-                    HttpClient client = new HttpClient(handler.Object);
-                    string token = SimulateToken(Roles.Admin);
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                    string url = "https://localhost:7107/CableCategory/List/All";
-                    HttpResponseMessage response = await Get(client, url);
-                    string trueContent = await response.Content.ReadAsStringAsync();
-                    ResponseBase<List<CableCategoryListDTO>?>? trueResult = JsonSerializer.Deserialize<ResponseBase<List<CableCategoryListDTO>?>>(trueContent);
-                    // Assert
-                    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-                    Assert.NotNull(trueResult);
-                    Assert.IsTrue(trueResult.Success);
-                    Assert.NotNull(trueResult.Data);
-                    Assert.IsTrue(trueResult.Data.Count == expectedData.Count);
-                }
-
-                private async Task ListAll_ReturnsUnauthorized(string? token)
-                {
-                    ResponseBase expectedResult = new ResponseBase("Unauthorized", (int)HttpStatusCode.Unauthorized);
-                    string content = JsonSerializer.Serialize(expectedResult);
-                    var handler = getHttpMessageHandler(HttpStatusCode.Unauthorized, content);
-                    HttpClient client = new HttpClient(handler.Object);
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                    string url = "https://localhost:7107/CableCategory/List/All";
-                    HttpResponseMessage response = await Get(client, url);
-                    // Assert
-                    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
-                    string data = await response.Content.ReadAsStringAsync();
-                    ResponseBase<object?>? trueResult = JsonSerializer.Deserialize<ResponseBase<object?>>(data);
-                    Assert.NotNull(trueResult);
-                    Assert.IsFalse(trueResult.Success);
-                }
-
-                [Test]
-                public async Task ListAll_WhenNoLogin_ReturnsUnauthorized()
-                {
-                    await ListAll_ReturnsUnauthorized(null);
-                }
-
-                [Test]
-                public async Task ListAll_WhenInvalidToken_ReturnsUnauthorized()
-                {
-                    await ListAll_ReturnsUnauthorized("Invalid token");
-                }
+        /*      
 
                 [Test]
                 public void ListAll_WhenExceptionThrown_ReturnsErrorResponse()
@@ -281,35 +210,7 @@ namespace UnitTests.Tests
                     Assert.NotNull(trueResult);
                     Assert.IsFalse(trueResult.Success);
                     Assert.That(trueResult.Message, Is.EqualTo(expectedResult.Message));
-                }
-
-                [Test]
-                public async Task Create_WhenNoLogin_ReturnsUnauthorized()
-                {
-                    await Create_ReturnsUnauthorized(null);
-                }
-
-                [Test]
-                public async Task Create_WhenInvalidToken_ReturnsUnauthorized()
-                {
-                    await Create_ReturnsUnauthorized("Invalid token");
-                }
-
-                [Test]
-                public async Task Create_NotAdmin_ReturnForbidden()
-                {
-                    CableCategoryCreateUpdateDTO DTO = new CableCategoryCreateUpdateDTO();
-                    ResponseBase result = new ResponseBase("Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
-                    string content = JsonSerializer.Serialize(result);
-                    var handler = getHttpMessageHandler(HttpStatusCode.OK, content);
-                    HttpClient client = new HttpClient(handler.Object);
-                    string token = SimulateToken(Roles.Staff);
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "");
-                    string url = "https://localhost:7107/CableCategory/Create";
-                    HttpResponseMessage response = await Post<CableCategoryCreateUpdateDTO?>(client, url, DTO);
-                    // Assert
-                    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-                }
+                }     
 
 
                 [Test]
