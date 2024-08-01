@@ -3,39 +3,32 @@ using Common.DTO.CableCategoryDTO;
 using Common.Entity;
 using Common.Paginations;
 using DataAccess.DAO;
-using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
+using System.Globalization;
 
 namespace UnitTests.Tests
 {
     [TestFixture]
-    public class CableCategoryTest : BaseTest
+    public class CableCategoryTest : BaseTest<CableCategory>
     {
-        private Mock<DbSet<CableCategory>> mockDbSet;
         private Mock<ICableCategoryService> mockService;
         private CableCategoryController controller;
-        private ControllerContext controllerContext;
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
-            mockDbSet = new Mock<DbSet<CableCategory>>();
             mockService = new Mock<ICableCategoryService>();
             controller = new CableCategoryController(mockService.Object);
-            controllerContext = new ControllerContext()
-            {
-                HttpContext = new DefaultHttpContext()
-            };
             controller.ControllerContext = controllerContext;
         }
 
         private void SetMockQueryCableCategory()
         {
+            string format = "yyyy-MM-dd HH:mm:ss.fffffff";
             List<CableCategory> cableCategories = new List<CableCategory>()
             {
-                 new CableCategory(){ CableCategoryId = 1, CableCategoryName = "Category 1" , CreatedAt = DateTime.Now, UpdateAt = DateTime.Now,IsDeleted = false},
-                 new CableCategory(){ CableCategoryId = 2, CableCategoryName = "Category 2" , CreatedAt = DateTime.Now, UpdateAt = DateTime.Now,IsDeleted = false}
+                 new CableCategory(){ CableCategoryId = 1, CableCategoryName = "Category 1" , CreatedAt = DateTime.ParseExact("2023-11-10 19:24:24.4349955", format, CultureInfo.InvariantCulture), UpdateAt = DateTime.ParseExact("2023-11-22 19:24:24.4349955", format, CultureInfo.InvariantCulture), IsDeleted = false},
+                 new CableCategory(){ CableCategoryId = 2, CableCategoryName = "Category 2" , CreatedAt = DateTime.ParseExact("2023-11-11 19:24:24.4349955", format, CultureInfo.InvariantCulture), UpdateAt = DateTime.Now, IsDeleted = false},
             };
             mockDbSet.As<IQueryable<CableCategory>>().Setup(c => c.Expression).Returns(cableCategories.AsQueryable().Expression);
             mockDbSet.As<IQueryable<CableCategory>>().Setup(c => c.Provider).Returns(cableCategories.AsQueryable().Provider);
@@ -44,9 +37,9 @@ namespace UnitTests.Tests
         }
 
         [Test]
-        public void ListPaged_InputNameNotExist_ReturnsResponseSuccess()
+        public void ListPaged_InputNameNotExistInData_ReturnsSuccessCode()
         {
-            // arrange
+            // --------------------------- arrange ----------------------------
             string? name = "SampleName";
             int page = 1;
             SetMockQueryCableCategory();
@@ -54,19 +47,16 @@ namespace UnitTests.Tests
             CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
             ResponseBase expectedResult = service.ListPaged(name, page);
             mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
-            // act
+            // --------------------------- act ----------------------------
             ResponseBase trueResult = controller.List(name, page);
-            // assert
+            // --------------------------- assert ----------------------------
             Assert.That(trueResult.Code, Is.EqualTo((int)HttpStatusCode.OK));
-            /*            Assert.That(trueData.RowCount, Is.EqualTo(0));
-                        Assert.That(trueData.List.Count, Is.EqualTo(0));
-                        Assert.That(trueData.CurrentPage, Is.EqualTo(page));*/
         }
 
         [Test]
-        public void ListPaged_InputNameNotExist_ReturnsSuccessTrue()
+        public void ListPaged_InputNameNotExistInData_ReturnsSuccessTrue()
         {
-            // arrange
+            // --------------------------- arrange ----------------------------
             string? name = "SampleName";
             int page = 1;
             SetMockQueryCableCategory();
@@ -74,16 +64,16 @@ namespace UnitTests.Tests
             CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
             ResponseBase expectedResult = service.ListPaged(name, page);
             mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
-            // act
+            // --------------------------- act ----------------------------
             ResponseBase trueResult = controller.List(name, page);
-            // assert
+            // --------------------------- assert ----------------------------
             Assert.IsTrue(trueResult.Success);
         }
 
         [Test]
-        public void ListPaged_InputNameNotExist_ReturnsMessageEmpty()
+        public void ListPaged_InputNameNotExistInData_ReturnsMessageEmpty()
         {
-            // arrange
+            // --------------------------- arrange ----------------------------
             string? name = "SampleName";
             int page = 1;
             SetMockQueryCableCategory();
@@ -91,16 +81,16 @@ namespace UnitTests.Tests
             CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
             ResponseBase expectedResult = service.ListPaged(name, page);
             mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
-            // act
+            // --------------------------- act ----------------------------
             ResponseBase trueResult = controller.List(name, page);
-            // assert
+            // --------------------------- assert ----------------------------
             Assert.That(trueResult.Message, Is.EqualTo(string.Empty));
         }
 
         [Test]
-        public void ListPaged_InputNameNotExist_ReturnsDataNotNull()
+        public void ListPaged_InputNameNotExistInData_ReturnsDataNotNull()
         {
-            // arrange
+            // --------------------------- arrange ----------------------------
             string? name = "SampleName";
             int page = 1;
             SetMockQueryCableCategory();
@@ -108,16 +98,16 @@ namespace UnitTests.Tests
             CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
             ResponseBase expectedResult = service.ListPaged(name, page);
             mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
-            // act
+            // --------------------------- act ----------------------------
             ResponseBase trueResult = controller.List(name, page);
-            // assert
+            // --------------------------- assert ----------------------------
             Assert.IsNotNull(trueResult.Data);
         }
 
         [Test]
-        public void ListPaged_InputNameNotExist_ReturnsPaginationTrueRowCount()
+        public void ListPaged_InputNameNotExistInData_ReturnsPaginationTrueRowCount()
         {
-            // arrange
+            // --------------------------- arrange ----------------------------
             string? name = "SampleName";
             int page = 1;
             int expectedRowCount = 0;
@@ -126,70 +116,109 @@ namespace UnitTests.Tests
             CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
             ResponseBase expectedResult = service.ListPaged(name, page);
             mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
-            // act
+            // --------------------------- act ----------------------------
             ResponseBase trueResult = controller.List(name, page);
-            // assert
+            // --------------------------- assert ----------------------------
             Pagination<CableCategoryListDTO>? trueData = (Pagination<CableCategoryListDTO>?)trueResult.Data;
             Assert.That(trueData?.RowCount, Is.EqualTo(expectedRowCount));
         }
 
-
-        [TestCase(null)]
-        [TestCase("    ")]
-        public void ListPaged_InputNameEmptyOrNull_ReturnsResponseSuccess(string? name)
+        [Test]
+        public void ListPaged_InputNameNotExistInData_ReturnsPaginationTrueNumberPage()
         {
-            // arrange
+            // --------------------------- arrange ----------------------------
+            string? name = "SampleName";
+            int page = 1;
+            int numberPage = 0;
+            SetMockQueryCableCategory();
+            DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
+            CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
+            ResponseBase expectedResult = service.ListPaged(name, page);
+            mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
+            // --------------------------- act ----------------------------
+            ResponseBase trueResult = controller.List(name, page);
+            // --------------------------- assert ----------------------------
+            Pagination<CableCategoryListDTO>? trueData = (Pagination<CableCategoryListDTO>?)trueResult.Data;
+            Assert.That(trueData?.NumberPage, Is.EqualTo(numberPage));
+        }
+
+        [Test]
+        public void ListPaged_InputNameNotExistInData_ReturnsPaginationTrueSum()
+        {
+            // --------------------------- arrange ----------------------------
+            string? name = "SampleName";
             int page = 1;
             SetMockQueryCableCategory();
             DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
             CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
             ResponseBase expectedResult = service.ListPaged(name, page);
             mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
-            // act
+            // --------------------------- act ----------------------------
             ResponseBase trueResult = controller.List(name, page);
-            // assert
+            // --------------------------- assert ----------------------------
+            Pagination<CableCategoryListDTO>? trueData = (Pagination<CableCategoryListDTO>?)trueResult.Data;
+            Assert.That(trueData?.NumberPage, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ListPaged_InputNameNotExistInData_ReturnsExpectedList()
+        {
+            // --------------------------- arrange ----------------------------
+            string? name = "SampleName";
+            int page = 1;
+            SetMockQueryCableCategory();
+            DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
+            CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
+            ResponseBase expectedResult = service.ListPaged(name, page);
+            List<CableCategory> list = daoCableCategory.getListCableCategory(name, page);
+            List<CableCategoryListDTO> expectedList = mapper.Map<List<CableCategoryListDTO>>(list);
+            mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
+            // --------------------------- act ----------------------------
+            ResponseBase trueResult = controller.List(name, page);
+            // --------------------------- assert ----------------------------
+            Pagination<CableCategoryListDTO>? trueData = (Pagination<CableCategoryListDTO>?)trueResult.Data;
+            Assert.That(trueData?.List, Is.EqualTo(expectedList));
+        }
+
+
+        [TestCase(null)]
+        [TestCase("    ")]
+        public void ListPaged_InputNameEmptyOrNull_ReturnsCodeSuccess(string? name)
+        {
+            // --------------------------- arrange ----------------------------
+            int page = 1;
+            SetMockQueryCableCategory();
+            DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
+            CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
+            ResponseBase expectedResult = service.ListPaged(name, page);
+            mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
+            // --------------------------- act ----------------------------
+            ResponseBase trueResult = controller.List(name, page);
+            // --------------------------- assert ----------------------------
             Assert.That(trueResult.Code, Is.EqualTo((int)HttpStatusCode.OK));
-            Assert.IsTrue(trueResult.Success);
-            Assert.IsNotNull(trueResult.Data);
         }
 
 
         [Test]
-        public void ListAll__ReturnsExpectedList()
+        public void ListAll_ReturnsExpectedList()
         {
             // arrange
             SetMockQueryCableCategory();
             DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
             CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
             ResponseBase expectedResult = service.ListAll();
-            List<CableCategory> expectedList = mockDbContext.Object.CableCategories.OrderByDescending(c => c.UpdateAt).ToList();
+            List<CableCategory> expectedList = daoCableCategory.getListCableCategory();
             List<CableCategoryListDTO> expectedData = mapper.Map<List<CableCategoryListDTO>>(expectedList);
             mockService.Setup(s => s.ListAll()).Returns(expectedResult);
             // act
             ResponseBase trueResult = controller.List();
             // assert
-            List<CableCategoryListDTO>? trueData = (List<CableCategoryListDTO>?) trueResult.Data;
-            Assert.IsTrue(trueData?.SequenceEqual(expectedData));
+            List<CableCategoryListDTO>? trueData = (List<CableCategoryListDTO>?)trueResult.Data;
+            Assert.That(trueData, Is.EqualTo(expectedData));
         }
 
 
-        /*      
-
-                [Test]
-                public void ListAll_WhenExceptionThrown_ReturnsErrorResponse()
-                {
-                    // Arrange
-                    var expectedExceptionMessage = "Simulated exception message";
-
-                    // Mock the ListAll method to throw an exception
-                    service.Setup(x => x.ListAll()).Throws(new Exception(expectedExceptionMessage));
-                    // Act and Assert
-                    var exception = Assert.Throws<Exception>(() => controller.List());
-
-                    // Verify that the exception has the expected message
-                    Assert.That(exception.Message, Is.EqualTo(expectedExceptionMessage));
-                }
-
+        /*
                 private async Task Create_ReturnsUnauthorized(string? token)
                 {
                     CableCategoryCreateUpdateDTO DTO = new CableCategoryCreateUpdateDTO();

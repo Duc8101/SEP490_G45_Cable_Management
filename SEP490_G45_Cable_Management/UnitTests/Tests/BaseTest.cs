@@ -1,4 +1,5 @@
 ﻿using API;
+using API.Services.CableCategories;
 using AutoMapper;
 using Common.Entity;
 using Common.Enums;
@@ -15,20 +16,27 @@ using System.Text.Json;
 
 namespace UnitTests.Tests
 {
-    public class BaseTest
+    public class BaseTest<TEntity> where TEntity : class
     {
         private protected Mock<CableManagementContext> mockDbContext;
+        private protected Mock<DbSet<TEntity>> mockDbSet;
         private protected IMapper mapper;
+        private protected ControllerContext controllerContext;
 
         [SetUp]
         public virtual void SetUp()
         {
             mockDbContext = new Mock<CableManagementContext>();
+            mockDbSet = new Mock<DbSet<TEntity>>();
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new MappingProfile());
             });
             mapper = config.CreateMapper();
+            controllerContext = new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext()
+            };
         }
 
         private protected Mock<HttpMessageHandler> getHttpMessageHandler(string content)
@@ -43,7 +51,7 @@ namespace UnitTests.Tests
                )
                .ReturnsAsync(new HttpResponseMessage
                {
-                  // Content = new StringContent(content)
+                   // Content = new StringContent(content)
                });
             return handler;
         }
