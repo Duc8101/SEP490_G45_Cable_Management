@@ -81,7 +81,7 @@ namespace API
                 builder.AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader();
-            }));
+            }));   
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             var config = new MapperConfiguration(cfg =>
             {
@@ -90,23 +90,23 @@ namespace API
             // ----------------------- register db context -----------------------
             builder.Services.AddDbContext<CableManagementContext>(/*options => options.UseSqlServer(ConfigData.SqlConnection), */ServiceLifetime.Scoped);
             // ----------------------- register DAO -----------------------
-            builder.Services.AddTransient<DAOCableCategory>();
-            builder.Services.AddTransient<DAOUser>();
-            builder.Services.AddTransient<DAOCable>();
-            builder.Services.AddTransient<DAOIssue>();
-            builder.Services.AddTransient<DAONodeMaterialCategory>();
-            builder.Services.AddTransient<DAONode>();
-            builder.Services.AddTransient<DAOOtherMaterialsCategory>();
-            builder.Services.AddTransient<DAOOtherMaterial>();
-            builder.Services.AddTransient<DAOTransactionOtherMaterial>();
-            builder.Services.AddTransient<DAOTransactionCable>();
-            builder.Services.AddTransient<DAORoute>();
-            builder.Services.AddTransient<DAOTransactionHistory>();
-            builder.Services.AddTransient<DAORequest>();
-            builder.Services.AddTransient<DAORequestCable>();
-            builder.Services.AddTransient<DAORequestOtherMaterial>();
-            builder.Services.AddTransient<DAOSupplier>();
-            builder.Services.AddTransient<DAOWarehouse>();
+            builder.Services.AddSingleton<DAOCableCategory>();
+            builder.Services.AddSingleton<DAOUser>();
+            builder.Services.AddSingleton<DAOCable>();
+            builder.Services.AddSingleton<DAOIssue>();
+            builder.Services.AddSingleton<DAONodeMaterialCategory>();
+            builder.Services.AddSingleton<DAONode>();
+            builder.Services.AddSingleton<DAOOtherMaterialsCategory>();
+            builder.Services.AddSingleton<DAOOtherMaterial>();
+            builder.Services.AddSingleton<DAOTransactionOtherMaterial>();
+            builder.Services.AddSingleton<DAOTransactionCable>();
+            builder.Services.AddSingleton<DAORoute>();
+            builder.Services.AddSingleton<DAOTransactionHistory>();
+            builder.Services.AddSingleton<DAORequest>();
+            builder.Services.AddSingleton<DAORequestCable>();
+            builder.Services.AddSingleton<DAORequestOtherMaterial>();
+            builder.Services.AddSingleton<DAOSupplier>();
+            builder.Services.AddSingleton<DAOWarehouse>();
             // ----------------------- register service -----------------------
             builder.Services.AddScoped<ICableCategoryService, CableCategoryService>();
             builder.Services.AddScoped<IUserService, UserService>();

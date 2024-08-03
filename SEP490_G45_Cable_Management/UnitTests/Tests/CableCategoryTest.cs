@@ -1,6 +1,7 @@
 ﻿using API.Services.CableCategories;
 using Common.DTO.CableCategoryDTO;
 using Common.Entity;
+using Common.Enums;
 using Common.Paginations;
 using DataAccess.DAO;
 using System.Globalization;
@@ -182,6 +183,7 @@ namespace UnitTests.Tests
 
 
         [TestCase(null)]
+        [TestCase("")]
         [TestCase("    ")]
         public void ListPaged_InputNameEmptyOrNull_ReturnsCodeSuccess(string? name)
         {
@@ -196,6 +198,120 @@ namespace UnitTests.Tests
             ResponseBase trueResult = controller.List(name, page);
             // --------------------------- assert ----------------------------
             Assert.That(trueResult.Code, Is.EqualTo((int)HttpStatusCode.OK));
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("    ")]
+        public void ListPaged_InputNameEmptyOrNull_ReturnsSuccessTrue(string? name)
+        {
+            // --------------------------- arrange ----------------------------
+            int page = 1;
+            SetMockQueryCableCategory();
+            DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
+            CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
+            ResponseBase expectedResult = service.ListPaged(name, page);
+            mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
+            // --------------------------- act ----------------------------
+            ResponseBase trueResult = controller.List(name, page);
+            // --------------------------- assert ----------------------------
+            Assert.IsTrue(trueResult.Success);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("    ")]
+        public void ListPaged_InputNameEmptyOrNull_ReturnsMessageEmpty(string? name)
+        {
+            // --------------------------- arrange ----------------------------
+            int page = 1;
+            SetMockQueryCableCategory();
+            DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
+            CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
+            ResponseBase expectedResult = service.ListPaged(name, page);
+            mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
+            // --------------------------- act ----------------------------
+            ResponseBase trueResult = controller.List(name, page);
+            // --------------------------- assert ----------------------------
+            Assert.That(trueResult.Message, Is.EqualTo(string.Empty));
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("    ")]
+        public void ListPaged_InputNameEmptyOrNull_ReturnsDataNotNull(string? name)
+        {
+            // --------------------------- arrange ----------------------------
+            int page = 1;
+            SetMockQueryCableCategory();
+            DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
+            CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
+            ResponseBase expectedResult = service.ListPaged(name, page);
+            mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
+            // --------------------------- act ----------------------------
+            ResponseBase trueResult = controller.List(name, page);
+            // --------------------------- assert ----------------------------
+            Assert.IsNotNull(trueResult.Data);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("    ")]
+        public void ListPaged_InputNameEmptyOrNull_ReturnsPaginationTrueRowCount(string? name)
+        {
+            // --------------------------- arrange ----------------------------
+            int page = 1;
+            SetMockQueryCableCategory();
+            DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
+            CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
+            ResponseBase expectedResult = service.ListPaged(name, page);
+            int expectedRowCount = daoCableCategory.getRowCount(name);
+            mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
+            // --------------------------- act ----------------------------
+            ResponseBase trueResult = controller.List(name, page);
+            // --------------------------- assert ----------------------------
+            Pagination<CableCategoryListDTO>? trueData = (Pagination<CableCategoryListDTO>?)trueResult.Data;
+            Assert.That(trueData?.RowCount, Is.EqualTo(expectedRowCount));
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("    ")]
+        public void ListPaged_InputNameEmptyOrNull_ReturnsPaginationTrueNumberPage(string? name)
+        {
+            // --------------------------- arrange ----------------------------
+            int page = 1;
+            SetMockQueryCableCategory();
+            DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
+            CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
+            ResponseBase expectedResult = service.ListPaged(name, page);
+            int expectedRowCount = daoCableCategory.getRowCount(name);
+            int expectedNumberPage = (int)Math.Ceiling((double)expectedRowCount / (int)PageSize.Size);
+            mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
+            // --------------------------- act ----------------------------
+            ResponseBase trueResult = controller.List(name, page);
+            // --------------------------- assert ----------------------------
+            Pagination<CableCategoryListDTO>? trueData = (Pagination<CableCategoryListDTO>?)trueResult.Data;
+            Assert.That(trueData?.NumberPage, Is.EqualTo(expectedNumberPage));
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("    ")]
+        public void ListPaged_InputNameEmptyOrNull_ReturnsPaginationTrueSum(string? name)
+        {
+            // --------------------------- arrange ----------------------------
+            int page = 1;
+            SetMockQueryCableCategory();
+            DAOCableCategory daoCableCategory = new DAOCableCategory(mockDbContext.Object);
+            CableCategoryService service = new CableCategoryService(mapper, daoCableCategory);
+            ResponseBase expectedResult = service.ListPaged(name, page);
+            mockService.Setup(s => s.ListPaged(name, page)).Returns(expectedResult);
+            // --------------------------- act ----------------------------
+            ResponseBase trueResult = controller.List(name, page);
+            // --------------------------- assert ----------------------------
+            Pagination<CableCategoryListDTO>? trueData = (Pagination<CableCategoryListDTO>?)trueResult.Data;
+            Assert.That(trueData?.Sum, Is.EqualTo(0));
         }
 
 
