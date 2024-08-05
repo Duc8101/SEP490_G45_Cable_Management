@@ -26,42 +26,53 @@ namespace API.Attributes
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            DAOUser daoUser = context.HttpContext.RequestServices.GetRequiredService<DAOUser>();
-            // ------------------ get token ----------------------------------------
-            string? token = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-            // ------------------ get information user from token ------------------
-            var handler = new JwtSecurityTokenHandler();
-            var security = handler.ReadJwtToken(token);
-            Claim? claim = security.Claims.FirstOrDefault(t => t.Type == "id");
-            if (claim == null)
+            DAOUser? daoUser = context.HttpContext.RequestServices.GetService<DAOUser>();
+            if(daoUser == null)
             {
-                ResponseBase result = new ResponseBase("Not found user id based on token. Please check information!!", (int)HttpStatusCode.NotFound);
+                ResponseBase result = new ResponseBase("Service DAOUser has not been registered yet!!", (int)HttpStatusCode.Conflict);
                 context.Result = new JsonResult(result)
                 {
-                    StatusCode = (int)HttpStatusCode.NotFound,
+                    StatusCode = (int)HttpStatusCode.Conflict,
                 };
             }
             else
             {
-                Guid userId = Guid.Parse(claim.Value);
-                User? user = daoUser.getUser(userId);
-                if (user == null)
+                // ------------------ get token ----------------------------------------
+                string? token = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                // ------------------ get information user from token ------------------
+                var handler = new JwtSecurityTokenHandler();
+                var security = handler.ReadJwtToken(token);
+                Claim? claim = security.Claims.FirstOrDefault(t => t.Type == "id");
+                if (claim == null)
                 {
-                    ResponseBase result = new ResponseBase("Not found user", (int)HttpStatusCode.NotFound);
+                    ResponseBase result = new ResponseBase("Not found user id based on token. Please check information!!", (int)HttpStatusCode.NotFound);
                     context.Result = new JsonResult(result)
                     {
                         StatusCode = (int)HttpStatusCode.NotFound,
                     };
                 }
-                else if (!Roles.Contains((Roles)user.RoleId))
+                else
                 {
-                    ResponseBase result = new ResponseBase("Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
-                    context.Result = new JsonResult(result)
+                    Guid userId = Guid.Parse(claim.Value);
+                    User? user = daoUser.getUser(userId);
+                    if (user == null)
                     {
-                        StatusCode = (int)HttpStatusCode.Forbidden,
-                    };
+                        ResponseBase result = new ResponseBase("Not found user", (int)HttpStatusCode.NotFound);
+                        context.Result = new JsonResult(result)
+                        {
+                            StatusCode = (int)HttpStatusCode.NotFound,
+                        };
+                    }
+                    else if (!Roles.Contains((Roles)user.RoleId))
+                    {
+                        ResponseBase result = new ResponseBase("Bạn không có quyền truy cập", (int)HttpStatusCode.Forbidden);
+                        context.Result = new JsonResult(result)
+                        {
+                            StatusCode = (int)HttpStatusCode.Forbidden,
+                        };
+                    }
                 }
-            }
+            } 
         }
     }
 }

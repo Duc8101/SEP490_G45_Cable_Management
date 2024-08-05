@@ -10,7 +10,7 @@ namespace API.Controllers
 
         private Claim? getClaim(string type)
         {
-            return User.Claims.Where(c => c.Type == type).FirstOrDefault();
+            return User.Claims.FirstOrDefault(c => c.Type == type);
         }
 
         private protected bool isAdmin()
